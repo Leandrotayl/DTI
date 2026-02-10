@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Senhas & Sorteador de Nomes</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+
+<style>
+    * {
+        margin: 0; 
+        padding: 0; 
+        box-sizing: border-box; 
+        font-family: 'Roboto', sans-serif;
+    }
+
+    body {
+        background: linear-gradient(135deg, #1f1c2c, #928dab);
+        color: #fff;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 20px;
+        overflow-x: hidden; /* CORREÇÃO DO BUG NO CELULAR */
+        width: 100%;
+    }
+
+    h1 {
+        font-family: 'Orbitron', sans-serif;
+        font-size: 2.5rem;
+        margin-bottom: 20px;
+        text-align: center;
+        width: 100%;
+    }
+
+    .container {
+        background: rgba(0,0,0,0.6);
+        border-radius: 20px;
+        padding: 30px;
+        max-width: 900px;
+        width: 100%;
+        box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        backdrop-filter: blur(10px);
+        overflow: hidden; /* EVITA ESTOURO INTERNO */
+    }
+
+    .section { margin-bottom: 40px; }
+
+    label { display: block; margin-bottom: 10px; font-weight: 500; }
+
+    input[type="number"], input[type="text"], textarea {
+        width: 100%;
+        padding: 10px;
+        border-radius: 10px;
+        border: none;
+        margin-bottom: 15px;
+        font-size: 1rem;
+    }
+
+    textarea { resize: none; height: 80px; }
+
+    button {
+        background: linear-gradient(90deg, #ff416c, #ff4b2b);
+        border: none;
+        padding: 12px 25px;
+        border-radius: 15px;
+        cursor: pointer;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #fff;
+        transition: 0.3s;
+        margin-right: 10px;
+    }
+
+    button:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 20px rgba(255,75,43,0.6);
+    }
+
+    #senhaGerada, #nomeSorteado {
+        margin-top: 15px;
+        font-size: 1.5rem;
+        font-weight: bold;
+        text-align: center;
+        word-break: break-all;
+        padding: 15px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.1);
+        box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    }
+
+    #listaSorteados {
+        margin-top: 20px;
+        max-height: 150px;
+        overflow-y: auto;
+        padding: 10px;
+        border-radius: 10px;
+        background: rgba(255,255,255,0.1);
+    }
+
+    #listaSorteados li {
+        padding: 5px 10px;
+        border-bottom: 1px solid rgba(255,255,255,0.2);
+    }
+
+    /* emojis */
+    .falling-item {
+    position: fixed;
+    top: -80px;
+    opacity: 1;
+    animation: fall linear forwards;
+    pointer-events: none;
+    object-fit: contain; /* garante imagem proporcional */
+    z-index: 9999; /* aparece sobre tudo */
+}
+
+@keyframes fall {
+    0% {
+        transform: translateY(0) rotate(0deg) scale(1);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotate(360deg) scale(0.8);
+        opacity: 0;
+    }
+}
+
+
+    @keyframes fall {
+        0% { transform: translateY(0) rotate(0deg); opacity:1; }
+        100% { transform: translateY(100vh) rotate(360deg); opacity:0; }
+    }
+
+    .flex { 
+        display: flex; 
+        flex-wrap: wrap; 
+        gap: 10px;
+        align-items: center; 
+    }
+
+    .flex label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        white-space: nowrap;
+    }
+
+    @media(max-width:600px){
+        .container { padding: 20px; }
+        button {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        h1 { font-size: 2rem; }
+    }
+</style>
+</head>
+
+<body>
+<h1>Gerador de Senhas & Sorteador de Nomes</h1>
+
+<div class="container">
+
+    <!-- GERADOR -->
+    <div class="section">
+        <h2>Gerador de Senhas</h2>
+
+        <label>Tamanho da Senha:</label>
+        <input type="number" id="tamanhoSenha" value="12" min="4" max="50">
+
+        <div class="flex">
+            <label><input type="checkbox" id="maiusculas" checked> Letras Maiúsculas</label>
+            <label><input type="checkbox" id="minusculas" checked> Letras Minúsculas</label>
+            <label><input type="checkbox" id="numeros" checked> Números</label>
+            <label><input type="checkbox" id="simbolos" checked> Símbolos</label>
+        </div>
+
+        <button onclick="gerarSenha()">Gerar Senha</button>
+        <button onclick="copiarSenha()">Copiar Senha</button>
+
+        <div id="senhaGerada"></div>
+    </div>
+
+    <!-- SORTEADOR -->
+    <div class="section">
+        <h2>Sorteador de Nomes</h2>
+
+        <label>Insira os nomes separados por vírgula:</label>
+        <textarea id="nomesInput" placeholder="Ex: João, Maria, Pedro"></textarea>
+
+        <button onclick="sortearNome()">Sortear Nome</button>
+        <button onclick="limparSorteados()">Limpar Lista de Sorteados</button>
+
+        <div id="nomeSorteado"></div>
+
+        <h3>Lista de Nomes Sorteados:</h3>
+        <ul id="listaSorteados"></ul>
+    </div>
+
+</div>
+
+<script>
+/* Gerar Senha */
+function gerarSenha() {
+    const tamanho = document.getElementById('tamanhoSenha').value;
+    const maiusculas = document.getElementById('maiusculas').checked;
+    const minusculas = document.getElementById('minusculas').checked;
+    const numeros = document.getElementById('numeros').checked;
+    const simbolos = document.getElementById('simbolos').checked;
+
+    let chars = '';
+    if (maiusculas) chars += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    if (minusculas) chars += 'abcdefghijklmnopqrstuvwxyz';
+    if (numeros) chars += '0123456789';
+    if (simbolos) chars += '!@#$%^&*()_+[]{}|;:,.<>?';
+
+    if (chars === '') { alert('Selecione pelo menos um tipo de caractere!'); return; }
+
+    let senha = '';
+    for (let i = 0; i < tamanho; i++) {
+        senha += chars[Math.floor(Math.random() * chars.length)];
+    }
+    document.getElementById('senhaGerada').innerText = senha;
+}
+
+function copiarSenha() {
+    const senha = document.getElementById('senhaGerada').innerText;
+    if (senha) {
+        navigator.clipboard.writeText(senha);
+        alert('Senha copiada!');
+    }
+}
+
+/* Sorteador */
+let nomesSorteados = [];
+
+function sortearNome() {
+    const input = document.getElementById('nomesInput').value;
+    const nomes = input.split(',').map(n => n.trim()).filter(n => n !== '');
+
+    if (nomes.length === 0) { alert('Insira pelo menos um nome!'); return; }
+
+    let disponiveis = nomes.filter(n => !nomesSorteados.includes(n));
+
+    if (disponiveis.length === 0) {
+        alert('Todos os nomes já foram sorteados!');
+        return;
+    }
+
+    const escolhido = disponiveis[Math.floor(Math.random() * disponiveis.length)];
+    document.getElementById('nomeSorteado').innerText = escolhido;
+
+    nomesSorteados.push(escolhido);
+    atualizarLista();
+
+    criarCascata(30);
+}
+
+function atualizarLista() {
+    const ul = document.getElementById('listaSorteados');
+    ul.innerHTML = '';
+    nomesSorteados.forEach(n => {
+        let li = document.createElement('li');
+        li.textContent = n;
+        ul.appendChild(li);
+    });
+}
+
+function limparSorteados() {
+    if (confirm('Deseja realmente limpar a lista de sorteados?')) {
+        nomesSorteados = [];
+        atualizarLista();
+        document.getElementById('nomeSorteado').innerText = '';
+    }
+}
+
+function criarCascata(qtd){
+    const imagens = [
+        'http://172.16.2.7/DTI/img/bola.png'  
+
+   
+    ];
+
+    for(let i = 0; i < qtd; i++){
+        const img = document.createElement('img');
+        img.className = 'falling-item';
+        img.style.left = Math.random() * 100 + 'vw';
+        img.style.animationDuration = (3 + Math.random() * 3) + 's';
+        img.style.width = (30 + Math.random() * 40) + 'px'; // tamanho variável
+        img.src = imagens[Math.floor(Math.random() * imagens.length)];
+
+        document.body.appendChild(img);
+
+        setTimeout(() => { img.remove(); }, 6000);
+    }
+}
+
+</script>
+
+</body>
+</html>

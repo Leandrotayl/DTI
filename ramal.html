@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ramais T.I</title>
+
+<link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3132/3132083.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#05070b;
+  --panel:#0c121a;
+  --glass:rgba(15,22,32,.75);
+  --border:#1e2a3a;
+  --text:#dfeff0;
+  --neon:#00ffe1;
+  --warn:#ffcc00;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:'Inter',sans-serif;
+  background:
+    linear-gradient(rgba(0,0,0,.85),rgba(0,0,0,.95)),
+    url("http://172.16.2.7/DTI/img/1.png");
+  background-size:cover;
+  background-attachment:fixed;
+  color:var(--text);
+}
+
+/* HEADER */
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:linear-gradient(90deg,#050b14,#02040a);
+  padding:14px 22px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid var(--border);
+}
+
+header h1{
+  font-family:'Orbitron';
+  font-size:1.4rem;
+  color:var(--neon);
+  letter-spacing:3px;
+}
+
+/* SEARCH */
+.search-box{ position:relative; }
+
+.search-box span{
+  position:absolute;
+  left:14px;
+  top:50%;
+  transform:translateY(-50%);
+}
+
+.search-box input{
+  width:340px;
+  padding:12px 18px 12px 44px;
+  border-radius:14px;
+  border:1px solid var(--neon);
+  background:rgba(0,0,0,.6);
+  color:#fff;
+  outline:none;
+  transition:.3s;
+}
+
+.search-box input:focus{
+  box-shadow:0 0 25px rgba(0,255,225,.5);
+}
+
+/* MAIN */
+main{ padding:20px; }
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+  gap:16px;
+}
+
+/* SETOR */
+.setor-title{
+  grid-column:1/-1;
+  font-family:'Orbitron';
+  font-size:.9rem;
+  letter-spacing:2px;
+
+  color:var(--neon);
+
+  padding:10px 14px;
+  margin:26px 0 14px;
+
+  background:linear-gradient(
+    90deg,
+    rgba(0,255,225,.18),
+    transparent 70%
+  );
+
+  border-left:5px solid var(--neon);
+  border-radius:8px;
+}
+
+.card[data-setor*="Suporte"]::after{
+  background:#00ffe1;
+}
+
+.card[data-setor*="Infra"]::after{
+  background:#ffcc00;
+}
+
+.card[data-setor*="Desenvolvimento"]::after{
+  background:#9b7cff;
+}
+
+
+/* CARD */
+.card{
+  background:var(--glass);
+  backdrop-filter:blur(10px);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:14px;
+  display:grid;
+  grid-template-columns:60px 1fr;
+  gap:14px;
+  transition:.3s;
+}
+
+.card:hover{ transform:translateY(-5px); }
+
+.card.match{
+  border-color:var(--warn);
+  box-shadow:0 0 25px rgba(255,204,0,.4);
+  animation:pulse 1s infinite alternate;
+}
+
+@keyframes pulse{
+  from{ transform:scale(1); }
+  to{ transform:scale(1.02); }
+}
+
+.card img{
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  border:2px solid var(--neon);
+}
+
+.card h3{
+  font-family:'Orbitron';
+  font-size:.85rem;
+  color:var(--neon);
+}
+
+.ramal-box.copiado{
+  border-color: var(--warn);
+  box-shadow: 0 0 15px rgba(255,204,0,.7);
+}
+
+.ramal-box.copiado::after{
+  content:" COPIADO!";
+  background:var(--warn);
+  color:#000;
+  font-weight:600;
+  opacity:1;
+}
+
+#toast-copiado{
+  position:fixed;
+  top:70px;
+  right:24px;
+
+  background:linear-gradient(135deg,#00ffe1,#00c9b7);
+  color:#000;
+
+  padding:16px 22px;
+  border-radius:16px;
+
+  font-family:'Orbitron';
+  font-size:.75rem;
+  letter-spacing:1px;
+
+  box-shadow:
+    0 0 25px rgba(0,255,225,.8),
+    0 0 60px rgba(0,255,225,.4);
+
+  opacity:0;
+  transform:translateY(-30px) scale(.9);
+
+  transition:opacity .3s ease, transform .3s ease;
+
+  z-index:2147483647; /* força ficar acima de tudo */
+  pointer-events:none;
+}
+
+#toast-copiado.show{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+
+.badge{
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.badge:contains("Infra"){
+  background:rgba(255,204,0,.15);
+}
+
+.badge:contains("Desenvolvimento"){
+  background:rgba(155,124,255,.15);
+}
+
+footer span:last-child{
+  color:var(--neon);
+  text-shadow:0 0 6px rgba(0,255,225,.6);
+}
+
+
+/* RAMAL */
+.ramal-box{
+  margin-top:6px;
+  padding:8px 14px;
+  border-radius:12px;
+  border:1px solid var(--neon);
+  cursor:pointer;
+  position:relative;
+}
+
+.ramal-box::after{
+  content:"Clique para copiar";
+  position:absolute;
+  bottom:120%;
+  left:50%;
+  transform:translateX(-50%);
+  background:#000;
+  padding:4px 8px;
+  font-size:.6rem;
+  border-radius:6px;
+  opacity:0;
+  transition:.3s;
+}
+
+.ramal-box:hover::after{ opacity:1; }
+
+.ramal-box{
+  margin-top:8px;
+  padding:10px 16px;
+  border-radius:12px;
+  background:rgba(0,0,0,.55);
+  border:1px solid rgba(0,255,225,.35);
+  cursor:pointer;
+  position:relative;
+  transition:.25s ease;
+}
+
+.ramal-box:hover{
+  background:rgba(0,255,225,.08);
+  border-color:var(--neon);
+}
+
+
+@keyframes flashRamal {
+  0%   { color:#eaffff; }
+  50%  { color:var(--warn); }
+  100% { color:#eaffff; }
+}
+
+.ramal-numero.flash{
+  animation:flashRamal .5s ease;
+}
+
+
+.ramal-numero.flash {
+  animation: flashRamal .6s ease-in-out;
+}
+
+
+
+header{
+  box-shadow:
+    0 0 20px rgba(0,255,225,.15),
+    inset 0 -1px rgba(255,255,255,.04);
+}
+
+.search-box input:focus{
+  background:rgba(0,0,0,.85);
+  letter-spacing:1px;
+}
+
+
+/* Menu principal */
+#btnMenu {
+  position: fixed;
+  top: 2px;
+  left: 190px;
+  width: 180px;
+  padding: 14px 0;
+  background: linear-gradient(135deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 3px solid #ff0000;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+  transition: all 0.3s ease-in-out;
+  z-index: 1001;
+}
+#btnMenu:hover { transform: scale(1.05); background: linear-gradient(145deg,#ff0000,#1a1aff); color:#fff; box-shadow:0 0 25px #ff4d4d,0 0 50px #ff4d4d inset; }
+
+
+/* TOAST DINÂMICO */
+.toast{
+  position:fixed;
+  min-width:260px;
+  max-width:320px;
+
+  padding:14px 18px;
+  border-radius:14px;
+
+  background:rgba(8,14,22,.88);
+  backdrop-filter:blur(14px);
+
+  border:1px solid rgba(0,255,225,.35);
+
+  box-shadow:
+    0 0 18px rgba(0,255,225,.35),
+    inset 0 0 0 1px rgba(255,255,255,.04);
+
+  font-family:'Inter',sans-serif;
+  color:#eaffff;
+
+  opacity:0;
+  transform:translateY(10px) scale(.96);
+  transition:.35s ease;
+
+  pointer-events:none;
+  z-index:999999;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+
+.toast h4{
+  font-size:.8rem;
+  font-weight:600;
+  margin-bottom:4px;
+  color:var(--neon);
+}
+
+.toast p{
+  font-size:.7rem;
+  opacity:.9;
+}
+
+/* cores por setor */
+.toast.suporte{
+  background:linear-gradient(135deg,#00ffe1,#00c9b7);
+  color:#000;
+  box-shadow:0 0 25px rgba(0,255,225,.7);
+}
+
+.toast.infra{
+  background:linear-gradient(135deg,#ffcc00,#ff9900);
+  color:#000;
+  box-shadow:0 0 25px rgba(255,204,0,.7);
+}
+
+.toast.dev{
+  background:linear-gradient(135deg,#9b7cff,#5b3cff);
+  color:#fff;
+  box-shadow:0 0 25px rgba(155,124,255,.7);
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateY(0) scale(1);
+}
+
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:14px;
+  background:
+    linear-gradient(
+      120deg,
+      transparent 30%,
+      rgba(0,255,225,.15),
+      transparent 70%
+    );
+  opacity:0;
+  transition:.4s;
+}
+
+.card{
+  position:relative;
+  overflow:hidden;
+}
+
+.card:hover::before{
+  opacity:1;
+  animation:scan 1.2s linear;
+}
+
+@keyframes scan{
+  from{ transform:translateX(-100%); }
+  to{ transform:translateX(100%); }
+}
+
+
+/* BADGE */
+.badge{
+  display:inline-block;
+  margin-top:6px;
+  font-size:.6rem;
+  padding:3px 8px;
+  border-radius:6px;
+  background:#060b12;
+}
+
+/* HIGHLIGHT */
+.highlight{
+  color:var(--warn);
+  background:rgba(255,204,0,.2);
+  padding:3px 6px;
+  border-radius:6px;
+  box-shadow:0 0 10px rgba(255,204,0,.6);
+}
+
+/* FOOTER */
+footer{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  background:#02040a;
+  border-top:1px solid var(--border);
+  padding:6px 18px;
+  font-size:.65rem;
+  display:flex;
+  justify-content:space-between;
+}
+</style>
+</head>
+
+<body>
+  
+<div id="toast" class="toast">
+  <h4 id="toast-titulo"></h4>
+  <p id="toast-texto"></p>
+</div>
+
+
+<header>
+  <h1>RAMAIS T.I</h1>
+  <div class="search-box">
+    <span></span>
+    <input id="search" placeholder="Buscar colaborador ou ramal">
+  </div>
+</header>
+
+<div id="toast" class="toast">Ramal copiado</div>
+
+<button id="btnMenu">MENU PRINCIPAL</button>
+
+
+<main>
+  <div class="grid" id="lista"></div>
+</main>
+
+<script>
+const avatarPadrao = "https://i.ibb.co/7pBv4yF/user.png";
+
+const colaboradores=[
+ { nome:"Leandro",	 	ramal:"868642", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/leandro.png" },
+ { nome:"Lemos", 	 	ramal:"868679", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/lemos.png" },
+ { nome:"Anna Braz",	  	ramal:"868636",	 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/anna.png" },
+ { nome:"Didi", 	 	ramal:"868678", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/didi.png" },
+ { nome:"Rodrigo", 	 	ramal:"868684", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/rodrigo.png" },
+ { nome:"Joao Lucas", 	 	ramal:"868607", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/joao-lucas.png" },
+ { nome:"Douglas Venicius", 	ramal:"868647", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/douglas.png" },
+ { nome:"Joao Vitor", 		ramal:"868687", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/joao-vitor.png" },
+ { nome:"Marcos Victor",	ramal:"868612", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/marcos.png" },
+ { nome:"Adriel", 		ramal:"868651", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/adriel.png" },
+ { nome:"Heitor Gusmam",	ramal:"868633", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/heitor.png" },
+ { nome:"Altemir", 		ramal:"868635", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/altemir.png" },
+ { nome:"Polenilson", 		ramal:"868671", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Francisco", 		ramal:"868658", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Sergio Ferreira",	ramal:"868643", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Pacheco",		ramal:"868644", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Miriam", 		ramal:"868637", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Natur", 		ramal:"868657", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Anderson", 		ramal:"868664", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Cassiano", 		ramal:"868648", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/cassiano.png" },
+ { nome:"Danielon", 		ramal:"868693", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/danielson.png" },
+ { nome:"Everaldo", 		ramal:"868645", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/everaldo.png" },
+ { nome:"Gilvan", 		ramal:"868683", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/gilvan.png" },
+ { nome:"Ismael", 		ramal:"868610", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/ismael.png" },
+ { nome:"Jessica", 		ramal:"868686", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/jessica.png" },
+ { nome:"Jonatas", 		ramal:"868631", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/jonatas.png" },
+ { nome:"Joseph", 		ramal:"868625", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/joseph.png" },
+ { nome:"Kassio", 		ramal:"868627", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/kassio.png" },
+ { nome:"Sousa", 		ramal:"868634", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/Sousa.png" },
+ { nome:"Lucas Helliab", 	ramal:"868685", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/lucas.png" },
+ { nome:"Matheus", 		ramal:"868632", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/matheus.png" },
+ { nome:"Reinaldo", 		ramal:"868639", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/reinaldo.png" },
+ { nome:"Thiago", 		ramal:"868649", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/thiago.png" },
+ { nome:"Erivan Veras", 	ramal:"868672 ", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/erivan.png" },
+ { nome:"Janaelson", 		ramal:"868648 ", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/janaelson.png" },
+ { nome:"David", 		ramal:"868688 ", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/David.png" },
+
+ { nome:"Fabio Muniz", 		ramal:"868618", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Erisvaldo", 		ramal:"868696", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Genesio", 		ramal:"868624", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Ivan", 		ramal:"868626", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Victoria", 		ramal:"868615", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Sergio Mendeiros", 	ramal:"868653", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Thiago Borges", 	ramal:"868606", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+
+
+
+ { nome:"Central TI", 		ramal:"868600", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/ti.png" },
+
+];
+
+
+function destacar(texto,busca){
+  if(!busca) return texto;
+  return texto.replace(new RegExp(`(${busca})`,'gi'),'<span class="highlight">$1</span>');
+}
+
+function render(filtro=""){
+  const lista=document.getElementById("lista");
+  lista.innerHTML="";
+  const busca=filtro.toLowerCase();
+  const isNumero=/^\d+$/.test(busca);
+  let total=0;
+  const setores={};
+
+  colaboradores
+    .filter(c=>isNumero
+      ? c.ramal.includes(busca)
+      : c.nome.toLowerCase().includes(busca) || c.ramal.includes(busca))
+    .forEach(c=>{
+      if(!setores[c.setor]) setores[c.setor]=[];
+      setores[c.setor].push(c);
+    });
+
+  Object.keys(setores).forEach(setor=>{
+    const t=document.createElement("div");
+    t.className="setor-title";
+    t.textContent=`${setor} (${setores[setor].length})`;
+    lista.appendChild(t);
+
+    setores[setor].sort((a,b)=>{
+      if(a.nome==="Central TI") return -1;
+      if(b.nome==="Central TI") return 1;
+      return a.nome.localeCompare(b.nome);
+    }).forEach(c=>{
+      const match=busca && (c.nome.toLowerCase().includes(busca)||c.ramal.includes(busca));
+      const card=document.createElement("div");
+      card.className="card"+(match?" match":"");
+      card.innerHTML=`
+        <img src="${c.foto}" onerror="this.src='${avatarPadrao}'">
+        <div>
+          <h3>${destacar(c.nome,busca)}</h3>
+          <div class="ramal-box" data-setor="${c.setor}" onclick="copiarRamal(this,'${c.ramal}')">
+            <span class="ramal-numero">${destacar(c.ramal,busca)}</span>
+          </div>
+          <span class="badge">${c.setor}</span>
+        </div>`;
+      lista.appendChild(card);
+      total++;
+    });
+  });
+
+  document.getElementById("contador").textContent =
+    busca ? `RESULTADOS: ${total}` : `COLABORADORES ATIVOS: ${total}`;
+}
+function copiarRamal(el, ramal){
+
+  /* --- copiar (HTTP safe) --- */
+  const temp = document.createElement("input");
+  temp.value = ramal;
+  document.body.appendChild(temp);
+  temp.select();
+  document.execCommand("copy");
+  document.body.removeChild(temp);
+
+  /* --- flash 1x no número --- */
+  const numero = el.querySelector(".ramal-numero");
+  numero.classList.remove("flash");
+  void numero.offsetWidth;
+  numero.classList.add("flash");
+
+  /* --- feedback no card --- */
+  el.classList.add("copiado");
+  setTimeout(()=>el.classList.remove("copiado"),800);
+
+  /* --- toast próximo ao card --- */
+  const toast = document.getElementById("toast");
+  const setor = el.dataset.setor.toLowerCase();
+
+  toast.className = "toast show " +
+    (setor.includes("infra") ? "infra" :
+     setor.includes("desenvolvimento") ? "dev" : "suporte");
+
+  const rect = el.getBoundingClientRect();
+  toast.style.top  = (rect.top - 50) + "px";
+  toast.style.left = (rect.left + rect.width/2 - toast.offsetWidth/2) + "px";
+
+  toast.textContent = `RAMAL ${ramal} COPIADO`;
+
+  setTimeout(()=>toast.classList.remove("show"),4500);
+}
+
+
+const btnMenu = document.getElementById("btnMenu");
+btnMenu.addEventListener("click", () => {
+    window.location.href = "menu.html";
+});
+
+document.addEventListener("mousemove", e=>{
+  document.querySelectorAll(".card:hover").forEach(card=>{
+    const r = card.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - .5;
+    const y = (e.clientY - r.top) / r.height - .5;
+
+    card.style.transform = `
+      translateY(-6px)
+      rotateX(${y * -8}deg)
+      rotateY(${x * 8}deg)
+    `;
+  });
+});
+
+document.addEventListener("mouseout", e=>{
+  if(e.target.classList.contains("card")){
+    e.target.style.transform="";
+  }
+});
+
+document.getElementById("search").addEventListener("focus",()=>{
+  document.body.style.backdropFilter="blur(1px)";
+});
+document.getElementById("search").addEventListener("blur",()=>{
+  document.body.style.backdropFilter="";
+});
+
+
+
+document.getElementById("search").addEventListener("input",e=>render(e.target.value));
+document.addEventListener("keydown",e=>{
+  if(e.key==="/"){ e.preventDefault(); document.getElementById("search").focus(); }
+});
+
+render();
+</script>
+
+</body>
+</html>

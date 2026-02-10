@@ -1,0 +1,2102 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rede IPs - Claudino</title>
+<style>
+
+
+ body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+
+  /* ?? Imagem no fundo */
+  background: 
+  linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.55)),
+  url("SUA-IMAGEM.jpg"),
+url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
+
+  background-size: cover;          /* preenche a tela inteira */
+  background-position: center;     /* centraliza */
+  background-repeat: no-repeat;    /* evita repetição */
+  background-attachment: fixed;    /* efeito de paralaxe (opcional) */
+
+  color: #fff;
+  animation: bgGradient 15s ease infinite; /* mantém sua animação */
+}
+
+/* Quadro para contar FortiGate e Mikrotik */
+.quadro-container {
+    position: fixed;
+    top: 10px;       /* distância do topo */
+    left: 10px;      /* lado esquerdo da tela */
+    display: flex;
+    flex-direction: column;  /* empilhar verticalmente */
+    gap: 10px;       /* espaço entre os quadros */
+    z-index: 999;
+}
+
+
+.quadro {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 10px;
+    padding: 6px 10px;    /* menos padding */
+    width: 120px;          /* largura menor */
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    transition: transform 0.3s;
+}
+
+.quadro:hover {
+    transform: scale(1.03);
+}
+
+.quadro h2 {
+    font-size: 1.4em;       /* fonte menor */
+    margin: 0;
+    color: #fff;
+    text-shadow: 0 0 6px #00f, 0 0 10px #0ff;
+}
+
+.quadro p {
+    margin: 3px 0 0;
+    font-size: 0.8em;
+    color: #ccc;
+    text-shadow: 0 0 3px #000;
+}
+
+.fortigate {
+    border-color: #ff3d00;
+    box-shadow: 0 0 12px #ff3d00;
+}
+
+.mikrotik {
+    border-color: #00e5ff;
+    box-shadow: 0 0 12px #00e5ff;
+}
+
+
+
+@keyframes bgGradient {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+  h1 { text-align:center; margin-bottom:20px; }
+
+.total-lojas {
+  position: fixed;
+  top: 2px;
+  right: 6px;
+  width: 260px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 18px;
+  padding: 1px;
+  color: #00c8d8;
+  text-align: center;
+  border: 2px solid rgba(0,200,220,0.6);
+  z-index: 9999;
+  box-shadow: 0 0 15px rgba(0,200,220,0.3);
+}
+
+
+.total-geral-quadro {
+  background: linear-gradient(135deg, #ff4d4d, #ff9999); /* Vermelho degradê */
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255,77,77,0.6);
+  color: #fff;
+}
+
+.total-item:nth-child(1) { /* Filial */
+  background: linear-gradient(135deg, #353a3f, #80c1ff);
+  border: 1px solid rgba(77,166,255,0.6);
+  color: #000;
+}
+
+.total-item:nth-child(2) { /* Posto */
+  background: linear-gradient(135deg, #3b443b, #99ff99);
+  border: 1px solid rgba(51,204,51,0.6);
+  color: #000;
+}
+
+.total-item:nth-child(3) { /* Deposito */
+  background: linear-gradient(135deg, #3a3831, #fff066);
+  border: 1px solid rgba(255,204,51,0.6);
+  color: #000;
+}
+
+.total-item:nth-child(4) { /* Representante */
+  background: linear-gradient(135deg, #3352ff, #e699ff);
+  border: 1px solid rgba(204,51,255,0.6);
+  color: #000;
+}
+
+.total-geral-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.total-geral-value {
+  font-size: 28px;
+  font-weight: bold;
+  text-shadow: 0 0 8px #00c8d8, 0 0 15px #00aab0;
+}
+
+.totais-gerais-duas-linhas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 10px;
+  margin-bottom: 8px;
+}
+
+.total-item {
+  background: linear-gradient(145deg, #1a1a1a, #222);
+  border-radius: 20px;
+  padding: 8px 0;
+  font-weight: bold;
+  color: #00c8d8;
+  text-shadow: 0 0 3px rgba(0,200,220,0.5);
+  border: 1px solid rgba(0,200,220,0.3);
+  box-shadow: 0 0 5px rgba(0,200,220,0.1) inset;
+}
+
+.ultima-atualizacao {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #00b0c8;
+  text-shadow: 0 0 5px rgba(0,180,200,0.6);
+}
+
+
+/* Container centralizado */
+.search-container { 
+  text-align: center;         
+  margin-bottom: 30px;        
+}
+
+
+
+/* BOT O PARA VOLTAR MENU PRINCIPAL */
+/* Bot o MENU PRINCIPAL reposicionado no topo da lateral */
+#btnMenu {
+  position: fixed;
+  top: 10px;       /* distancia do topo */
+  left: 160px;      /* fixa na lateral esquerda */
+  width: 240px;    /* largura consistente com o painel lateral */
+  padding: 15px 0;
+  background: linear-gradient(135deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 3px solid #ff0000;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+  transition: all 0.3s ease-in-out;
+  z-index: 1001;   /* acima do painel lateral */
+}
+
+#btnMenu:hover {
+  background: linear-gradient(145deg,#ff0000,#1a1aff);
+  color: #fff;
+  box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
+  transform: scale(1.05);
+}
+/* Campo de busca maior e robusto */
+.search-input {
+  width: 500px;               /* Aumentei a largura */
+  max-width: 95%;             /* Responsivo em telas menores */
+  padding: 16px 24px;         /* Padding maior para visual mais imponente */
+  border-radius: 15px;        /* Bordas mais arredondadas */
+  border: 2px solid #00ffea;  /* Neon suave */
+  background: #0d0d0d;        /* Fundo escuro */
+  color: #00ffea;             /* Cor do texto */
+  font-size: 18px;            /* Fonte maior */
+  font-weight: 500;           /* Texto mais robusto */
+  text-shadow: 0 0 3px #00ffea33; /* Brilho sutil */
+  box-shadow: 0 2px 5px #00ffea22 inset, 0 0 5px #00ffea11; /* efeito interno e externo leve */
+  transition: all 0.3s ease; 
+}
+
+/* Efeito ao focar */
+.search-input:focus {
+  outline: none;
+  border-color: #00ffe0;
+  box-shadow: 0 0 10px #00ffea44, 0 0 18px #00ffe033 inset;
+  transform: translateY(-1px); /* leve efeito 3D */
+}
+
+/* Placeholder */
+.search-input::placeholder {
+  color: #00ffeaaa;
+  text-shadow: 0 0 2px #00ffea22;
+}
+
+/* Cards regionais 3D ultra futurista */
+.regional-card {
+  background: linear-gradient(135deg,#1c1c1c,#2a2a2a);
+  border-radius: 20px;
+  width: 190px;
+  height: 180px;
+  display: flex;
+  
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  padding: 15px;
+  box-shadow: 
+    0 10px 25px rgba(0,255,234,0.3),       /* sombra externa */
+    inset 0 0 15px rgba(0,255,234,0.2),     /* brilho interno */
+    inset 0 0 30px rgba(0,255,234,0.1),
+    0 0 20px rgba(0,255,234,0.15);
+  transition: all 0.5s ease;
+  perspective: 1200px;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(0,255,234,0.6);
+}
+
+/* Cards regionais 3D robustos e elegantes */
+.regional-card {
+  background: linear-gradient(135deg,#1c1c1c,#2a2a2a);
+  border-radius: 20px;
+  width: 190px;
+  height: 180px;
+  display: flex;
+  
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  padding: 15px;
+  box-shadow: 
+    0 10px 25px rgba(0,255,234,0.3),       /* sombra externa */
+    inset 0 0 15px rgba(0,255,234,0.2),     /* brilho interno */
+    inset 0 0 30px rgba(0,255,234,0.1),
+    0 0 20px rgba(0,255,234,0.15);
+  transition: all 0.5s ease;
+  perspective: 1200px;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(0,255,234,0.6);
+}
+
+/* Pseudo-element para brilho dinâmico */
+.regional-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(60deg, rgba(0,255,234,0.2), rgba(0,255,234,0) 70%);
+  transform: rotate(25deg);
+  animation: shine 4s infinite linear;
+  transition: all 0.6s ease;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0% { transform: rotate(25deg) translateX(-10px); }
+  50% { transform: rotate(25deg) translateX(10px); }
+  100% { transform: rotate(25deg) translateX(-10px); }
+}
+
+/* Hover robusto */
+.regional-card:hover {
+  background: linear-gradient(145deg, #1a1a1a, #3a3a3a);
+  transform: scale(1.05) rotateX(4deg) rotateY(4deg);
+  box-shadow: 
+    0 14px 30px rgba(0,0,0,0.7),
+    inset 0 0 20px rgba(0,255,234,0.05);
+}
+
+
+
+
+
+/* Badge de quantidade discreto e elegante */
+.regional-card .badge-quantidade {
+  position: absolute;
+  top: 14px;
+  right: 50%;
+  transform: translateX(50%);
+  background: rgba(0,255,240,0.4);
+  color: #000;
+  font-weight: bold;
+  font-size: 20px;
+  padding: 8px 14px;
+  border-radius: 14px;
+  box-shadow: 0 0 10px rgba(0,255,240,0.2);
+  text-align: center;
+  min-width: 35px;
+  transition: all 0.3s ease;
+}
+
+.regional-card .badge-quantidade:hover {
+  transform: translateX(50%) scale(1.1);
+  box-shadow: 0 0 15px rgba(0,255,240,0.25);
+}
+
+/* Contadores dentro do card */
+.contadores-card {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #00fff0;
+  text-shadow: 0 0 5px #00fff0;
+  transition: all 0.3s ease;
+}
+
+
+.regional-card:hover::before {
+  transform: rotate(35deg) translateX(10px) translateY(10px);
+}
+
+.regional-card:hover {
+  background: linear-gradient(135deg,#00d1c1,#33e0d8);
+  color: #000;
+  transform: scale(1.08) rotateX(8deg) rotateY(8deg);
+  box-shadow: 
+    0 15px 40px rgba(0,209,193,0.6),
+    inset 0 0 40px rgba(0,209,193,0.3),
+    0 0 35px rgba(0,209,193,0.2);
+}
+
+/* Contadores dentro do card */
+.contadores-card {
+  margin-top: 15px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #00fff0;
+  text-shadow: 0 0 10px #00fff0, 0 0 25px #33e0d8;
+}
+
+
+.regional-card:hover::before {
+  transform: rotate(35deg) translateX(5px) translateY(5px);
+}
+
+.regional-card:hover {
+  background: linear-gradient(135deg,#00d1c1,#33e0d8); /* cores suaves no hover */
+  color:#000;
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,209,193,0.5), 0 0 35px rgba(0,209,193,0.2) inset;
+}
+
+.contadores-card {
+  margin-top:12px;
+  font-size:14px;
+  text-align:center;
+  line-height:1.3;
+  color:#00fff0;
+  text-shadow:0 0 8px #00fff0, 0 0 20px #00f5ff;
+  transition: all 0.3s ease;
+}
+
+
+/* Container de regionais */
+.regionais-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  margin-left: 20px;
+  margin-top: 120px;  /* <-- aumente este valor para "abaixar" os quadros */
+  perspective: 1000px;
+}
+
+
+.message-box {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 400px;
+  padding: 20px 30px;
+  background: linear-gradient(135deg, #0ff, #0aa, #05d);
+  border-radius: 20px;
+  border: 2px solid #0ff;
+  box-shadow: 0 0 20px #0ff, 0 0 40px #0aa inset, 0 0 60px #05d;
+  color: #000;
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 9999;
+  text-shadow: 0 0 10px #0ff, 0 0 20px #0aa;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.message-box.show {
+  opacity: 1;
+  transform: translateX(-50%) scale(1.05);
+}
+.message-box .message-content {
+  animation: glowPulse 1.8s infinite alternate;
+}
+
+@keyframes glowPulse {
+  0% { text-shadow: 0 0 10px #0ff, 0 0 20px #0aa; }
+  50% { text-shadow: 0 0 20px #0ff, 0 0 40px #0aa, 0 0 60px #05d; }
+  100% { text-shadow: 0 0 10px #0ff, 0 0 20px #0aa; }
+}
+
+
+
+/* CORES DIFERENTES PARA CADA REGIONAL */
+.regionais-container .regional-card:nth-child(1) { background: linear-gradient(135deg,#1648b4,#2564c2,#1d7bb9); }
+.regionais-container .regional-card:nth-child(2) { background: linear-gradient(135deg,#1648b4,#1648b4,#2f477a); }
+.regionais-container .regional-card:nth-child(3) { background: linear-gradient(135deg,#1648b4,#5e4b6d,#ca7b13); }
+.regionais-container .regional-card:nth-child(4) { background: linear-gradient(135deg,#1648b4,#5aa090,#ca7b13); }
+.regionais-container .regional-card:nth-child(5) { background: linear-gradient(135deg,#1648b4,#003f7f,#ca7b13); }
+.regionais-container .regional-card:nth-child(6) { background: linear-gradient(135deg,#1648b4,#039f6a,#ca7b13); }
+.regionais-container .regional-card:nth-child(7) { background: linear-gradient(135deg,#1648b4,#413837,#c54614); }
+.regionais-container .regional-card:nth-child(8) { background: linear-gradient(135deg,#1648b4,#1558a5,#bd571c); }
+.regionais-container .regional-card:nth-child(9) { background: linear-gradient(135deg,#292825,#320a7e,#db5203); }
+
+
+
+/* ESTILO COMUM PARA TODOS OS CARDS */
+.regional {
+  border-radius: 18px;
+  width: 200px; height:180px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  cursor:pointer; font-weight:bold; text-align:center;
+  padding:12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3), 0 0 15px rgba(255,255,255,0.05) inset;
+  transition: all 0.5s ease;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  text-shadow: 0 0 5px rgba(255,255,255,0.3);
+}
+
+/* Pseudo-element para brilho sutil */
+.regional::before {
+  content:"";
+  position:absolute;
+  top:-50%; left:-50%;
+  width:200%; height:200%;
+  background: linear-gradient(60deg, rgba(255,255,255,0.06), rgba(255,255,255,0) 70%);
+  transform: rotate(25deg);
+  transition: all 0.6s ease;
+}
+
+.regional:hover::before {
+  transform: rotate(35deg) translateX(5px) translateY(5px);
+}
+
+/* Hover futurista e 3D sutil */
+.regional:hover {
+  transform: scale(1.06) rotateX(3deg) rotateY(3deg);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.35), 0 0 35px rgba(255,255,255,0.08) inset;
+}
+
+/* Contadores dentro do card */
+.contadores-card {
+  margin-top:12px;
+  font-size:13px;
+  text-align:center;
+  line-height:1.3;
+  color:#fff;
+  text-shadow:0 0 4px rgba(255,255,255,0.4);
+}
+
+.regional-card .badge-quantidade {
+  position: absolute;
+  top: 12px;               /* um pouco mais afastado do topo */
+  right: 70%;              /* posiciona no centro horizontal do card */
+  transform: translateX(50%); /* centraliza exatamente */
+  background: rgba(0,255,240,0.85);
+  color: #000;
+  font-weight: bold;
+  font-size: 20px;         /* aumentado */
+  padding: 8px 16px;       /* aumentado para ficar maior e proporcional */
+  border-radius: 14px;     /* borda arredondada maior */
+  box-shadow: 0 0 10px #00fff0;
+  text-align: center;
+  min-width: 30px;
+}
+
+.acao-btns {
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  align-items:center;
+}
+
+/* botões estilo original */
+.action-btn {
+  padding:8px 12px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+  font-size:0.9rem;
+  transition: all 0.3s ease;
+  box-shadow:0 0 8px rgba(0,255,234,0.12);
+}
+
+.fortigate-btn { background: linear-gradient(45deg,#0c10d6,#00f5ff); color:#fff; border:2px solid rgba(0,255,240,0.2); }
+.fortigate-btn:hover { box-shadow:0 0 15px #0c10d6,0 0 25px #00ff99; transform:scale(1.05);}
+
+.mikrotik-btn { background: linear-gradient(45deg,#13e236,#00ff99); color:#000; border:2px solid rgba(0,255,240,0.06);}
+.mikrotik-btn:hover { box-shadow:0 0 15px #13e236,0 0 25px #00ff99; transform:scale(1.05);}
+
+.copy-senha-btn { background: linear-gradient(45deg,#ff7a18,#ff3d00); color:#000; border:2px solid rgba(255,160,0,0.08); padding:8px 10px; }
+.copy-senha-btn:hover { box-shadow:0 0 15px rgba(255,120,0,0.3); transform:scale(1.05); }
+
+/* resultado pesquisa e tabelas */
+#resultado-pesquisa {
+  display:none;
+  margin-top:20px;
+  background:#0a0a0a;
+  border:2px solid #00ffea;
+  border-radius:15px;
+  padding:15px;
+  max-width:95%;
+  margin-left:auto;
+  margin-right:auto;
+  box-shadow:0 0 25px #00ffea;
+}
+
+#tabela-pesquisa {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+}
+
+#tabela-pesquisa th, #tabela-pesquisa td {
+  border:1px solid #00ffea;
+  padding:10px;
+  text-align:center;
+}
+
+#tabela-pesquisa th {
+  background:#00ffea;
+  color:#000;
+}
+
+#tabela-pesquisa td {
+  color:#fff;
+}
+
+/* Mantém a aparência sem alteração ao passar o mouse */
+#tabela-pesquisa tr:hover {
+  background: #0a0a0a;  /* mesma cor do fundo da tabela */
+  color: #fff;           /* mesma cor do texto */
+  transform: none;       /* sem zoom */
+  box-shadow: none;      /* sem sombra */
+}
+
+
+
+/* Quadro para contar FortiGate e Mikrotik */
+/* Quadro para contar FortiGate e Mikrotik */
+.quadro-container {
+    position: fixed;
+    top: 10px;       /* distância do topo */
+    left: 10px;      /* lado esquerdo da tela */
+    display: flex;
+    flex-direction: column;  /* empilhar verticalmente */
+    gap: 10px;       /* espaço entre os quadros */
+    z-index: 999;
+}
+
+.quadro {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 10px;
+    padding: 6px 10px;    /* menos padding */
+    width: 120px;          /* largura menor */
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    transition: transform 0.3s;
+}
+
+.quadro:hover {
+    transform: scale(1.03);
+}
+
+.quadro h2 {
+    font-size: 1.4em;       /* fonte menor */
+    margin: 0;
+    color: #fff;
+    text-shadow: 0 0 6px #00f, 0 0 10px #0ff;
+}
+
+.quadro p {
+    margin: 3px 0 0;
+    font-size: 0.8em;
+    color: #ccc;
+    text-shadow: 0 0 3px #000;
+}
+
+.fortigate {
+    border-color: #ff3d00;
+    box-shadow: 0 0 12px #ff3d00;
+}
+
+.mikrotik {
+    border-color: #00e5ff;
+    box-shadow: 0 0 12px #00e5ff;
+}
+
+
+  #lojas-container { margin-top:20px; display:none; }
+  #contadores-regional { margin-top:10px; font-size:14px; }
+  table { width:100%; border-collapse:collapse; margin-top:20px; }
+  th,td { border:1px solid #00ffea; padding:10px; text-align:center; }
+  th { background:#00ffea; color:#000; }
+
+  .back-btn {
+  margin-top: 15px;
+  padding: 12px 25px;       /* Aumenta o tamanho do botão */
+  background: #00ffea;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;      /* Borda um pouco maior */
+  font-weight: bold;
+  font-size: 1rem;          /* Fonte maior */
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px #00ffea;
+}
+
+.back-btn:hover {
+  background: linear-gradient(90deg, #00ffea, #0ff);
+  color: #000;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #00ffea, 0 0 25px #0ff inset;
+}
+
+  .action-btn {
+  padding:8px 16px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:bold;
+  font-size:0.9rem;
+  transition: all 0.4s ease;
+  box-shadow:0 0 10px #00fff0;
+}
+
+.action-btn:hover {
+  transform: scale(1.15);
+  box-shadow:0 0 25px #00fff0, 0 0 45px #33e0d8 inset;
+}
+
+  .fortigate-btn { background: linear-gradient(45deg,#0c10d6,#00f5ff); color:#fff; }
+  .fortigate-btn:hover { box-shadow:0 0 15px #0c10d6,0 0 25px #00ff99; transform:scale(1.1); }
+  .mikrotik-btn { background: linear-gradient(45deg,#13e236,#00ff99); color:#000; }
+  .mikrotik-btn:hover { box-shadow:0 0 15px #13e236,0 0 25px #00ff99; transform:scale(1.1);}
+
+ /* Quadro fixo no canto superior esquerdo */
+  #contadorLoja {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: linear-gradient(135deg, #1f1f1f, #333);
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    z-index: 9999;
+  }
+
+
+ /* --- modal de senha --- */
+  #modalSenha {
+    display:none;
+    position:fixed;
+    left:0; top:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.7);
+    z-index:2000;
+    justify-content:center;
+    align-items:center;
+  }
+  #modalSenha .modal-inner {
+    background: linear-gradient(135deg,#091b2a,#06202a);
+    border-radius:18px;
+    padding:20px;
+    width:360px;
+    box-shadow: 0 0 40px rgba(0,200,220,0.2);
+    color:#fff;
+    text-align:center;
+    position:relative;
+  }
+  #modalSenha .input-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 85%;
+  }
+  #modalSenha input[type="password"],
+  #modalSenha input[type="text"] {
+    width:100%;
+    padding:10px 40px 10px 12px;
+    border-radius:10px;
+    border:2px solid rgba(0,200,220,0.15);
+    margin-bottom:12px;
+    background:#0b0b0b;
+    color:#00ffea;
+    font-size:16px;
+  }
+  #toggleSenha {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #00ffea;
+    user-select: none;
+  }
+  #toggleSenha:hover { color:#fff; }
+
+  #modalSenha .btn-row { display:flex; gap:10px; justify-content:center; margin-top:8px; }
+  #modalSenha .btn-row button {
+    padding:10px 14px;
+    border-radius:10px;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+  }
+
+  .confirmar-btn {
+    background: linear-gradient(135deg,#00ffea,#007bff);
+    color:#000;
+    box-shadow:0 0 10px #00ffea;
+  }
+  .cancelar-btn {
+    background: linear-gradient(135deg,#ff4444,#ff0000);
+    color:#fff;
+    box-shadow:0 0 10px #ff0000;
+  }
+  
+</style>
+</head>
+<body>
+
+
+
+  
+
+<button id="btnMenu">MENU PRINCIPAL</button>
+
+<h1>Rede IPs - Claudino</h1>
+
+<div class="total-lojas" id="totalLojas">
+  <div class="total-geral-quadro">
+    <div class="total-geral-label">Total Geral</div>
+    <div class="total-geral-value" id="totalGeral">0</div>
+  </div>
+  <div class="totais-gerais-duas-linhas">
+    <div class="total-item">Filial: <span id="totalFilial">0</span></div>
+    <div class="total-item">Posto: <span id="totalPosto">0</span></div>
+    <div class="total-item">Deposito: <span id="totalDeposito">0</span></div>
+    <div class="total-item">Representante: <span id="totalRepresentante">0</span></div>
+  </div>
+  <div class="ultima-atualizacao">Atualizado em: <span id="ultimaAtualizacao"></span></div>
+</div>
+
+
+<!-- Mensagem fixa dentro de quadro futurista -->
+<div id="copyMessage" class="message-box">
+  <div class="message-content"></div>
+</div>
+<div class="search-container">
+  <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por Sigla ou Endereco IP" onkeyup="pesquisarLojas()">
+</div>
+
+<div class="regionais-container" id="regionais-container"></div>
+
+<div id="resultado-pesquisa">
+  <h2>Resultados da Pesquisa</h2>
+  <table id="tabela-pesquisa">
+    <thead>
+      <tr>
+        <th>Sigla</th>
+        <th>Filial</th>
+        <th>Tipo</th>
+        <th>Endereco IP</th>
+        <th>Dispositivo</th>
+        <th>Acao</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<!-- Quadro de contagem -->
+<div class="quadro-container">
+  <div class="quadro fortigate">
+    <h2 id="countFortiGate">0</h2>
+    <p>FortiGate</p>
+  </div>
+  <div class="quadro mikrotik">
+    <h2 id="countMikrotik">0</h2>
+    <p>Mikrotik</p>
+  </div>
+</div>
+
+
+<div id="lojas-container">
+  <button class="back-btn" onclick="voltarRegionais()">Voltar aos Regionais</button>
+  <h2 id="nome-regional"></h2>
+  <div id="contadores-regional">
+    Filial: <span id="regionalFilial">0</span> |
+    Posto: <span id="regionalPosto">0</span> |
+    Deposito: <span id="regionalDeposito">0</span> |
+    Representante: <span id="regionalRepresentante">0</span>
+  </div>
+  <table id="tabela-lojas">
+    <thead>
+      <tr>
+        <th>Sigla</th>
+        <th>Filial</th>
+        <th>Tipo</th>
+        <th>Endereco IP</th>
+        <th>Dispositivo</th>
+        <th>Acao</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+
+<!-- Modal de liberação -->
+<div id="modalUsuario" class="modal" style="display: none;">
+  <div class="modal-content">
+    <h2>Digite o usuario para liberar a senha</h2>
+    <div style="position: relative;">
+      <input type="password" id="usuarioInput" placeholder="Usuário" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+      <span id="toggleUsuario" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: #666;">???</span>
+    </div>
+    <div style="margin-top: 15px; display: flex; justify-content: space-around;">
+      <button id="confirmarUsuario">Confirmar</button>
+      <button id="cancelarUsuario">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+
+<script>
+
+const lojasData = {
+  "Regional Afonso": [
+    { sigla: "ACA", filial: "ACA", tipo: "Filial", ip: "172.16.88.251", dispositivo: "FortiGate" },
+    { sigla: "BJS", filial: "ACA", tipo: "Posto", ip: "172.19.56.251", dispositivo: "FortiGate" },
+    { sigla: "CID", filial: "ACA", tipo: "Posto", ip: "172.19.52.251", dispositivo: "FortiGate" },
+    { sigla: "ITG", filial: "ACA", tipo: "Posto", ip: "172.16.147.251", dispositivo: "FortiGate" },
+    { sigla: "RNP", filial: "ACA", tipo: "Posto", ip: "172.18.231.251", dispositivo: "FortiGate" },
+    { sigla: "SFB", filial: "ACA", tipo: "Posto", ip: "172.19.57.251", dispositivo: "FortiGate" },
+    { sigla: "SPB", filial: "ACA", tipo: "Posto", ip: "172.19.36.251", dispositivo: "FortiGate" },
+    { sigla: "VNM", filial: "ACA", tipo: "Posto", ip: "172.19.36.251", dispositivo: "FortiGate" },
+    { sigla: "BJT", filial: "ACA", tipo: "Posto", ip: "172.18.111.251", dispositivo: "FortiGate" },
+    { sigla: "VLD", filial: "ACA", tipo: "Representante", ip: "172.26.88.1", dispositivo: "Mikrotik" },
+
+    { sigla: "ARG", filial: "ARG", tipo: "Filial", ip: "172.17.120.251", dispositivo: "FortiGate" },
+    { sigla: "ANN", filial: "ARG", tipo: "Posto", ip: "172.19.108.251", dispositivo: "FortiGate" },
+    { sigla: "TOC", filial: "ARG", tipo: "Posto", ip: "172.19.185.251", dispositivo: "FortiGate" },
+    { sigla: "WAD", filial: "ARG", tipo: "Posto", ip: "172.19.125.251", dispositivo: "FortiGate" },
+    { sigla: "XAB", filial: "ARG", tipo: "Posto", ip: "172.19.109.251", dispositivo: "FortiGate" },
+    { sigla: "CLT", filial: "ARG", tipo: "Posto", ip: "172.18.227.251", dispositivo: "FortiGate" },
+    { sigla: "ARG / DAG", filial: "ARG", tipo: "Deposito", ip: "172.27.120.1", dispositivo: "Mikrotik" },
+
+    { sigla: "AUG", filial: "AUG", tipo: "Filial", ip: "172.16.153.251", dispositivo: "FortiGate" },
+    { sigla: "ART", filial: "AUG", tipo: "Posto", ip: "172.16.151.251", dispositivo: "FortiGate" },
+    { sigla: "AXI", filial: "AUG", tipo: "Posto", ip: "172.19.2.251", dispositivo: "FortiGate" },
+    { sigla: "BUT", filial: "AUG", tipo: "Posto", ip: "172.16.155.251", dispositivo: "FortiGate" },
+    { sigla: "EPT", filial: "AUG", tipo: "Posto", ip: "172.19.63.251", dispositivo: "FortiGate" },
+    { sigla: "STN", filial: "AUG", tipo: "Posto", ip: "172.16.157.251", dispositivo: "FortiGate" },
+    { sigla: "ITS", filial: "AUG", tipo: "Representante", ip: "172.19.72.251", dispositivo: "Mikrotik" },
+    { sigla: "PNE", filial: "AUG", tipo: "Representante", ip: "172.19.58.251", dispositivo: "Mikrotik" },
+    { sigla: "SPT", filial: "AUG", tipo: "Representante", ip: "172.19.86.251", dispositivo: "Mikrotik" },
+    { sigla: "SBO", filial: "AUG", tipo: "Representante", ip: "172.19.159.251", dispositivo: "Mikrotik" },
+   
+   
+    { sigla: "BAL", filial: "BAL", tipo: "Filial", ip: "172.16.108.251", dispositivo: "FortiGate" },
+    { sigla: "ATP", filial: "BAL", tipo: "Posto", ip: "172.16.141.251", dispositivo: "FortiGate" },
+    { sigla: "RIA", filial: "BAL", tipo: "Posto", ip: "172.19.32.251", dispositivo: "FortiGate" },
+    { sigla: "FNG", filial: "BAL", tipo: "Posto", ip: "172.19.47.251", dispositivo: "FortiGate" },
+    { sigla: "SRM", filial: "BAL", tipo: "Posto", ip: "172.19.35.251", dispositivo: "FortiGate" },
+    { sigla: "TFG", filial: "BAL", tipo: "Posto", ip: "172.19.88.251", dispositivo: "FortiGate" },
+    { sigla: "BAL / BDE", filial: "BAL", tipo: "Deposito", ip: "172.26.108.1", dispositivo: "Mikrotik" },
+    { sigla: "FEN", filial: "BAL", tipo: "Representante", ip: "172.19.76.251", dispositivo: "Mikrotik" },
+    { sigla: "LOT", filial: "BAL", tipo: "Representante", ip: "172.19.89.251", dispositivo: "Mikrotik" },
+   
+    
+    { sigla: "COA", filial: "COA", tipo: "Filial", ip: "172.18.233.251", dispositivo: "FortiGate" },
+
+   
+    { sigla: "IMP", filial: "IMP", tipo: "Filial", ip: "172.16.50.251", dispositivo: "FortiGate" },
+    { sigla: "IGV", filial: "IMP", tipo: "Filial", ip: "172.16.48.129", dispositivo: "Mikrotik" },
+    { sigla: "AMM", filial: "IMP", tipo: "Posto", ip: "172.19.31.251", dispositivo: "FortiGate" },
+    { sigla: "BBS", filial: "IMP", tipo: "Posto", ip: "172.16.49.97", dispositivo: "Mikrotik" },
+    { sigla: "BRT", filial: "IMP", tipo: "Posto", ip: "172.19.67.251", dispositivo: "FortiGate" },
+    { sigla: "CAR", filial: "IMP", tipo: "Posto", ip: "172.16.93.251", dispositivo: "FortiGate" },
+    { sigla: "EDL", filial: "IMP", tipo: "Posto", ip: "172.19.186.251", dispositivo: "FortiGate" },
+    { sigla: "EST", filial: "IMP", tipo: "Filial", ip: "172.16.143.251", dispositivo: "FortiGate" },
+    { sigla: "IVN", filial: "IMP", tipo: "Posto", ip: "172.16.48.1", dispositivo: "Mikrotik" },
+    { sigla: "JLB", filial: "IMP", tipo: "Posto", ip: "172.16.165.251", dispositivo: "FortiGate" },
+    { sigla: "MOA", filial: "IMP", tipo: "Posto", ip: "172.16.49.97", dispositivo: "FortiGate" },
+    { sigla: "PFO", filial: "IMP", tipo: "Posto", ip: "172.16.149.251", dispositivo: "FortiGate" },
+    { sigla: "IMP / IDC", filial: "IMP", tipo: "Deposito", ip: "172.16.49.129", dispositivo: "Mikrotik" },
+    { sigla: "RFI", filial: "IMP", tipo: "Representante", ip: "172.16.49.49", dispositivo: "Mikrotik" },
+    { sigla: "SJI", filial: "IMP", tipo: "Representante", ip: "172.19.77.251", dispositivo: "Mikrotik" },
+    { sigla: "SLR", filial: "IMP", tipo: "Posto", ip: "172.18.120.251", dispositivo: "FortiGate" },
+    { sigla: "VLB", filial: "IMP", tipo: "Representante", ip: "172.16.48.193", dispositivo: "Mikrotik" },
+    { sigla: "CPE", filial: "IMP", tipo: "Posto", ip: "172.19.68.251", dispositivo: "FortiGate" },
+    { sigla: "DPO", filial: "IMP", tipo: "Representante", ip: "172.19.200.251", dispositivo: "Mikrotik" },
+    { sigla: "ICF", filial: "IMP", tipo: "Representante", ip: "172.16.49.33", dispositivo: "Mikrotik" },
+    
+ 
+    { sigla: "PAM", filial: "PAM", tipo: "Filial", ip: "172.17.90.251", dispositivo: "FortiGate" },
+    { sigla: "NAC", filial: "PAM", tipo: "Posto", ip: "172.18.110.251", dispositivo: "FortiGate" },
+
+
+    { sigla: "PGO", filial: "PGO", tipo: "Filial", ip: "172.18.229.251", dispositivo: "FortiGate" },
+    { sigla: "ULN", filial: "PGO", tipo: "Posto", ip: "172.18.119.251", dispositivo: "FortiGate" },
+    { sigla: "DPG", filial: "DPG", tipo: "Deposito", ip: "Sem Estrutura de rede", dispositivo: "Mikrotik" },
+
+
+    { sigla: "RDP", filial: "RDP", tipo: "Filial", ip: "172.18.230.251", dispositivo: "FortiGate" },
+
+
+
+    { sigla: "TAQ", filial: "TAQ", tipo: "Filial", ip: "172.18.60.251", dispositivo: "FortiGate" },
+    { sigla: "MIT", filial: "TAQ", tipo: "Posto", ip: "172.19.113.251", dispositivo: "FortiGate" },
+    { sigla: "PAF", filial: "TAQ", tipo: "Posto", ip: "172.19.114.251", dispositivo: "FortiGate" },
+    { sigla: "PNA", filial: "TAQ", tipo: "Posto", ip: "172.18.250.251", dispositivo: "FortiGate" },
+    { sigla: "PTO", filial: "TAQ", tipo: "Posto", ip: "172.17.60.251", dispositivo: "FortiGate" },
+    { sigla: "PAM / PDE", filial: "TAQ", tipo: "Deposito", ip: "172.18.61.251", dispositivo: "Mikrotik" },
+
+
+    { sigla: "XIN", filial: "XIN", tipo: "Filial", ip: "172.18.232.251", dispositivo: "FortiGate" },
+    
+  
+
+  ],
+  "Regional Cazuza": [
+    { sigla: "ABR", filial: "ABR", tipo: "Filial", ip: "172.16.186.251", dispositivo: "FortiGate" },
+    { sigla: "AMA", filial: "ABR", tipo: "Posto", ip: "172.16.188.251", dispositivo: "FortiGate" },
+    { sigla: "ANG", filial: "ABR", tipo: "Posto", ip: "172.16.229.251", dispositivo: "FortiGate" },
+    { sigla: "BDR", filial: "ABR", tipo: "Posto", ip: "172.16.231.251", dispositivo: "FortiGate" },
+    { sigla: "DLB", filial: "ABR", tipo: "Posto", ip: "172.16.201.251", dispositivo: "FortiGate" },
+    { sigla: "MGL", filial: "ABR", tipo: "Posto", ip: "172.19.82.251", dispositivo: "FortiGate" },
+    { sigla: "PAL", filial: "ABR", tipo: "Posto", ip: "172.16.243.251", dispositivo: "FortiGate" },
+    { sigla: "PRP", filial: "ABR", tipo: "Posto", ip: "172.19.20.251", dispositivo: "FortiGate" },
+    { sigla: "REG", filial: "ABR", tipo: "Posto", ip: "172.16.195.251", dispositivo: "FortiGate" },
+    { sigla: "SAG", filial: "ABR", tipo: "Posto", ip: "172.19.100.251", dispositivo: "FortiGate" },
+    { sigla: "SFR", filial: "ABR", tipo: "Posto", ip: "172.16.173.251", dispositivo: "FortiGate" },
+    { sigla: "SPE", filial: "ABR", tipo: "Posto", ip: "172.19.102.251", dispositivo: "FortiGate" },
+    { sigla: "ABR / DAB", filial: "ABR", tipo: "Deposito", ip: "172.26.186.1", dispositivo: "Mikrotik" },
+    { sigla: "HUN", filial: "ABR", tipo: "Representante", ip: "172.18.113.251", dispositivo: "Mikrotik" },
+    { sigla: "SFL", filial: "ABR", tipo: "Representante", ip: "172.19.106.251", dispositivo: "Mikrotik" },
+    { sigla: "PFP", filial: "ABR", tipo: "Posto", ip: "172.19.220.251", dispositivo: "FortiGate" },
+    { sigla: "AGR", filial: "ABR", tipo: "Representante", ip: "172.16.191.251", dispositivo: "Mikrotik" },
+
+
+    { sigla: "ARP", filial: "ARP", tipo: "Filial", ip: "172.16.171.251", dispositivo: "FortiGate" },
+    { sigla: "OUR", filial: "ARP", tipo: "Posto", ip: "172.19.219.251", dispositivo: "FortiGate" },
+    { sigla: "SRO", filial: "ARP", tipo: "Posto", ip: "172.19.157.251", dispositivo: "FortiGate" },
+    { sigla: "TRI", filial: "ARP", tipo: "Posto", ip: "172.19.162.251", dispositivo: "FortiGate" },
+    { sigla: "SRT", filial: "ARP", tipo: "Posto", ip: "172.18.116.251", dispositivo: "FortiGate" },
+    { sigla: "EXU", filial: "ARP", tipo: "Posto", ip: "172.18.117.251", dispositivo: "FortiGate" },
+    { sigla: "MRL", filial: "ARP", tipo: "Posto", ip: "172.18.118.251", dispositivo: "FortiGate" },
+    { sigla: "BDC", filial: "ARP", tipo: "Posto", ip: "172.18.112.251", dispositivo: "FortiGate" },
+    { sigla: "ARP / ARD", filial: "ARP", tipo: "Deposito", ip: "172.26.171.1", dispositivo: "Mikrotik" },
+    { sigla: "IPB", filial: "ARP", tipo: "Representante", ip: "172.19.154.251S", dispositivo: "Mikrotik" },
+    { sigla: "NAS", filial: "ARP", tipo: "Representante", ip: "172.18.236.251", dispositivo: "Mikrotik" },
+    
+
+    { sigla: "CNV", filial: "CNV", tipo: "Filial", ip: "172.16.138.251", dispositivo: "FortiGate" },
+    { sigla: "SNA", filial: "CNV", tipo: "Representante", ip: "172.19.138.251", dispositivo: "Mikrotik" },
+
+
+    { sigla: "JUA", filial: "JUA", tipo: "Filial", ip: "172.16.81.251", dispositivo: "FortiGate" },
+    { sigla: "JJP", filial: "JUA", tipo: "Posto", ip: "172.26.80.193", dispositivo: "Mikrotik" },
+
+
+    { sigla: "OEI", filial: "OEI", tipo: "Filial", ip: "172.16.202.251", dispositivo: "FortiGate" },
+    { sigla: "EVL", filial: "OEI", tipo: "Posto", ip: "172.16.212.251", dispositivo: "FortiGate" },
+    { sigla: "FRL", filial: "OEI", tipo: "Posto", ip: "172.19.11.251", dispositivo: "FortiGate" },
+    { sigla: "SCP", filial: "OEI", tipo: "Posto", ip: "172.19.1.251", dispositivo: "FortiGate" },
+    { sigla: "SJP", filial: "OEI", tipo: "Posto", ip: "172.16.204.251", dispositivo: "FortiGate" },
+    { sigla: "SMP", filial: "OEI", tipo: "Posto", ip: "172.16.248.251", dispositivo: "FortiGate" },
+    { sigla: "DSJ", filial: "OEI", tipo: "Deposito", ip: "Sem Rede Definida", dispositivo: "FortiGate" },
+    { sigla: "COP", filial: "OEI", tipo: "Representante", ip: "172.19.237.251", dispositivo: "Mikrotik" },
+    { sigla: "CPG", filial: "OEI", tipo: "Representante", ip: "172.18.235.251", dispositivo: "Mikrotik" },
+    { sigla: "SCR", filial: "OEI", tipo: "Representante", ip: "172.19.241.251", dispositivo: "Mikrotik" },
+    { sigla: "PLD", filial: "OEI", tipo: "Representante", ip: "172.19.240.251", dispositivo: "Mikrotik" },
+    { sigla: "SAI", filial: "OEI", tipo: "Representante", ip: "172.19.238.251", dispositivo: "Mikrotik" },
+    { sigla: "SJV", filial: "OEI", tipo: "Representante", ip: "172.19.239.251", dispositivo: "Mikrotik" },
+    { sigla: "VGD", filial: "OEI", tipo: "Representante", ip: "172.19.242.251", dispositivo: "Mikrotik" },
+    { sigla: "WAF", filial: "OEI", tipo: "Representante", ip: "172.19.208.251", dispositivo: "FortiGate" },
+    { sigla: "CPP", filial: "OEI", tipo: "Representante", ip: "172.16.85.251", dispositivo: "Mikrotik" },
+
+    
+    { sigla: "PET", filial: "PET", tipo: "Filial", ip: "172.16.80.251", dispositivo: "FortiGate" },
+    { sigla: "CRC", filial: "PET", tipo: "Posto", ip: "172.19.40.251", dispositivo: "FortiGate" },
+    { sigla: "JAG", filial: "PET", tipo: "Posto", ip: "172.19.42.251", dispositivo: "FortiGate" },
+    { sigla: "LGP", filial: "PET", tipo: "Posto", ip: "172.16.123.251", dispositivo: "FortiGate" },
+    { sigla: "ORO", filial: "PET", tipo: "Posto", ip: "172.19.85.251", dispositivo: "FortiGate" },
+    { sigla: "PJM", filial: "PET", tipo: "Posto", ip: "172.26.80.129", dispositivo: "Mikrotik" },
+    { sigla: "PLA", filial: "PET", tipo: "Posto", ip: "172.16.107.251", dispositivo: "FortiGate" },
+    { sigla: "PMZ", filial: "PET", tipo: "Representante", ip: "172.26.80.65", dispositivo: "Mikrotik" },
+    { sigla: "PSG", filial: "PET", tipo: "Posto", ip: "172.26.80.161", dispositivo: "Mikrotik" },
+    { sigla: "REM", filial: "PET", tipo: "Posto", ip: "172.19.43.251", dispositivo: "FortiGate" },
+    { sigla: "SCV", filial: "PET", tipo: "Posto", ip: "172.19.117.251", dispositivo: "FortiGate" },
+    { sigla: "SFI", filial: "PET", tipo: "Posto", ip: "172.19.107.251", dispositivo: "FortiGate" },
+    { sigla: "SMB", filial: "PET", tipo: "Posto", ip: "172.19.46.251", dispositivo: "FortiGate" },
+    { sigla: "SOB", filial: "PET", tipo: "Posto", ip: "172.19.45.251", dispositivo: "FortiGate" },
+    { sigla: "STS", filial: "PET", tipo: "Posto", ip: "172.16.125.251", dispositivo: "FortiGate" },
+    { sigla: "BSF", filial: "PET", tipo: "Posto", ip: "172.18.121.251", dispositivo: "FortiGate" },
+    { sigla: "PET / PDC", filial: "PET", tipo: "Deposito", ip: "172.26.80.1", dispositivo: "Mikrotik" },
+    { sigla: "VRM", filial: "PET", tipo: "Representante", ip: "172.19.103.251", dispositivo: "Mikrotik" },
+    { sigla: "AFR", filial: "PET", tipo: "Representante", ip: "172.19.166.251", dispositivo: "Mikrotik" },
+    { sigla: "DRM", filial: "PET", tipo: "Representante", ip: "172.19.144.251", dispositivo: "Mikrotik" },
+    { sigla: "PIL", filial: "PET", tipo: "Representante", ip: "172.19.116.251", dispositivo: "Mikrotik" },
+    { sigla: "PJD", filial: "PET", tipo: "Representante", ip: "172.26.80.97", dispositivo: "Mikrotik" },
+
+
+    { sigla: "VAL", filial: "VAL", tipo: "Filial", ip: "172.16.212.251", dispositivo: "FortiGate" },
+    { sigla: "ARO", filial: "VAL", tipo: "Posto", ip: "172.19.3.251", dispositivo: "FortiGate" },
+    { sigla: "PMT", filial: "VAL", tipo: "Posto", ip: "172.19.18.251", dispositivo: "FortiGate" },
+    { sigla: "INH", filial: "VAL", tipo: "Posto", ip: "172.16.239.251", dispositivo: "FortiGate" },
+    { sigla: "IPI", filial: "VAL", tipo: "Posto", ip: "172.16.249.251", dispositivo: "FortiGate" },
+
+
+    { sigla: "PIC", filial: "PIC", tipo: "Filial", ip: "172.16.114.251", dispositivo: "FortiGate" },
+    { sigla: "PIM", filial: "PIC", tipo: "Filial", ip: "172.26.114.1", dispositivo: "Mikrotik" },
+    { sigla: "FRO", filial: "PIC", tipo: "Posto", ip: "172.19.12.251", dispositivo: "FortiGate" },
+    { sigla: "FSA", filial: "PIC", tipo: "Posto", ip: "172.19.13.251", dispositivo: "FortiGate" },
+    { sigla: "ITI", filial: "PIC", tipo: "Posto", ip: "172.16.113.251", dispositivo: "FortiGate" },
+    { sigla: "JAI", filial: "PIC", tipo: "Posto", ip: "172.16.162.251", dispositivo: "FortiGate" },
+    { sigla: "SIM", filial: "PIC", tipo: "Posto", ip: "172.19.24.251", dispositivo: "FortiGate" },
+    { sigla: "MCO", filial: "PIC", tipo: "Posto", ip: "172.16.207.251", dispositivo: "FortiGate" },
+    { sigla: "PAU", filial: "PIC", tipo: "Posto", ip: "172.16.134.251", dispositivo: "FortiGate" },
+    { sigla: "PIX", filial: "PIC", tipo: "Posto", ip: "172.19.16.251", dispositivo: "FortiGate" },
+    { sigla: "CRN", filial: "PIC", tipo: "Posto", ip: "172.19.214.251", dispositivo: "FortiGate" },
+    { sigla: "PMA", filial: "PIC", tipo: "Posto", ip: "172.19.17.251", dispositivo: "FortiGate" },
+    { sigla: "PIC / DPC", filial: "PIC", tipo: "Deposito", ip: "172.26.114.129", dispositivo: "Mikrotik" },
+    { sigla: "QNV", filial: "PIC", tipo: "Representante", ip: "172.19.25.251", dispositivo: "Mikrotik" },
+    { sigla: "SAB", filial: "PIC", tipo: "Representante", ip: "172.19.151.251", dispositivo: "Mikrotik" },
+    { sigla: "SCB", filial: "PIC", tipo: "Representante", ip: "172.19.148.251", dispositivo: "Mikrotik" },
+    { sigla: "SJO", filial: "PIC", tipo: "Representante", ip: "172.19.153.251", dispositivo: "Mikrotik" },
+    { sigla: "SJU", filial: "PIC", tipo: "Representante", ip: "172.19.206.251", dispositivo: "Mikrotik" },
+    { sigla: "SNT", filial: "PIC", tipo: "Representante", ip: "172.19.150.251", dispositivo: "Mikrotik" },
+    { sigla: "VEM", filial: "PIC", tipo: "Representante", ip: "172.19.207.251", dispositivo: "Mikrotik" },
+    { sigla: "LAB", filial: "PIC", tipo: "Representante", ip: "172.18.114.251", dispositivo: "Mikrotik" },
+    { sigla: "MHI", filial: "PIC", tipo: "Representante", ip: "172.19.156.251", dispositivo: "Mikrotik" },
+    { sigla: "JAB", filial: "PIC", tipo: "Representante", ip: "172.19.204.251", dispositivo: "Mikrotik" },
+    { sigla: "AGT", filial: "PIC", tipo: "Representante", ip: "172.19.155.251", dispositivo: "Mikrotik" },
+    { sigla: "ALH", filial: "PIC", tipo: "Representante", ip: "172.19.149.251", dispositivo: "Mikrotik" },
+    { sigla: "BEN", filial: "PIC", tipo: "Representante", ip: "172.19.203.251", dispositivo: "Mikrotik" },
+    { sigla: "BNA", filial: "PIC", tipo: "Representante", ip: "172.19.158.251", dispositivo: "Mikrotik" },
+    { sigla: "CCN", filial: "PIC", tipo: "Representante", ip: "172.19.216.251", dispositivo: "Mikrotik" },
+    { sigla: "CGP", filial: "PIC", tipo: "Representante", ip: "172.19.217.251", dispositivo: "Mikrotik" },
+    { sigla: "CRD", filial: "PIC", tipo: "Representante", ip: "172.19.213.251", dispositivo: "Mikrotik" },
+    { sigla: "DEX", filial: "PIC", tipo: "Representante", ip: "172.19.152.251", dispositivo: "Mikrotik" },
+    { sigla: "ISC", filial: "PIC", tipo: "Representante", ip: "172.19.218.251", dispositivo: "Mikrotik" },
+
+
+  ],
+  "Regional Coutinho": [
+    { sigla: "ZED", filial: "ZED", tipo: "Filial", ip: "172.16.94.251", dispositivo: "FortiGate" },
+    { sigla: "AGN", filial: "ZED", tipo: "Posto", ip: "172.19.191.251", dispositivo: "FortiGate" },
+    { sigla: "CDG", filial: "ZED", tipo: "Posto", ip: "172.19.192.251", dispositivo: "FortiGate" },
+    { sigla: "CNM", filial: "ZED", tipo: "Posto", ip: "172.19.193.251", dispositivo: "FortiGate" },
+    { sigla: "ENC", filial: "ZED", tipo: "Posto", ip: "172.16.109.251", dispositivo: "FortiGate" },
+    { sigla: "GUM", filial: "ZED", tipo: "Posto", ip: "172.16.221.251", dispositivo: "FortiGate" },
+    { sigla: "MAS", filial: "ZED", tipo: "Posto", ip: "172.16.197.251", dispositivo: "FortiGate" },
+    { sigla: "MAZ", filial: "ZED", tipo: "Posto", ip: "172.19.196.251", dispositivo: "FortiGate" },
+    { sigla: "NOL", filial: "ZED", tipo: "Posto", ip: "172.19.33.251", dispositivo: "FortiGate" },
+    { sigla: "PDM", filial: "ZED", tipo: "Posto", ip: "172.19.197.251", dispositivo: "FortiGate" },
+    { sigla: "PRO", filial: "ZED", tipo: "Posto", ip: "172.19.198.251", dispositivo: "FortiGate" },
+    { sigla: "SLP", filial: "ZED", tipo: "Filial", ip: "172.16.246.251", dispositivo: "FortiGate" },
+    { sigla: "ZED / DZE", filial: "ZED", tipo: "Deposito", ip: "172.26.94.1", dispositivo: "Mikrotik" },
+    { sigla: "ZMU", filial: "ZED", tipo: "Representante", ip: "172.26.94.65", dispositivo: "Mikrotik" },
+    { sigla: "JUN", filial: "ZED", tipo: "Representante", ip: "172.19.194.251", dispositivo: "Mikrotik" },
+    { sigla: "GNB", filial: "ZED", tipo: "Representante", ip: "172.19.201.251", dispositivo: "Mikrotik" },
+    { sigla: "CGT", filial: "ZED", tipo: "Posto", ip: "172.18.247.251", dispositivo: "FortiGate" },
+
+
+    { sigla: "SIN", filial: "SIN", tipo: "Filial", ip: "172.16.96.251", dispositivo: "FortiGate" },
+    { sigla: "BCU", filial: "BCU", tipo: "Filial", ip: "172.16.222.251", dispositivo: "FortiGate" },
+    { sigla: "BJA", filial: "SIN", tipo: "Posto", ip: "172.16.215.251", dispositivo: "FortiGate" },
+    { sigla: "BVI", filial: "SIN", tipo: "Posto", ip: "172.19.209.251", dispositivo: "FortiGate" },
+    { sigla: "IPM", filial: "SIN", tipo: "Posto", ip: "172.19.211.251", dispositivo: "FortiGate" },
+    { sigla: "MAT", filial: "SIN", tipo: "Posto", ip: "172.19.96.251", dispositivo: "FortiGate" },
+    { sigla: "MON", filial: "SIN", tipo: "Posto", ip: "172.19.90.251", dispositivo: "FortiGate" },
+    { sigla: "PEN", filial: "SIN", tipo: "Posto", ip: "172.16.217.251", dispositivo: "FortiGate" },
+    { sigla: "PMI", filial: "SIN", tipo: "Posto", ip: "172.16.127.251", dispositivo: "FortiGate" },
+    { sigla: "SJC", filial: "SIN", tipo: "Posto", ip: "172.19.199.251", dispositivo: "FortiGate" },
+    { sigla: "SLZ", filial: "SIN", tipo: "Posto", ip: "172.16.244.251", dispositivo: "FortiGate" },
+    { sigla: "VIA", filial: "SIN", tipo: "Posto", ip: "172.16.193.251", dispositivo: "FortiGate" },
+    { sigla: "VME", filial: "SIN", tipo: "Posto", ip: "172.16.137.251", dispositivo: "FortiGate" },
+    { sigla: "ARI", filial: "SIN", tipo: "Posto", ip: "172.16.216.251", dispositivo: "FortiGate" },
+    { sigla: "SIN / DSI", filial: "SIN", tipo: "Deposito", ip: "172.26.96.1", dispositivo: "Mikrotik" },
+    { sigla: "AAP", filial: "SIN", tipo: "Representante", ip: "172.19.94.251", dispositivo: "Mikrotik" },
+    { sigla: "ACO", filial: "SIN", tipo: "Representante", ip: "172.19.222.251", dispositivo: "Mikrotik" },
+    { sigla: "AUZ", filial: "SIN", tipo: "Representante", ip: "172.19.223.251", dispositivo: "Mikrotik" },
+    { sigla: "CAJ", filial: "SIN", tipo: "Representante", ip: "172.19.210.251", dispositivo: "Mikrotik" },
+    { sigla: "JRE", filial: "SIN", tipo: "Representante", ip: "172.19.224.251", dispositivo: "Mikrotik" },
+    { sigla: "TUF", filial: "SIN", tipo: "Representante", ip: "172.19.212.251", dispositivo: "Mikrotik" },
+    { sigla: "OLN", filial: "SIN", tipo: "Posto", ip: "172.19.225.251", dispositivo: "FortiGate" },
+    
+
+    { sigla: "PIN", filial: "PIN", tipo: "Filial", ip: "172.16.86.251", dispositivo: "FortiGate" },
+    { sigla: "CUM", filial: "PIN", tipo: "Filial", ip: "172.16.115.251", dispositivo: "FortiGate" },
+    { sigla: "APA", filial: "PIN", tipo: "Posto", ip: "172.19.184.251", dispositivo: "FortiGate" },
+    { sigla: "ALC", filial: "PIN", tipo: "Posto", ip: "172.19.64.251", dispositivo: "FortiGate" },
+    { sigla: "BCR", filial: "PIN", tipo: "Posto", ip: "172.19.187.251", dispositivo: "FortiGate" },
+    { sigla: "MIZ", filial: "PIN", tipo: "Posto", ip: "172.16.129.251", dispositivo: "FortiGate" },
+    { sigla: "PNU", filial: "PIN", tipo: "Posto", ip: "172.26.86.65", dispositivo: "Mikrotik" },
+    { sigla: "PSA", filial: "PIN", tipo: "Posto", ip: "172.19.164.251", dispositivo: "FortiGate" },
+    { sigla: "SBE", filial: "PIN", tipo: "Posto", ip: "172.16.110.251", dispositivo: "FortiGate" },
+    { sigla: "SHE", filial: "PIN", tipo: "Posto", ip: "172.16.187.251", dispositivo: "FortiGate" },
+    { sigla: "SVF", filial: "PIN", tipo: "Posto", ip: "172.16.112.251", dispositivo: "FortiGate" },
+    { sigla: "SJB", filial: "PIN", tipo: "Posto", ip: "172.16.111.251", dispositivo: "FortiGate" },
+    { sigla: "TUR", filial: "PIN", tipo: "Posto", ip: "172.16.128.251", dispositivo: "FortiGate" },
+    { sigla: "DPI", filial: "PIN", tipo: "Deposito", ip: "172.26.86.1", dispositivo: "Mikrotik" },
+    { sigla: "BEQ", filial: "PIN", tipo: "Representante", ip: "172.19.188.251", dispositivo: "Mikrotik" },
+    { sigla: "CED", filial: "PIN", tipo: "Representante", ip: "172.19.227.251", dispositivo: "Mikrotik" },
+    { sigla: "CEN", filial: "PIN", tipo: "Representante", ip: "172.19.228.251", dispositivo: "Mikrotik" },
+    { sigla: "CJA", filial: "PIN", tipo: "Representante", ip: "172.19.229.251", dispositivo: "Mikrotik" },
+    { sigla: "BCB", filial: "PIN", tipo: "Representante", ip: "172.19.226.251", dispositivo: "Mikrotik" },
+    { sigla: "PAS", filial: "PIN", tipo: "Representante", ip: "172.18.243.251", dispositivo: "Mikrotik" },
+    { sigla: "PEM", filial: "PIN", tipo: "Posto", ip: "172.19.71.251", dispositivo: "FortiGate" },
+    { sigla: "PME", filial: "PIN", tipo: "Representante", ip: "172.19.230.251", dispositivo: "Mikrotik" },
+    { sigla: "SER", filial: "PIN", tipo: "Representante", ip: "172.19.232.251", dispositivo: "Mikrotik" },
+    { sigla: "POM", filial: "PIN", tipo: "Representante", ip: "172.19.231.251", dispositivo: "Mikrotik" },
+    { sigla: "GUI", filial: "PIN", tipo: "Representante", ip: "172.19.165.251", dispositivo: "Mikrotik" },
+    { sigla: "TRF", filial: "PIN", tipo: "Representante", ip: "172.19.233.251", dispositivo: "Mikrotik" },
+
+
+
+    { sigla: "CTP", filial: "CTP", tipo: "Filial", ip: "172.19.37.251", dispositivo: "FortiGate" },
+    { sigla: "DCT / CTP", filial: "CTP", tipo: "Deposito", ip: "172.29.37.1", dispositivo: "Mikrotik" },
+    { sigla: "AMP", filial: "CTP", tipo: "Posto", ip: "172.19.73.251", dispositivo: "FortiGate" },
+    { sigla: "CME", filial: "CTP", tipo: "Posto", ip: "172.16.223.251", dispositivo: "FortiGate" },
+    { sigla: "GDV", filial: "CTP", tipo: "Posto", ip: "172.19.75.251", dispositivo: "FortiGate" },
+    { sigla: "LDO", filial: "CTP", tipo: "Posto", ip: "172.19.195.251", dispositivo: "FortiGate" },
+
+
+    { sigla: "CAX", filial: "CAX", tipo: "Filial", ip: "172.16.90.251", dispositivo: "FortiGate" },
+    { sigla: "ALA", filial: "CAX", tipo: "Posto", ip: "172.19.27.251", dispositivo: "FortiGate" },
+    { sigla: "CXE", filial: "CAX", tipo: "Posto", ip: "172.26.90.65", dispositivo: "FortiGate" },
+    { sigla: "MTS", filial: "CAX", tipo: "Posto", ip: "172.16.127.251", dispositivo: "FortiGate" },
+    { sigla: "PRN", filial: "CAX", tipo: "Posto", ip: "172.16.252.251", dispositivo: "Mikrotik" },
+    { sigla: "CAX / CDP", filial: "CAX", tipo: "Deposito", ip: "172.26.90.1", dispositivo: "Mikrotik" },
+    { sigla: "BRJ", filial: "CAX", tipo: "Representante", ip: "172.19.95.251", dispositivo: "Mikrotik" },
+    { sigla: "CVR", filial: "CAX", tipo: "Representante", ip: "Desativado temporariamente", dispositivo: "Mikrotik" },
+    { sigla: "SJE", filial: "CAX", tipo: "Posto", ip: "172.19.176.251", dispositivo: "FortiGate" },
+   
+
+    { sigla: "BAC", filial: "BAC", tipo: "Filial", ip: "172.16.82.251", dispositivo: "FortiGate" },
+    { sigla: "ANJ", filial: "BAC", tipo: "Posto", ip: "172.19.26.251", dispositivo: "FortiGate" },
+    { sigla: "BBV", filial: "BAC", tipo: "Posto", ip: "172.26.82.1", dispositivo: "Mikrotik" },
+    { sigla: "CAT", filial: "BAC", tipo: "Posto", ip: "172.16.224.251", dispositivo: "FortiGate" },
+    { sigla: "LCU", filial: "BAC", tipo: "Posto", ip: "172.19.59.251", dispositivo: "FortiGate" },
+    { sigla: "LGD", filial: "BAC", tipo: "Posto", ip: "172.19.129.251", dispositivo: "FortiGate" },
+    { sigla: "LVE", filial: "BAC", tipo: "Posto", ip: "172.19.60.251", dispositivo: "FortiGate" },
+    { sigla: "MIR", filial: "BAC", tipo: "Posto", ip: "172.16.236.251", dispositivo: "FortiGate" },
+    { sigla: "ALE", filial: "BAC", tipo: "Posto", ip: "172.16.214.251", dispositivo: "FortiGate" },
+    { sigla: "MTN", filial: "BAC", tipo: "Posto", ip: "172.19.79.251", dispositivo: "FortiGate" },
+    { sigla: "ODC", filial: "BAC", tipo: "Posto", ip: "172.16.211.251", dispositivo: "FortiGate" },
+    { sigla: "PIO", filial: "BAC", tipo: "Posto", ip: "172.16.240.251", dispositivo: "FortiGate" },
+    { sigla: "PIP", filial: "BAC", tipo: "Posto", ip: "172.19.80.251", dispositivo: "FortiGate" },
+    { sigla: "SAM", filial: "BAC", tipo: "Posto", ip: "172.16.131.251", dispositivo: "FortiGate" },
+    { sigla: "SLG", filial: "BAC", tipo: "Posto", ip: "172.19.61.251", dispositivo: "FortiGate" },
+    { sigla: "VIF", filial: "BAC", tipo: "Posto", ip: "172.16.139.251", dispositivo: "FortiGate" },
+    { sigla: "STB", filial: "BAC", tipo: "Representante", ip: "172.19.140.251", dispositivo: "Mikrotik" },
+    { sigla: "PRM", filial: "BAC", tipo: "Posto", ip: "172.19.131.251", dispositivo: "FortiGate" },
+    { sigla: "BDA", filial: "BAC", tipo: "Posto", ip: "172.19.139.251", dispositivo: "FortiGate" },
+    { sigla: "BLU", filial: "BAC", tipo: "Representante", ip: "172.19.141.251", dispositivo: "Mikrotik" },
+    { sigla: "AMI", filial: "BAC", tipo: "Posto", ip: "172.19.13.251", dispositivo: "FortiGate" },
+ 
+
+
+  ],
+  "Regional Edivano": [
+
+    { sigla: "BHM", filial: "BHM", tipo: "Filial", ip: "172.16.70.251", dispositivo: "FortiGate" },
+    { sigla: "BHI", filial: "BHM", tipo: "Filial", ip: "172.26.70.65", dispositivo: "FortiGate" },
+    { sigla: "ANB", filial: "BHM", tipo: "Posto", ip: "172.16.125.251", dispositivo: "FortiGate" },
+    { sigla: "BRA", filial: "BHM", tipo: "Posto", ip: "172.16.136.251", dispositivo: "FortiGate" },
+    { sigla: "COT", filial: "BHM", tipo: "Posto", ip: "172.19.50.251", dispositivo: "FortiGate" },
+    { sigla: "CRI", filial: "BHM", tipo: "Posto", ip: "172.19.39.251", dispositivo: "FortiGate" },
+    { sigla: "FRP", filial: "BHM", tipo: "Posto", ip: "172.19.51.251", dispositivo: "FortiGate" },
+    { sigla: "IBO", filial: "BHM", tipo: "Posto", ip: "172.16.140.251", dispositivo: "FortiGate" },
+    { sigla: "RNE", filial: "BHM", tipo: "Posto", ip: "172.19.44.251", dispositivo: "FortiGate" },
+    { sigla: "SAN", filial: "BHM", tipo: "Posto", ip: "172.19.41.251", dispositivo: "FortiGate" },
+    { sigla: "SDE", filial: "BHM", tipo: "Posto", ip: "172.19.19.251", dispositivo: "FortiGate" },
+    { sigla: "SMV", filial: "BHM", tipo: "Posto", ip: "172.16.142.251", dispositivo: "FortiGate" },
+    { sigla: "SRC", filial: "BHM", tipo: "Posto", ip: "172.16.144.251", dispositivo: "FortiGate" },
+    { sigla: "TBV", filial: "BHM", tipo: "Posto", ip: "172.16.97.251", dispositivo: "FortiGate" },
+    { sigla: "BHM / BDF", filial: "BHM", tipo: "Deposito", ip: "172.26.70.1", dispositivo: "Mikrotik" },
+    { sigla: "WAN", filial: "BHM", tipo: "Representante", ip: "172.16.87.251", dispositivo: "Mikrotik" },
+    { sigla: "BAI", filial: "BHM", tipo: "Representante", ip: "172.19.93.251", dispositivo: "Mikrotik" },
+    { sigla: "BBH", filial: "BHM", tipo: "Representante", ip: "172.26.70.129", dispositivo: "Mikrotik" },
+    { sigla: "MAC", filial: "BHM", tipo: "Representante", ip: "172.19.62.251", dispositivo: "Mikrotik" },
+    { sigla: "SDO", filial: "BHM", tipo: "Representante", ip: "172.19.136.251", dispositivo: "Mikrotik" },
+    { sigla: "CBA", filial: "BHM", tipo: "Representante", ip: "172.19.29.251", dispositivo: "Mikrotik" },
+
+
+
+
+
+    { sigla: "BOJ", filial: "BOJ", tipo: "Filial", ip: "172.16.192.251", dispositivo: "FortiGate" },
+    { sigla: "RGR", filial: "BOJ", tipo: "Posto", ip: "172.19.25.251", dispositivo: "FortiGate" },
+    { sigla: "CCT", filial: "BOJ", tipo: "Posto", ip: "172.16.199.251", dispositivo: "FortiGate" },
+    { sigla: "BOJ / DBJ", filial: "BOJ", tipo: "Deposito", ip: "172.16.192.1", dispositivo: "Mikrotik" },
+    { sigla: "PDP", filial: "BOJ", tipo: "Representante", ip: "172.19.235.251", dispositivo: "Mikrotik" },
+    { sigla: "SZP", filial: "BOJ", tipo: "Representante", ip: "172.19.236.251", dispositivo: "Mikrotik" },
+
+
+
+    { sigla: "COR", filial: "COR", tipo: "Filial", ip: "172.16.196.251", dispositivo: "FortiGate" },
+    { sigla: "GLB", filial: "COR", tipo: "Posto", ip: "172.19.44.251", dispositivo: "FortiGate" },
+    { sigla: "PRG", filial: "COR", tipo: "Posto", ip: "172.19.49.251", dispositivo: "FortiGate" },
+    { sigla: "CUR", filial: "COR", tipo: "Posto", ip: "172.16.235.251", dispositivo: "FortiGate" },
+    { sigla: "COR / CDE", filial: "COR", tipo: "Deposito", ip: "172.26.196.1", dispositivo: "Mikrotik" },
+    { sigla: "JUB", filial: "COR", tipo: "Representante", ip: "172.19.99.251", dispositivo: "Mikrotik" },
+    { sigla: "RIF", filial: "COR", tipo: "Representante", ip: "172.19.92.251", dispositivo: "Mikrotik" },
+    { sigla: "SEB", filial: "COR", tipo: "Representante", ip: "172.16.183.251", dispositivo: "Mikrotik" },
+    { sigla: "MAL", filial: "COR", tipo: "Posto", ip: "172.19.91.251", dispositivo: "FortiGate" },
+    { sigla: "SFO", filial: "COR", tipo: "Representante", ip: "172.16.203.251", dispositivo: "Mikrotik" },
+    { sigla: "ALP", filial: "COR", tipo: "Representante", ip: "172.19.97.251", dispositivo: "Mikrotik" },
+    { sigla: "CTL", filial: "COR", tipo: "Representante", ip: "172.19.98.251", dispositivo: "Mikrotik" },
+
+
+
+    { sigla: "FLO", filial: "FLO", tipo: "Filial", ip: "172.16.102.251", dispositivo: "FortiGate" },
+    { sigla: "AAL", filial: "FLO", tipo: "Posto", ip: "172.19.25.251", dispositivo: "FortiGate" },
+    { sigla: "BAG", filial: "FLO", tipo: "Posto", ip: "172.26.102.65", dispositivo: "Mikrotik" },
+    { sigla: "BER", filial: "FLO", tipo: "Posto", ip: "172.19.5.251", dispositivo: "FortiGate" },
+    { sigla: "CAB", filial: "FLO", tipo: "Posto", ip: "172.16.194.251", dispositivo: "FortiGate" },
+    { sigla: "COG", filial: "FLO", tipo: "Posto", ip: "172.19.9.251", dispositivo: "FortiGate" },
+    { sigla: "EMR", filial: "FLO", tipo: "Posto", ip: "172.19.10.251", dispositivo: "FortiGate" },
+    { sigla: "GPE", filial: "FLO", tipo: "Posto", ip: "172.16.158.251", dispositivo: "FortiGate" },
+    { sigla: "ITE", filial: "FLO", tipo: "Posto", ip: "172.16.160.251", dispositivo: "FortiGate" },
+    { sigla: "MEM", filial: "FLO", tipo: "Posto", ip: "172.19.250.251", dispositivo: "FortiGate" },
+    { sigla: "MPA", filial: "FLO", tipo: "Posto", ip: "172.19.55.251", dispositivo: "FortiGate" },
+    { sigla: "SJX", filial: "FLO", tipo: "Posto", ip: "172.19.22.251", dispositivo: "FortiGate" },
+    { sigla: "FLO / FLD", filial: "FLO", tipo: "Deposito", ip: "172.26.102.1", dispositivo: "Mikrotik" },
+    { sigla: "DCB", filial: "FLO", tipo: "Deposito", ip: "172.26.194.1", dispositivo: "Mikrotik" },
+    { sigla: "ATM", filial: "FLO", tipo: "Representante", ip: "172.19.161.251", dispositivo: "Mikrotik" },
+    { sigla: "AVG", filial: "FLO", tipo: "Representante", ip: "172.16.89.251", dispositivo: "Mikrotik" },
+    { sigla: "BJP", filial: "FLO", tipo: "Representante", ip: "172.19.247.251", dispositivo: "Mikrotik" },
+    { sigla: "CAN", filial: "FLO", tipo: "Representante", ip: "172.19.253.251", dispositivo: "Mikrotik" },
+    { sigla: "CJZ", filial: "FLO", tipo: "Representante", ip: "172.19.0.251", dispositivo: "Mikrotik" },
+    { sigla: "FAY", filial: "FLO", tipo: "Representante", ip: "172.18.255.251", dispositivo: "Mikrotik" },
+    { sigla: "JER", filial: "FLO", tipo: "Representante", ip: "172.19.248.251", dispositivo: "Mikrotik" },
+    { sigla: "FLR", filial: "FLO", tipo: "Representante", ip: "172.198.254.251", dispositivo: "Mikrotik" },
+    { sigla: "LSA", filial: "FLO", tipo: "Representante", ip: "172.19.249.251", dispositivo: "Mikrotik" },
+    { sigla: "NAZ", filial: "FLO", tipo: "Representante", ip: "172.19.160.251", dispositivo: "Mikrotik" },
+    { sigla: "PAV", filial: "FLO", tipo: "Representante", ip: "172.18.252.251", dispositivo: "Mikrotik" },
+    { sigla: "PJU", filial: "FLO", tipo: "Representante", ip: "172.19.87.251", dispositivo: "Mikrotik" },
+    { sigla: "POA", filial: "FLO", tipo: "Representante", ip: "172.19.134.251", dispositivo: "Mikrotik" },
+    { sigla: "RGD", filial: "FLO", tipo: "Representante", ip: "172.18.252.251", dispositivo: "Mikrotik" },
+    { sigla: "RIB", filial: "FLO", tipo: "Representante", ip: "172.18.251.251", dispositivo: "Mikrotik" },
+    { sigla: "SBL", filial: "FLO", tipo: "Representante", ip: "172.19.254.251", dispositivo: "Mikrotik" },
+    { sigla: "SFC", filial: "FLO", tipo: "Representante", ip: "172.19.252.251", dispositivo: "Mikrotik" },
+    { sigla: "SMI", filial: "FLO", tipo: "Representante", ip: "172.19.255.251", dispositivo: "Mikrotik" },
+    { sigla: "STR", filial: "FLO", tipo: "Representante", ip: "172.19.251.251", dispositivo: "Mikrotik" },
+   
+
+
+
+    { sigla: "LEM", filial: "LEM", tipo: "Filial", ip: "172.16.78.251", dispositivo: "FortiGate" },
+    { sigla: "TAG", filial: "LEM", tipo: "Posto", ip: "172.19.48.251", dispositivo: "FortiGate" },
+    { sigla: "LDU", filial: "LEM", tipo: "Posto", ip: "172.26.78.1", dispositivo: "Mikrotik" },
+    { sigla: "LEM / LED", filial: "LEM", tipo: "Deposito", ip: "172.26.78.65", dispositivo: "Mikrotik" },
+    { sigla: "COB", filial: "LEM", tipo: "Representante", ip: "172.19.142.251", dispositivo: "Mikrotik" },
+
+
+    { sigla: "SRN", filial: "SRN", tipo: "Filial", ip: "172.16.206.251", dispositivo: "FortiGate" },
+    { sigla: "CAC", filial: "SRN", tipo: "Posto", ip: "172.19.8.251", dispositivo: "FortiGate" },
+    { sigla: "ABU", filial: "SRN", tipo: "Posto", ip: "172.19.23.251", dispositivo: "FortiGate" },
+    { sigla: "DAV", filial: "SRN", tipo: "Posto", ip: "172.19.81.251", dispositivo: "FortiGate" },
+    { sigla: "DIN", filial: "SRN", tipo: "Representante", ip: "172.18.239.251", dispositivo: "Mikrotik" },
+    { sigla: "FAR", filial: "SRN", tipo: "Representante", ip: "172.18.249.251", dispositivo: "Mikrotik" },
+    { sigla: "SBZ", filial: "SRN", tipo: "Representante", ip: "172.18.248.251", dispositivo: "Mikrotik" },
+    { sigla: "SRN / SRD", filial: "SRN", tipo: "Deposito", ip: "172.26.206.1", dispositivo: "Mikrotik" },
+    { sigla: "BFP", filial: "SRN", tipo: "Representante", ip: "172.18.109.251", dispositivo: "Mikrotik" },
+
+
+    { sigla: "URU", filial: "URU", tipo: "Filial", ip: "172.19.209.251", dispositivo: "FortiGate" },
+    { sigla: "BGR", filial: "URU", tipo: "Posto", ip: "172.19.4.251", dispositivo: "FortiGate" },
+    { sigla: "RGO", filial: "URU", tipo: "Posto", ip: "172.16.245.251", dispositivo: "FortiGate" },
+
+    
+  ],
+  "Regional Erisvaldo": [
+
+    { sigla: "BHA", filial: "BHA", tipo: "Filial", ip: "172.16.218.251", dispositivo: "FortiGate" },
+    { sigla: "HBC", filial: "BHA", tipo: "Posto", ip: "172.16.232.251", dispositivo: "FortiGate" },
+    { sigla: "SMR", filial: "BHA", tipo: "Posto", ip: "172.18.240.251", dispositivo: "FortiGate" },
+    { sigla: "BHA / DBH", filial: "BHA", tipo: "Deposito", ip: "172.26.218.1", dispositivo: "Mikrotik" },
+    { sigla: "PCZ", filial: "BHA", tipo: "Representante", ip: "172.18.242.251", dispositivo: "Mikrotik" },
+  
+
+
+    { sigla: "CHA", filial: "CHA", tipo: "Filial", ip: "172.16.92.251", dispositivo: "FortiGate" },
+    { sigla: "BRE", filial: "CHA", tipo: "Posto", ip: "172.16.220.251", dispositivo: "FortiGate" },
+    { sigla: "SBD", filial: "CHA", tipo: "Posto", ip: "172.16.250.251", dispositivo: "FortiGate" },
+    { sigla: "SBR", filial: "CHA", tipo: "Posto", ip: "172.19.182.251", dispositivo: "FortiGate" },
+    { sigla: "UBS", filial: "CHA", tipo: "Posto", ip: "172.16.133.251", dispositivo: "FortiGate" },
+    { sigla: "STQ", filial: "CHA", tipo: "Posto", ip: "172.19.183.251", dispositivo: "FortiGate" },
+    { sigla: "CHA / CHD", filial: "CHA", tipo: "Deposito", ip: "172.26.92.1", dispositivo: "Mikrotik" },
+    { sigla: "MAG", filial: "CHA", tipo: "Representante", ip: "172.19.120.251", dispositivo: "Mikrotik" },
+    { sigla: "MLG", filial: "BRE", tipo: "Representante", ip: "172.18.238.251", dispositivo: "Mikrotik" },
+    { sigla: "ANP", filial: "CHA", tipo: "Representante", ip: "172.19.177.251", dispositivo: "Mikrotik" },
+    { sigla: "PLT", filial: "BRE", tipo: "Representante", ip: "172.18.241.251", dispositivo: "Mikrotik" },
+    { sigla: "MRA", filial: "CHA", tipo: "Representante", ip: "172.19.179.251", dispositivo: "Mikrotik" },
+    { sigla: "SMA", filial: "CHA", tipo: "Representante", ip: "172.16.98.251", dispositivo: "Mikrotik" },
+
+
+    { sigla: "CNE", filial: "CNE", tipo: "Filial", ip: "172.16.226.251", dispositivo: "FortiGate" },
+    { sigla: "DUB", filial: "CNE", tipo: "Representante", ip: "172.19.172.251", dispositivo: "Mikrotik" },
+    { sigla: "AFC", filial: "CNE", tipo: "Posto", ip: "172.19.172.251", dispositivo: "FortiGate" },
+    { sigla: "BIV", filial: "CNE", tipo: "Posto", ip: "172.19.168.251", dispositivo: "FortiGate" },
+   
+
+    { sigla: "COD", filial: "COD", tipo: "Filial", ip: "172.16.84.251", dispositivo: "FortiGate" },
+    { sigla: "COD / CDF", filial: "COD", tipo: "Deposito", ip: "172.26.84.1", dispositivo: "Mikrotik" },
+    { sigla: "CSB", filial: "COD", tipo: "Representante", ip: "172.18.246.251", dispositivo: "Mikrotik" },
+    { sigla: "TIN", filial: "COD", tipo: "Posto", ip: "172.19.101.251", dispositivo: "FortiGate" },
+
+
+    { sigla: "CTA", filial: "CTA", tipo: "Filial", ip: "172.16.228.251", dispositivo: "FortiGate" },
+    { sigla: "CTA / CTZ", filial: "CTA", tipo: "Representante", ip: "172.26.228.1", dispositivo: "Mikrotik" },
+
+
+    { sigla: "SRI", filial: "SRI", tipo: "Filial", ip: "172.17.115.251", dispositivo: "FortiGate" },
+
+
+    { sigla: "ITA", filial: "ITA", tipo: "Filial", ip: "172.17.113.251", dispositivo: "FortiGate" },
+
+
+    { sigla: "ROS", filial: "ROS", tipo: "Filial", ip: "172.17.114.251", dispositivo: "FortiGate" },
+    { sigla: "ROS / ATR", filial: "ROS", tipo: "Filial", ip: "172.27.114.1", dispositivo: "Mikrotik" },
+    { sigla: "MRO", filial: "ROS", tipo: "Posto", ip: "172.19.65.251", dispositivo: "FortiGate" },
+    { sigla: "PRJ", filial: "ROS", tipo: "Posto", ip: "172.19.66.251", dispositivo: "FortiGate" },
+    { sigla: "ICT", filial: "ROS", tipo: "Posto", ip: "172.16.67.251", dispositivo: "FortiGate" },
+    { sigla: "AXA", filial: "ROS", tipo: "Posto", ip: "172.19.178.251", dispositivo: "FortiGate" },
+    { sigla: "BCA", filial: "ROS", tipo: "Representante", ip: "172.19.202.251", dispositivo: "Mikrotik" },
+
+
+    { sigla: "TUT", filial: "TUT", tipo: "Filial", ip: "172.16.154.251", dispositivo: "FortiGate" },
+    { sigla: "AGD", filial: "TUT", tipo: "Representante", ip: "172.19.167.251", dispositivo: "Mikrotik" },
+    { sigla: "CNB", filial: "TUT", tipo: "Representante", ip: "172.19.171.251", dispositivo: "Mikrotik" },
+    { sigla: "PLN", filial: "TUT", tipo: "Representante", ip: "172.19.170.251", dispositivo: "Mikrotik" },
+
+
+
+    { sigla: "VAG", filial: "VAG", tipo: "Filial", ip: "172.16.135.251", dispositivo: "FortiGate" },
+    { sigla: "NIR", filial: "VAG", tipo: "Representante", ip: "172.19.180.251", dispositivo: "Mikrotik" },
+    { sigla: "PVG", filial: "VAG", tipo: "Representante", ip: "172.19.181.251", dispositivo: "Mikrotik" },
+
+
+  ],
+  "Regional Ronnie Von": [
+    { sigla: "BCO", filial: "BCO", tipo: "Filial", ip: "172.16.166.251", dispositivo: "FortiGate" },
+    { sigla: "BCO / DBC", filial: "BCO", tipo: "Deposito", ip: "172.26.166.1", dispositivo: "Mikrotik" },
+    { sigla: "JEV", filial: "BCO", tipo: "Representante", ip: "172.19.133.251", dispositivo: "Mikrotik" },
+    { sigla: "FFC", filial: "BCO", tipo: "Representante", ip: "172.18.245.251", dispositivo: "Mikrotik" },
+
+
+
+    { sigla: "COM", filial: "COM", tipo: "Filial", ip: "172.16.170.251", dispositivo: "FortiGate" },
+    { sigla: "BUB", filial: "COM", tipo: "Posto", ip: "172.16.168.251", dispositivo: "FortiGate" },
+    { sigla: "MID", filial: "COM", tipo: "Posto", ip: "172.19.123.251", dispositivo: "FortiGate" },
+    { sigla: "PBO", filial: "COM", tipo: "Posto", ip: "172.16.68.251", dispositivo: "FortiGate" },
+    { sigla: "PFR", filial: "COM", tipo: "Posto", ip: "172.19.124.251", dispositivo: "FortiGate" },
+    { sigla: "PNO", filial: "COM", tipo: "Posto", ip: "172.16.176.251", dispositivo: "FortiGate" },
+    { sigla: "SPA", filial: "COM", tipo: "Posto", ip: "172.16.182.251", dispositivo: "FortiGate" },
+    { sigla: "COM / DCO", filial: "COM", tipo: "Deposito", ip: "172.26.170.1", dispositivo: "Mikrotik" },
+    { sigla: "JTB", filial: "COM", tipo: "Representante", ip: "172.19.122.251", dispositivo: "Mikrotik" },
+    { sigla: "LGM", filial: "COM", tipo: "Representante", ip: "172.19.128.251", dispositivo: "Mikrotik" },
+    { sigla: "NIQ", filial: "COM", tipo: "Representante", ip: "172.19.243.251", dispositivo: "Mikrotik" },
+    { sigla: "SAZ", filial: "COM", tipo: "Representante", ip: "172.19.127.251", dispositivo: "Mikrotik" },
+    { sigla: "SUR", filial: "COM", tipo: "Representante", ip: "172.19.190.251", dispositivo: "Mikrotik" },
+    { sigla: "SUN", filial: "COM", tipo: "Representante", ip: "172.19.126.251", dispositivo: "Mikrotik" },
+  
+
+    { sigla: "GRA", filial: "GRA", tipo: "Filial", ip: "172.16.145.251", dispositivo: "FortiGate" },
+    { sigla: "ARM", filial: "GRA", tipo: "Posto", ip: "172.16.126.251", dispositivo: "FortiGate" },
+    { sigla: "SNM", filial: "GRA", tipo: "Posto", ip: "172.19.78.251", dispositivo: "FortiGate" },
+    { sigla: "FSN", filial: "GRA", tipo: "Posto", ip: "172.19.30.251", dispositivo: "FortiGate" },
+    { sigla: "GCN", filial: "GRA", tipo: "Posto", ip: "172.26.145.1", dispositivo: "Mikrotik" },
+    { sigla: "IGR", filial: "GRA", tipo: "Posto", ip: "172.19.84.251", dispositivo: "FortiGate" },
+    { sigla: "GAB", filial: "GRA", tipo: "Representante", ip: "172.19.234.251", dispositivo: "Mikrotik" },
+    { sigla: "LJN", filial: "GRA", tipo: "Posto", ip: "172.16.150.251", dispositivo: "FortiGate" },
+
+
+    { sigla: "PDU", filial: "PDU", tipo: "Filial", ip: "172.16.178.251", dispositivo: "FortiGate" },
+    { sigla: "DPE", filial: "PDU", tipo: "Posto", ip: "172.16.172.251", dispositivo: "FortiGate" },
+    { sigla: "ESA", filial: "PDU", tipo: "Posto", ip: "172.19.174.251", dispositivo: "FortiGate" },
+    { sigla: "FOR", filial: "PDU", tipo: "Posto", ip: "172.19.121.251", dispositivo: "FortiGate" },
+    { sigla: "GDI", filial: "PDU", tipo: "Posto", ip: "172.16.174.251", dispositivo: "FortiGate" },
+    { sigla: "GEB", filial: "PDU", tipo: "Posto", ip: "172.19.175.251", dispositivo: "FortiGate" },
+    { sigla: "SAD", filial: "PDU", tipo: "Posto", ip: "172.16.180.251", dispositivo: "FortiGate" },
+    { sigla: "SAL", filial: "PDU", tipo: "Posto", ip: "172.16.205.251", dispositivo: "FortiGate" },
+    { sigla: "TUN", filial: "PDU", tipo: "Posto", ip: "172.16.184.251", dispositivo: "FortiGate" },
+    { sigla: "PDU / DPU", filial: "PDU", tipo: "Deposito", ip: "172.26.178.1", dispositivo: "Mikrotik" },
+    { sigla: "CAZ", filial: "PDU", tipo: "Representante", ip: "172.19.110.251", dispositivo: "Mikrotik" },
+    { sigla: "GAC", filial: "PDU", tipo: "Representante", ip: "172.19.111.251", dispositivo: "Mikrotik" },
+    { sigla: "GCA", filial: "PDU", tipo: "Representante", ip: "172.18.234.251", dispositivo: "Mikrotik" },
+    { sigla: "GLR", filial: "PDU", tipo: "Representante", ip: "172.19.74.251", dispositivo: "Mikrotik" },
+    { sigla: "SFM", filial: "PDU", tipo: "Representante", ip: "172.18.237.251", dispositivo: "Mikrotik" },
+  
+
+    { sigla: "PED", filial: "PED", tipo: "Filial", ip: "172.16.106.251", dispositivo: "FortiGate" },
+    { sigla: "ENO", filial: "PED", tipo: "Posto", ip: "172.16.230.251", dispositivo: "FortiGate" },
+    { sigla: "IGE", filial: "PED", tipo: "Posto", ip: "172.16.225.251", dispositivo: "FortiGate" },
+    { sigla: "JOZ", filial: "PED", tipo: "Posto", ip: "172.19.112.251", dispositivo: "FortiGate" },
+    { sigla: "LAP", filial: "PED", tipo: "Posto", ip: "172.16.234.251", dispositivo: "FortiGate" },
+    { sigla: "PPE", filial: "PED", tipo: "Posto", ip: "172.16.242.251", dispositivo: "FortiGate" },
+    { sigla: "PER", filial: "PED", tipo: "Posto", ip: "172.16.238.251", dispositivo: "FortiGate" },
+    { sigla: "PED / PDF", filial: "PED", tipo: "Deposito", ip: "172.26.106.1", dispositivo: "Mikrotik" },
+    { sigla: "BRM", filial: "PED", tipo: "Representante", ip: "172.19.132.251", dispositivo: "Mikrotik" },
+    { sigla: "LAJ", filial: "PED", tipo: "Representante", ip: "172.19.118.251", dispositivo: "Mikrotik" },
+    { sigla: "LAR", filial: "PED", tipo: "Representante", ip: "172.19.115.251", dispositivo: "Mikrotik" },
+    { sigla: "LIC", filial: "PED", tipo: "Representante", ip: "172.19.69.251", dispositivo: "Mikrotik" },
+    { sigla: "SBA", filial: "PED", tipo: "Representante", ip: "172.19.38.251", dispositivo: "Mikrotik" },
+    { sigla: "SRB", filial: "PED", tipo: "Representante", ip: "172.19.246.251", dispositivo: "Mikrotik" },
+
+  ],
+  "Regional Wellington": [
+    { sigla: "ALS", filial: "ALS", tipo: "Filial", ip: "172.16.196.251", dispositivo: "FortiGate" },
+    { sigla: "ALG", filial: "ALS", tipo: "Posto", ip: "172.16.227.251", dispositivo: "FortiGate" },
+    { sigla: "BNT", filial: "ALS", tipo: "Posto", ip: "172.19.6.251", dispositivo: "FortiGate" },
+    { sigla: "SJS", filial: "ALS", tipo: "Representante", ip: "172.19.219.251", dispositivo: "Mikrotik" },
+    { sigla: "NSA", filial: "ALS", tipo: "Representante", ip: "172.19.227.251", dispositivo: "Mikrotik" },
+
+
+
+    { sigla: "CAM", filial: "CAM", tipo: "Filial", ip: "172.16.116.251", dispositivo: "FortiGate" },
+    { sigla: "CST", filial: "CAM", tipo: "Posto", ip: "172.16.237.251", dispositivo: "FortiGate" },
+    { sigla: "JFT", filial: "CAM", tipo: "Posto", ip: "172.16.167.251", dispositivo: "FortiGate" },
+    { sigla: "MIA", filial: "CAM", tipo: "Posto", ip: "172.16.159.251", dispositivo: "FortiGate" },
+    { sigla: "SMT", filial: "CAM", tipo: "Posto", ip: "172.16.247.251", dispositivo: "FortiGate" },
+    { sigla: "UNI", filial: "CAM", tipo: "Posto", ip: "172.16.208.251", dispositivo: "FortiGate" },
+    { sigla: "CAM / CAD", filial: "CAM", tipo: "Deposito", ip: "172.26.116.1", dispositivo: "Mikrotik" },
+    { sigla: "CAM", filial: "CAM-CAMERAS", tipo: "Deposito", ip: "172.26.116.129", dispositivo: "Mikrotik" },
+    { sigla: "BHO", filial: "CAM", tipo: "Representante", ip: "172.16.189.251", dispositivo: "Mikrotik" },
+    { sigla: "BOP", filial: "CAM", tipo: "Representante", ip: "172.19.137.251", dispositivo: "Mikrotik" },
+    { sigla: "JUP", filial: "CAM", tipo: "Representante", ip: "172.18.244.251", dispositivo: "Mikrotik" },
+    { sigla: "LAL", filial: "CAM", tipo: "Representante", ip: "172.19.189.251", dispositivo: "Mikrotik" },
+    { sigla: "SGP", filial: "CAM", tipo: "Representante", ip: "172.19.143.251", dispositivo: "Mikrotik" },
+	
+
+
+    { sigla: "PIR", filial: "PIR", tipo: "Filial", ip: "172.16.118.251", dispositivo: "FortiGate" },
+    { sigla: "BAR", filial: "PIR", tipo: "Posto", ip: "172.16.190.251", dispositivo: "FortiGate" },
+    { sigla: "BAT", filial: "PIR", tipo: "Posto", ip: "172.16.233.251", dispositivo: "FortiGate" },
+    { sigla: "BRS", filial: "PIR", tipo: "Posto", ip: "172.19.7.251", dispositivo: "FortiGate" },
+    { sigla: "CCA", filial: "PIR", tipo: "Posto", ip: "172.19..135.251", dispositivo: "FortiGate" },
+    { sigla: "ESP", filial: "PIR", tipo: "Posto", ip: "172.16.198.251", dispositivo: "FortiGate" },
+    { sigla: "LUZ", filial: "PIR", tipo: "Posto", ip: "172.16.200.251", dispositivo: "FortiGate" },
+    { sigla: "MIO", filial: "PIR", tipo: "Posto", ip: "172.19.15.251", dispositivo: "FortiGate" },
+    { sigla: "PII", filial: "PIR", tipo: "Posto", ip: "172.16.130.251", dispositivo: "FortiGate" },
+    { sigla: "NSR", filial: "PIR", tipo: "Posto", ip: "172.19.105.251", dispositivo: "FortiGate" },
+    { sigla: "PRA", filial: "PIR", tipo: "Posto", ip: "172.16.132.251", dispositivo: "FortiGate" },
+    { sigla: "PRT", filial: "PIR", tipo: "Posto", ip: "172.19.21.251", dispositivo: "FortiGate" },
+    { sigla: "PIR / PID", filial: "PIR", tipo: "Deposito", ip: "172.26.118.1", dispositivo: "Mikrotik" },
+    { sigla: "SBT", filial: "PIR", tipo: "Posto", ip: "172.16.161.251", dispositivo: "FortiGate" },
+    { sigla: "TIA", filial: "PIR", tipo: "Posto", ip: "172.16.120.251", dispositivo: "FortiGate" },
+    { sigla: "VIC", filial: "PIR", tipo: "Posto", ip: "172.16.103.251", dispositivo: "FortiGate" },
+    { sigla: "DGM", filial: "PIR", tipo: "Representante", ip: "172.19.119.251", dispositivo: "Mikrotik" },   
+    { sigla: "MAD", filial: "PIR", tipo: "Representante", ip: "172.19.169.251", dispositivo: "Mikrotik" },
+    { sigla: "CLG", filial: "PIR", tipo: "Representante", ip: "172.18.115.251", dispositivo: "Mikrotik" },
+    { sigla: "SJA", filial: "PIR", tipo: "Representante", ip: "172.19.146.251", dispositivo: "Mikrotik" },
+
+
+    { sigla: "PAR", filial: "PAR", tipo: "Filial", ip: "172.16.122.251", dispositivo: "FortiGate" },
+    { sigla: "BLO", filial: "PAR", tipo: "Posto", ip: "172.16.156.251", dispositivo: "FortiGate" },
+    { sigla: "CJP", filial: "PAR", tipo: "Posto", ip: "172.19.104.251", dispositivo: "FortiGate" },
+    { sigla: "COC", filial: "PAR", tipo: "Posto", ip: "172.16.104.251", dispositivo: "FortiGate" },
+    { sigla: "JPR", filial: "PAR", tipo: "Posto", ip: "172.16.241.251", dispositivo: "FortiGate" },
+    { sigla: "LCO", filial: "PAR", tipo: "Posto", ip: "172.16.164.251", dispositivo: "FortiGate" },
+    { sigla: "PCA", filial: "PAR", tipo: "Posto", ip: "172.26.122.193", dispositivo: "Mikrotik" },
+    { sigla: "PJS", filial: "PAR", tipo: "Posto", ip: "172.26.122.65", dispositivo: "Mikrotik" },
+    { sigla: "PPM", filial: "PAR", tipo: "Posto", ip: "172.26.122.129", dispositivo: "Mikrotik" },
+    { sigla: "ARA", filial: "PAR", tipo: "Posto", ip: "172.16.152.251", dispositivo: "FortiGate" },
+    { sigla: "CHV", filial: "PAR", tipo: "Posto", ip: "172.19.53.251", dispositivo: "FortiGate" },
+    { sigla: "GRJ", filial: "PAR", tipo: "Posto", ip: "172.19.54.251", dispositivo: "FortiGate" },
+    { sigla: "CIM", filial: "PAR", tipo: "Posto", ip: "172.16.146.251", dispositivo: "FortiGate" },
+    { sigla: "BPR", filial: "PAR", tipo: "Representante", ip: "172.19.145.251", dispositivo: "Mikrotik" },
+    { sigla: "CBP", filial: "PAR", tipo: "Representante", ip: "172.16.91.251", dispositivo: "Mikrotik" },
+    { sigla: "CRB", filial: "PAR", tipo: "Representante", ip: "172.19.215.251", dispositivo: "Mikrotik" },
+    { sigla: "IGP", filial: "PAR", tipo: "Representante", ip: "172.26.122.1", dispositivo: "Mikrotik" },
+    { sigla: "MPO", filial: "PAR", tipo: "Representante", ip: "172.19.95.251", dispositivo: "Mikrotik" },
+    { sigla: "CAV", filial: "PAR", tipo: "Representante", ip: "172.18.228.251", dispositivo: "Mikrotik" },
+
+
+
+  ],
+  "Regional Diretoria": [
+    { sigla: "TEZ", filial: "TEZ", tipo: "Filial", ip: "172.16.11.249", dispositivo: "Mikrotik" },
+    { sigla: "TEZ / DRH ", filial: "TEZ", tipo: "Filial", ip: "172.16.11.249", dispositivo: "Mikrotik" },
+    { sigla: "TEZ / CTB ", filial: "TEZ", tipo: "Filial", ip: "172.16.11.249", dispositivo: "Mikrotik" },
+    { sigla: "TEZ / IMOVEIS ", filial: "TEZ", tipo: "Filial", ip: "172.16.11.249", dispositivo: "Mikrotik" },
+    { sigla: "TEZ / DGO ", filial: "TEZ", tipo: "Filial", ip: "172.16.11.249", dispositivo: "Mikrotik" },
+    { sigla: "TEZ / DCC  ", filial: "TEZ", tipo: "Filial", ip: "172.16.11.249", dispositivo: "Mikrotik" },
+    { sigla: "TEZ / NCP  ", filial: "TEZ", tipo: "Filial", ip: "172.16.11.249", dispositivo: "Mikrotik" },
+
+    { sigla: "TED", filial: "TEZ", tipo: "Filial", ip: "172.16.23.251", dispositivo: "FortiGate" },
+    { sigla: "TMA", filial: "TEZ", tipo: "Filial", ip: "172.16.17.251", dispositivo: "FortiGate" },
+    { sigla: "TMO", filial: "TEZ", tipo: "Filial", ip: "172.16.21.251", dispositivo: "FortiGate" },
+    { sigla: "TEU", filial: "TEZ", tipo: "Filial", ip: "172.16.15.251", dispositivo: "FortiGate" },
+    { sigla: "TPP", filial: "TEZ", tipo: "Filial", ip: "172.16.46.251", dispositivo: "FortiGate" },
+    { sigla: "TPI", filial: "TEZ", tipo: "Filial", ip: "172.16.52.251", dispositivo: "FortiGate" },
+    { sigla: "TSJ", filial: "TEZ", tipo: "Filial", ip: "172.16.44.251", dispositivo: "FortiGate" },
+    { sigla: "TES", filial: "TEZ", tipo: "Filial", ip: "172.16.18.251", dispositivo: "FortiGate" },
+    { sigla: "TIM", filial: "TEZ", tipo: "Filial", ip: "172.16.163.251", dispositivo: "Mikrotik" },
+    { sigla: "TEC", filial: "TEZ", tipo: "Filial", ip: "172.16.14.251", dispositivo: "FortiGate" },
+    { sigla: "TDC", filial: "TEZ", tipo: "Deposito", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "TAT", filial: "TEZ", tipo: "Filial", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "TCT", filial: "TEZ", tipo: "Filial", ip: " 172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "TVE", filial: "TEZ", tipo: "Filial", ip: " 172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "TLP", filial: "TEZ", tipo: "Filial", ip: "172.21.254.1 ", dispositivo: "Mikrotik" },
+    { sigla: "TOP", filial: "TEZ", tipo: "Filial", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+  
+  ],
+
+  "Coligadas": [
+    { sigla: "FRI-INDUSTRIA", filial: "FRI-INDUSTRIA", tipo: "Filial", ip: "172.16.19.251", dispositivo: "FortiGate" },
+    { sigla: "FRI-FML-MATADOURO", filial: "FRI-MATADOURO", tipo: "Filial", ip: "172.16.213.251", dispositivo: "Mikrotik" },
+    { sigla: "FRI-FMC-MERCADO CENTRAL", filial: "FRI-MERCADO CENTRAL", tipo: "Filial", ip: "172.16.73.1", dispositivo: "Mikrotik" },
+    { sigla: "AUDAX", filial: "AUDAX", tipo: "Filial", ip: "172.16.22.1", dispositivo: "Mikrotik" },
+    { sigla: "FRI-FJN", filial: "FRIGOTIL JUAZEIRO DO NORTE", tipo: "Filial", ip: "172.16.179.251", dispositivo: "Mikrotik" },
+    { sigla: "FRI-FCG", filial: "FRIGOTIL CAMPINA GRANDE", tipo: "Filial", ip: "172.16.181.251", dispositivo: "Mikrotik" },
+    { sigla: "FAZENDA-SAPUCAIA", filial: "FAZENDA", tipo: "Filial", ip: "172.26.105.65", dispositivo: "Mikrotik" },
+    { sigla: "FAZENDA-UNIAO-SIN", filial: "FAZENDA", tipo: "Filial", ip: "172.16.117.251", dispositivo: "Mikrotik" },
+    { sigla: "FAZENDA-TRES MARIAS-SIN", filial: "FAZENDA", tipo: "Filial", ip: "172.16.148.251", dispositivo: "Mikrotik" },
+    { sigla: "FAZENDA-SANGRADOURO", filial: "FAZENDA", tipo: "Filial", ip: "172.16.105.251", dispositivo: "Mikrotik" },
+    { sigla: "COL", filial: "COLON", tipo: "Filial", ip: "172.16.8.251", dispositivo: "Mikrotik" },
+    { sigla: "VEI", filial: "VEICULOS", tipo: "Filial", ip: "172.16.9.251", dispositivo: "Mikrotik" },
+    { sigla: "FFZ", filial: "FRIGOTIL FORTALEZA", tipo: "Filial", ip: "172.16.177.251", dispositivo: "Mikrotik" },
+    { sigla: "HAL", filial: "HALLEY", tipo: "Filial", ip: "192.168.1.1", dispositivo: "Mikrotik" },
+    { sigla: "MNA - Mineradora", filial: "Mineradora Alvorada", tipo: "Filial", ip: "172.16.58.251", dispositivo: "Mikrotik" },
+    { sigla: "GUA", filial: "GUADALAJARA", tipo: "Filial", ip: "172.16.1.254", dispositivo: "Mikrotik" },
+    { sigla: "SPO", filial: "SAO PAULO", tipo: "Filial", ip: "172.16.25.251", dispositivo: "FortiGate" },
+    { sigla: "FCC - Fundacao Fca. Fernandes", filial: "FundacaoFcaFernandes", tipo: "Filial", ip: "172.16.172.251", dispositivo: "FortiGate" },
+    { sigla: "FLC - Fundacao Lica Claudino", filial: "FundacaoFcaFernandes", tipo: "Filial", ip: "172.18.211.251", dispositivo: "FortiGate" },
+
+
+    { sigla: "CMC", filial: "CENTRO MEDICO", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "SCO", filial: "SETOR COMERCIAL", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "TDC-G1", filial: "TDC-G1", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "TDC-G2", filial: "TDC-G2", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "ECM", filial: "ECM", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "TDC-G3", filial: "TDC-G3", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "TDC-G4", filial: "TDC-G4", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "DTI", filial: "DTI", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "JOCA", filial: "JOCA CLAUDINO", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "RESTAURANTE", filial: "RESTAURANTE", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "ASSISTENCIA", filial: "ASSISTENCIA", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "TDC-G5", filial: "TDC-G5", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "TDC-G6", filial: "TDC-G6", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "TDC-G7", filial: "TDC-G7", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "XXX", filial: "XXX", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "XXX", filial: "XXX", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "XXX", filial: "XXX", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "XXX", filial: "XXX", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+    { sigla: "XXX", filial: "XXX", tipo: "Complexo-TDC", ip: "172.21.254.1", dispositivo: "Mikrotik" },
+
+
+    { sigla: "XXX", filial: "XXX", tipo: "Filial", ip: "EnderecoIP", dispositivo: "Mikrotik" },
+
+
+
+  ]
+
+};
+
+
+// ---------- SENHA PADRÃO FORTIGATE ----------
+const senhaFortigate = "Hrt5M-jgExN7"; // senha única para todas as lojas FortiGate
+const usuarioLiberacaoAceito = ["gertec20"]; // usuários autorizados
+const modalUsuario = document.getElementById("modalUsuario");
+const usuarioInput = document.getElementById("usuarioInput");
+const confirmarUsuario = document.getElementById("confirmarUsuario");
+const cancelarUsuario = document.getElementById("cancelarUsuario");
+const toggleUsuario = document.getElementById("toggleUsuario");
+
+
+
+
+// Mostrar/ocultar usuário digitado
+toggleUsuario.addEventListener("click", () => {
+  if (usuarioInput.type === "password") {
+    usuarioInput.type = "text";
+    toggleUsuario.textContent = "??";
+  } else {
+    usuarioInput.type = "password";
+    toggleUsuario.textContent = "???";
+  }
+});
+
+// Confirmar usuário
+confirmarUsuario.addEventListener("click", () => {
+  const usuario = usuarioInput.value.trim();
+  if (usuarioLiberacaoAceito.includes(usuario)) {
+    alert("Usuário autorizado. Senha liberada!");
+    modalUsuario.style.display = "none";
+    usuarioInput.value = "";
+    // Aqui você pode chamar a função que copia a senha
+  } else {
+    alert("Usuário inválido!");
+  }
+});
+
+// Cancelar
+cancelarUsuario.addEventListener("click", () => {
+  modalUsuario.style.display = "none";
+  usuarioInput.value = "";
+});
+
+
+
+// ---------- FUNÇÕES INICIAIS ----------
+function criarRegionais() {
+  const container = document.getElementById('regionais-container');
+  container.innerHTML = '';
+  const coresCount = 8;
+  let index = 0;
+
+  for (const regional in lojasData) {
+    const lojas = lojasData[regional];
+    const contadores = contarTipos(lojas);
+    const totalLojasRegional = lojas.length; // total de lojas
+
+    const card = document.createElement('div');
+    card.className = 'regional-card';
+    card.setAttribute('data-cor', index % coresCount);
+    card.onclick = () => abrirRegional(regional);
+    card.innerHTML = `
+      ${regional}
+      <div class="badge-quantidade">${totalLojasRegional}</div>
+      <div class="contadores-card">
+        Filial: ${contadores.filial}<br>
+        Posto: ${contadores.posto}<br>
+        Deposito: ${contadores.deposito}<br>
+        Representante: ${contadores.representante}
+      </div>
+    `;
+    container.appendChild(card);
+    index++;
+  }
+}
+
+function somarTodasAsLojas() {
+  let todasLojas = [];
+  for (const regional in lojasData) {
+    todasLojas = todasLojas.concat(lojasData[regional]);
+  }
+  return todasLojas;
+}
+
+function contarTipos(lojas) {
+  let filial=0, posto=0, deposito=0, representante=0;
+  const lojasUnicas = Array.from(new Set(lojas.map(l => JSON.stringify(l)))).map(l => JSON.parse(l));
+  lojasUnicas.forEach(loja => {
+    switch((loja.tipo||'').toLowerCase()){
+      case 'filial': filial++; break;
+      case 'posto': posto++; break;
+      case 'deposito': deposito++; break;
+      case 'representante': representante++; break;
+    }
+  });
+  return {filial, posto, deposito, representante};
+}
+
+// atualizarContadores (mantive sua versão)
+function atualizarContadores(lojas, alvo) {
+  const contadores = contarTipos(lojas);
+  if(alvo==='total'){
+    document.getElementById('totalFilial').innerText = contadores.filial;
+    document.getElementById('totalPosto').innerText = contadores.posto;
+    document.getElementById('totalDeposito').innerText = contadores.deposito;
+    document.getElementById('totalRepresentante').innerText = contadores.representante;
+
+    // Total geral = quantidade total de lojas em todos os regionais
+    document.getElementById('totalGeral').innerText = lojas.length;
+  } else {
+    document.getElementById('regionalFilial').innerText = contadores.filial;
+    document.getElementById('regionalPosto').innerText = contadores.posto;
+    document.getElementById('regionalDeposito').innerText = contadores.deposito;
+    document.getElementById('regionalRepresentante').innerText = contadores.representante;
+  }
+}
+
+
+// Abrir regional e mostrar lojas
+function abrirRegional(nome) {
+  document.getElementById('regionais-container').style.display='none';
+  document.getElementById('lojas-container').style.display='block';
+  document.getElementById('nome-regional').innerText=nome;
+  document.getElementById('resultado-pesquisa').style.display='none';
+  mostrarLojas(lojasData[nome]||[]);
+  atualizarContadores(lojasData[nome]||[],'regional');
+  atualizarTotais(lojasData[nome]||[]); // atualiza apenas com lojas da regional
+}
+
+// Mostrar lojas na tabela por regional
+function mostrarLojas(lojas){
+  const tbody = document.querySelector('#tabela-lojas tbody');
+  tbody.innerHTML = '';
+
+  if(lojas.length === 0){
+    tbody.innerHTML = `<tr><td colspan="6">Nenhuma loja encontrada</td></tr>`;
+    return;
+  }
+
+  // Agrupar lojas por filial
+  const lojasPorFilial = {};
+  lojas.forEach(loja => {
+    if(!lojasPorFilial[loja.filial]) lojasPorFilial[loja.filial] = [];
+    lojasPorFilial[loja.filial].push(loja);
+  });
+
+  // Ordenar filiais alfabeticamente
+  const filiaisOrdenadas = Object.keys(lojasPorFilial).sort();
+
+  filiaisOrdenadas.forEach(filial => {
+    // Linha de título da filial
+    const trFilial = document.createElement('tr');
+    trFilial.innerHTML = `<td colspan="6" style="background:#00ffea; color:#000; font-weight:bold; text-align:left; padding-left:10px;">Filial: ${filial}</td>`;
+    tbody.appendChild(trFilial);
+
+    // Adicionar lojas dessa filial
+    lojasPorFilial[filial].forEach(loja => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${loja.sigla}</td>
+        <td>${loja.filial}</td>
+        <td>${loja.tipo}</td>
+        <td>${loja.ip}</td>
+        <td>${loja.dispositivo}</td>
+        <td>
+          ${loja.dispositivo === 'FortiGate' ? 
+            `<div class="acao-btns">
+               <button class="action-btn fortigate-btn" onclick="abrirForti('${loja.ip}')">Abrir</button>
+               <button class="action-btn copy-senha-btn" onclick="abrirModalSenha('${loja.ip}','${loja.sigla}')">Copiar Senha</button>
+             </div>` :
+            `<button class="action-btn mikrotik-btn" onclick="copiarMikro('${loja.ip}')">Copiar</button>`}
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+// Função para atualizar os contadores de FortiGate e Mikrotik
+// Função para atualizar contadores
+  function atualizarContadoresDispositivos() {
+    let countFortiGate = 0;
+    let countMikrotik = 0;
+
+    for (const regional in lojasData) {
+      lojasData[regional].forEach(loja => {
+        if (loja.dispositivo.toLowerCase() === "fortigate") countFortiGate++;
+        if (loja.dispositivo.toLowerCase() === "mikrotik") countMikrotik++;
+      });
+    }
+
+    // Animação de contagem
+    animarContagem('countFortiGate', countFortiGate);
+    animarContagem('countMikrotik', countMikrotik);
+  }
+
+  // Função de animação de contagem
+  function animarContagem(id, valorFinal) {
+    const el = document.getElementById(id);
+    let valorAtual = parseInt(el.textContent);
+    const incremento = valorFinal > valorAtual ? 1 : -1;
+
+    if (valorAtual === valorFinal) return;
+
+    const intervalo = setInterval(() => {
+      valorAtual += incremento;
+      el.textContent = valorAtual;
+      if (valorAtual === valorFinal) clearInterval(intervalo);
+    }, 50);
+  }
+
+  // Atualizar na inicialização
+  atualizarContadoresDispositivos();
+
+// Atualiza automaticamente ao carregar a página
+window.addEventListener("DOMContentLoaded", atualizarContadores);
+
+
+// Pesquisar lojas (versão mantendo agrupamento por filial)
+function pesquisarLojas(){
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  const tbody = document.querySelector('#tabela-pesquisa tbody');
+  tbody.innerHTML = '';
+
+  if(!query){
+    document.getElementById('resultado-pesquisa').style.display = 'none';
+    document.getElementById('regionais-container').style.display = 'flex';
+    document.getElementById('lojas-container').style.display = 'none';
+    atualizarTotais(); // total geral completo
+    return;
+  }
+
+  const resultados = [];
+  for(const regional in lojasData){
+    lojasData[regional].forEach(loja=>{
+      if(loja.sigla.toLowerCase().includes(query) || loja.ip.includes(query)){
+        resultados.push({...loja, regional});
+      }
+    });
+  }
+
+  if(resultados.length === 0){
+    tbody.innerHTML = `<tr><td colspan="6">Nenhum resultado encontrado</td></tr>`;
+  } else {
+    // Agrupar por filial
+    const resultadosPorFilial = {};
+    resultados.forEach(loja => {
+      if(!resultadosPorFilial[loja.filial]) resultadosPorFilial[loja.filial] = [];
+      resultadosPorFilial[loja.filial].push(loja);
+    });
+
+    // Ordenar filiais alfabeticamente
+    const filiaisOrdenadas = Object.keys(resultadosPorFilial).sort();
+
+    filiaisOrdenadas.forEach(filial => {
+      // Linha de título da filial
+      const trFilial = document.createElement('tr');
+      trFilial.innerHTML = `<td colspan="6" style="background:#00ffea; color:#000; font-weight:bold; text-align:left; padding-left:10px;">Filial: ${filial}</td>`;
+      tbody.appendChild(trFilial);
+
+      // Adicionar lojas da filial
+      resultadosPorFilial[filial].forEach(loja => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${loja.sigla}</td>
+          <td>${loja.filial}</td>
+          <td>${loja.tipo}</td>
+          <td>${loja.ip}</td>
+          <td>${loja.dispositivo}</td>
+          <td>
+            ${loja.dispositivo === 'FortiGate' ? 
+              `<div class="acao-btns">
+                 <button class="action-btn fortigate-btn" onclick="abrirForti('${loja.ip}')">Abrir</button>
+                 <button class="action-btn copy-senha-btn" onclick="abrirModalSenha('${loja.ip}','${loja.sigla}')">Copiar Senha</button>
+               </div>` :
+              `<button class="action-btn mikrotik-btn" onclick="copiarMikro('${loja.ip}')">Copiar</button>`}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    });
+  }
+
+  document.getElementById('resultado-pesquisa').style.display = 'block';
+  document.getElementById('regionais-container').style.display = 'none';
+  document.getElementById('lojas-container').style.display = 'none';
+
+  atualizarTotais(resultados); // total baseado na pesquisa
+}
+
+// Voltar para regionais
+function voltarRegionais() {
+  document.getElementById('regionais-container').style.display='flex';
+  document.getElementById('lojas-container').style.display='none';
+  document.getElementById('nome-regional').innerText='';
+  document.querySelector('#tabela-lojas tbody').innerHTML='';
+  document.getElementById('resultado-pesquisa').style.display='none';
+  atualizarTotais(); // total geral completo
+}
+
+
+// ===== AÇÕES =====
+const btnMenu = document.getElementById("btnMenu");
+btnMenu.addEventListener("click", () => {
+    window.location.href = "menu.html";
+});
+
+function abrirForti(ip){
+    window.open(`https://${ip}:5413`, '_blank');
+}
+function copiarMikro(ip) {
+  if (!ip) return;
+  const ipComPorta = `${ip}:5819`;
+
+  const copiarTexto = () => {
+    if (navigator.clipboard && window.isSecureContext) {
+    	
+    	return navigator.clipboard.writeText(ipComPorta);
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = ipComPorta;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      return Promise.resolve();
+    }
+  };
+
+  copiarTexto().then(() => {
+    // Tocar som futurista
+    const audio = document.getElementById('click-sound');
+    if(audio) { try{ audio.currentTime = 0; audio.play(); }catch(e){} }
+
+    // Mostrar mensagem no quadro
+    const msgBox = document.getElementById('copyMessage');
+    const msgContent = msgBox.querySelector('.message-content');
+    msgContent.innerHTML = ` <strong>${ipComPorta}</strong> copiado com sucesso!`;
+    msgBox.classList.add('show');
+
+    // Remover após 15 segundos (pode ajustar entre 10-20)
+    setTimeout(() => msgBox.classList.remove('show'), 15000);
+  }).catch(err => console.error('Erro ao copiar IP:', err));
+}
+
+// <!-- Som futurista ao copiar -->
+//<audio id="click-sound">
+//  <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
+//</audio>
+
+// ===== Modal e cópia da senha FortiGate =====
+function abrirModalSenha(ip, sigla){
+  // exibe modal; guarda dados para uso (se desejar mostrar na UI)
+  const modal = document.getElementById('modalSenha');
+  modal.style.display = 'flex';
+  modal.setAttribute('data-ip', ip || '');
+  modal.setAttribute('data-sigla', sigla || '');
+  const input = document.getElementById('modalSenhaUsuario');
+  if(input) input.value = '';
+  const inputFocus = () => { if(input) input.focus(); };
+  setTimeout(inputFocus, 120);
+}
+
+function fecharModalSenha(){
+  const modal = document.getElementById('modalSenha');
+  modal.style.display = 'none';
+  modal.removeAttribute('data-ip');
+  modal.removeAttribute('data-sigla');
+}
+
+function tentarLiberarSenha(){
+  const input = document.getElementById('modalSenhaUsuario');
+  const usuario = (input && input.value) ? input.value.trim().toLowerCase() : '';
+  if(usuario && usuarioLiberacaoAceito.includes(usuario)){
+    copiarSenhaForti();
+    fecharModalSenha();
+    // mensagem confirmando a cópia da senha
+	mostrarMsgBox(`<strong>Senha Copiada com Sucesso!</strong>`);
+  } else {
+    	mostrarMsgBox(`<strong>Usuario Invalido</strong> , Liberacao Negada.`);
+  }
+}
+
+function copiarSenhaForti(){
+  const copiarTexto = () => {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(senhaFortigate);
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = senhaFortigate;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      return Promise.resolve();
+    }
+  };
+
+  copiarTexto().then(() => {
+    const audio = document.getElementById('click-sound');
+    if(audio) { try{ audio.currentTime = 0; audio.play(); }catch(e){} }
+    // mensagem será mostrada na função que chama copiarSenhaForti
+  }).catch(err => console.error('Erro ao copiar senha:', err));
+}
+
+// Função reutilizada para mostrar mensagem no quadro futurista
+function mostrarMsgBox(htmlContent){
+  const msgBox = document.getElementById('copyMessage');
+  const msgContent = msgBox.querySelector('.message-content');
+  msgContent.innerHTML = htmlContent;
+  msgBox.classList.add('show');
+  setTimeout(() => msgBox.classList.remove('show'), 15000);
+}
+
+
+// ===== Totais =====
+function atualizarTotais(lojas = null) {
+  const todasLojas = lojas || somarTodasAsLojas();
+  const contadores = contarTipos(todasLojas);
+
+  document.getElementById('totalFilial').innerText = contadores.filial;
+  document.getElementById('totalPosto').innerText = contadores.posto;
+  document.getElementById('totalDeposito').innerText = contadores.deposito;
+  document.getElementById('totalRepresentante').innerText = contadores.representante;
+  
+  // Total geral = número total de lojas mostradas
+  document.getElementById('totalGeral').innerText = todasLojas.length;
+
+  // Atualizar data da última atualização
+  document.getElementById('ultimaAtualizacao').innerText = new Date().toLocaleString();
+}
+
+
+
+// ===== Inicialização =====
+criarRegionais();
+atualizarTotais();
+
+</script>
+
+<!-- Modal HTML (colocado no final para sobrepor corretamente) -->
+<!-- Modal HTML (substitua o modal antigo por este) -->
+<div id="modalSenha">
+  <div class="modal-inner" role="dialog" aria-modal="true">
+    <h3 style="color:#00ffea; margin:0 0 10px 0;">Autenticacao - Liberar Senha</h3>
+    <div style="font-size:13px; margin-bottom:10px; color:#bfeff3;">Digite o usuario para liberar </div>
+
+    <!-- wrapper que usa seu CSS #toggleSenha -->
+    <div class="input-wrapper" style="margin:0 auto 6px; width:85%;">
+      <input type="password" id="modalSenhaUsuario" placeholder=" Nome do Usuario " autocomplete="off" />
+    </div>
+
+    <div class="btn-row">
+      <button style="background:linear-gradient(90deg,#00d1c1,#33e0d8); color:#000; border-radius:10px;" onclick="tentarLiberarSenha()">Liberar</button>
+      <button style="background:linear-gradient(90deg,#ff7a18,#ff3d00); color:#000; border-radius:10px;" onclick="fecharModalSenha()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

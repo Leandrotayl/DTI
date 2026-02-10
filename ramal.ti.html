@@ -1,0 +1,548 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ramais T.I</title>
+
+<link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3132/3132083.png">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --glass:rgba(20,30,45,.68);
+  --border:rgba(60,90,130,.25);
+  --text:#e8f6f7;
+  --muted:#9fb4c8;
+  --neon:#00ffe1;
+}
+
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  font-family:'Inter',sans-serif;
+  min-height:100vh;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 20% 10%, rgba(0,255,225,.12), transparent 40%),
+    radial-gradient(circle at 80% 90%, rgba(0,180,255,.08), transparent 45%),
+    linear-gradient(rgba(0,0,0,.82), rgba(0,0,0,.94)),
+    url("http://172.16.2.7/DTI/img/1.png");
+  background-size:cover;
+  background-attachment:fixed;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:url("https://grainy-gradients.vercel.app/noise.svg");
+  opacity:.06;
+  z-index:1;
+}
+
+/* HEADER */
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  backdrop-filter:blur(18px);
+  background:linear-gradient(90deg, rgba(6,14,24,.85), rgba(2,5,10,.95));
+  padding:18px 30px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid var(--border);
+}
+
+header h1{
+  font-family:'Orbitron';
+  letter-spacing:5px;
+  font-size:1.4rem;
+  color:var(--neon);
+}
+
+header input{
+  width:340px;
+  padding:14px 20px;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:rgba(8,14,22,.85);
+  color:#fff;
+  outline:none;
+}
+
+header input:focus{
+  border-color:var(--neon);
+  box-shadow:0 0 26px rgba(0,255,225,.45);
+}
+
+main{ padding:30px; position:relative; z-index:2; }
+
+/* SETOR */
+.setor{
+  margin-bottom:50px;
+}
+
+.setor h2{
+  font-family:'Orbitron';
+  letter-spacing:3px;
+  color:var(--neon);
+  font-size:1.1rem;
+  margin-bottom:18px;
+}
+
+
+
+.setor h2 span{
+  margin-left:8px;
+  padding:4px 10px;
+  font-size:.7rem;
+  border-radius:14px;
+  background:rgba(0,255,225,.15);
+  border:1px solid rgba(0,255,225,.4);
+  color:#eaffff;
+}
+
+.ramal.destaque{
+  animation:ramalFocus 1.2s ease-in-out infinite;
+  border-color:#ffffff;
+}
+
+@keyframes ramalFocus{
+  0%{
+    box-shadow:0 0 10px rgba(0,255,225,.6);
+    text-shadow:0 0 6px rgba(0,255,225,.6);
+  }
+  50%{
+    box-shadow:0 0 28px rgba(0,255,225,1);
+    text-shadow:0 0 16px rgba(0,255,225,1);
+  }
+  100%{
+    box-shadow:0 0 10px rgba(0,255,225,.6);
+    text-shadow:0 0 6px rgba(0,255,225,.6);
+  }
+}
+
+.ramal{
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease,
+    letter-spacing .25s ease;
+}
+
+.ramal:hover{
+  transform:scale(1.08);
+  letter-spacing:6px;
+  box-shadow:
+    0 0 30px rgba(0,255,225,.95),
+    inset 0 0 10px rgba(255,255,255,.4);
+}
+
+/* Efeito 3D geral */
+.topo {
+  transform-style: preserve-3d;
+  transition: transform .4s ease, box-shadow .4s ease;
+}
+
+/* Ao passar o mouse */
+.topo:hover {
+  transform: perspective(1200px) rotateX(6deg) rotateY(-6deg) scale(1.02);
+  box-shadow:
+    0 30px 70px rgba(0,0,0,.65),
+    0 0 40px rgba(0,229,255,.35);
+}
+
+/* Elementos flutuando em camadas */
+.titulo, .busca {
+  transform: translateZ(25px);
+}
+
+/* Ícone com destaque */
+.titulo .icone {
+  transition: transform .4s ease;
+}
+
+.topo:hover .titulo .icone {
+  transform: translateZ(40px) scale(1.15);
+}
+
+
+/* brilho animado */
+.topo::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(0,229,255,.18),
+    transparent
+  );
+  animation: brilho 6s linear infinite;
+}
+
+@keyframes brilho {
+  from { transform: translateX(-100%); }
+  to   { transform: translateX(100%); }
+}
+
+
+/* Título */
+.titulo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.titulo h1 {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #00e5ff, #4facfe);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 18px rgba(0,229,255,.4);
+}
+
+.titulo .icone {
+  font-size: 30px;
+  filter: drop-shadow(0 0 6px rgba(0,229,255,.7));
+}
+
+.titulo .icone {
+  font-size: 26px;
+}
+
+/* Busca */
+.busca {
+  position: relative;
+}
+
+.busca input {
+  width: 300px;
+  padding: 14px 46px 14px 18px;
+  border-radius: 30px;
+  background: rgba(255,255,255,.08);
+  border: 1px solid rgba(255,255,255,.15);
+  color: #fff;
+  font-size: 15px;
+  transition: all .35s ease;
+}
+
+.busca input:focus {
+  border-color: #00e5ff;
+  box-shadow:
+    0 0 0 3px rgba(0,229,255,.25),
+    0 0 25px rgba(0,229,255,.45);
+  transform: scale(1.03);
+}
+
+.busca .lupa {
+  font-size: 16px;
+  opacity: .7;
+  transition: .3s;
+}
+
+.busca input:focus + .lupa {
+  opacity: 1;
+  color: #00e5ff;
+}
+
+
+.busca input::placeholder {
+  color: #cfd8dc;
+}
+
+.busca input:focus {
+  background: rgba(255,255,255,.22);
+  box-shadow: 0 0 15px rgba(0,229,255,.6);
+}
+
+/* Ícone lupa */
+.busca .lupa {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  opacity: .8;
+}
+
+.topo::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 30px;
+  right: 30px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #00e5ff,
+    transparent
+  );
+  opacity: .7;
+}
+
+@media (max-width: 700px) {
+  .topo {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+  }
+
+  .busca input {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+
+
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill, 200px);
+  gap:16px;
+}
+
+/* CARD */
+.card{
+ will-change:transform;
+  backface-visibility:hidden;
+  transform:translateZ(0);
+  background:linear-gradient(160deg, rgba(40,60,95,.92), rgba(12,20,35,.92));
+  width:200px;
+  height:210px;
+  border-radius:26px;
+  padding:18px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  border:1px solid rgba(0,255,225,.35);
+  box-shadow:
+    inset 0 0 18px rgba(0,255,225,.12),
+    0 22px 45px rgba(0,0,0,.85);
+  transition:.4s;
+}
+
+.card:hover{
+  transform:translateY(-6px) scale(1.04);
+  box-shadow:
+    0 0 40px rgba(0,255,225,.45),
+    0 30px 80px rgba(0,0,0,.95);
+}
+
+.card img{
+  width:90px;
+  height:90px;
+  border-radius:10px;
+  object-fit:cover;
+  border:1px solid rgba(0,255,225,.6);
+  box-shadow:0 0 14px rgba(0,255,225,.6);
+}
+
+/* RAMAL ULTRA DESTAQUE */
+.ramal{
+  font-family:'Orbitron';
+  font-size:1.15rem;
+  font-weight:700;
+  letter-spacing:3px;
+
+  color:#003333; /* texto mais legível */
+  background:linear-gradient(180deg, #00ffe1, #5dfff1);
+
+  padding:6px 16px;
+  border-radius:14px;
+  margin-top:6px;
+
+  /* brilho controlado */
+  box-shadow:
+    0 0 14px rgba(0,255,225,.65),
+    inset 0 0 6px rgba(255,255,255,.35);
+
+  /* nitidez */
+  text-shadow:
+    0 1px 0 rgba(255,255,255,.55);
+
+  filter:none;
+}
+
+@keyframes digitalPulse{
+  0%   { text-shadow:0 0 6px rgba(0,255,225,.6); }
+  50%  { text-shadow:0 0 14px rgba(0,255,225,1); }
+  100% { text-shadow:0 0 6px rgba(0,255,225,.6); }
+}
+
+.ramal{
+  animation:digitalPulse 2.2s infinite;
+}
+
+
+/* TEXTO */
+.card h3{
+  font-size:.85rem;
+  text-align:center;
+}
+
+.badge{
+  font-size:.6rem;
+  padding:4px 12px;
+  border-radius:14px;
+  border:1px solid rgba(0,255,225,.35);
+  color:#eaffff;
+}
+
+/* FOOTER */
+footer{
+  position:fixed;
+  bottom:0;
+  width:100%;
+  backdrop-filter:blur(16px);
+  background:rgba(2,5,10,.96);
+  border-top:1px solid var(--border);
+  padding:10px 26px;
+  font-size:.65rem;
+  display:flex;
+  justify-content:space-between;
+  color:#8fa6be;
+}
+</style>
+</head>
+
+<body>
+
+<header class="topo">
+  <div class="titulo">
+    <span class="icone">??</span>
+    <h1>RAMAIS T.I</h1>
+  </div>
+
+  <div class="busca">
+    <input id="search" placeholder="Buscar por nome ou ramal">
+    <span class="lupa">??</span>
+  </div>
+</header>
+
+
+<main id="conteudo"></main>
+
+<footer>
+  <span id="contador"></span>
+  <span>?? OPERACIONAL • NOC ATIVO</span>
+</footer>
+
+<script>
+const avatarPadrao="https://i.ibb.co/7pBv4yF/user.png";
+
+const colaboradores=[
+ { nome:"Leandro",	 	ramal:"868642", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/leandro.png" },
+ { nome:"Lemos", 	 	ramal:"868679", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/lemos.png" },
+ { nome:"Anna Braz",	  	ramal:"868636",	 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/anna.png" },
+ { nome:"Didi", 	 	ramal:"868678", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/didi.png" },
+ { nome:"Joao Lucas", 	 	ramal:"868607", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/joao-lucas.png" },
+ { nome:"Douglas Venicius", 	ramal:"868647", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/douglas.png" },
+ { nome:"Joao Vitor", 		ramal:"868687", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/joao-vitor.png" },
+ { nome:"Marcos Victor",	ramal:"868612", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/marcos.png" },
+ { nome:"Adriel", 		ramal:"868651", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/adriel.png" },
+ { nome:"Altemir", 		ramal:"868635", 	setor:"Gerencia de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/altemir.png" },
+ { nome:"Polenilson", 		ramal:"868671", 	setor:"Gerencia de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/avatar.png" },
+ { nome:"Francisco", 		ramal:"868658", 	setor:"Gerencia de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/avatar.png" },
+ { nome:"Sergio Ferreira",	ramal:"868643", 	setor:"Gerencia de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/avatar.png" },
+ { nome:"Pacheco",		ramal:"868644", 	setor:"Gerencia de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/avatar.png" },
+ { nome:"Miriam", 		ramal:"868637", 	setor:"Gerencia de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/avatar.png" },
+ { nome:"Natur", 		ramal:"868657", 	setor:"Gerencia de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/avatar.png" },
+ { nome:"Anderson", 		ramal:"868664", 	setor:"Gerencia de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/avatar.png" },
+ { nome:"Cassiano", 		ramal:"868648", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/cassiano.png" },
+ { nome:"Danielon", 		ramal:"868693", 	setor:"Gerencia de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/danielson.png" },
+ { nome:"Everaldo", 		ramal:"868645", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/everaldo.png" },
+ { nome:"Gilvan", 		ramal:"868683", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/gilvan.png" },
+ { nome:"Ismael", 		ramal:"868610", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/ismael.png" },
+ { nome:"Jessica", 		ramal:"868686", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/jessica.png" },
+ { nome:"Jonatas", 		ramal:"868631", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/jonatas.png" },
+ { nome:"Joseph", 		ramal:"868625", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/joseph.png" },
+ { nome:"Kassio", 		ramal:"868627", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/kassio.png" },
+ { nome:"Lucas Helliab", 	ramal:"868685", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/lucas.png" },
+ { nome:"Matheus", 		ramal:"868632", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/matheus.png" },
+ { nome:"Reinaldo", 		ramal:"868639", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/reinaldo.png" },
+ { nome:"Thiago", 		ramal:"868649", 	setor:"Gerencia de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/thiago.png" },
+ { nome:"Erivan Veras", 	ramal:"868672 ", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/erivan.png" },
+ { nome:"Janaelson", 		ramal:"868648 ", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/janaelson.png" },
+ { nome:"David", 		ramal:"868688 ", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/david.png" },
+
+
+
+ { nome:"Central TI", 		ramal:"868600", 	setor:"Gerencia de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/ti.png" },
+
+
+ 
+];
+
+function render(busca=""){
+  const container=document.getElementById("conteudo");
+  container.innerHTML="";
+  busca=busca.toLowerCase().trim();
+
+  // ?? ORDENAR ALFABETICAMENTE PELO NOME
+  const listaOrdenada = [...colaboradores].sort((a,b)=>
+    a.nome.localeCompare(b.nome, 'pt-BR')
+  );
+
+  const grupos={};
+
+  listaOrdenada
+    .filter(c=>c.nome.toLowerCase().includes(busca)||c.ramal.includes(busca))
+    .forEach(c=>{
+      grupos[c.setor]=grupos[c.setor]||[];
+      grupos[c.setor].push(c);
+    });
+
+  let total=0;
+
+  Object.keys(grupos).sort().forEach(setor=>{
+    const sec=document.createElement("section");
+    sec.className="setor";
+    sec.innerHTML = `
+  <h2>${setor} <span>(${grupos[setor].length})</span></h2>
+  <div class="grid"></div>
+`;
+
+
+
+
+    const grid=sec.querySelector(".grid");
+
+    grupos[setor].forEach(c=>{
+      const card=document.createElement("div");
+      card.className="card";
+      const termo = busca && (c.nome.toLowerCase() === busca || c.ramal === busca);
+
+card.innerHTML = `
+  <img src="${c.foto}" onerror="this.src='${avatarPadrao}'">
+  <h3>${c.nome}</h3>
+  <div class="ramal ${termo ? 'destaque' : ''}">${c.ramal}</div>
+`;
+
+      grid.appendChild(card);
+      total++;
+    });
+
+    container.appendChild(sec);
+  });
+
+  document.getElementById("contador").textContent=`COLABORADORES ATIVOS: ${total}`;
+}
+
+
+search.addEventListener("input",e=>render(e.target.value));
+render();
+</script>
+
+</body>
+</html>

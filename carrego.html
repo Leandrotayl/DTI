@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manutencao</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: #f0f2f5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+      color: #333;
+    }
+
+    .box {
+      background: linear-gradient(135deg, #1896df, #505257);
+      padding: 35px;
+      border-radius: 18px;
+      width: 90%;
+      max-width: 380px;
+      box-shadow:
+        0 4px 10px rgba(0,0,0,0.15),
+        0 10px 30px rgba(0,0,0,0.12);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      transition: transform .25s ease;
+    }
+
+    .box:hover {
+      transform: translateY(-4px);
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+
+    p {
+      font-size: 16px;
+      opacity: 0.9;
+      margin-top: 0;
+    }
+
+    /* BOTÃO MENU PRINCIPAL */
+    #btnMenu {
+      position: fixed;
+      top: 10px;
+      left: 160px;
+      width: 240px;
+      padding: 15px 0;
+      background: linear-gradient(135deg,#0d47a1,#1976d2);
+      color: #0ff;
+      border: 3px solid #ff0000;
+      border-radius: 15px;
+      font-size: 1rem;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+      box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+      transition: all 0.3s ease-in-out;
+      z-index: 1001;
+    }
+
+    #btnMenu:hover {
+      background: linear-gradient(145deg,#ff0000,#1a1aff);
+      color: #fff;
+      box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
+      transform: scale(1.05);
+    }
+    
+  </style>
+</head>
+
+<body>
+
+  <button id="btnMenu">MENU PRINCIPAL</button>
+
+  <div class="box">
+    <h1>Estamos trabalhando para melhorar o site</h1>
+    <p>Voltaremos em breve. Obrigado pela compreensao!</p>
+  </div>
+
+  <script>
+    const btnMenu = document.getElementById("btnMenu");
+    btnMenu.addEventListener("click", () => {
+        window.location.href = "menu.html";
+    });
+
+  </script>
+
+</body>
+</html>
