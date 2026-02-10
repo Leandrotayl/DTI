@@ -1,0 +1,1391 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rede IPs - Claudino</title>
+<style>
+
+
+  body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin: 0;
+  padding: 20px;
+  background: linear-gradient(135deg, #0f0f0f, #111111);
+  background-size: 400% 400%;
+  animation: bgGradient 15s ease infinite;
+  color: #fff;
+}/* Quadro para contar FortiGate e Mikrotik */
+.quadro-container {
+    position: fixed;
+    top: 10px;       /* distância do topo */
+    left: 10px;      /* lado esquerdo da tela */
+    display: flex;
+    flex-direction: column;  /* empilhar verticalmente */
+    gap: 10px;       /* espaço entre os quadros */
+    z-index: 999;
+}
+
+
+.quadro {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 10px;
+    padding: 6px 10px;    /* menos padding */
+    width: 120px;          /* largura menor */
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    transition: transform 0.3s;
+}
+
+.quadro:hover {
+    transform: scale(1.03);
+}
+
+.quadro h2 {
+    font-size: 1.4em;       /* fonte menor */
+    margin: 0;
+    color: #fff;
+    text-shadow: 0 0 6px #00f, 0 0 10px #0ff;
+}
+
+.quadro p {
+    margin: 3px 0 0;
+    font-size: 0.8em;
+    color: #ccc;
+    text-shadow: 0 0 3px #000;
+}
+
+.fortigate {
+    border-color: #ff3d00;
+    box-shadow: 0 0 12px #ff3d00;
+}
+
+.mikrotik {
+    border-color: #00e5ff;
+    box-shadow: 0 0 12px #00e5ff;
+}
+
+
+
+@keyframes bgGradient {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+
+  h1 { text-align:center; margin-bottom:20px; }
+
+.total-lojas {
+  position: fixed;
+  top: 2px;
+  right: 6px;
+  width: 260px;
+  background: rgba(0,0,0,0.3);
+  border-radius: 18px;
+  padding: 1px;
+  color: #00c8d8;
+  text-align: center;
+  border: 2px solid rgba(0,200,220,0.6);
+  z-index: 9999;
+  box-shadow: 0 0 15px rgba(0,200,220,0.3);
+}
+
+
+.total-geral-quadro {
+  background: linear-gradient(135deg, #ff4d4d, #ff9999); /* Vermelho degradê */
+  border-radius: 12px;
+  padding: 12px;
+  margin-bottom: 10px;
+  border: 1px solid rgba(255,77,77,0.6);
+  color: #fff;
+}
+
+.total-item:nth-child(1) { /* Filial */
+  background: linear-gradient(135deg, #353a3f, #80c1ff);
+  border: 1px solid rgba(77,166,255,0.6);
+  color: #000;
+}
+
+.total-item:nth-child(2) { /* Posto */
+  background: linear-gradient(135deg, #3b443b, #99ff99);
+  border: 1px solid rgba(51,204,51,0.6);
+  color: #000;
+}
+
+.total-item:nth-child(3) { /* Deposito */
+  background: linear-gradient(135deg, #3a3831, #fff066);
+  border: 1px solid rgba(255,204,51,0.6);
+  color: #000;
+}
+
+.total-item:nth-child(4) { /* Representante */
+  background: linear-gradient(135deg, #3352ff, #e699ff);
+  border: 1px solid rgba(204,51,255,0.6);
+  color: #000;
+}
+
+.total-geral-label {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.total-geral-value {
+  font-size: 28px;
+  font-weight: bold;
+  text-shadow: 0 0 8px #00c8d8, 0 0 15px #00aab0;
+}
+
+.totais-gerais-duas-linhas {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 10px;
+  margin-bottom: 8px;
+}
+
+.total-item {
+  background: linear-gradient(145deg, #1a1a1a, #222);
+  border-radius: 20px;
+  padding: 8px 0;
+  font-weight: bold;
+  color: #00c8d8;
+  text-shadow: 0 0 3px rgba(0,200,220,0.5);
+  border: 1px solid rgba(0,200,220,0.3);
+  box-shadow: 0 0 5px rgba(0,200,220,0.1) inset;
+}
+
+.ultima-atualizacao {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #00b0c8;
+  text-shadow: 0 0 5px rgba(0,180,200,0.6);
+}
+
+
+/* Container centralizado */
+.search-container { 
+  text-align: center;         
+  margin-bottom: 30px;        
+}
+
+
+
+/* BOT O PARA VOLTAR MENU PRINCIPAL */
+/* Bot o MENU PRINCIPAL reposicionado no topo da lateral */
+#btnMenu {
+  position: fixed;
+  top: 10px;       /* distancia do topo */
+  left: 160px;      /* fixa na lateral esquerda */
+  width: 240px;    /* largura consistente com o painel lateral */
+  padding: 15px 0;
+  background: linear-gradient(135deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 3px solid #ff0000;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+  transition: all 0.3s ease-in-out;
+  z-index: 1001;   /* acima do painel lateral */
+}
+
+#btnMenu:hover {
+  background: linear-gradient(145deg,#ff0000,#1a1aff);
+  color: #fff;
+  box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
+  transform: scale(1.05);
+}
+/* Campo de busca maior e robusto */
+.search-input {
+  width: 500px;               /* Aumentei a largura */
+  max-width: 95%;             /* Responsivo em telas menores */
+  padding: 16px 24px;         /* Padding maior para visual mais imponente */
+  border-radius: 15px;        /* Bordas mais arredondadas */
+  border: 2px solid #00ffea;  /* Neon suave */
+  background: #0d0d0d;        /* Fundo escuro */
+  color: #00ffea;             /* Cor do texto */
+  font-size: 18px;            /* Fonte maior */
+  font-weight: 500;           /* Texto mais robusto */
+  text-shadow: 0 0 3px #00ffea33; /* Brilho sutil */
+  box-shadow: 0 2px 5px #00ffea22 inset, 0 0 5px #00ffea11; /* efeito interno e externo leve */
+  transition: all 0.3s ease; 
+}
+
+/* Efeito ao focar */
+.search-input:focus {
+  outline: none;
+  border-color: #00ffe0;
+  box-shadow: 0 0 10px #00ffea44, 0 0 18px #00ffe033 inset;
+  transform: translateY(-1px); /* leve efeito 3D */
+}
+
+/* Placeholder */
+.search-input::placeholder {
+  color: #00ffeaaa;
+  text-shadow: 0 0 2px #00ffea22;
+}
+
+/* Cards regionais 3D ultra futurista */
+.regional-card {
+  background: linear-gradient(135deg,#1c1c1c,#2a2a2a);
+  border-radius: 20px;
+  width: 190px;
+  height: 180px;
+  display: flex;
+  
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  padding: 15px;
+  box-shadow: 
+    0 10px 25px rgba(0,255,234,0.3),       /* sombra externa */
+    inset 0 0 15px rgba(0,255,234,0.2),     /* brilho interno */
+    inset 0 0 30px rgba(0,255,234,0.1),
+    0 0 20px rgba(0,255,234,0.15);
+  transition: all 0.5s ease;
+  perspective: 1200px;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(0,255,234,0.6);
+}
+
+/* Cards regionais 3D robustos e elegantes */
+.regional-card {
+  background: linear-gradient(135deg,#1c1c1c,#2a2a2a);
+  border-radius: 20px;
+  width: 190px;
+  height: 180px;
+  display: flex;
+  
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+  padding: 15px;
+  box-shadow: 
+    0 10px 25px rgba(0,255,234,0.3),       /* sombra externa */
+    inset 0 0 15px rgba(0,255,234,0.2),     /* brilho interno */
+    inset 0 0 30px rgba(0,255,234,0.1),
+    0 0 20px rgba(0,255,234,0.15);
+  transition: all 0.5s ease;
+  perspective: 1200px;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  text-shadow: 0 0 8px rgba(0,255,234,0.6);
+}
+
+/* Pseudo-element para brilho dinâmico */
+.regional-card::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(60deg, rgba(0,255,234,0.2), rgba(0,255,234,0) 70%);
+  transform: rotate(25deg);
+  animation: shine 4s infinite linear;
+  transition: all 0.6s ease;
+  pointer-events: none;
+}
+
+@keyframes shine {
+  0% { transform: rotate(25deg) translateX(-10px); }
+  50% { transform: rotate(25deg) translateX(10px); }
+  100% { transform: rotate(25deg) translateX(-10px); }
+}
+
+/* Hover robusto */
+.regional-card:hover {
+  background: linear-gradient(145deg, #1a1a1a, #3a3a3a);
+  transform: scale(1.05) rotateX(4deg) rotateY(4deg);
+  box-shadow: 
+    0 14px 30px rgba(0,0,0,0.7),
+    inset 0 0 20px rgba(0,255,234,0.05);
+}
+
+
+
+
+
+/* Badge de quantidade discreto e elegante */
+.regional-card .badge-quantidade {
+  position: absolute;
+  top: 14px;
+  right: 50%;
+  transform: translateX(50%);
+  background: rgba(0,255,240,0.4);
+  color: #000;
+  font-weight: bold;
+  font-size: 20px;
+  padding: 8px 14px;
+  border-radius: 14px;
+  box-shadow: 0 0 10px rgba(0,255,240,0.2);
+  text-align: center;
+  min-width: 35px;
+  transition: all 0.3s ease;
+}
+
+.regional-card .badge-quantidade:hover {
+  transform: translateX(50%) scale(1.1);
+  box-shadow: 0 0 15px rgba(0,255,240,0.25);
+}
+
+/* Contadores dentro do card */
+.contadores-card {
+  margin-top: 16px;
+  font-size: 15px;
+  line-height: 1.4;
+  color: #00fff0;
+  text-shadow: 0 0 5px #00fff0;
+  transition: all 0.3s ease;
+}
+
+
+.regional-card:hover::before {
+  transform: rotate(35deg) translateX(10px) translateY(10px);
+}
+
+.regional-card:hover {
+  background: linear-gradient(135deg,#00d1c1,#33e0d8);
+  color: #000;
+  transform: scale(1.08) rotateX(8deg) rotateY(8deg);
+  box-shadow: 
+    0 15px 40px rgba(0,209,193,0.6),
+    inset 0 0 40px rgba(0,209,193,0.3),
+    0 0 35px rgba(0,209,193,0.2);
+}
+
+/* Contadores dentro do card */
+.contadores-card {
+  margin-top: 15px;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #00fff0;
+  text-shadow: 0 0 10px #00fff0, 0 0 25px #33e0d8;
+}
+
+
+.regional-card:hover::before {
+  transform: rotate(35deg) translateX(5px) translateY(5px);
+}
+
+.regional-card:hover {
+  background: linear-gradient(135deg,#00d1c1,#33e0d8); /* cores suaves no hover */
+  color:#000;
+  transform: scale(1.05);
+  box-shadow: 0 8px 20px rgba(0,209,193,0.5), 0 0 35px rgba(0,209,193,0.2) inset;
+}
+
+.contadores-card {
+  margin-top:12px;
+  font-size:14px;
+  text-align:center;
+  line-height:1.3;
+  color:#00fff0;
+  text-shadow:0 0 8px #00fff0, 0 0 20px #00f5ff;
+  transition: all 0.3s ease;
+}
+
+
+/* Container de regionais */
+.regionais-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  margin-left: 20px;
+  margin-top: 120px;  /* <-- aumente este valor para "abaixar" os quadros */
+  perspective: 1000px;
+}
+
+
+.message-box {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: auto;
+  max-width: 400px;
+  padding: 20px 30px;
+  background: linear-gradient(135deg, #0ff, #0aa, #05d);
+  border-radius: 20px;
+  border: 2px solid #0ff;
+  box-shadow: 0 0 20px #0ff, 0 0 40px #0aa inset, 0 0 60px #05d;
+  color: #000;
+  font-weight: bold;
+  font-size: 1.2rem;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  z-index: 9999;
+  text-shadow: 0 0 10px #0ff, 0 0 20px #0aa;
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.message-box.show {
+  opacity: 1;
+  transform: translateX(-50%) scale(1.05);
+}
+.message-box .message-content {
+  animation: glowPulse 1.8s infinite alternate;
+}
+
+@keyframes glowPulse {
+  0% { text-shadow: 0 0 10px #0ff, 0 0 20px #0aa; }
+  50% { text-shadow: 0 0 20px #0ff, 0 0 40px #0aa, 0 0 60px #05d; }
+  100% { text-shadow: 0 0 10px #0ff, 0 0 20px #0aa; }
+}
+
+
+
+/* CORES DIFERENTES PARA CADA REGIONAL */
+.regionais-container .regional-card:nth-child(1) { background: linear-gradient(135deg,#1648b4,#2564c2,#1d7bb9); }
+.regionais-container .regional-card:nth-child(2) { background: linear-gradient(135deg,#1648b4,#1648b4,#2f477a); }
+.regionais-container .regional-card:nth-child(3) { background: linear-gradient(135deg,#1648b4,#5e4b6d,#ca7b13); }
+.regionais-container .regional-card:nth-child(4) { background: linear-gradient(135deg,#1648b4,#5aa090,#ca7b13); }
+.regionais-container .regional-card:nth-child(5) { background: linear-gradient(135deg,#1648b4,#003f7f,#ca7b13); }
+.regionais-container .regional-card:nth-child(6) { background: linear-gradient(135deg,#1648b4,#039f6a,#ca7b13); }
+.regionais-container .regional-card:nth-child(7) { background: linear-gradient(135deg,#1648b4,#413837,#c54614); }
+.regionais-container .regional-card:nth-child(8) { background: linear-gradient(135deg,#1648b4,#1558a5,#bd571c); }
+.regionais-container .regional-card:nth-child(9) { background: linear-gradient(135deg,#292825,#320a7e,#db5203); }
+
+
+
+/* ESTILO COMUM PARA TODOS OS CARDS */
+.regional {
+  border-radius: 18px;
+  width: 200px; height:180px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  cursor:pointer; font-weight:bold; text-align:center;
+  padding:12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3), 0 0 15px rgba(255,255,255,0.05) inset;
+  transition: all 0.5s ease;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  text-shadow: 0 0 5px rgba(255,255,255,0.3);
+}
+
+/* Pseudo-element para brilho sutil */
+.regional::before {
+  content:"";
+  position:absolute;
+  top:-50%; left:-50%;
+  width:200%; height:200%;
+  background: linear-gradient(60deg, rgba(255,255,255,0.06), rgba(255,255,255,0) 70%);
+  transform: rotate(25deg);
+  transition: all 0.6s ease;
+}
+
+.regional:hover::before {
+  transform: rotate(35deg) translateX(5px) translateY(5px);
+}
+
+/* Hover futurista e 3D sutil */
+.regional:hover {
+  transform: scale(1.06) rotateX(3deg) rotateY(3deg);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.35), 0 0 35px rgba(255,255,255,0.08) inset;
+}
+
+/* Contadores dentro do card */
+.contadores-card {
+  margin-top:12px;
+  font-size:13px;
+  text-align:center;
+  line-height:1.3;
+  color:#fff;
+  text-shadow:0 0 4px rgba(255,255,255,0.4);
+}
+
+.regional-card .badge-quantidade {
+  position: absolute;
+  top: 12px;               /* um pouco mais afastado do topo */
+  right: 70%;              /* posiciona no centro horizontal do card */
+  transform: translateX(50%); /* centraliza exatamente */
+  background: rgba(0,255,240,0.85);
+  color: #000;
+  font-weight: bold;
+  font-size: 20px;         /* aumentado */
+  padding: 8px 16px;       /* aumentado para ficar maior e proporcional */
+  border-radius: 14px;     /* borda arredondada maior */
+  box-shadow: 0 0 10px #00fff0;
+  text-align: center;
+  min-width: 30px;
+}
+
+.acao-btns {
+  display:flex;
+  gap:8px;
+  justify-content:center;
+  align-items:center;
+}
+
+/* botões estilo original */
+.action-btn {
+  padding:8px 12px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-weight:bold;
+  font-size:0.9rem;
+  transition: all 0.3s ease;
+  box-shadow:0 0 8px rgba(0,255,234,0.12);
+}
+
+.fortigate-btn { background: linear-gradient(45deg,#0c10d6,#00f5ff); color:#fff; border:2px solid rgba(0,255,240,0.2); }
+.fortigate-btn:hover { box-shadow:0 0 15px #0c10d6,0 0 25px #00ff99; transform:scale(1.05);}
+
+.mikrotik-btn { background: linear-gradient(45deg,#13e236,#00ff99); color:#000; border:2px solid rgba(0,255,240,0.06);}
+.mikrotik-btn:hover { box-shadow:0 0 15px #13e236,0 0 25px #00ff99; transform:scale(1.05);}
+
+.copy-senha-btn { background: linear-gradient(45deg,#ff7a18,#ff3d00); color:#000; border:2px solid rgba(255,160,0,0.08); padding:8px 10px; }
+.copy-senha-btn:hover { box-shadow:0 0 15px rgba(255,120,0,0.3); transform:scale(1.05); }
+
+/* resultado pesquisa e tabelas */
+#resultado-pesquisa {
+  display:none;
+  margin-top:20px;
+  background:#0a0a0a;
+  border:2px solid #00ffea;
+  border-radius:15px;
+  padding:15px;
+  max-width:95%;
+  margin-left:auto;
+  margin-right:auto;
+  box-shadow:0 0 25px #00ffea;
+}
+
+#tabela-pesquisa {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+}
+
+#tabela-pesquisa th, #tabela-pesquisa td {
+  border:1px solid #00ffea;
+  padding:10px;
+  text-align:center;
+}
+
+#tabela-pesquisa th {
+  background:#00ffea;
+  color:#000;
+}
+
+#tabela-pesquisa td {
+  color:#fff;
+}
+
+/* Mantém a aparência sem alteração ao passar o mouse */
+#tabela-pesquisa tr:hover {
+  background: #0a0a0a;  /* mesma cor do fundo da tabela */
+  color: #fff;           /* mesma cor do texto */
+  transform: none;       /* sem zoom */
+  box-shadow: none;      /* sem sombra */
+}
+
+
+
+/* Quadro para contar FortiGate e Mikrotik */
+/* Quadro para contar FortiGate e Mikrotik */
+.quadro-container {
+    position: fixed;
+    top: 10px;       /* distância do topo */
+    left: 10px;      /* lado esquerdo da tela */
+    display: flex;
+    flex-direction: column;  /* empilhar verticalmente */
+    gap: 10px;       /* espaço entre os quadros */
+    z-index: 999;
+}
+
+.quadro {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 10px;
+    padding: 6px 10px;    /* menos padding */
+    width: 120px;          /* largura menor */
+    text-align: center;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    transition: transform 0.3s;
+}
+
+.quadro:hover {
+    transform: scale(1.03);
+}
+
+.quadro h2 {
+    font-size: 1.4em;       /* fonte menor */
+    margin: 0;
+    color: #fff;
+    text-shadow: 0 0 6px #00f, 0 0 10px #0ff;
+}
+
+.quadro p {
+    margin: 3px 0 0;
+    font-size: 0.8em;
+    color: #ccc;
+    text-shadow: 0 0 3px #000;
+}
+
+.fortigate {
+    border-color: #ff3d00;
+    box-shadow: 0 0 12px #ff3d00;
+}
+
+.mikrotik {
+    border-color: #00e5ff;
+    box-shadow: 0 0 12px #00e5ff;
+}
+
+
+  #lojas-container { margin-top:20px; display:none; }
+  #contadores-regional { margin-top:10px; font-size:14px; }
+  table { width:100%; border-collapse:collapse; margin-top:20px; }
+  th,td { border:1px solid #00ffea; padding:10px; text-align:center; }
+  th { background:#00ffea; color:#000; }
+
+  .back-btn {
+  margin-top: 15px;
+  padding: 12px 25px;       /* Aumenta o tamanho do botão */
+  background: #00ffea;
+  color: #000;
+  border: none;
+  cursor: pointer;
+  border-radius: 10px;      /* Borda um pouco maior */
+  font-weight: bold;
+  font-size: 1rem;          /* Fonte maior */
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px #00ffea;
+}
+
+.back-btn:hover {
+  background: linear-gradient(90deg, #00ffea, #0ff);
+  color: #000;
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #00ffea, 0 0 25px #0ff inset;
+}
+
+  .action-btn {
+  padding:8px 16px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:bold;
+  font-size:0.9rem;
+  transition: all 0.4s ease;
+  box-shadow:0 0 10px #00fff0;
+}
+
+.action-btn:hover {
+  transform: scale(1.15);
+  box-shadow:0 0 25px #00fff0, 0 0 45px #33e0d8 inset;
+}
+
+  .fortigate-btn { background: linear-gradient(45deg,#0c10d6,#00f5ff); color:#fff; }
+  .fortigate-btn:hover { box-shadow:0 0 15px #0c10d6,0 0 25px #00ff99; transform:scale(1.1); }
+  .mikrotik-btn { background: linear-gradient(45deg,#13e236,#00ff99); color:#000; }
+  .mikrotik-btn:hover { box-shadow:0 0 15px #13e236,0 0 25px #00ff99; transform:scale(1.1);}
+
+ /* Quadro fixo no canto superior esquerdo */
+  #contadorLoja {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    background: linear-gradient(135deg, #1f1f1f, #333);
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    z-index: 9999;
+  }
+
+
+ /* --- modal de senha --- */
+  #modalSenha {
+    display:none;
+    position:fixed;
+    left:0; top:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.7);
+    z-index:2000;
+    justify-content:center;
+    align-items:center;
+  }
+  #modalSenha .modal-inner {
+    background: linear-gradient(135deg,#091b2a,#06202a);
+    border-radius:18px;
+    padding:20px;
+    width:360px;
+    box-shadow: 0 0 40px rgba(0,200,220,0.2);
+    color:#fff;
+    text-align:center;
+    position:relative;
+  }
+  #modalSenha .input-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 85%;
+  }
+  #modalSenha input[type="password"],
+  #modalSenha input[type="text"] {
+    width:100%;
+    padding:10px 40px 10px 12px;
+    border-radius:10px;
+    border:2px solid rgba(0,200,220,0.15);
+    margin-bottom:12px;
+    background:#0b0b0b;
+    color:#00ffea;
+    font-size:16px;
+  }
+  #toggleSenha {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 20px;
+    color: #00ffea;
+    user-select: none;
+  }
+  #toggleSenha:hover { color:#fff; }
+
+  #modalSenha .btn-row { display:flex; gap:10px; justify-content:center; margin-top:8px; }
+  #modalSenha .btn-row button {
+    padding:10px 14px;
+    border-radius:10px;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+  }
+
+  .confirmar-btn {
+    background: linear-gradient(135deg,#00ffea,#007bff);
+    color:#000;
+    box-shadow:0 0 10px #00ffea;
+  }
+  .cancelar-btn {
+    background: linear-gradient(135deg,#ff4444,#ff0000);
+    color:#fff;
+    box-shadow:0 0 10px #ff0000;
+  }
+  
+</style>
+</head>
+<body>
+
+
+
+  
+
+<button id="btnMenu">MENU PRINCIPAL</button>
+
+<h1>Rede IPs - Claudino</h1>
+
+<div class="total-lojas" id="totalLojas">
+  <div class="total-geral-quadro">
+    <div class="total-geral-label">Total Geral</div>
+    <div class="total-geral-value" id="totalGeral">0</div>
+  </div>
+  <div class="totais-gerais-duas-linhas">
+    <div class="total-item">Filial: <span id="totalFilial">0</span></div>
+    <div class="total-item">Posto: <span id="totalPosto">0</span></div>
+    <div class="total-item">Deposito: <span id="totalDeposito">0</span></div>
+    <div class="total-item">Representante: <span id="totalRepresentante">0</span></div>
+  </div>
+  <div class="ultima-atualizacao">Atualizado em: <span id="ultimaAtualizacao"></span></div>
+</div>
+
+
+<!-- Mensagem fixa dentro de quadro futurista -->
+<div id="copyMessage" class="message-box">
+  <div class="message-content"></div>
+</div>
+
+<!-- Som futurista ao copiar -->
+<audio id="click-sound">
+  <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
+</audio>
+
+
+<div class="search-container">
+  <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por Sigla ou Endereco IP" onkeyup="pesquisarLojas()">
+</div>
+
+<div class="regionais-container" id="regionais-container"></div>
+
+<div id="resultado-pesquisa">
+  <h2>Resultados da Pesquisa</h2>
+  <table id="tabela-pesquisa">
+    <thead>
+      <tr>
+        <th>Sigla</th>
+        <th>Filial</th>
+        <th>Tipo</th>
+        <th>Endereco IP</th>
+        <th>Dispositivo</th>
+        <th>Acao</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<!-- Quadro de contagem -->
+<div class="quadro-container">
+  <div class="quadro fortigate">
+    <h2 id="countFortiGate">0</h2>
+    <p>FortiGate</p>
+  </div>
+  <div class="quadro mikrotik">
+    <h2 id="countMikrotik">0</h2>
+    <p>Mikrotik</p>
+  </div>
+</div>
+
+
+<div id="lojas-container">
+  <button class="back-btn" onclick="voltarRegionais()">Voltar aos Regionais</button>
+  <h2 id="nome-regional"></h2>
+  <div id="contadores-regional">
+    Filial: <span id="regionalFilial">0</span> |
+    Posto: <span id="regionalPosto">0</span> |
+    Deposito: <span id="regionalDeposito">0</span> |
+    Representante: <span id="regionalRepresentante">0</span>
+  </div>
+  <table id="tabela-lojas">
+    <thead>
+      <tr>
+        <th>Sigla</th>
+        <th>Filial</th>
+        <th>Tipo</th>
+        <th>Endereco IP</th>
+        <th>Dispositivo</th>
+        <th>Acao</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<div id="particles-js"></div>
+
+<!-- Particles.js -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script>
+const particleCount = window.innerWidth < 480 ? 20 : (window.innerWidth < 768 ? 40 : 60);
+particlesJS("particles-js", {
+  "particles": {
+    "number":{"value":particleCount,"density":{"enable":true,"value_area":800}},
+    "color":{"value":"#00ffff"},
+    "shape":{"type":"circle"},
+    "opacity":{"value":0.5,"random":true},
+    "size":{"value":3,"random":true},
+    "line_linked":{"enable":true,"distance":150,"color":"#00ffff","opacity":0.4,"width":1},
+    "move":{"enable":true,"speed":2,"random":true,"out_mode":"out"}
+  },
+  "interactivity":{"events":{"onhover":{"enable":true,"mode":"grab"}}},
+  "retina_detect":true
+});
+</script>
+
+<!-- Modal de liberação -->
+<div id="modalUsuario" class="modal" style="display: none;">
+  <div class="modal-content">
+    <h2>Digite o usuario para liberar a senha</h2>
+    <div style="position: relative;">
+      <input type="password" id="usuarioInput" placeholder="Usuário" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+      <span id="toggleUsuario" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: #666;">???</span>
+    </div>
+    <div style="margin-top: 15px; display: flex; justify-content: space-around;">
+      <button id="confirmarUsuario">Confirmar</button>
+      <button id="cancelarUsuario">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+
+<script>const lojasData = {
+  "Regional Afonso": [
+    { sigla: "ACA", filial: "ACA", tipo: "Filial", ip: "172.16.88.251", dispositivo: "FortiGate" },
+    { sigla: "BJS", filial: "ACA", tipo: "Posto", ip: "172.19.56.251", dispositivo: "FortiGate" },
+
+    { sigla: "XXX", filial: "XXX", tipo: "Filial", ip: "EnderecoIP", dispositivo: "Mikrotik" },
+
+
+
+  ]
+
+};
+
+
+// ---------- SENHA PADRÃO FORTIGATE ----------
+const senhaFortigate = "Hrt5M-jgExN7"; // senha única para todas as lojas FortiGate
+const usuarioLiberacaoAceito = ["gertec20"]; // usuários autorizados
+const modalUsuario = document.getElementById("modalUsuario");
+const usuarioInput = document.getElementById("usuarioInput");
+const confirmarUsuario = document.getElementById("confirmarUsuario");
+const cancelarUsuario = document.getElementById("cancelarUsuario");
+const toggleUsuario = document.getElementById("toggleUsuario");
+
+
+
+
+// Mostrar/ocultar usuário digitado
+toggleUsuario.addEventListener("click", () => {
+  if (usuarioInput.type === "password") {
+    usuarioInput.type = "text";
+    toggleUsuario.textContent = "??";
+  } else {
+    usuarioInput.type = "password";
+    toggleUsuario.textContent = "???";
+  }
+});
+
+// Confirmar usuário
+confirmarUsuario.addEventListener("click", () => {
+  const usuario = usuarioInput.value.trim();
+  if (usuarioLiberacaoAceito.includes(usuario)) {
+    alert("Usuário autorizado. Senha liberada!");
+    modalUsuario.style.display = "none";
+    usuarioInput.value = "";
+    // Aqui você pode chamar a função que copia a senha
+  } else {
+    alert("Usuário inválido!");
+  }
+});
+
+// Cancelar
+cancelarUsuario.addEventListener("click", () => {
+  modalUsuario.style.display = "none";
+  usuarioInput.value = "";
+});
+
+
+
+// ---------- FUNÇÕES INICIAIS ----------
+function criarRegionais() {
+  const container = document.getElementById('regionais-container');
+  container.innerHTML = '';
+  const coresCount = 8;
+  let index = 0;
+
+  for (const regional in lojasData) {
+    const lojas = lojasData[regional];
+    const contadores = contarTipos(lojas);
+    const totalLojasRegional = lojas.length; // total de lojas
+
+    const card = document.createElement('div');
+    card.className = 'regional-card';
+    card.setAttribute('data-cor', index % coresCount);
+    card.onclick = () => abrirRegional(regional);
+    card.innerHTML = `
+      ${regional}
+      <div class="badge-quantidade">${totalLojasRegional}</div>
+      <div class="contadores-card">
+        Filial: ${contadores.filial}<br>
+        Posto: ${contadores.posto}<br>
+        Deposito: ${contadores.deposito}<br>
+        Representante: ${contadores.representante}
+      </div>
+    `;
+    container.appendChild(card);
+    index++;
+  }
+}
+
+function somarTodasAsLojas() {
+  let todasLojas = [];
+  for (const regional in lojasData) {
+    todasLojas = todasLojas.concat(lojasData[regional]);
+  }
+  return todasLojas;
+}
+
+function contarTipos(lojas) {
+  let filial=0, posto=0, deposito=0, representante=0;
+  const lojasUnicas = Array.from(new Set(lojas.map(l => JSON.stringify(l)))).map(l => JSON.parse(l));
+  lojasUnicas.forEach(loja => {
+    switch((loja.tipo||'').toLowerCase()){
+      case 'filial': filial++; break;
+      case 'posto': posto++; break;
+      case 'deposito': deposito++; break;
+      case 'representante': representante++; break;
+    }
+  });
+  return {filial, posto, deposito, representante};
+}
+
+// atualizarContadores (mantive sua versão)
+function atualizarContadores(lojas, alvo) {
+  const contadores = contarTipos(lojas);
+  if(alvo==='total'){
+    document.getElementById('totalFilial').innerText = contadores.filial;
+    document.getElementById('totalPosto').innerText = contadores.posto;
+    document.getElementById('totalDeposito').innerText = contadores.deposito;
+    document.getElementById('totalRepresentante').innerText = contadores.representante;
+
+    // Total geral = quantidade total de lojas em todos os regionais
+    document.getElementById('totalGeral').innerText = lojas.length;
+  } else {
+    document.getElementById('regionalFilial').innerText = contadores.filial;
+    document.getElementById('regionalPosto').innerText = contadores.posto;
+    document.getElementById('regionalDeposito').innerText = contadores.deposito;
+    document.getElementById('regionalRepresentante').innerText = contadores.representante;
+  }
+}
+
+
+
+// Abrir regional e mostrar lojas
+function abrirRegional(nome) {
+  document.getElementById('regionais-container').style.display='none';
+  document.getElementById('lojas-container').style.display='block';
+  document.getElementById('nome-regional').innerText=nome;
+  document.getElementById('resultado-pesquisa').style.display='none';
+  mostrarLojas(lojasData[nome]||[]);
+  atualizarContadores(lojasData[nome]||[],'regional');
+  atualizarTotais(lojasData[nome]||[]); // atualiza apenas com lojas da regional
+}
+
+// Mostrar lojas na tabela por regional
+function mostrarLojas(lojas){
+  const tbody = document.querySelector('#tabela-lojas tbody');
+  tbody.innerHTML = '';
+
+  if(lojas.length === 0){
+    tbody.innerHTML = `<tr><td colspan="6">Nenhuma loja encontrada</td></tr>`;
+    return;
+  }
+
+  // Agrupar lojas por filial
+  const lojasPorFilial = {};
+  lojas.forEach(loja => {
+    if(!lojasPorFilial[loja.filial]) lojasPorFilial[loja.filial] = [];
+    lojasPorFilial[loja.filial].push(loja);
+  });
+
+  // Ordenar filiais alfabeticamente
+  const filiaisOrdenadas = Object.keys(lojasPorFilial).sort();
+
+  filiaisOrdenadas.forEach(filial => {
+    // Linha de título da filial
+    const trFilial = document.createElement('tr');
+    trFilial.innerHTML = `<td colspan="6" style="background:#00ffea; color:#000; font-weight:bold; text-align:left; padding-left:10px;">Filial: ${filial}</td>`;
+    tbody.appendChild(trFilial);
+
+    // Adicionar lojas dessa filial
+    lojasPorFilial[filial].forEach(loja => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${loja.sigla}</td>
+        <td>${loja.filial}</td>
+        <td>${loja.tipo}</td>
+        <td>${loja.ip}</td>
+        <td>${loja.dispositivo}</td>
+        <td>
+          ${loja.dispositivo === 'FortiGate' ? 
+            `<div class="acao-btns">
+               <button class="action-btn fortigate-btn" onclick="abrirForti('${loja.ip}')">Abrir</button>
+               <button class="action-btn copy-senha-btn" onclick="abrirModalSenha('${loja.ip}','${loja.sigla}')">Copiar Senha</button>
+             </div>` :
+            `<button class="action-btn mikrotik-btn" onclick="copiarMikro('${loja.ip}')">Copiar</button>`}
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+}
+
+// Função para atualizar os contadores de FortiGate e Mikrotik
+// Função para atualizar contadores
+  function atualizarContadoresDispositivos() {
+    let countFortiGate = 0;
+    let countMikrotik = 0;
+
+    for (const regional in lojasData) {
+      lojasData[regional].forEach(loja => {
+        if (loja.dispositivo.toLowerCase() === "fortigate") countFortiGate++;
+        if (loja.dispositivo.toLowerCase() === "mikrotik") countMikrotik++;
+      });
+    }
+
+    // Animação de contagem
+    animarContagem('countFortiGate', countFortiGate);
+    animarContagem('countMikrotik', countMikrotik);
+  }
+
+  // Função de animação de contagem
+  function animarContagem(id, valorFinal) {
+    const el = document.getElementById(id);
+    let valorAtual = parseInt(el.textContent);
+    const incremento = valorFinal > valorAtual ? 1 : -1;
+
+    if (valorAtual === valorFinal) return;
+
+    const intervalo = setInterval(() => {
+      valorAtual += incremento;
+      el.textContent = valorAtual;
+      if (valorAtual === valorFinal) clearInterval(intervalo);
+    }, 50);
+  }
+
+  // Atualizar na inicialização
+  atualizarContadoresDispositivos();
+
+// Atualiza automaticamente ao carregar a página
+window.addEventListener("DOMContentLoaded", atualizarContadores);
+
+
+// Pesquisar lojas (versão mantendo agrupamento por filial)
+function pesquisarLojas(){
+  const query = document.getElementById('searchInput').value.toLowerCase();
+  const tbody = document.querySelector('#tabela-pesquisa tbody');
+  tbody.innerHTML = '';
+
+  if(!query){
+    document.getElementById('resultado-pesquisa').style.display = 'none';
+    document.getElementById('regionais-container').style.display = 'flex';
+    document.getElementById('lojas-container').style.display = 'none';
+    atualizarTotais(); // total geral completo
+    return;
+  }
+
+  const resultados = [];
+  for(const regional in lojasData){
+    lojasData[regional].forEach(loja=>{
+      if(loja.sigla.toLowerCase().includes(query) || loja.ip.includes(query)){
+        resultados.push({...loja, regional});
+      }
+    });
+  }
+
+  if(resultados.length === 0){
+    tbody.innerHTML = `<tr><td colspan="6">Nenhum resultado encontrado</td></tr>`;
+  } else {
+    // Agrupar por filial
+    const resultadosPorFilial = {};
+    resultados.forEach(loja => {
+      if(!resultadosPorFilial[loja.filial]) resultadosPorFilial[loja.filial] = [];
+      resultadosPorFilial[loja.filial].push(loja);
+    });
+
+    // Ordenar filiais alfabeticamente
+    const filiaisOrdenadas = Object.keys(resultadosPorFilial).sort();
+
+    filiaisOrdenadas.forEach(filial => {
+      // Linha de título da filial
+      const trFilial = document.createElement('tr');
+      trFilial.innerHTML = `<td colspan="6" style="background:#00ffea; color:#000; font-weight:bold; text-align:left; padding-left:10px;">Filial: ${filial}</td>`;
+      tbody.appendChild(trFilial);
+
+      // Adicionar lojas da filial
+      resultadosPorFilial[filial].forEach(loja => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${loja.sigla}</td>
+          <td>${loja.filial}</td>
+          <td>${loja.tipo}</td>
+          <td>${loja.ip}</td>
+          <td>${loja.dispositivo}</td>
+          <td>
+            ${loja.dispositivo === 'FortiGate' ? 
+              `<div class="acao-btns">
+                 <button class="action-btn fortigate-btn" onclick="abrirForti('${loja.ip}')">Abrir</button>
+                 <button class="action-btn copy-senha-btn" onclick="abrirModalSenha('${loja.ip}','${loja.sigla}')">Copiar Senha</button>
+               </div>` :
+              `<button class="action-btn mikrotik-btn" onclick="copiarMikro('${loja.ip}')">Copiar</button>`}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    });
+  }
+
+  document.getElementById('resultado-pesquisa').style.display = 'block';
+  document.getElementById('regionais-container').style.display = 'none';
+  document.getElementById('lojas-container').style.display = 'none';
+
+  atualizarTotais(resultados); // total baseado na pesquisa
+}
+
+// Voltar para regionais
+function voltarRegionais() {
+  document.getElementById('regionais-container').style.display='flex';
+  document.getElementById('lojas-container').style.display='none';
+  document.getElementById('nome-regional').innerText='';
+  document.querySelector('#tabela-lojas tbody').innerHTML='';
+  document.getElementById('resultado-pesquisa').style.display='none';
+  atualizarTotais(); // total geral completo
+}
+
+
+
+// ===== AÇÕES =====
+const btnMenu = document.getElementById("btnMenu");
+btnMenu.addEventListener("click", () => {
+    window.location.href = "menu.html";
+});
+
+function abrirForti(ip){
+    window.open(`https://${ip}:5413`, '_blank');
+}
+function copiarMikro(ip) {
+  if (!ip) return;
+  const ipComPorta = `${ip}:5819`;
+
+  const copiarTexto = () => {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(ipComPorta);
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = ipComPorta;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      return Promise.resolve();
+    }
+  };
+
+  copiarTexto().then(() => {
+    // Tocar som futurista
+    const audio = document.getElementById('click-sound');
+    if(audio) { try{ audio.currentTime = 0; audio.play(); }catch(e){} }
+
+    // Mostrar mensagem no quadro
+    const msgBox = document.getElementById('copyMessage');
+    const msgContent = msgBox.querySelector('.message-content');
+    msgContent.innerHTML = ` <strong>${ipComPorta}</strong> copiado com sucesso!`;
+    msgBox.classList.add('show');
+
+    // Remover após 15 segundos (pode ajustar entre 10-20)
+    setTimeout(() => msgBox.classList.remove('show'), 15000);
+  }).catch(err => console.error('Erro ao copiar IP:', err));
+}
+
+
+// ===== Modal e cópia da senha FortiGate =====
+function abrirModalSenha(ip, sigla){
+  // exibe modal; guarda dados para uso (se desejar mostrar na UI)
+  const modal = document.getElementById('modalSenha');
+  modal.style.display = 'flex';
+  modal.setAttribute('data-ip', ip || '');
+  modal.setAttribute('data-sigla', sigla || '');
+  const input = document.getElementById('modalSenhaUsuario');
+  if(input) input.value = '';
+  const inputFocus = () => { if(input) input.focus(); };
+  setTimeout(inputFocus, 120);
+}
+
+function fecharModalSenha(){
+  const modal = document.getElementById('modalSenha');
+  modal.style.display = 'none';
+  modal.removeAttribute('data-ip');
+  modal.removeAttribute('data-sigla');
+}
+
+function tentarLiberarSenha(){
+  const input = document.getElementById('modalSenhaUsuario');
+  const usuario = (input && input.value) ? input.value.trim().toLowerCase() : '';
+  if(usuario && usuarioLiberacaoAceito.includes(usuario)){
+    copiarSenhaForti();
+    fecharModalSenha();
+    // mensagem confirmando a cópia da senha
+	mostrarMsgBox(`<strong>Senha Copiada com Sucesso!</strong>`);
+  } else {
+    	mostrarMsgBox(`<strong>Usuario Invalido</strong> , Liberacao Negada.`);
+  }
+}
+
+function copiarSenhaForti(){
+  const copiarTexto = () => {
+    if (navigator.clipboard && window.isSecureContext) {
+      return navigator.clipboard.writeText(senhaFortigate);
+    } else {
+      const textarea = document.createElement('textarea');
+      textarea.value = senhaFortigate;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      return Promise.resolve();
+    }
+  };
+
+  copiarTexto().then(() => {
+    const audio = document.getElementById('click-sound');
+    if(audio) { try{ audio.currentTime = 0; audio.play(); }catch(e){} }
+    // mensagem será mostrada na função que chama copiarSenhaForti
+  }).catch(err => console.error('Erro ao copiar senha:', err));
+}
+
+// Função reutilizada para mostrar mensagem no quadro futurista
+function mostrarMsgBox(htmlContent){
+  const msgBox = document.getElementById('copyMessage');
+  const msgContent = msgBox.querySelector('.message-content');
+  msgContent.innerHTML = htmlContent;
+  msgBox.classList.add('show');
+  setTimeout(() => msgBox.classList.remove('show'), 15000);
+}
+
+
+// ===== Totais =====
+function atualizarTotais(lojas = null) {
+  const todasLojas = lojas || somarTodasAsLojas();
+  const contadores = contarTipos(todasLojas);
+
+  document.getElementById('totalFilial').innerText = contadores.filial;
+  document.getElementById('totalPosto').innerText = contadores.posto;
+  document.getElementById('totalDeposito').innerText = contadores.deposito;
+  document.getElementById('totalRepresentante').innerText = contadores.representante;
+  
+  // Total geral = número total de lojas mostradas
+  document.getElementById('totalGeral').innerText = todasLojas.length;
+
+  // Atualizar data da última atualização
+  document.getElementById('ultimaAtualizacao').innerText = new Date().toLocaleString();
+}
+
+
+
+// ===== Inicialização =====
+criarRegionais();
+atualizarTotais();
+
+</script>
+
+<!-- Modal HTML (colocado no final para sobrepor corretamente) -->
+<!-- Modal HTML (substitua o modal antigo por este) -->
+<div id="modalSenha">
+  <div class="modal-inner" role="dialog" aria-modal="true">
+    <h3 style="color:#00ffea; margin:0 0 10px 0;">Autenticacao - Liberar Senha</h3>
+    <div style="font-size:13px; margin-bottom:10px; color:#bfeff3;">Digite o usuario para liberar </div>
+
+    <!-- wrapper que usa seu CSS #toggleSenha -->
+    <div class="input-wrapper" style="margin:0 auto 6px; width:85%;">
+      <input type="password" id="modalSenhaUsuario" placeholder=" Nome do Usuario " autocomplete="off" />
+    </div>
+
+    <div class="btn-row">
+      <button style="background:linear-gradient(90deg,#00d1c1,#33e0d8); color:#000; border-radius:10px;" onclick="tentarLiberarSenha()">Liberar</button>
+      <button style="background:linear-gradient(90deg,#ff7a18,#ff3d00); color:#000; border-radius:10px;" onclick="fecharModalSenha()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

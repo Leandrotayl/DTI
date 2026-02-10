@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema de Gestão</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Roboto', sans-serif; }
+  body {
+    background: #0f2027;  
+    background: linear-gradient(to right, #2c5364, #203a43, #0f2027);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  /* LOGIN */
+  #login-container {
+    background: rgba(0,0,0,0.7);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 30px rgba(0,0,0,0.8);
+    width: 300px;
+    text-align: center;
+  }
+  #login-container h1 {
+    margin-bottom: 20px;
+    color: #00ffe7;
+  }
+  #login-container input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+  }
+  #login-container button {
+    padding: 10px 20px;
+    background: #00ffe7;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #000;
+    font-weight: bold;
+    transition: 0.3s;
+  }
+  #login-container button:hover {
+    background: #00c5b3;
+  }
+
+  /* DASHBOARD */
+  #dashboard {
+    display: none;
+    width: 90%;
+    max-width: 1200px;
+    text-align: center;
+  }
+  #dashboard h1 {
+    margin-bottom: 30px;
+    color: #00ffe7;
+  }
+  .panels {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  .panel-card {
+    background: rgba(255,255,255,0.05);
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  .panel-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0 40px #00ffe7;
+  }
+  .panel-card h2 {
+    margin-bottom: 10px;
+    color: #00ffe7;
+  }
+  .panel-card p {
+    font-size: 0.9rem;
+    color: #ccc;
+  }
+
+  /* PAGES */
+  .page {
+    display: none;
+    margin-top: 30px;
+    text-align: left;
+    background: rgba(0,0,0,0.8);
+    padding: 20px;
+    border-radius: 15px;
+  }
+  .page h2 {
+    color: #00ffe7;
+    margin-bottom: 15px;
+  }
+  .page button.back {
+    background: #ff4d4d;
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-bottom: 15px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  table th, table td {
+    padding: 12px;
+    border: 1px solid #00ffe7;
+    text-align: left;
+  }
+  table th {
+    background: rgba(0,255,231,0.1);
+  }
+
+</style>
+</head>
+<body>
+
+<div id="login-container">
+  <h1>Login</h1>
+  <input type="text" id="username" placeholder="Usuário">
+  <input type="password" id="password" placeholder="Senha">
+  <button onclick="login()">Entrar</button>
+</div>
+
+<div id="dashboard">
+  <h1>Bem-vindo ao Sistema</h1>
+  <div class="panels">
+    <div class="panel-card" onclick="openPage('inventario')">
+      <h2>Supervisão de Inventário</h2>
+      <p>Gerencie o inventário da empresa com controle total.</p>
+    </div>
+    <div class="panel-card" onclick="openPage('colaboradores')">
+      <h2>Colaboradores</h2>
+      <p>Cadastro e gerenciamento de colaboradores.</p>
+    </div>
+    <div class="panel-card" onclick="openPage('ramal')">
+      <h2>Ramal</h2>
+      <p>Controle de ramais e contatos internos.</p>
+    </div>
+    <div class="panel-card" onclick="openPage('gerencia')">
+      <h2>Gerência de Suporte</h2>
+      <p>Monitoramento e atendimento de chamados.</p>
+    </div>
+  </div>
+
+  <!-- Páginas internas -->
+  <div id="inventario" class="page">
+    <button class="back" onclick="backDashboard()">Voltar</button>
+    <h2>Supervisão de Inventário</h2>
+    <table>
+      <tr><th>ID</th><th>Produto</th><th>Quantidade</th><th>Data</th></tr>
+      <tr><td>1</td><td>Notebook</td><td>10</td><td>20/11/2025</td></tr>
+      <tr><td>2</td><td>Monitor</td><td>5</td><td>20/11/2025</td></tr>
+    </table>
+  </div>
+
+  <div id="colaboradores" class="page">
+    <button class="back" onclick="backDashboard()">Voltar</button>
+    <h2>Colaboradores</h2>
+    <table>
+      <tr><th>ID</th><th>Nome</th><th>Cargo</th></tr>
+      <tr><td>1</td><td>Leandro Martins</td><td>TI</td></tr>
+      <tr><td>2</td><td>Thulio ECM</td><td>Suporte</td></tr>
+    </table>
+  </div>
+
+  <div id="ramal" class="page">
+    <button class="back" onclick="backDashboard()">Voltar</button>
+    <h2>Ramal</h2>
+    <table>
+      <tr><th>Ramal</th><th>Nome</th></tr>
+      <tr><td>101</td><td>Leandro</td></tr>
+      <tr><td>102</td><td>Thulio</td></tr>
+    </table>
+  </div>
+
+  <div id="gerencia" class="page">
+    <button class="back" onclick="backDashboard()">Voltar</button>
+    <h2>Gerência de Suporte</h2>
+    <table>
+      <tr><th>ID Chamado</th><th>Colaborador</th><th>Status</th></tr>
+      <tr><td>001</td><td>Leandro</td><td>Aberto</td></tr>
+      <tr><td>002</td><td>Thulio</td><td>Fechado</td></tr>
+    </table>
+  </div>
+
+</div>
+
+<script>
+function login() {
+  const user = document.getElementById('username').value;
+  const pass = document.getElementById('password').value;
+  // Exemplo simples: usuário admin, senha 123
+  if(user === 'admin' && pass === '123'){
+    document.getElementById('login-container').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+  } else {
+    alert('Usuário ou senha inválidos!');
+  }
+}
+
+function openPage(pageId) {
+  const pages = document.querySelectorAll('.page');
+  pages.forEach(p => p.style.display = 'none');
+  document.getElementById(pageId).style.display = 'block';
+}
+
+function backDashboard() {
+  const pages = document.querySelectorAll('.page');
+  pages.forEach(p => p.style.display = 'none');
+}
+</script>
+
+</body>
+</html>

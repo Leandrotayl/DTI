@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparador de Planilhas Excel</title>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: #0d0d0f;
+        color: #00f7ff;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        text-shadow: 0 0 10px #00eaff;
+        margin-bottom: 30px;
+        font-size: 32px;
+    }
+
+    /* Área dos indicadores */
+    .cards {
+        display: flex;
+        gap: 15px;
+        margin-bottom: 25px;
+    }
+
+    .card {
+        background: #111825;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 0 12px #00eaff66;
+        width: 180px;
+    }
+
+    .card h3 {
+        margin: 0;
+        font-size: 15px;
+        color: #7ff6ff;
+    }
+
+    .card p {
+        font-size: 22px;
+        margin: 5px 0 0 0;
+        color: #00eaff;
+        font-weight: bold;
+    }
+
+    .card span {
+        font-size: 12px;
+        color: #7ff6ff;
+        display: block;
+        margin-top: 6px;
+    }
+
+    /* Input files */
+    input[type="file"] {
+        margin: 10px auto;
+        display: block;
+        padding: 10px;
+        color: #00f7ff;
+        background: #000;
+        border: 1px solid #00f7ff;
+        border-radius: 8px;
+        cursor: pointer;
+        width: 260px;
+    }
+
+    /* Pesquisa */
+    .pesquisa {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+    }
+
+    .pesquisa input {
+        padding: 10px;
+        width: 220px;
+        border-radius: 8px;
+        border: 1px solid #00f7ff;
+        background: #000;
+        color: #00ffff;
+    }
+
+    /* Layout lado a lado */
+    .container {
+        display: flex;
+        gap: 20px;
+    }
+
+    .box {
+        flex: 1;
+        background: #111;
+        padding: 15px;
+        border-radius: 12px;
+        box-shadow: 0 0 12px #00eaff66;
+    }
+
+    h2 {
+        text-align: center;
+        margin-top: 5px;
+    }
+
+    table {
+        width: 100%;
+        margin-top: 12px;
+        border-collapse: collapse;
+        background: #0d0d0f;
+    }
+
+    th, td {
+        padding: 10px;
+        border: 1px solid #00eaff66;
+        text-align: center;
+    }
+
+    th {
+        background: #000;
+        color: #00eaff;
+    }
+
+    tbody tr:nth-child(even) {
+        background: #1b1b1b;
+    }
+
+    tbody tr:hover {
+        background: #222;
+    }
+</style>
+</head>
+<body>
+
+<h1>Comparador de Planilhas Excel</h1>
+
+<!-- Campo de busca -->
+<div class="pesquisa">
+    <input type="text" id="campoBusca" placeholder="Pesquisar...">
+</div>
+
+<!-- Cards de repetição -->
+<div class="cards">
+    <div class="card">
+        <h3>Seriais Repetidos</h3>
+        <p id="qtSerialRep">0</p>
+        <span id="listaSerialRep">Nenhum</span>
+    </div>
+    <div class="card">
+        <h3>Lojas Repetidas</h3>
+        <p id="qtLojaRep">0</p>
+        <span id="listaLojaRep">Nenhuma</span>
+    </div>
+</div>
+
+<!-- Inputs de arquivo -->
+<input type="file" id="fileAtual" accept=".xls,.xlsx">
+<input type="file" id="fileAnterior" accept=".xls,.xlsx">
+
+<!-- Áreas lado a lado -->
+<div class="container">
+    <div class="box">
+        <h2>Mês Atual</h2>
+        <table id="tabelaAtual">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Loja (Coluna_A)</th>
+                    <th>Modelo (Coluna_F)</th>
+                    <th>Serial (Coluna_G)</th>
+                    <th>Páginas (Coluna_I)</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <div class="box">
+        <h2>Mês Anterior</h2>
+        <table id="tabelaAnterior">
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Loja (Coluna_B)</th>
+                    <th>Modelo (Coluna_F)</th>
+                    <th>Serial (Coluna_D)</th>
+                    <th>Páginas (Coluna_I)</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function formatItem(n){ return n.toString().padStart(2,"0"); }
+
+/* ----------- LER PLANILHAS ----------- */
+function lerPlanilha(input, tabelaId, config) {
+    let file = input.files[0];
+    if(!file) return;
+
+    let reader = new FileReader();
+
+    reader.onload = e => {
+        let wb = XLSX.read(new Uint8Array(e.target.result), {type:"array"});
+        let sheet = wb.Sheets[wb.SheetNames[0]];
+        let rows = XLSX.utils.sheet_to_json(sheet, {header:1}).slice(1);
+
+        let dados = rows.map(r => ({
+            loja: r[config.loja] || "",
+            modelo: r[5] || "",
+            serial: r[config.serial] || "",
+            paginas: Number(r[8] || 0)
+        }));
+
+        dados.sort((a,b)=>b.paginas - a.paginas);
+
+        let tbody = document.querySelector(`#${tabelaId} tbody`);
+        tbody.innerHTML = "";
+
+        dados.forEach((d,i)=>{
+            let tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${formatItem(i+1)}</td>
+                <td>${d.loja}</td>
+                <td>${d.modelo}</td>
+                <td>${d.serial}</td>
+                <td>${d.paginas}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+
+        if(tabelaId === "tabelaAtual") analisarRepeticoes(dados);
+    };
+
+    reader.readAsArrayBuffer(file);
+}
+
+/* ----------- REPETIÇÕES ----------- */
+function analisarRepeticoes(dados){
+    let seriais = {};
+    let lojas = {};
+
+    dados.forEach(d=>{
+        seriais[d.serial] = (seriais[d.serial]||0)+1;
+        lojas[d.loja] = (lojas[d.loja]||0)+1;
+    });
+
+    let repSerial = Object.entries(seriais).filter(e=>e[1]>1);
+    let repLoja = Object.entries(lojas).filter(e=>e[1]>1);
+
+    document.getElementById("qtSerialRep").innerText = repSerial.length;
+    document.getElementById("listaSerialRep").innerText =
+        repSerial.length ? repSerial.map(s=>`${s[0]} (${s[1]})`).join(", ") : "Nenhum";
+
+    document.getElementById("qtLojaRep").innerText = repLoja.length;
+    document.getElementById("listaLojaRep").innerText =
+        repLoja.length ? repLoja.map(s=>`${s[0]} (${s[1]})`).join(", ") : "Nenhuma";
+}
+
+/* ----------- PESQUISA GLOBAL ----------- */
+document.getElementById("campoBusca").addEventListener("input", function() {
+    let termo = this.value.toLowerCase();
+
+    filtrarTabela("tabelaAtual", termo);
+    filtrarTabela("tabelaAnterior", termo);
+});
+
+function filtrarTabela(tabelaId, termo) {
+    let linhas = document.querySelectorAll(`#${tabelaId} tbody tr`);
+
+    linhas.forEach(tr => {
+        tr.style.display = tr.innerText.toLowerCase().includes(termo) ? "" : "none";
+    });
+}
+
+/* ----------- EVENTOS ----------- */
+fileAtual.addEventListener("change",()=>{
+    lerPlanilha(fileAtual,"tabelaAtual",{loja:0,serial:6});
+});
+
+fileAnterior.addEventListener("change",()=>{
+    lerPlanilha(fileAnterior,"tabelaAnterior",{loja:1,serial:3});
+});
+</script>
+
+</body>
+</html>

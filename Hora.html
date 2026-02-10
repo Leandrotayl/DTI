@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Dados DTI </title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Roboto', sans-serif; }
+body { min-height:100vh; display:flex; justify-content:center; align-items:center; background: linear-gradient(135deg,#4b6cb7,#182848); color:#fff; position:relative; }
+
+#logoutBtn {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    background: #ff4d4d;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;
+    z-index: 1000;
+    transition: 0.3s;
+}
+#logoutBtn:hover { background:#e63939; }
+
+#loginForm { background: rgba(255,255,255,0.05); padding:30px; border-radius:15px; width:350px; box-shadow:0 8px 30px rgba(0,0,0,0.3); backdrop-filter:blur(10px); text-align:center;}
+#loginForm input { width:100%; padding:12px; margin:10px 0; border-radius:8px; border:none; outline:none; font-size:16px;}
+#loginForm input:focus { box-shadow:0 0 10px #00ffcc;}
+#loginForm button { width:100%; padding:12px; margin-top:10px; border:none; border-radius:8px; background:#00ffcc; color:#182848; font-weight:bold; cursor:pointer; transition:0.3s;}
+#loginForm button:hover { background:#00e6b8; }
+.error { color:#ff4d4d; font-size:14px; margin-top:10px; display:none; }
+
+#mainScreen { display:none; flex-direction:column; align-items:center; width:100%; min-height:100vh; padding:20px; }
+#addBtn {
+    position: fixed;
+    top: 15px;
+    right: 120px;
+    font-size: 20px;
+    color: #00ffcc;
+    background: none;
+    border: 2px solid #00ffcc;
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer
+    transition: 0.3s;
+    z-index: 1000;
+}
+#addBtn:hover { background: rgba(0,255,204,0.1); transform: scale(1.2); }
+
+#tabelaRegistros { width:90%; max-width:900px; border-collapse:collapse; margin-top:20px; background: rgba(255,255,255,0.05); border-radius:10px; overflow:hidden;}
+#tabelaRegistros th, #tabelaRegistros td { padding:10px; text-align:center; border-bottom:1px solid #fff;}
+#tabelaRegistros th { background: rgba(0,255,204,0.2); }
+#tabelaRegistros button { padding:3px 6px; margin:0 2px; border:none; border-radius:5px; cursor:pointer; font-size:12px; }
+.btn-edit { background:#00ffcc; color:#182848; }
+.btn-edit:hover { background:#00e6b8; }
+.btn-delete { background:#ff4d4d; color:#fff; }
+.btn-delete:hover { background:#e63939; }
+
+#btnMenu {
+  position: fixed;
+  top: 6px;
+  left: 2px;
+  width: 180px;       /* diminuiu de 240px */
+  padding: 16px 0;    /* diminuiu o padding */
+  background: linear-gradient(135deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 3px solid #ff0000;
+  border-radius: 12px; /* um pouco menor */
+  font-size: 0.9rem;   /* diminuiu o tamanho da fonte */
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+  transition: all 0.3s ease-in-out;
+  z-index: 1001;
+}
+
+#btnMenu:hover {
+  background: linear-gradient(145deg,#ff0000,#1a1aff);
+  color: #fff;
+  box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
+  transform: scale(1.05);
+}
+
+
+/* Modals */
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:1000; }
+.modal-content { background: rgba(255,255,255,0.05); padding:30px; border-radius:15px; width:350px; box-shadow:0 8px 30px rgba(0,0,0,0.3); backdrop-filter:blur(10px); position:relative; }
+.modal-content h2 { text-align:center; margin-bottom:20px; }
+.modal-content input, .modal-content textarea { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:none; outline:none; font-size:16px;}
+.modal-content textarea { resize:none; }
+.modal-content input:focus, .modal-content textarea:focus { box-shadow:0 0 10px #00ffcc;}
+.modal-content button { width:100%; padding:12px; margin-top:15px; border:none; border-radius:8px; background:#00ffcc; color:#182848; font-weight:bold; cursor:pointer; transition:0.3s;}
+.modal-content button:hover { background:#00e6b8; }
+.closeBtn { position:absolute; top:10px; right:15px; background:#ff4d4d; color:#fff; border:none; border-radius:5px; padding:8px 15px; font-size:14px; cursor:pointer; }
+
+/* Preview modal */
+#previewModal .modal-content { width:auto; max-width:90%; text-align:center; }
+#previewModal img, #previewModal iframe { border-radius:8px; max-width:100%; max-height:80vh; }
+#previewModal iframe { width:80vw; height:80vh; border:none; cursor:default; }
+#previewModal p { color:#fff; }
+</style>
+</head>
+<body>
+
+<button id="logoutBtn" onclick="logout()">Logout</button>
+
+<!-- Login -->
+<div id="loginForm">
+<h1>Login</h1>
+<input type="text" id="usuario" placeholder="Usuario">
+<input type="password" id="senha" placeholder="Senha">
+<button onclick="validarLogin()">Entrar</button>
+<div class="error" id="error-msg">Usuário ou senha incorretos!</div>
+</div>
+
+<!-- Tela Principal -->
+<div id="mainScreen">
+<button id="addBtn" onclick="abrirModal()">Adicionar</button>
+<table id="tabelaRegistros">
+<thead>
+<tr>
+<th>Colaborador</th>
+<th>Data Inicial</th>
+<th>Data Final</th>
+<th>Anexo</th>
+<th>Comentario</th>
+<th>Acoes</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+
+<button id="btnMenu">MENU PRINCIPAL</button>
+
+
+<!-- Modal Registro -->
+<div id="registroModal" class="modal">
+<div class="modal-content">
+<button class="closeBtn" onclick="fecharModal()">Fechar</button>
+<h2 id="modalTitle">Salvar Registro de Pontos</h2>
+<label>Colaborador</label>
+<input type="text" id="colaborador" readonly>
+<label>Data Inicial</label>
+<input type="date" id="dataInicial">
+<label>Data Final</label>
+<input type="date" id="dataFinal">
+<label>Anexar Arquivo</label>
+<input type="file" id="arquivo" onchange="previewArquivo()">
+<div id="previewArquivo" style="margin-top:10px; text-align:center;"></div>
+<label>Comentário</label>
+<textarea id="comentario" placeholder="Digite um comentario..." rows="3"></textarea>
+<button onclick="salvarRegistro()">Salvar Registro</button>
+</div>
+</div>
+
+<!-- Modal Preview Anexo -->
+<div id="previewModal" class="modal">
+<div class="modal-content">
+<button class="closeBtn" onclick="fecharPreview()">Fechar</button>
+<div id="previewContainer" style="margin-top:20px;"></div>
+</div>
+</div>
+
+<script>
+const usuarios = { 
+    "leandro":"1", 
+    "douglas":"12", 
+    "joao vitor":"123", 
+    "joao lucas":"1234", 
+    "marcos victor":"12345"
+};
+
+const logoutBtn = document.getElementById('logoutBtn');
+const loginForm = document.getElementById('loginForm');
+const mainScreen = document.getElementById('mainScreen');
+const registroModal = document.getElementById('registroModal');
+const tabelaBody = document.querySelector('#tabelaRegistros tbody');
+
+let registroEditIndex = null;
+
+// Login
+function validarLogin(){
+    const user = document.getElementById('usuario').value.trim().toLowerCase();
+    const pass = document.getElementById('senha').value;
+    if(usuarios[user] && usuarios[user] === pass){
+        document.getElementById('error-msg').style.display = "none";
+        localStorage.setItem('usuarioLogado', user);
+        mostrarTelaPrincipal();
+    } else { document.getElementById('error-msg').style.display = "block"; }
+}
+
+// Tela principal
+function mostrarTelaPrincipal(){
+    const user = localStorage.getItem('usuarioLogado');
+    if(!user) return;
+    loginForm.style.display = 'none';
+    mainScreen.style.display = 'flex';
+    logoutBtn.style.display = 'block';
+    carregarRegistros();
+}
+
+// Modal Registro
+function abrirModal(){
+    registroEditIndex = null;
+    document.getElementById('modalTitle').innerText = "Salvar Registro de Pontos";
+    const user = localStorage.getItem('usuarioLogado');
+    document.getElementById('colaborador').value = user.charAt(0).toUpperCase()+user.slice(1);
+    const hoje = new Date().toISOString().split('T')[0];
+    document.getElementById('dataInicial').value = hoje;
+    document.getElementById('dataFinal').value = hoje;
+    document.getElementById('arquivo').value = "";
+    document.getElementById('previewArquivo').innerHTML = "";
+    document.getElementById('comentario').value = "";
+    registroModal.style.display = 'flex';
+}
+function fecharModal(){ registroModal.style.display='none'; }
+
+// Logout
+function logout(){ localStorage.removeItem('usuarioLogado'); location.reload(); }
+
+// Fechar modals clicando fora
+window.onclick = function(e){
+    if(e.target === registroModal) fecharModal();
+    if(e.target === document.getElementById('previewModal')) fecharPreview();
+}
+
+// Preview arquivo
+function previewArquivo(){
+    const input = document.getElementById('arquivo');
+    const preview = document.getElementById('previewArquivo');
+    preview.innerHTML = "";
+    if(input.files && input.files[0]){
+        const file = input.files[0];
+        const tipo = file.type;
+        if(tipo.startsWith("image/")){
+            const img = document.createElement('img');
+            img.src = URL.createObjectURL(file);
+            img.style.maxWidth="100%"; img.style.maxHeight="150px"; img.style.borderRadius="8px";
+            preview.appendChild(img);
+        } else if(tipo==="application/pdf"){
+            preview.innerHTML = `<p>PDF selecionado: ${file.name}</p>`;
+        } else { preview.innerHTML = `<p>Arquivo: ${file.name}</p>`; }
+    }
+}
+
+// Salvar registro
+function salvarRegistro(){
+    const colaborador = document.getElementById('colaborador').value;
+    const dataInicial = document.getElementById('dataInicial').value;
+    const dataFinal = document.getElementById('dataFinal').value;
+    const comentario = document.getElementById('comentario').value;
+    const arquivoInput = document.getElementById('arquivo');
+    const arquivoFile = arquivoInput.files[0];
+    if(!dataInicial || !dataFinal){ alert("Preencha as datas corretamente!"); return; }
+
+    function salvarNoLS(registro){
+        const usuario = localStorage.getItem('usuarioLogado');
+        let registros = JSON.parse(localStorage.getItem('registros_' + usuario)) || [];
+        if(registroEditIndex !== null){
+            registros[registroEditIndex] = registro;
+        } else {
+            registros.push(registro);
+        }
+        localStorage.setItem('registros_' + usuario, JSON.stringify(registros));
+        document.getElementById('arquivo').value="";
+        document.getElementById('previewArquivo').innerHTML="";
+        document.getElementById('comentario').value="";
+        registroEditIndex = null;
+        fecharModal();
+        carregarRegistros();
+    }
+
+    if(arquivoFile){
+        const reader = new FileReader();
+        reader.onload = function(e){
+            salvarNoLS({
+                colaborador,
+                dataInicial,
+                dataFinal,
+                arquivo: arquivoFile.name,
+                arquivoTipo: arquivoFile.type,
+                arquivoData: e.target.result,
+                comentario
+            });
+        }
+        reader.readAsDataURL(arquivoFile);
+    } else {
+        salvarNoLS({
+            colaborador,
+            dataInicial,
+            dataFinal,
+            arquivo:"Nenhum",
+            arquivoTipo:null,
+            arquivoData:null,
+            comentario
+        });
+    }
+}
+
+// Formatar data dd/mm/aaaa
+function formatarData(data){
+    const d = new Date(data);
+    const dia = String(d.getDate()).padStart(2,'0');
+    const mes = String(d.getMonth()+1).padStart(2,'0');
+    const ano = d.getFullYear();
+    return `${dia}/${mes}/${ano}`;
+}
+
+// Carregar registros
+function carregarRegistros(){
+    tabelaBody.innerHTML="";
+    const usuario = localStorage.getItem('usuarioLogado');
+    let registros = JSON.parse(localStorage.getItem('registros_' + usuario)) || [];
+    registros.forEach((r,index)=>{
+        let tr = document.createElement('tr');
+        let anexoHTML="Nenhum";
+        if(r.arquivo && r.arquivo!=="Nenhum"){
+            if(r.arquivoTipo?.startsWith("image/") && r.arquivoData){
+                anexoHTML = `<img src="${r.arquivoData}" style="max-width:60px; max-height:40px; border-radius:5px; cursor:pointer;" onclick="visualizarAnexo('${r.arquivoData}','${r.arquivoTipo}')">`;
+            } else if(r.arquivoTipo==="application/pdf" && r.arquivoData){
+                anexoHTML = `<span style="cursor:pointer; color:#00ffcc;" onclick="visualizarAnexo('${r.arquivoData}','${r.arquivoTipo}')">&#128196;</span>`;
+            } else { anexoHTML = r.arquivo; }
+        }
+        tr.innerHTML = `<td>${r.colaborador}</td>
+                        <td>${formatarData(r.dataInicial)}</td>
+                        <td>${formatarData(r.dataFinal)}</td>
+                        <td>${anexoHTML}</td>
+                        <td>${r.comentario || ""}</td>
+                        <td>
+                            <button class="btn-edit" onclick="editarRegistro(${index})">Editar</button>
+                            <button class="btn-delete" onclick="deletarRegistro(${index})">Excluir</button>
+                        </td>`;
+        tabelaBody.appendChild(tr);
+    });
+}
+
+// Editar registro
+function editarRegistro(index){
+    registroEditIndex = index;
+    const usuario = localStorage.getItem('usuarioLogado');
+    const registros = JSON.parse(localStorage.getItem('registros_' + usuario)) || [];
+    const r = registros[index];
+    document.getElementById('modalTitle').innerText = "Editar Registro de Pontos";
+    document.getElementById('colaborador').value = r.colaborador;
+    document.getElementById('dataInicial').value = r.dataInicial;
+    document.getElementById('dataFinal').value = r.dataFinal;
+    document.getElementById('arquivo').value = "";
+    document.getElementById('comentario').value = r.comentario || "";
+    const preview = document.getElementById('previewArquivo');
+    preview.innerHTML="";
+    if(r.arquivoData){
+        if(r.arquivoTipo.startsWith("image/")){
+            const img = document.createElement('img');
+            img.src = r.arquivoData;
+            img.style.maxWidth="100%"; img.style.maxHeight="150px"; img.style.borderRadius="8px";
+            preview.appendChild(img);
+        } else if(r.arquivoTipo==="application/pdf"){
+            preview.innerHTML = `<p>PDF selecionado: ${r.arquivo}</p>`;
+        } else { preview.innerHTML = `<p>Arquivo: ${r.arquivo}</p>`; }
+    }
+    registroModal.style.display='flex';
+}
+
+// Deletar registro
+function deletarRegistro(index){
+    const usuario = localStorage.getItem('usuarioLogado');
+    const senha = prompt("Digite sua senha para excluir o registro:");
+    if(senha === null) return;
+    if(usuarios[usuario] === senha){
+        let registros = JSON.parse(localStorage.getItem('registros_' + usuario)) || [];
+        registros.splice(index,1);
+        localStorage.setItem('registros_' + usuario, JSON.stringify(registros));
+        carregarRegistros();
+    } else {
+        alert("Senha incorreta! Não é possível excluir o registro.");
+    }
+}
+
+const btnMenu = document.getElementById("btnMenu");
+btnMenu.addEventListener("click", () => {
+    window.location.href = "menu.html";
+});
+
+
+// Visualizar anexo
+function visualizarAnexo(arquivoData, tipo){
+    const container = document.getElementById('previewContainer');
+    container.innerHTML = "";
+    if(tipo.startsWith("image/")){
+        const img = document.createElement('img');
+        img.src = arquivoData;
+        container.appendChild(img);
+    } else if(tipo==="application/pdf"){
+        const iframe = document.createElement('iframe');
+        iframe.src = arquivoData;
+        container.appendChild(iframe);
+    } else {
+        container.innerHTML="<p>Não é possível pré-visualizar este tipo de arquivo.</p>";
+    }
+    document.getElementById('previewModal').style.display='flex';
+}
+function fecharPreview(){ document.getElementById('previewModal').style.display='none'; }
+
+// Auto login
+if(localStorage.getItem('usuarioLogado')) mostrarTelaPrincipal();
+</script>
+
+</body>
+</html>

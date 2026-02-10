@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Redes • Claudino</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --azul:#2563eb;
+  --verde:#059669;
+  --roxo:#7c3aed;
+  --cinza:#0f172a;
+  --bg:#f1f5f9;
+}
+
+*{ box-sizing:border-box }
+
+body{
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background:linear-gradient(180deg,#e8edf3,#f8fafc);
+  margin:0;
+  padding:30px;
+  color:#0f172a;
+}
+
+h1{
+  text-align:center;
+  font-size:32px;
+  margin-bottom:30px;
+  letter-spacing:.5px;
+}
+
+/* ===================== */
+/* PESQUISA */
+/* ===================== */
+.pesquisa-container{
+  max-width:700px;
+  margin:0 auto 40px auto;
+  background:rgba(255,255,255,.85);
+  backdrop-filter:blur(10px);
+  padding:22px;
+  border-radius:20px;
+  box-shadow:0 25px 50px rgba(0,0,0,.18);
+}
+
+.pesquisa-container input{
+  width:100%;
+  padding:14px 16px;
+  border-radius:12px;
+  border:1px solid #cbd5f5;
+  font-size:16px;
+  outline:none;
+}
+
+.pesquisa-container input:focus{
+  border-color:var(--azul);
+  box-shadow:0 0 0 3px rgba(37,99,235,.2);
+}
+
+.resultado{
+  margin-top:18px;
+}
+
+/* ===================== */
+/* CARDS RESUMO */
+/* ===================== */
+.cards-resumo{
+  position:fixed;
+  top:24px;          /* distância do topo */
+  right:24px;        /* distância da direita */
+  display:flex;
+  gap:16px;
+  z-index:999;
+}
+
+
+.card-info{
+  background:linear-gradient(145deg,#ffffff,#eef2ff);
+  border-radius:22px;
+  padding:18px;
+  flex-direction:column;
+  text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,.18);
+  transition:.3s;
+}
+
+.card-info:hover{
+  transform:translateY(-6px) scale(1.03);
+}
+
+.card-info h3{
+  margin:0;
+  font-size:14px;
+  color:#475569;
+  letter-spacing:.4px;
+}
+
+.card-info span{
+  display:block;
+  margin-top:10px;
+  font-size:34px;
+  font-weight:800;
+}
+
+.card-total span{ color:#020617 }
+.card-imp span{ color:var(--azul) }
+.card-pdv span{ color:var(--verde) }
+.card-rel span{ color:var(--roxo) }
+
+/* ===================== */
+/* TABELAS */
+/* ===================== */
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:10px;
+  font-size:15px;
+  background:#fff;
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 15px 35px rgba(0,0,0,.12);
+}
+
+thead{
+  background:linear-gradient(90deg,#1e3a8a,#2563eb);
+  color:#fff;
+}
+
+th,td{
+  padding:14px;
+  text-align:center;
+}
+
+tbody tr{
+  transition:.2s;
+}
+
+tbody tr:hover{
+  background:#eef2ff;
+}
+
+/* ===================== */
+/* TOAST NOTIFICAÇÃO */
+/* ===================== */
+.toast{
+  position:fixed;
+  top:90px;
+  right:24px;
+  background:linear-gradient(135deg,#2563eb,#1e40af);
+  color:#fff;
+  padding:14px 22px;
+  border-radius:14px;
+  font-size:14px;
+  box-shadow:0 15px 30px rgba(0,0,0,.35);
+  display:flex;
+  align-items:center;
+  gap:10px;
+  opacity:0;
+  transform:translateY(-15px);
+  transition:all .4s ease;
+  z-index:2000;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.toast::before{
+  content:"✔";
+  font-size:18px;
+}
+
+.hidden{
+  display:none;
+}
+
+/* ===================== */
+/* MODAL SENHA */
+/* ===================== */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(2,6,23,.55);
+  backdrop-filter:blur(12px);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:3000;
+}
+
+.modal-box{
+  background:linear-gradient(145deg,#ffffff,#eef2ff);
+  width:100%;
+  max-width:420px;
+  padding:32px;
+  border-radius:24px;
+  box-shadow:0 30px 80px rgba(0,0,0,.45);
+  text-align:center;
+  animation:modalIn .45s ease;
+}
+
+@keyframes modalIn{
+  from{ transform:scale(.85) translateY(30px); opacity:0 }
+  to{ transform:scale(1) translateY(0); opacity:1 }
+}
+
+.modal-box h3{
+  margin:0;
+  font-size:22px;
+  color:#1e3a8a;
+}
+
+.modal-box p{
+  margin:12px 0 22px;
+  font-size:14px;
+  color:#475569;
+}
+
+.modal-box input{
+  width:100%;
+  padding:14px;
+  border-radius:14px;
+  border:1px solid #cbd5f5;
+  font-size:15px;
+  outline:none;
+  text-align:center;
+}
+
+.modal-box input:focus{
+  border-color:var(--azul);
+  box-shadow:0 0 0 3px rgba(37,99,235,.25);
+}
+
+.modal-actions{
+  display:flex;
+  gap:14px;
+  margin-top:26px;
+}
+
+.btn-cancelar{
+  flex:1;
+  background:linear-gradient(135deg,#64748b,#334155);
+}
+
+.btn-confirmar{
+  flex:1;
+  background:linear-gradient(135deg,#059669,#047857);
+}
+
+/* ===================== */
+/* CAMPO DE PESQUISA FUTURISTA */
+/* ===================== */
+.pesquisa-campo {
+  max-width: 700px;
+  margin: 0 auto 20px auto;
+  display: flex;
+  justify-content: center;
+}
+
+.pesquisa-campo input {
+  width: 50%;
+  padding: 16px 24px;
+  border-radius: 30px;
+  border: 2px solid rgba(37, 99, 235, 0.4);
+  font-size: 18px;
+  font-weight: 500;
+  outline: none;
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  box-shadow:
+    inset 0 2px 6px rgba(0,0,0,0.2),
+    0 8px 20px rgba(37, 99, 235, 0.3);
+  transition: all 0.3s ease;
+}
+
+.pesquisa-campo input::placeholder {
+  color: rgba(37, 99, 235, 0.7);
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+.pesquisa-campo input:focus {
+  border: 2px solid #2563eb;
+  box-shadow:
+    inset 0 2px 6px rgba(0,0,0,0.2),
+    0 0 25px rgba(37, 99, 235, 0.7),
+    0 8px 30px rgba(37, 99, 235, 0.3);
+  background: rgba(255,255,255,0.25);
+  transform: scale(1.02);
+}
+
+/* ===================== */
+/* QUADRO DE RESULTADOS FUTURISTA */
+/* ===================== */
+.resultado-container {
+  max-width: 700px;
+  margin: 0 auto 40px auto;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(15px);
+  padding: 22px;
+  border-radius: 24px;
+  box-shadow:
+    0 8px 30px rgba(37, 99, 235, 0.2),
+    0 20px 60px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.resultado-container table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: inset 0 0 15px rgba(37, 99, 235, 0.2);
+}
+
+.resultado-container thead {
+  background: linear-gradient(90deg,#1e3a8a,#2563eb);
+  color: #fff;
+}
+
+.resultado-container th, .resultado-container td {
+  padding: 14px;
+  text-align: center;
+  color: #0f172a;
+}
+
+.resultado-container tbody tr:hover {
+  background: rgba(37, 99, 235, 0.15);
+}
+
+/* TOAST COPIADO ULTRA HD */
+.toast-ultra {
+  position: fixed;
+  top: 30px;
+  right: 30px;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  border: 2px solid #0ff;
+  border-radius: 16px;
+  padding: 16px 28px;
+  color: #0ff;
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: 1px;
+  font-family: 'Segoe UI', sans-serif;
+  box-shadow: 0 0 20px #0ff, 0 0 60px #0ff;
+  opacity: 0;
+  transform: translateY(-30px) scale(0.9);
+  z-index: 10000;
+  text-align: center;
+  text-shadow: 0 0 8px #0ff, 0 0 16px #0ff;
+  transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  pointer-events: none;
+}
+
+.toast-ultra.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Ícone futurista */
+.toast-ultra::before {
+  content: "✔";
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 20px;
+  color: #0ff;
+  text-shadow: 0 0 10px #0ff, 0 0 20px #0ff;
+  animation: pulse 1s infinite alternate;
+}
+
+/* animação de brilho pulsante */
+@keyframes pulse {
+  0% { text-shadow: 0 0 10px #0ff, 0 0 20px #0ff; }
+  50% { text-shadow: 0 0 20px #0ff, 0 0 40px #0ff; }
+  100% { text-shadow: 0 0 10px #0ff, 0 0 20px #0ff; }
+}
+
+
+/* ===================== */
+/* BOTÕES NEON FUTURISTA */
+/* ===================== */
+.btn-fortigate, .btn-mikrotik {
+  border-radius: 16px;
+  padding: 10px 20px;
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 0 6px rgba(0,0,0,0.3);
+  box-shadow: 0 0 10px rgba(255,255,255,0.2);
+  transition: all 0.25s ease;
+}
+
+.btn-fortigate {
+  background: linear-gradient(135deg, #059669, #047857);
+  box-shadow: 0 0 12px #059669, 0 0 20px #047857;
+}
+
+.btn-mikrotik {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  box-shadow: 0 0 12px #2563eb, 0 0 20px #1e40af;
+}
+
+.btn-fortigate:hover, .btn-mikrotik:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #fff, 0 0 25px rgba(37, 99, 235, 0.7);
+}
+
+
+.pesquisa-campo input:focus {
+  border-color: var(--azul);
+  box-shadow: 0 0 0 3px rgba(37,99,235,.2);
+}
+
+.resultado-container {
+  max-width: 10000px;
+  margin: 0 auto 40px auto;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(10px);
+  padding: 22px;
+  border-radius: 20px;
+  box-shadow: 0 25px 50px rgba(0,0,0,.18);
+}
+
+.modal {
+  position: fixed;
+  top:0; left:0; width:100%; height:100%;
+  background: rgba(0,0,0,0.7);
+  display:flex; align-items:center; justify-content:center;
+  z-index: 9999;
+}
+
+.modal-box {
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  padding: 20px;
+  border-radius: 16px;
+  width: 350px;
+  max-height: 80%;
+  overflow-y: auto;
+  color: #fff;
+  box-shadow: 0 0 20px rgba(0,255,255,0.5);
+  animation: modalFade 0.25s ease-out;
+}
+
+@keyframes modalFade {
+  from {opacity:0; transform: scale(0.9);}
+  to {opacity:1; transform: scale(1);}
+}
+
+.modal-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.item-modal {
+  background: linear-gradient(135deg, #2563eb, #1e40af);
+  padding: 10px 14px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.25s;
+}
+
+.item-modal:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px #2563eb;
+}
+
+.item-modal span {
+  font-size: 14px;
+}
+
+.item-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.item-actions button {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  padding: 4px 8px;
+  border-radius: 6px;
+  color: #fff;
+  font-size: 12px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.item-actions button:hover {
+  background: rgba(255,255,255,0.25);
+}
+
+/* ===================== */
+/* REGIONAIS */
+/* ===================== */
+.regionais{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:26px;
+}
+
+.card-regional{
+  background:linear-gradient(145deg,#ffffff,#e0e7ff);
+  padding:34px;
+  text-align:center;
+  border-radius:26px;
+  cursor:pointer;
+  font-size:20px;
+  font-weight:700;
+  color:#1e3a8a;
+  box-shadow:0 25px 50px rgba(0,0,0,.18);
+  transition:.35s;
+}
+
+.card-regional:hover{
+  transform:translateY(-10px) scale(1.04);
+}
+
+.card-regional small{
+  display:block;
+  margin-top:14px;
+  font-size:13px;
+  font-weight:500;
+  color:#334155;
+  line-height:1.6;
+}
+
+.card-regional small span{
+  display:block;
+}
+
+.erro-input{
+  border-color:#dc2626 !important;
+  box-shadow:0 0 0 3px rgba(220,38,38,.25);
+}
+
+.msg-erro{
+  color:#dc2626;
+  font-size:13px;
+  margin-top:10px;
+  display:none;
+}
+
+
+/* ===================== */
+/* BOTÕES */
+/* ===================== */
+button{
+  border:none;
+  border-radius:10px;
+  padding:8px 18px;
+  cursor:pointer;
+  color:#fff;
+  font-weight:600;
+  transition:.25s;
+}
+
+button:hover{
+  transform:scale(1.05);
+}
+
+.btn-mikrotik{ background:linear-gradient(135deg,#2563eb,#1e40af) }
+.btn-fortigate{ background:linear-gradient(135deg,#059669,#065f46) }
+.btn-voltar{
+  background:linear-gradient(135deg,#334155,#020617);
+  margin-bottom:20px;
+}
+
+.hidden{ display:none }
+</style>
+</head>
+
+<body>
+
+<h1>Rede • Claudino</h1>
+
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden">
+  <span id="toastText"></span>
+</div>
+
+<!-- MODAL COPIAR SENHA -->
+<div id="modalSenha" class="modal hidden">
+  <div class="modal-box">
+    <h3>🔐 Acesso restrito</h3>
+    <p>Informe o usuario para liberar</p>
+
+    <input id="usuarioSenha" type="password" placeholder="Usuário autorizado">
+    <div id="msgErroUsuario" class="msg-erro">Usuário incorreto ❌</div>
+
+    <div class="modal-actions">
+      <button class="btn-cancelar" onclick="fecharModalSenha()">Cancelar</button>
+      <button class="btn-confirmar" onclick="confirmarUsuario()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- TOAST COPIADO -->
+<div id="toastUltra" class="toast-ultra">Copiado com sucesso!</div>
+
+<!-- MODAL IMPRESSORAS -->
+<div id="modalImpressoras" class="modal hidden">
+  <div class="modal-box">
+    <h3>🖨️ Impressoras da Loja</h3>
+    <div id="listaImpressoras" class="modal-lista"></div>
+    <div class="modal-actions">
+      <button class="btn-cancelar" onclick="fecharModal('modalImpressoras')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PDVS -->
+<div id="modalPdvs" class="modal hidden">
+  <div class="modal-box">
+    <h3>💻 PDVs da Loja</h3>
+    <div id="listaPdvs" class="modal-lista"></div>
+    <div class="modal-actions">
+      <button class="btn-cancelar" onclick="fecharModal('modalPdvs')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL RELOGIOS -->
+<div id="modalRelogios" class="modal hidden">
+  <div class="modal-box">
+    <h3>⏱️ Relógios da Loja</h3>
+    <div id="listaRelogios" class="modal-lista"></div>
+    <div class="modal-actions">
+      <button class="btn-cancelar" onclick="fecharModal('modalRelogios')">Fechar</button>
+    </div>
+  </div>
+</div>
+
+<div class="pesquisa-campo">
+  <input id="pesquisaSigla" placeholder="🔍 Digite a sigla da loja" oninput="pesquisarLoja()">
+  <button id="btnLimparPesquisa" onclick="limparPesquisa()" style="
+    margin-left:10px;
+    padding:10px 16px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#334155,#1e3a8a);
+    color:#fff;
+    font-weight:600;
+    cursor:pointer;
+    transition:.25s;
+  ">Limpar</button>
+</div>
+
+  
+</div>
+
+<!-- RESULTADOS -->
+<div class="resultado-container">
+  <div class="resultado" id="resultadoPesquisa">Digite a sigla da loja</div>
+</div>
+
+
+
+<!-- CARDS RESUMO -->
+<div id="cardsResumo" class="cards-resumo hidden">
+  <div class="card-info card-imp"><h3>Impressoras</h3><span id="totalImpressoras">0</span></div>
+  <div class="card-info card-pdv"><h3>PDVs</h3><span id="totalPdvs">0</span></div>
+  <div class="card-info card-rel"><h3>Relógios</h3><span id="totalRelogios">0</span></div>
+</div>
+
+<!-- REGIONAIS -->
+<div id="telaRegionais" class="regionais"></div>
+
+<!-- DETALHES -->
+<div id="telaDetalhes" class="hidden">
+  <button class="btn-voltar" onclick="voltar()">⬅ Voltar</button>
+  <div id="conteudoDetalhes"></div>
+</div>
+
+<script>
+// =====================
+// DADOS
+// =====================
+const lojasData={
+  "Regional Afonso":[
+   { sigla: "ACA", filial: "ACA", tipo: "Filial", ip: "172.16.88.251", dispositivo: "FortiGate" },
+   { sigla: "BJT", filial: "ACA", tipo: "Posto", ip: "172.18.111.251", dispositivo: "FortiGate" },
+   { sigla: "VLD", filial: "ACA", tipo: "Representante", ip: "172.26.88.1", dispositivo: "Mikrotik" },
+
+],
+   "Regional Cazuza": [
+    { sigla: "ABR", filial: "ABR", tipo: "Filial", ip: "172.16.186.251", dispositivo: "FortiGate" },
+   
+
+  ],
+  "Regional Coutinho":[
+    { sigla:"CTL", filial:"CTL", tipo:"Filial", ip:"172.18.10.1", dispositivo:"FortiGate" }
+  ],
+
+
+  "Regional Edivano": [
+    { sigla: "BHM", filial: "BHM", tipo: "Filial", ip: "172.16.70.251", dispositivo: "FortiGate" },
+  ],
+
+  "Regional Erisvaldo": [
+    { sigla: "BHA", filial: "BHA", tipo: "Filial", ip: "172.16.218.251", dispositivo: "FortiGate" },
+ ],
+
+"Regional Ronnie Von": [
+    { sigla: "BCO", filial: "BCO", tipo: "Filial", ip: "172.16.166.251", dispositivo: "FortiGate" },
+ ],
+
+"Regional Wellington": [
+    { sigla: "ALS", filial: "ALS", tipo: "Filial", ip: "172.16.196.251", dispositivo: "FortiGate" },
+ ],
+
+"Regional Diretoria": [
+    { sigla: "TEZ", filial: "TEZ", tipo: "Filial", ip: "172.16.11.249", dispositivo: "Mikrotik" },
+ ],
+
+"Coligadas": [
+    { sigla: "FRI-INDUSTRIA", filial: "FRI-INDUSTRIA", tipo: "Filial", ip: "172.16.19.251", dispositivo: "FortiGate" },
+ ],
+
+};
+
+const const_impressoras_por_loja = {
+  "ACA": [
+    { nome: "LASER_01", modelo: "HP_4103", ip: "172.16.88.46" },
+    { nome: "LASER_02", modelo: "HP_4103", ip: "172.16.88.47" },
+    { nome: "LASER_03", modelo: "Epson_5390", ip: "172.16.88.48" },
+  ],
+
+  "BJT": [
+    { modelo: "HP LaserJet Pro M404dn", ip: "172.16.90.201" }
+  ]
+};
+
+
+const const_pdvs = {
+  "ACA": [
+    { nome: "PDVACA01", ip: "172.16.88.200" },
+    { nome: "PDVACA02", ip: "172.16.88.201" }
+  ],
+  "BJT": [
+    { nome: "PDVBJT01", ip: "172.16.90.101" }
+  ],
+};
+
+
+const const_relogios_por_loja = [
+  { sigla: "ACA", nome: "Relógio 01", ip: "172.16.88.201" },
+  { sigla: "ACA", nome: "Relógio 02", ip: "172.16.88.202" },
+
+  { sigla: "BJT", nome: "Relógio 01", ip: "172.16.90.201" }
+];
+
+
+// =====================
+// REGIONAIS
+// =====================
+const telaRegionais=document.getElementById("telaRegionais");
+Object.keys(lojasData).forEach(r=>{
+  const dados = lojasData[r];
+
+  const totalFilial = dados.filter(l=>l.tipo==="Filial").length;
+  const totalPosto = dados.filter(l=>l.tipo==="Posto").length;
+  const totalDeposito = dados.filter(l=>l.tipo==="Deposito").length;
+  const totalRepresentante = dados.filter(l=>l.tipo==="Representante").length;
+
+  const c=document.createElement("div");
+  c.className="card-regional";
+  c.onclick=()=>abrirRegional(r);
+
+  c.innerHTML=`
+    ${r}
+    <small>
+      <span> Filiais: <b>${totalFilial}</b></span>
+      <span> Postos: <b>${totalPosto}</b></span>
+      <span> Depósitos: <b>${totalDeposito}</b></span>
+      <span> Representantes: <b>${totalRepresentante}</b></span>
+    </small>
+  `;
+
+  telaRegionais.appendChild(c);
+});
+
+function limparPesquisa() {
+  location.reload(); // recarrega a página inteira
+}
+
+
+// =====================
+// PESQUISA
+// =====================
+function pesquisarLoja(){
+  const sigla = document.getElementById("pesquisaSigla").value.toUpperCase().trim();
+  const res = document.getElementById("resultadoPesquisa");
+
+  if(!sigla){ 
+    res.innerHTML = "Digite a sigla da loja"; 
+    document.getElementById("cardsResumo").classList.add("hidden");
+    return; 
+  }
+
+  let loja = null;
+  for(const r in lojasData){
+    lojasData[r].forEach(l => { if(l.sigla === sigla) loja = l; });
+  }
+
+  if(!loja){ 
+    res.innerHTML = "❌ Loja não encontrada"; 
+    document.getElementById("cardsResumo").classList.add("hidden");
+    return; 
+  }
+
+  const imp = (const_impressoras_por_loja[sigla] || []).length;
+  const pdv = (const_pdvs[sigla] || []).length;
+  const rel = const_relogios_por_loja.filter(r => r.sigla === sigla).length;
+
+  // === ATUALIZA CARDS ===
+  document.getElementById("totalImpressoras").textContent = imp;
+  document.getElementById("totalPdvs").textContent = pdv;
+  document.getElementById("totalRelogios").textContent = rel;
+  const cardsResumo = document.getElementById("cardsResumo");
+  cardsResumo.classList.remove("hidden");
+
+  // === MOSTRA SIGLA ACIMA DOS CARDS ===
+  let tituloSigla = document.getElementById("siglaPesquisa");
+  if(!tituloSigla){
+    tituloSigla = document.createElement("h2");
+    tituloSigla.id = "siglaPesquisa";
+    tituloSigla.style.textAlign = "center";
+    tituloSigla.style.marginBottom = "15px";
+    tituloSigla.style.color = "#1e3a8a";
+    tituloSigla.style.fontSize = "36px";  // tamanho grande
+    tituloSigla.style.fontWeight = "700";
+    tituloSigla.style.textShadow = "2px 2px 6px rgba(0,0,0,0.3)";
+    cardsResumo.prepend(tituloSigla); // coloca antes dos cards
+  }
+  tituloSigla.textContent = sigla;
+
+  // === RESTANTE DA FUNÇÃO PARA MOSTRAR TABELA E BOTÕES ===
+  const acao = `
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center;">
+      ${loja.dispositivo.includes("Mikro")
+      ? `<button class="btn-mikrotik" onclick="copiarEndereco('${loja.ip}:5819')">Copiar IP</button>`
+      : `<button class="btn-fortigate" onclick="abrirEndereco('${loja.ip}:5413')">Abrir</button>
+         <button class="btn-fortigate" onclick="copiarSenha(SENHA_FORTIGATE)">Copiar Senha</button>`}
+      <div style="display:flex; gap:6px; align-items:center;">
+        <span onclick="mostrarImpressoras('${sigla}')" style="background:linear-gradient(135deg,#2563eb,#1e40af); padding:6px 10px; border-radius:12px; color:#fff; font-weight:600; font-size:13px; cursor:pointer;">Impressoras ${imp}</span>
+        <span onclick="mostrarPdvs('${sigla}')" style="background:linear-gradient(135deg,#059669,#047857); padding:6px 10px; border-radius:12px; color:#fff; font-weight:600; font-size:13px; cursor:pointer;">PDVs ${pdv}</span>
+        <span onclick="mostrarRelogios('${sigla}')" style="background:linear-gradient(135deg,#7c3aed,#6b21a8); padding:6px 10px; border-radius:12px; color:#fff; font-weight:600; font-size:13px; cursor:pointer;">Relógios ${rel}</span>
+      </div>
+    </div>
+  `;
+
+  res.innerHTML = `<table>
+    <thead><tr>
+      <th>Sigla</th><th>Filial</th><th>Tipo</th>
+      <th>Endereço IP</th><th>Dispositivo</th><th>Ação</th>
+    </tr></thead>
+    <tbody><tr>
+      <td>${loja.sigla}</td><td>${loja.filial}</td><td>${loja.tipo}</td>
+      <td>${loja.ip}</td><td>${loja.dispositivo}</td><td>${acao}</td>
+    </tr></tbody>
+  </table>`;
+}
+
+
+// Impressoras detalhadas
+let listaImpressoras = impressoras.map(i => `
+  <div 
+    onclick="window.open('http://${i.ip}', '_blank')"
+    style="
+      background:linear-gradient(135deg,#2563eb,#1e40af); 
+      padding:6px 12px; 
+      border-radius:12px; 
+      color:#fff; 
+      font-size:12px; 
+      margin-top:4px; 
+      cursor:pointer; 
+      transition:0.25s;
+      text-align:center;
+    "
+    onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 0 12px #2563eb'"
+    onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='none'"
+  >
+    ${i.modelo} | ${i.ip}
+  </div>
+`).join("");
+
+// função genérica para fechar qualquer modal
+
+// função genérica para fechar qualquer modal
+function fecharModal(idModal){
+  document.getElementById(idModal).classList.add("hidden");
+}
+
+// função genérica para criar item de modal com botões Abrir e Copiar
+
+// função de mostrar toast futurista
+function mostrarToastUltra(texto = "Copiado com sucesso!") {
+  const toast = document.getElementById("toastUltra");
+  toast.textContent = texto;
+  toast.classList.add("show");
+
+  // remove após 2 segundos
+  setTimeout(() => {
+    toast.classList.remove("show");
+  }, 2000);
+}
+
+
+// função para criar itens de modal (Impressoras, PDVs, Relógios)
+function criarItemModal(nome, ip, cor1="#2563eb", cor2="#1e40af") {
+  const div = document.createElement("div");
+  div.className = "item-modal";
+  div.style.background = `linear-gradient(135deg, ${cor1}, ${cor2})`;
+
+  const nomeSpan = document.createElement("span");
+  nomeSpan.textContent = nome;
+
+  const ipSpan = document.createElement("span");
+  ipSpan.textContent = ip;
+  ipSpan.style.fontWeight = "600";
+  ipSpan.style.textDecoration = "underline";
+
+  const actions = document.createElement("div");
+  actions.className = "item-actions";
+
+  // botão abrir
+  const btnAbrir = document.createElement("button");
+  btnAbrir.className = "btn-abrir";
+  btnAbrir.textContent = "Abrir";
+  btnAbrir.onclick = (e) => {
+    e.stopPropagation();
+    window.open(`http://${ip}`, "_blank");
+  };
+
+  // botão copiar
+  const btnCopiar = document.createElement("button");
+  btnCopiar.className = "btn-copiar";
+  btnCopiar.textContent = "Copiar";
+  btnCopiar.onclick = (e) => {
+  e.stopPropagation();
+  navigator.clipboard.writeText(ip).then(() => {
+    mostrarToastUltra();
+  });
+};
+
+  actions.appendChild(btnAbrir);
+  actions.appendChild(btnCopiar);
+
+  div.appendChild(nomeSpan);
+  div.appendChild(ipSpan);
+  div.appendChild(actions);
+
+  return div;
+}
+
+// Exemplo de uso em modal Impressoras
+function mostrarImpressoras(sigla){
+  const impressorasLoja = const_impressoras_por_loja[sigla] || [];
+  const container = document.getElementById("listaImpressoras");
+  container.innerHTML = "";
+
+  if(impressorasLoja.length === 0){
+    container.innerHTML = "<p>Nenhuma impressora cadastrada ❌</p>";
+  } else {
+    impressorasLoja.forEach(i => {
+      const item = criarItemModal(i.modelo || i.nome, i.ip, "#2563eb", "#1e40af");
+      container.appendChild(item);
+    });
+  }
+
+  document.getElementById("modalImpressoras").classList.remove("hidden");
+}
+
+// mesma lógica para PDVs e Relógios
+function mostrarPdvs(sigla){
+  const pdvsLoja = const_pdvs[sigla] || [];
+  const container = document.getElementById("listaPdvs");
+  container.innerHTML = "";
+
+  if(pdvsLoja.length === 0){
+    container.innerHTML = "<p>Nenhum PDV cadastrado ❌</p>";
+  } else {
+    pdvsLoja.forEach(p => {
+      const item = criarItemModal(p.nome, p.ip, "#059669", "#047857");
+      container.appendChild(item);
+    });
+  }
+
+  document.getElementById("modalPdvs").classList.remove("hidden");
+}
+
+function mostrarRelogios(sigla){
+  const relogiosLoja = const_relogios_por_loja.filter(r => r.sigla === sigla);
+  const container = document.getElementById("listaRelogios");
+  container.innerHTML = "";
+
+  if(relogiosLoja.length === 0){
+    container.innerHTML = "<p>Nenhum relógio cadastrado ❌</p>";
+  } else {
+    relogiosLoja.forEach(r => {
+      const item = criarItemModal(r.nome, r.ip, "#7c3aed", "#6b21a8");
+      container.appendChild(item);
+    });
+  }
+
+  document.getElementById("modalRelogios").classList.remove("hidden");
+}
+
+
+// =====================
+// IMPRESSORAS
+// =====================
+function mostrarImpressoras(sigla){
+  const impressorasLoja = const_impressoras_por_loja[sigla] || [];
+  const container = document.getElementById("listaImpressoras");
+  container.innerHTML = "";
+
+  if(impressorasLoja.length === 0){
+    container.innerHTML = "<p>Nenhuma impressora cadastrada ❌</p>";
+  } else {
+    impressorasLoja.forEach(i => container.appendChild(
+      criarItemModal(i.modelo || i.nome, i.ip, "#2563eb", "#1e40af")
+    ));
+  }
+
+  document.getElementById("modalImpressoras").classList.remove("hidden");
+}
+
+// =====================
+// PDVS
+// =====================
+function mostrarPdvs(sigla){
+  const pdvsLoja = const_pdvs[sigla] || [];
+  const container = document.getElementById("listaPdvs");
+  container.innerHTML = "";
+
+  if(pdvsLoja.length === 0){
+    container.innerHTML = "<p>Nenhum PDV cadastrado ❌</p>";
+  } else {
+    pdvsLoja.forEach(p => container.appendChild(
+      criarItemModal(p.nome, p.ip, "#059669", "#047857")
+    ));
+  }
+
+  document.getElementById("modalPdvs").classList.remove("hidden");
+}
+
+// =====================
+// RELOGIOS
+// =====================
+function mostrarRelogios(sigla){
+  const relogiosLoja = const_relogios_por_loja.filter(r => r.sigla === sigla);
+  const container = document.getElementById("listaRelogios");
+  container.innerHTML = "";
+
+  if(relogiosLoja.length === 0){
+    container.innerHTML = "<p>Nenhum relógio cadastrado ❌</p>";
+  } else {
+    relogiosLoja.forEach(r => container.appendChild(
+      criarItemModal(r.nome, r.ip, "#7c3aed", "#6b21a8")
+    ));
+  }
+
+  document.getElementById("modalRelogios").classList.remove("hidden");
+}
+
+
+// =====================
+// SENHA PADRÃO FORTIGATE
+// =====================
+const SENHA_FORTIGATE = "Hrt5M-jgExN7"; // <-- coloque a senha real aqui
+
+let senhaTemp = "";
+
+function copiarSenha(senha){
+  senhaTemp = senha;
+  document.getElementById("usuarioSenha").value = "";
+  document.getElementById("modalSenha").classList.remove("hidden");
+
+  setTimeout(()=>{
+    document.getElementById("usuarioSenha").focus();
+  }, 200);
+}
+
+function fecharModalSenha(){
+  document.getElementById("modalSenha").classList.add("hidden");
+}
+
+function confirmarUsuario() {
+  const usuarioDigitado = document.getElementById("usuarioSenha").value.trim();
+
+  if(usuarioDigitado === USUARIO_AUTORIZADO) {
+    // copia senha para área de transferência
+    navigator.clipboard.writeText(senhaParaCopiar).then(() => {
+      mostrarToastUltra("Senha copiada com sucesso! ✅");
+      fecharModalSenha();
+    });
+  } else {
+    // mostra erro
+    document.getElementById("msgErroUsuario").style.display = "block";
+  }
+}
+
+function fecharModalSenha() {
+  document.getElementById("modalSenha").classList.add("hidden");
+  document.getElementById("usuarioSenha").value = "";
+  document.getElementById("msgErroUsuario").style.display = "none";
+}
+
+
+
+// =====================
+// DETALHES
+// =====================
+function abrirRegional(regional){
+  const dados = lojasData[regional] || [];
+  const telaDetalhes = document.getElementById("telaDetalhes");
+  document.getElementById("telaRegionais").classList.add("hidden");
+  telaDetalhes.classList.remove("hidden");
+
+  // montar a tabela
+  let linhas = dados.map(loja => {
+    const sigla = loja.sigla;
+    const imp = (const_impressoras_por_loja[sigla] || []).length;
+    const pdv = (const_pdvs[sigla] || []).length;
+    const rel = const_relogios_por_loja.filter(r => r.sigla === sigla).length;
+
+    const acao = `
+      <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap; justify-content:center;">
+        ${loja.dispositivo.includes("Mikro")
+          ? `<button class="btn-mikrotik" onclick="copiarEndereco('${loja.ip}:5819')">Copiar IP</button>`
+          : `<button class="btn-fortigate" onclick="abrirEndereco('${loja.ip}:5413')">Abrir</button>
+             <button class="btn-fortigate" onclick="copiarSenha(SENHA_FORTIGATE)">Copiar Senha</button>`
+        }
+
+        <div style="display:flex; gap:6px; align-items:center;">
+          <span onclick="mostrarImpressoras('${sigla}')"
+                style="background:linear-gradient(135deg,#2563eb,#1e40af);
+                       padding:6px 10px; border-radius:12px;
+                       color:#fff; font-weight:600; font-size:13px;
+                       cursor:pointer;">Impressoras ${imp}</span>
+
+          <span onclick="mostrarPdvs('${sigla}')"
+                style="background:linear-gradient(135deg,#059669,#047857);
+                       padding:6px 10px; border-radius:12px;
+                       color:#fff; font-weight:600; font-size:13px;
+                       cursor:pointer;">PDVs ${pdv}</span>
+
+          <span onclick="mostrarRelogios('${sigla}')"
+                style="background:linear-gradient(135deg,#7c3aed,#6b21a8);
+                       padding:6px 10px; border-radius:12px;
+                       color:#fff; font-weight:600; font-size:13px;
+                       cursor:pointer;">Relógios ${rel}</span>
+        </div>
+      </div>
+    `;
+
+    return `<tr>
+      <td>${loja.sigla}</td>
+      <td>${loja.filial}</td>
+      <td>${loja.tipo}</td>
+      <td>${loja.ip}</td>
+      <td>${loja.dispositivo}</td>
+      <td>${acao}</td>
+    </tr>`;
+  }).join("");
+
+  document.getElementById("conteudoDetalhes").innerHTML = `
+    <div id="cardsResumo" class="cards-resumo">
+      <div class="card-info card-imp"><h3>Impressoras</h3><span id="totalImpressoras">${dados.reduce((acc, loja)=> acc + (const_impressoras_por_loja[loja.sigla] || []).length,0)}</span></div>
+      <div class="card-info card-pdv"><h3>PDVs</h3><span id="totalPdvs">${dados.reduce((acc, loja)=> acc + (const_pdvs[loja.sigla] || []).length,0)}</span></div>
+      <div class="card-info card-rel"><h3>Relógios</h3><span id="totalRelogios">${dados.reduce((acc, loja)=> acc + const_relogios_por_loja.filter(r=>r.sigla===loja.sigla).length,0)}</span></div>
+    </div>
+
+    <table>
+      <thead><tr>
+        <th>Sigla</th><th>Filial</th><th>Tipo</th>
+        <th>Endereço IP</th><th>Dispositivo</th><th>Ação</th>
+      </tr></thead>
+      <tbody>${linhas}</tbody>
+    </table>
+  `;
+}
+
+// =====================
+// ATUALIZAR CARDS SUPERIOR AUTOMATICAMENTE
+// =====================
+function atualizarCardsResumoGeral() {
+  let totalImp = 0;
+  let totalPdv = 0;
+  let totalRel = 0;
+
+  // percorre todas as lojas
+  for (const r in lojasData) {
+    lojasData[r].forEach(loja => {
+      const sigla = loja.sigla;
+      totalImp += (const_impressoras_por_loja[sigla] || []).length;
+      totalPdv += (const_pdvs[sigla] || []).length;
+      totalRel += const_relogios_por_loja.filter(r => r.sigla === sigla).length;
+    });
+  }
+
+  document.getElementById("totalImpressoras").textContent = totalImp;
+  document.getElementById("totalPdvs").textContent = totalPdv;
+  document.getElementById("totalRelogios").textContent = totalRel;
+
+  // exibe os cards
+  document.getElementById("cardsResumo").classList.remove("hidden");
+}
+
+// chama a função ao carregar a página
+window.addEventListener("load", atualizarCardsResumoGeral);
+
+
+function voltar(){
+  document.getElementById("telaDetalhes").classList.add("hidden");
+  telaRegionais.classList.remove("hidden");
+}
+
+function copiarEndereco(e){ navigator.clipboard.writeText(e); }
+function abrirEndereco(e){ window.open("https://"+e,"_blank"); }
+
+function mostrarToast(texto){
+  const toast = document.getElementById("toast");
+  const toastText = document.getElementById("toastText");
+
+  toastText.textContent = texto;
+  toast.classList.remove("hidden");
+
+  // força reflow pra animação sempre funcionar
+  toast.offsetHeight;
+
+  toast.classList.add("show");
+
+  setTimeout(()=>{
+    toast.classList.remove("show");
+    setTimeout(()=> toast.classList.add("hidden"), 400);
+  }, 2500);
+}
+
+function copiarIP(ip, btn){
+  navigator.clipboard.writeText(ip).then(()=>{
+    mostrarToastCard(btn.parentElement, `IP ${ip} copiado ✅`);
+  });
+}
+
+function copiarSenhaFuturo(senha, btn){
+  senhaTemp = senha;
+  document.getElementById("usuarioSenha").value = "";
+  document.getElementById("modalSenha").classList.remove("hidden");
+  setTimeout(()=> document.getElementById("usuarioSenha").focus(), 200);
+  // O toast será exibido após o usuário confirmar
+}
+
+// Toast ultra futurista dentro do card
+function mostrarToastCard(cardEl, texto="Copiado com sucesso!"){
+  let toast = cardEl.querySelector(".toast-card");
+  if(!toast){
+    toast = document.createElement("div");
+    toast.className = "toast-card";
+    cardEl.appendChild(toast);
+  }
+  toast.textContent = texto;
+  toast.classList.add("show");
+  setTimeout(()=> toast.classList.remove("show"), 2000);
+}
+
+
+</script>
+
+</body>
+</html>
+
+

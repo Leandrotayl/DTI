@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Comparador de Paginas Impressas</title>
+
+<!-- XLSX -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Inter:wght@400;600&display=swap');
+
+body {
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:radial-gradient(circle at 20% 20%,#041024,#020c18);
+  color:#e4eaf2;
+  min-height:100vh;
+  padding:20px;
+}
+
+h1 {
+  font-family:'Orbitron',sans-serif;
+  text-align:center;
+  font-size:30px;
+  margin-bottom:20px;
+  color:#7ef9c5;
+  text-shadow:0 0 10px #7ef9c5;
+}
+
+.container {
+  width:100%;
+  padding:20px;
+  background: rgba(255,255,255,0.05);
+  border-radius:12px;
+  box-shadow:0 0 20px rgba(0,255,200,0.2);
+}
+
+.uploads {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-bottom:25px;
+}
+
+input[type=file], input[type=text] {
+  padding:12px;
+  border-radius:10px;
+  background: rgba(255,255,255,0.08);
+  color:#7ef9c5;
+  border:1px solid rgba(255,255,255,0.15);
+  cursor:pointer;
+  width:230px;
+}
+
+button {
+  cursor:pointer;
+}
+
+/* BOT O PARA VOLTAR MENU PRINCIPAL */
+/* Bot o MENU PRINCIPAL reposicionado no topo da lateral */
+#btnMenu {
+  position: fixed;
+  top: 10px;       /* distancia do topo */
+  left: 160px;      /* fixa na lateral esquerda */
+  width: 240px;    /* largura consistente com o painel lateral */
+  padding: 15px 0;
+  background: linear-gradient(135deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 3px solid #ff0000;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+  transition: all 0.3s ease-in-out;
+  z-index: 1001;   /* acima do painel lateral */
+}
+
+#btnMenu:hover {
+  background: linear-gradient(145deg,#ff0000,#1a1aff);
+  color: #fff;
+  box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
+  transform: scale(1.05);
+}
+
+#btnComparar, #btnExportar, #btnHistorico {
+  background: linear-gradient(135deg,#00ffcc,#00aaff);
+  color:#041520;
+  font-weight:700;
+  font-size:14px;
+  padding:12px 22px;
+  border-radius:12px;
+  border:none;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  box-shadow: 0 0 12px rgba(0,255,200,0.4),0 5px 12px rgba(0,255,200,0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+#btnComparar:hover, #btnExportar:hover, #btnHistorico:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow:0 0 22px rgba(0,255,200,0.6),0 8px 18px rgba(0,255,200,0.3);
+}
+
+#resultados {
+  margin-top:30px;
+  overflow-x:auto;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+}
+
+thead {
+  background: linear-gradient(135deg,#0affb0,#00c4ff);
+  color:#041520;
+}
+
+th, td {
+  padding:8px 10px;
+  text-align:center;
+  font-size:14px;
+}
+
+th {
+  cursor:pointer;
+  user-select:none;
+  position:relative;
+}
+
+th span {
+  margin-left:5px;
+  font-size:12px;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.05);
+  transition: background 0.3s, transform 0.3s;
+}
+
+tbody tr:hover {
+  transform: scale(1.02);
+  background: rgba(0,255,200,0.1);
+}
+
+td.diff-negativo { color:#ff6060; text-shadow:0 0 8px #ff3030; font-weight:600;}
+td.diff-positivo { color:#00ff99; text-shadow:0 0 8px #00ff66; font-weight:600;}
+td.diff-repetido { color:#ffd700; text-shadow:0 0 6px #ffaa00; font-weight:700;}
+
+#totais {
+  display:flex;
+  justify-content:space-around;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+body {
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:#020c18; /* cor base por baixo das partículas */
+  color:#e4eaf2;
+  min-height:100vh;
+  padding:20px;
+  position:relative;
+  z-index:1; /* conteúdo acima das partículas */
+}
+
+.container, h1, .uploads, #totais, #resultados {
+  position: relative; /* garante que fiquem sobre as partículas */
+  z-index: 1;
+}
+
+
+
+#totais .card {
+  background: rgba(255,255,255,0.05);
+  padding:15px 25px;
+  border-radius:12px;
+  text-align:center;
+  min-width:180px;
+  box-shadow: 0 0 15px rgba(0,255,200,0.2);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+
+#cardTotalSeries::before, #cardTotalSeries::after {
+  content:"";
+  position:absolute; width:5px; height:100%; top:0;
+}
+#cardTotalSeries::before { left:0; background:#00ffff; }
+#cardTotalSeries::after  { right:0; background:#00aaff; }
+
+#cardTotalAtual::before, #cardTotalAtual::after {
+  content:"";
+  position:absolute; width:5px; height:100%; top:0;
+}
+#cardTotalAtual::before { left:0; background:#00ff66; }
+#cardTotalAtual::after  { right:0; background:#009933; }
+
+#cardTotalAnterior::before, #cardTotalAnterior::after {
+  content:"";
+  position:absolute; width:5px; height:100%; top:0;
+}
+#cardTotalAnterior::before { left:0; background:#ffff00; }
+#cardTotalAnterior::after  { right:0; background:#ffaa00; }
+
+#cardDiferenca::before, #cardDiferenca::after {
+  content:"";
+  position:absolute; width:5px; height:100%; top:0;
+}
+#cardDiferenca::before { left:0; background:#aa00ff; }
+#cardDiferenca::after  { right:0; background:#5500aa; }
+
+#cardNegativos::before, #cardNegativos::after {
+  content:"";
+  position:absolute; width:5px; height:100%; top:0;
+}
+#cardNegativos::before { left:0; background:#ff0000; }
+#cardNegativos::after  { right:0; background:#aa0000; }
+
+#totais .card strong { font-size:18px; color:#fff; }
+
+#painelHistorico {
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,0.9);
+  color:#fff;
+  overflow:auto;
+  padding:20px;
+  z-index:2000;
+}
+#painelHistorico h2{ text-align:center; color:#00ffcc; }
+
+/* Modal de autenticação */
+#modalAuth {
+  display:none; 
+  position:fixed; 
+  top:0; left:0; 
+  width:100%; height:100%; 
+  background:rgba(0,0,0,0.85); 
+  z-index:3000; 
+  justify-content:center; align-items:center;
+}
+#modalAuth .modalContent {
+  background:#041024; 
+  padding:30px; 
+  border-radius:15px; 
+  width:320px; 
+  text-align:center;
+  box-shadow:0 0 30px #00ffcc; 
+  position:relative;
+}
+#modalAuth h2 {
+  color:#00ffcc; 
+  font-family:'Orbitron',sans-serif; 
+  margin-bottom:20px;
+}
+#modalAuth input {
+  width:100%; 
+  padding:10px; 
+  margin-bottom:15px;
+  border-radius:10px; 
+  border:1px solid rgba(0,255,200,0.3); 
+  background:rgba(0,255,200,0.05); 
+  color:#fff;
+}
+#modalAuth #authErro {
+  color:#ff5050; 
+  margin-bottom:10px; 
+  display:none;
+}
+#modalAuth button {
+  padding:10px 20px; 
+  border:none; 
+  border-radius:8px; 
+  font-weight:bold; 
+  cursor:pointer;
+  margin-right:10px;
+}
+#modalAuth #btnAuthConfirmar { background:#00ffcc; color:#000; }
+#modalAuth #btnAuthCancelar { background:#ff5050; color:#fff; }
+</style>
+</head>
+<body>
+
+<h1>Comparador de Paginas Impressas</h1> 
+
+<button id="btnMenu">MENU PRINCIPAL</button> 
+
+<div class="container">
+  <div class="uploads">
+    <div>
+      <label>Mes Atual (Planilha Atual):</label><br>
+      <input type="file" id="mesAtual" accept=".xlsx, .xls">
+    </div>
+    <div>
+      <label>Mes Anterior (Planilha Antiga):</label><br>
+      <input type="file" id="mesAnterior" accept=".xlsx, .xls">
+    </div>
+    <div>
+      <button id="btnComparar" onclick="compararPlanilhas()">Comparar Planilhas</button>
+      <input type="text" id="filtroSerial" placeholder="Pesquisar por Numero de Serie ou Loja">
+      <button id="btnExportar" onclick="exportarExcel()">Exportar Excel</button>
+      <button id="btnHistorico" onclick="abrirHistorico()">Ver Historico</button>
+    </div>
+  </div>
+
+<!-- Partículas de fundo -->
+<div id="particles-js" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:0;"></div>
+
+
+
+  <!-- Cards de totais -->
+  <div id="totais">
+    <div class="card" id="cardTotalSeries">Total Numeros de Serie: <strong>0</strong></div>
+    <div class="card" id="cardTotalAtual">Total Mes Atual: <strong>0</strong></div>
+    <div class="card" id="cardTotalAnterior">Total Mes Anterior: <strong>0</strong></div>
+    <div class="card" id="cardDiferenca">Diferenca Total: <strong>0</strong></div>
+    <div class="card" id="cardNegativos">Diferencas Negativas: <strong>0</strong></div>
+  </div>
+
+  <div id="resultados"></div>
+</div>
+
+<!-- Painel Historico -->
+<div id="painelHistorico">
+  <h2>Historico de Comparacoes</h2>
+  <div id="listaHistorico"></div>
+  <button onclick="fecharHistorico()" style="margin-top:20px; padding:10px 20px; background:#00ffcc; color:#000; border:none; border-radius:8px;">Fechar</button>
+</div>
+
+<!-- Modal Autenticacao -->
+<div id="modalAuth">
+  <div class="modalContent">
+    <h2>Autenticacao</h2>
+    <input type="text" id="authUsuario" placeholder="Usuario">
+    <input type="password" id="authSenha" placeholder="Senha">
+    <div id="authErro">Usuario ou senha incorretos!</div>
+    <button id="btnAuthConfirmar">Confirmar</button>
+    <button id="btnAuthCancelar">Cancelar</button>
+  </div>
+</div>
+
+<!-- Particles.js -->
+<script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+<script>
+const particleCount = window.innerWidth < 480 ? 20 :
+                      window.innerWidth < 768 ? 40 :
+                      window.innerWidth < 1200 ? 60 : 100;
+
+particlesJS("particles-js", {
+  "particles": {
+    "number":{"value":particleCount,"density":{"enable":true,"value_area":800}},
+    "color":{"value":"#00ffff"},
+    "shape":{"type":"circle"},
+    "opacity":{"value":0.5,"random":true},
+    "size":{"value":3,"random":true},
+    "line_linked":{"enable":true,"distance":150,"color":"#00ffff","opacity":0.4,"width":1},
+    "move":{"enable":true,"speed":2,"random":true,"out_mode":"out"}
+  },
+  "interactivity":{"events":{"onhover":{"enable":true,"mode":"grab"}}},
+  "retina_detect":true
+});
+</script>
+
+
+<script>
+// =====================
+// Variáveis
+// =====================
+let listaComparativa = [];
+let sortDirections = {};
+let authCallback = null;
+
+// =====================
+// Funções utilitárias
+// =====================
+function removerAcentos(texto){
+  return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, "");
+}
+
+// =====================
+// Leitura planilhas
+// =====================
+async function lerPlanilha(file, incluirLoja=false){
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+
+    reader.onload = e => {
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data, { type:'array' });
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const json = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+      let resultado = [];
+
+      json.forEach((linha, index) => {
+        if(index === 0) return; // pular cabeçalho
+
+        let loja = null, modelo = null, serial = null, paginas = 0;
+
+        if(incluirLoja){
+          // PLANILHA DO MÊS ATUAL (estrutura comum dos relatórios)
+          loja   = linha[0] ?? null;      // A
+          modelo = linha[5] ?? null;      // F
+          serial = linha[6] ? String(linha[6]).trim() : null;  // G
+
+        } else {
+          // PLANILHA DO MÊS ANTERIOR
+          // Serial ? coluna D (índice 3)
+          serial = linha[3] ? String(linha[3]).trim() : null;
+        }
+
+        // Páginas ? coluna I (índice 8) para AMBAS planilhas
+        paginas = (!isNaN(linha[8]) && linha[8] !== undefined) ? Number(linha[8]) : 0;
+
+        resultado.push({ loja, modelo, serial, paginas });
+      });
+
+      resolve(resultado);
+    };
+
+    reader.onerror = err => reject(err);
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+
+
+// =====================
+// Eventos upload Mês Atual
+// =====================
+document.getElementById('mesAtual').addEventListener('change', async (e)=>{
+  const file=e.target.files[0]; if(!file) return;
+  const atual = await lerPlanilha(file,true);
+  listaComparativa = [];
+  let itemCounter = 1;
+
+ atual.forEach(l=>{
+    // Garantir que pelo menos a loja exista
+    if(l.loja){
+        listaComparativa.push({
+            item: String(itemCounter++).padStart(2,'0'),
+            loja: l.loja || '-',
+            modelo: l.modelo || '-',
+            serial: l.serial && l.serial.trim() !== '' ? l.serial.trim() : 'Sem Numero de Serie na planilha',
+            atual: l.paginas && !isNaN(l.paginas) ? Number(l.paginas) : 0,
+            anterior: 0,
+            diff: 0,
+            observacao: ''
+        });
+    }
+});
+
+
+
+
+  atualizarTotais();
+  ordenarLista('diff');
+  mostrarResultados(listaComparativa);
+});
+
+// =====================
+// Comparar Planilhas
+// =====================
+async function compararPlanilhas(){
+  const arquivoAnterior = document.getElementById('mesAnterior').files[0];
+  if(!arquivoAnterior){ alert('Selecione a planilha do mes anterior'); return; }
+  const anterior = await lerPlanilha(arquivoAnterior);
+
+  listaComparativa = listaComparativa.map(l => {
+    if (!l.serial || l.serial === 'Sem Numero de Serie na planilha') {
+        return { ...l, cor: 'diff-negativo', observacao: 'Sem Número de Série' };
+    }
+
+    const match = anterior.find(a => a.serial === l.serial);
+
+    if (!match) {
+        // *** SERIAL NOVO NO MÊS ATUAL ***
+        return {
+            ...l,
+            anterior: 0,
+            diff: l.atual,
+            cor: 'diff-positivo',
+            observacao: 'NOVO NA PLANILHA ATUAL'
+        };
+    }
+
+    // CASO NORMAL
+    const anteriorPag = match.paginas;
+    const diff = l.atual - anteriorPag;
+
+    return {
+        ...l,
+        anterior: anteriorPag,
+        diff,
+        observacao: diff < 0 ? 'Diminuiu' : (diff === 0 ? '' : 'Aumentou')
+    };
+});
+
+
+  atualizarTotais();
+  ordenarLista('diff');
+  mostrarResultados(listaComparativa);
+  salvarComparacao();
+}
+
+// =====================
+// Mostrar Resultados
+// =====================
+function mostrarResultados(lista){
+  const container = document.getElementById('resultados');
+  const table = document.createElement('table');
+
+  const thead = document.createElement('thead');
+  thead.innerHTML = `<tr>
+    ${['item','loja ( Coluna A )','modelo ( Coluna F )','serial ( Coluna G )','anterior (Coluna I )','atual ( Coluna I )','diferenca ( Anterior e Atual )','observacao'].map(col=>`<th onclick="ordenarLista('${col}')">${col.toUpperCase()}<span></span></th>`).join('')}
+  </tr>`;
+  table.appendChild(thead);
+
+  const tbody = document.createElement('tbody');
+  const fragment = document.createDocumentFragment();
+
+  // ?? Filtrar linhas inválidas antes de exibir
+  const listaFiltrada = lista.filter(l => 
+      (l.serial && l.serial !== '' && l.serial !== '0' && l.serial !== 'Sem Número de Série na planilha') || 
+      (l.loja && l.loja !== '' && l.loja !== '0')
+  );
+
+  listaFiltrada.forEach((l,i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${String(i+1).padStart(2,'0')}</td>
+      <td>${l.loja||'-'}</td>
+      <td>${l.modelo||'-'}</td>
+      <td class="${l.cor||''}" title="${l.diff<0?'Diferenca negativa':l.cor==='diff-repetido'?'Numero de Serie Repetido':''}">${l.serial}</td>
+      <td>${l.anterior}</td>
+      <td>${l.atual}</td>
+      <td class="${l.cor||''}">${l.diff}</td>
+      <td contenteditable="true" oninput="l.observacao=this.innerText">${l.observacao}</td>
+    `;
+    fragment.appendChild(tr);
+  });
+
+  tbody.appendChild(fragment);
+  table.appendChild(tbody);
+
+  container.innerHTML='';
+  container.appendChild(table);
+  atualizarSetas();
+}
+
+
+// =====================
+// Ordenação
+// =====================
+function ordenarLista(col){
+  const dir = sortDirections[col] = sortDirections[col]===1?-1:1;
+  listaComparativa.sort((a,b)=>{
+    if(typeof a[col]==='number') return (a[col]-b[col])*dir;
+    if(!a[col]) return 1*dir;
+    if(!b[col]) return -1*dir;
+    return a[col].toString().localeCompare(b[col].toString())*dir;
+  });
+  mostrarResultados(listaComparativa);
+}
+
+function atualizarSetas(){
+  const ths = document.querySelectorAll('th');
+  ths.forEach(th=>{
+    const col = th.textContent.replace(/\s/,'').toLowerCase();
+
+    const dir = sortDirections[col];
+    th.querySelector('span').textContent = dir===1?'?':dir===-1?'?':'';
+  });
+}
+
+// =====================
+// Filtro
+// =====================
+document.getElementById('filtroSerial').addEventListener('input',()=>{
+  const termo = removerAcentos(document.getElementById('filtroSerial').value.trim().toLowerCase());
+  const filtrado = listaComparativa.filter(l=>
+    (l.serial && removerAcentos(l.serial.toLowerCase()).includes(termo)) ||
+    (l.loja && removerAcentos(l.loja.toLowerCase()).includes(termo))
+  );
+  mostrarResultados(filtrado);
+});
+
+// =====================
+// Exportar CSV
+// =====================
+// =====================
+// Exportar Excel conforme visualização atual
+// =====================
+function exportarExcel(){
+  const trs = document.querySelectorAll('#resultados tbody tr');
+  if (trs.length === 0){
+    alert("Nenhum dado para exportar!");
+    return;
+  }
+
+  const ws_data = [
+    ["Item","Loja","Modelo","Numero de Serie","Mes Anterior","Mes Atual","Diferenca","Observacao"]
+  ];
+
+  trs.forEach(tr => {
+    const tds = tr.querySelectorAll('td');
+    ws_data.push([
+      tds[0].innerText.trim(),
+      tds[1].innerText.trim(),
+      tds[2].innerText.trim(),
+      tds[3].innerText.trim(),
+      tds[4].innerText.trim(),
+      tds[5].innerText.trim(),
+      tds[6].innerText.trim(),
+      tds[7].innerText.trim()
+    ]);
+  });
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(ws_data);
+
+  XLSX.utils.book_append_sheet(wb, ws, "Comparação");
+
+  XLSX.writeFile(wb, "comparacao_paginas.xlsx");
+}
+
+
+
+
+// =====================
+// Totais
+// =====================
+function atualizarTotais(){
+  const totalSeries = listaComparativa.filter(l=>l.serial && l.serial!=='Sem Número de Série na planilha').length;
+  const totalAtual = listaComparativa.reduce((acc,l)=>acc+l.atual,0);
+  const totalAnterior = listaComparativa.reduce((acc,l)=>acc+l.anterior,0);
+  const diffTotal = totalAtual-totalAnterior;
+  const diffNeg = listaComparativa.filter(l=>l.diff<0).length;
+
+  document.querySelector('#cardTotalSeries strong').innerText=totalSeries;
+  document.querySelector('#cardTotalAtual strong').innerText=totalAtual;
+  document.querySelector('#cardTotalAnterior strong').innerText=totalAnterior;
+  document.querySelector('#cardDiferenca strong').innerText=diffTotal;
+  document.querySelector('#cardNegativos strong').innerText=diffNeg;
+}
+
+
+
+const btnMenu = document.getElementById("btnMenu");
+btnMenu.addEventListener("click", () => {
+    window.location.href = "menu.html";
+});
+
+
+
+
+
+
+// =====================
+// Histórico
+// =====================
+function salvarComparacao(){
+  let historico = JSON.parse(localStorage.getItem('historicoComparacoes')||'[]');
+  historico.unshift({dataHora:new Date().toLocaleString(),resultados:listaComparativa});
+  if(historico.length>50) historico.pop();
+  localStorage.setItem('historicoComparacoes',JSON.stringify(historico));
+}
+
+function abrirHistorico(){
+  const painel = document.getElementById('painelHistorico');
+  const lista = document.getElementById('listaHistorico');
+  lista.innerHTML='';
+  const historico = JSON.parse(localStorage.getItem('historicoComparacoes')||'[]');
+
+  historico.forEach((h,i)=>{
+    const div = document.createElement('div');
+    div.style.marginBottom='15px';
+    div.style.borderBottom='1px solid #00ffcc';
+    div.style.paddingBottom='8px';
+    div.innerHTML = `
+      <strong>${h.dataHora}</strong> 
+      <button onclick="verDetalhesHistorico(${i})" style="padding:5px 10px; margin-left:10px; border-radius:6px; border:none; background:#00ffcc; color:#041520; cursor:pointer;">Ver Detalhes</button>
+      <button onclick="abrirModalAuth(()=>excluirHistorico(${i}))" style="padding:5px 10px; margin-left:10px; border-radius:6px; border:none; background:#ff5050; color:#fff; cursor:pointer;">Excluir</button>
+    `;
+    lista.appendChild(div);
+  });
+  painel.style.display='block';
+}
+
+function excluirHistorico(idx){
+  const usuario = document.getElementById('authUsuario').value.trim(); // usuário autenticado
+  let historico = JSON.parse(localStorage.getItem('historicoComparacoes')||'[]');
+  if(idx < 0 || idx >= historico.length) return;
+
+  // Adicionar log de exclusão
+  const excluido = historico.splice(idx,1)[0];
+  excluido.removidoPor = usuario;
+  excluido.dataRemocao = new Date().toLocaleString();
+
+  // Salvar histórico atualizado e também o log de exclusão
+  let historicoExclusoes = JSON.parse(localStorage.getItem('historicoExclusoes')||'[]');
+  historicoExclusoes.unshift(excluido);
+  localStorage.setItem('historicoComparacoes', JSON.stringify(historico));
+  localStorage.setItem('historicoExclusoes', JSON.stringify(historicoExclusoes));
+
+  abrirHistorico(); // Atualiza lista
+  alert(`Historico removido com sucesso por ${usuario}!`);
+}
+
+
+
+function fecharHistorico(){ document.getElementById('painelHistorico').style.display='none'; }
+
+// =====================
+// Modal Autenticação
+// =====================
+function abrirModalAuth(callback){
+  authCallback=callback;
+  document.getElementById('authUsuario').value='';
+  document.getElementById('authSenha').value='';
+  document.getElementById('authErro').style.display='none';
+  document.getElementById('modalAuth').style.display='flex';
+}
+function fecharModalAuth(){ document.getElementById('modalAuth').style.display='none'; }
+
+document.getElementById('btnAuthConfirmar').addEventListener('click',()=>{
+  const usuario = document.getElementById('authUsuario').value.trim();
+  const senha = document.getElementById('authSenha').value.trim();
+  const usuariosPermitidos = {'leandro':'Dti@1111','everaldo':'1'};
+  if(usuariosPermitidos[usuario.toLowerCase()]===senha){
+    fecharModalAuth();
+    if(authCallback) authCallback();
+  }else document.getElementById('authErro').style.display='block';
+});
+
+document.getElementById('btnAuthCancelar').addEventListener('click',()=>fecharModalAuth());
+
+function verDetalhesHistorico(idx){
+  abrirModalAuth(()=>{
+    const historico = JSON.parse(localStorage.getItem('historicoComparacoes')||'[]');
+    const reg = historico[idx]; if(!reg) return;
+    listaComparativa = reg.resultados;
+    mostrarResultados(listaComparativa);
+    atualizarTotais();
+    fecharHistorico();
+    alert(`Comparacao restaurada de ${reg.dataHora}`);
+  });
+}
+</script>
+
+</body>
+</html>

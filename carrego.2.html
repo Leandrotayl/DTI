@@ -1,0 +1,1540 @@
+    <!DOCTYPE html>
+    <html lang="pt-BR">
+    <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Planejamento de Carrego </title>
+
+    <!-- Fontes -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+
+    <style>
+    * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+    body {
+        background:#0d0d0d;
+        color:#fff;
+        min-height:100vh;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        perspective:1200px; /* Perspectiva global 3D */
+    }
+
+    /* Header e Título */
+    .header {
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        margin-bottom:20px;
+        z-index:1;
+        position:relative;
+    }
+
+    .titulo-quadro {
+        background: rgba(0,0,0,0.85);
+        border: 2px solid #F8EC03;
+        border-radius: 12px;
+        padding: 20px 30px;
+        box-shadow: 0 0 25px #0316c2;
+        text-align:center;
+        transform-style: preserve-3d;
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+        width:100%;
+        max-width:700px;
+    }
+    .titulo-quadro:hover {
+        transform: rotateY(10deg) rotateX(5deg) translateZ(20px);
+        box-shadow: 0 0 80px #fff800, 0 0 150px #f8ec03 inset;
+    }
+
+    h1 {
+        color:#F8EC03;
+        font-size:2em;
+        text-shadow:0 0 15px #f8ec03, 0 0 25px #fff800;
+        letter-spacing:2px;
+        font-family:'Orbitron', sans-serif;
+    }
+
+    #dataAtual {
+        color:#ffffff;
+        font-family:'Orbitron', sans-serif;
+        font-size:1em;
+        text-shadow:0 0 8px #f8ec03;
+        margin-top:6px;
+    }
+
+    /* Contadores */
+    .quadro-contadores {
+        display:flex;
+        justify-content:space-around;
+        margin-top:15px;
+        gap:15px;
+    }
+
+    .quadro-contadores div {
+        font-family:'Orbitron', sans-serif;
+        font-weight:bold;
+        padding:18px 25px;
+        border-radius:12px;
+        min-width:140px;
+        text-align:center;
+        font-size:1.6em;
+        transform-style: preserve-3d;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    .quadro-contadores div:hover {
+        transform: translateZ(20px) rotateX(5deg);
+        box-shadow: 0 0 50px #ffec00, 0 0 80px #ffec00 inset;
+    }
+
+    #contadorFiliais { background:#ff4444; color:#fff; box-shadow:0 0 20px #ff4444; }
+    #contadorPostos { background:#44ff44; color:#000; box-shadow:0 0 20px #44ff44; }
+    #contadorLojas { background:#0099ff; color:#fff; box-shadow:0 0 20px #0099ff; }
+
+    select {
+        padding:8px 12px;
+        border-radius:6px;
+        border:none;
+        background:#f8ec03;
+        font-weight:bold;
+        cursor:pointer;
+        transition: all 0.3s ease;
+    }
+    select:hover { background:#333; color:#fff; }
+
+    /* Container de colunas */
+    .container {
+        display:flex;
+        justify-content:center;
+        gap:20px;
+        width:100%;
+        max-width:1300px;
+        flex-wrap:wrap;
+        margin-top:25px;
+        position:relative;
+        z-index:1;
+    }
+    .column {
+        background-color: rgba(0,0,0,0.85);
+        border-radius:12px;
+        padding:15px;
+        flex:1;
+        min-width:250px;
+        max-width:350px;
+        box-shadow: 0 0 20px rgba(255,255,0,0.3);
+        opacity:0;
+        animation: aparecer 1s ease forwards;
+        transform-style: preserve-3d;
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+    .column:hover {
+        transform: translateZ(20px) rotateY(-5deg);
+        box-shadow:0 0 50px rgba(255,255,255,0.4), 0 0 100px rgba(255,255,255,0.2) inset;
+    }
+    @keyframes aparecer { to { opacity:1; } }
+
+    /* Cards */
+    .card-container { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+    .card {
+        background-color:#cc0909;
+        border:1px solid #f6f3f3;
+        border-radius:10px;
+        padding:12px;
+        text-align:center;
+        font-size:1.4em;
+        box-shadow:0 2px 6px rgba(244,241,241,0.8);
+        color:#fff;
+        transform-style: preserve-3d;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+    }
+    .card:hover {
+        transform: translateZ(15px) rotateX(5deg) rotateY(5deg);
+        box-shadow:0 0 40px #00ff99, 0 0 80px #00ff99 inset;
+    }
+
+    /* Card de aviso robusto, porém suave */
+    .card-aviso {
+        background: #444; /* fundo escuro suave */
+        border: 2px solid #88c0d0; /* borda azul suave */
+        border-radius: 12px;
+        padding: 20px;
+        margin: 10px 0;
+        color: #e0e0e0; /* texto cinza claro */
+        font-family: 'Orbitron', sans-serif;
+        text-align: center;
+        font-size: 1.1em;
+        box-shadow: 
+            0 0 10px #88c0d0, /* sombra externa leve */
+            0 0 20px #555 inset; /* sombra interna discreta */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    /* Efeito ao passar o mouse */
+    .card-aviso:hover {
+        transform: translateY(-3px);
+        box-shadow: 
+            0 0 15px #88c0d0,
+            0 0 25px #555 inset;
+    }
+
+    /* Título do aviso */
+    .card-aviso h3 {
+        margin-bottom: 8px;
+        font-size: 1.2em;
+        color: #fff;
+    }
+
+    /* Texto explicativo */
+    .card-aviso p {
+        font-size: 1em;
+        color: #d0d0d0;
+    }
+
+    .card-aviso-3d-robusto {
+        background: linear-gradient(145deg, #2b2b2b, #1f1f1f);
+        border-radius: 16px;
+        padding: 25px 20px;
+        margin: 15px 0;
+        color: #e1e1e1;
+        font-family: 'Segoe UI', Roboto, sans-serif;
+        text-align: center;
+        font-size: 1.15em;
+        font-weight: 500;
+        box-shadow:
+            0 15px 30px rgba(0,0,0,0.6),   /* sombra profunda */
+            inset 0 0 12px rgba(255,255,255,0.05); /* leve brilho interno */
+        transform-style: preserve-3d;
+        perspective: 800px;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        border: 1px solid #444;
+    }
+
+    /* Hover 3D robusto */
+    .card-aviso-3d-robusto:hover {
+        transform: rotateX(5deg) rotateY(-5deg) translateZ(12px);
+        box-shadow:
+            0 20px 40px rgba(0,0,0,0.7),
+            inset 0 0 15px rgba(255,255,255,0.07);
+    }
+
+    .card-aviso-3d-robusto h3 {
+        font-size: 1.4em;
+        color: #f5f5f5;
+        text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        margin-bottom: 8px;
+    }
+
+    .card-aviso-3d-robusto p {
+        font-size: 1em;
+        color: #cfcfcf;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+    }
+
+    /* Saida da loja */
+    .saida-loja {
+        position:relative;
+        margin-top:20px;
+        background:rgba(0,0,50,0.8);
+        border:2px solid #00ffff;
+        border-radius:12px;
+        padding:15px 25px;
+        text-align:center;
+        box-shadow:0 0 25px #00ffff, 0 0 50px #00ffff inset;
+        font-family:'Orbitron', sans-serif;
+        color:#00ffff;
+        font-size:1.5em;
+        text-shadow:0 0 10px #00ffff, 0 0 20px #00ffff inset;
+        transform-style: preserve-3d;
+        transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+    .saida-loja:hover {
+        transform: translateZ(25px) rotateX(5deg);
+        box-shadow:0 0 60px #00ffff, 0 0 120px #00ffff inset;
+    }
+
+    /* Selecionado */
+    .selecionado {
+        transform: translateZ(20px) rotateX(5deg);
+        box-shadow: 0 0 25px #ffec00, 0 0 50px #ffd700 inset;
+    }
+
+    /* QUADRO DAS LOJAS */
+    .column h2 {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-family: 'Orbitron', sans-serif;
+        color: #fff;
+        margin-bottom: 10px;
+    }
+
+    .quantidade {
+        background: rgba(255,255,255,0.1);
+        padding: 2px 8px;
+        border-radius: 8px;
+        font-size: 0.8em;
+        color: #ffec00;
+        box-shadow: 0 0 8px #ffec00;
+    }
+
+    .card span:last-child {
+    animation: brilhoVerde 2s infinite ease-in-out;
+    }
+    @keyframes brilhoVerde {
+    0%,100% { text-shadow: 0 0 6px #00ff00, 0 0 12px #00ff00; }
+    50% { text-shadow: 0 0 20px #00ff00, 0 0 35px #00ff00; }
+    }
+
+
+    #pesquisaInput:focus {
+    box-shadow:0 0 15px #00ffff, 0 0 5px #00ffff inset;
+    background:#000;
+    }
+
+    .linha-topo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+    }
+
+
+
+    /*  Campo de pesquisa sofisticado e centralizado */
+    .campo-pesquisa {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 20px auto;
+    background: linear-gradient(135deg, #00ffff22, #0ff2ff11);
+    border-radius: 50px;
+    width: 80%;
+    max-width: 450px;
+    padding: 3px;
+    box-shadow: 0 0 20px #00ffff33, inset 0 0 15px #00ffff22;
+    transition: all 0.4s ease;
+    }
+
+    .campo-pesquisa:hover {
+    box-shadow: 0 0 25px #00ffffaa, inset 0 0 20px #00ffff55;
+    transform: scale(1.02);
+    }
+
+    .campo-pesquisa input {
+    flex: 1;
+    background: #0a0a0a;
+    border: none;
+    outline: none;
+    color: #00ffff;
+    font-size: 1em;
+    border-radius: 50px;
+    padding: 12px 45px 12px 18px;
+    width: 100%;
+    transition: all 0.4s ease;
+    letter-spacing: 0.5px;
+    text-shadow: 0 0 6px #00ffff;
+    }
+
+    .campo-pesquisa input::placeholder {
+    color: #00ffff99;
+    }
+
+    .campo-pesquisa input:focus {
+    box-shadow: 0 0 25px #00ffff, 0 0 15px #00ffff inset;
+    background: #000;
+    color: #fff;
+    text-shadow: 0 0 8px #00ffff;
+    }
+
+    /* Ícone da lupa neon */
+    .icone-lupa {
+    position: absolute;
+    right: 18px;
+    color: #00ffffbb;
+    font-size: 1.3em;
+    pointer-events: none;
+    animation: brilhoLupa 3s infinite ease-in-out;
+    }
+
+    @keyframes brilhoLupa {
+    0%, 100% { text-shadow: 0 0 8px #00ffff55, 0 0 15px #00ffff33; }
+    50% { text-shadow: 0 0 25px #00ffff, 0 0 35px #00ffff; }
+    }
+
+
+    /* BOTÃO PARA VOLTAR MENU PRINCIPAL */
+    #btnMenu {
+    position: fixed;
+    top: 220px;       /* distancia do topo */
+    left: 20px;      /* fixa na lateral esquerda */
+    width: 240px;    /* largura consistente com o painel lateral */
+    padding: 15px 0;
+    background: linear-gradient(135deg,#0d47a1,#1976d2);
+    color: #0ff;
+    border: 3px solid #ff0000;
+    border-radius: 15px;
+    font-size: 1rem;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+    box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+    transition: all 0.3s ease-in-out;
+    z-index: 1001;   /* acima do painel lateral */
+    }
+
+    #btnMenu:hover {
+    background: linear-gradient(145deg,#ff0000,#1a1aff);
+    color: #fff;
+    box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
+    transform: scale(1.05);
+    }
+
+    /* --- QUADRO DE RESULTADO DA PESQUISA - LOJA ( GERAL ) --- */
+        #buscaInput {
+            
+            width: 230px;
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            font-size: 18px;
+            text-align: center;
+            background: #111727;
+            color: #0ff;
+            box-shadow: 0 0 12px #00e7ff inset;
+        }
+
+        #autocomplete {
+    display: none; /* invisível até digitar */
+
+    position: absolute;
+    top: 50%;               /* centro vertical */
+    left: 50%;              /* centro horizontal */
+    transform: translate(-50%, -50%); /* centraliza de verdade */
+
+    width: 90%;            /* ocupa boa largura sem ser exagerado */
+    max-width: 1200px;     /* limite elegante */
+
+    /* sem quadro nenhum */
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    backdrop-filter: none !important;
+
+    /* layout das lojas */
+    display: grid;
+    grid-template-rows: repeat(2, 50px); 
+    grid-auto-flow: column;
+    grid-auto-columns: 120px;
+
+    gap: 12px;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scrollbar-width: none;
+}
+
+#autocomplete::-webkit-scrollbar {
+    display: none;
+}
+
+/* Itens */
+.suggest {
+    background: #1e293b;
+    padding: 12px;
+    text-align: center;
+    border-radius: 8px;
+    white-space: nowrap;
+    color: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+
+    transition: 0.2s ease;
+}
+
+.suggest:hover {
+    transform: scale(1.07);
+    background: #334155;
+}
+
+
+
+
+        /* POSICIONAR O CARD DE RESULTADO NO LADO DIREITO */
+        .card-resultado {
+            position: absolute;
+            top: 260px;      /* Ajuste caso seu quadro de data seja maior ou menor */
+            right: 20px;     /* Distância da lateral direita */
+            width: 220px;
+            margin: 20px auto;
+            background: linear-gradient(135deg, #0a1828, #07101f);
+            padding: 25px;
+            border-radius: 20px;
+            max-width: 380px;
+            text-align: center;
+            display: none;
+            box-shadow: 0 0 20px #00eaff, 0 0 40px #005f7f inset;
+            transform: perspective(600px) rotateX(0deg);
+            transition: .4s;
+        }
+
+        .card-resultado:hover {
+            transform: perspective(600px) rotateX(7deg);
+            box-shadow: 0 0 25px #00eaff, 0 0 60px #009ed0 inset;
+        }
+
+        .carrego {
+            font-size: 26px;
+            font-weight: bold;
+            text-shadow: 0 0 10px #0ff;
+            margin-bottom: 10px;
+        }
+
+        .loja {
+            font-size: 50px;
+            font-weight: bold;
+            color: #00eaff;
+            text-shadow: 0 0 20px #00eaff;
+        }
+
+        .notfound {
+            color: #ff0066;
+            font-size: 20px;
+            margin-top: 20px;
+            text-shadow: 0 0 10px #ff0066;
+        }
+
+
+
+    /* --- QUADRO DE RESULTADO DA PESQUISA (SUPERIOR DIREITO) --- */
+    .quadro-pesquisa {
+        position: fixed;
+        top: 130px; /* ligeiramente mais alto */
+        right: 20px; /* mais próximo da borda */
+        width: 218px;
+        max-width: 90%;
+        background: linear-gradient(145deg, rgba(0,255,255,0.15), rgba(0,200,255,0.25));
+        border: 3px double #00ffff;
+        padding: 20px 25px;
+        border-radius: 16px;
+        color: #00ffff;
+        font-family: 'Orbitron', sans-serif;
+        font-size: 1.4em;
+        box-shadow: 
+            0 0 25px #00ffff, 
+            0 0 60px #00ffff inset, 
+            0 0 80px rgba(0,255,255,0.2);
+        text-align: center;
+        transform-style: preserve-3d;
+        transition: all 0.4s ease, transform 0.5s ease, box-shadow 0.5s ease;
+        z-index: 1000;
+        backdrop-filter: blur(6px); /* leve desfoque de fundo */
+        border-image: linear-gradient(to right, #242e2e, #00bfff) 1;
+    }
+
+    /* Hover mais intenso */
+    .quadro-pesquisa:hover {
+        transform: translateZ(20px) rotateX(5deg) rotateY(-2deg);
+        box-shadow: 
+            0 0 40px #00ffff, 
+            0 0 80px #00ffff inset,
+            0 0 100px rgba(0,255,255,0.25),
+            0 0 150px rgba(0,255,255,0.15) inset;
+    }
+
+    /* Título h3 mais destacado */
+    .quadro-pesquisa h3 {
+        margin-bottom: 12px;
+        font-size: 1em;
+        color: #fff;
+        text-shadow: 
+            0 0 5px #00ffff, 
+            0 0 15px #00ffff, 
+            0 0 20px #00ffff;
+    }
+
+    /* Resultado da pesquisa dentro do quadro */
+    #resultadoPesquisa {
+        display: block;
+        margin-top: 8px;
+        font-weight: bold;
+        font-size: 1.1em;
+        text-shadow: 0 0 6px #00ffff, 0 0 12px #00ffff, 0 0 18px #00ffff;
+        background: rgba(0,0,0,0.2);
+        padding: 8px 12px;
+        border-radius: 10px;
+        border: 1px solid #00ffff;
+    }
+
+    .input-area{
+        display: flex;
+    
+
+    }
+
+#autocompleteBox {
+    position: relative;
+    width: 100vw;            /* ocupa toda a largura da página */
+    height: auto;
+    
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;        /* nunca quebra linha */
+    overflow-x: auto;         /* rolagem horizontal */
+    overflow-y: hidden;
+    white-space: nowrap;      /* impede quebra */
+    
+    gap: 12px;
+    padding: 20px;
+
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(8px);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.15);
+
+    scrollbar-width: thin;
+}
+
+/* Cada item do autocomplete */
+.autocomplete-item {
+    flex: 0 0 auto;            /* impede crescer ou quebrar */
+    display: inline-block;
+    background: #1e293b;
+    padding: 8px 14px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    white-space: nowrap;      /* nome da loja não quebra também */
+}
+
+
+
+.suggest {
+    background: #1f2937;
+    color: white;
+    padding: 20px 20px;
+    border-radius: 10px;
+    border: 2px solid #374151;
+    display: inline-flex;
+    cursor: pointer;
+    font-size: 10px;
+    min-width: 55px;
+    height: 50px;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+    transition: 0.2s;
+}
+
+.suggest:hover {
+    background: #374151;
+    transform: scale(1.05);
+}
+
+
+
+
+    /* Relógio */
+    .relogio {
+        position:absolute;
+        top:20px;
+        right:20px;
+        font-family:'Orbitron', sans-serif;
+        font-size:2em;
+        color:#00ffcc;
+        text-align:center;
+        background: linear-gradient(145deg, rgba(0,255,204,0.1), rgba(0,50,50,0.3));
+        padding:15px 25px;
+        border-radius:18px;
+        border:3px double #00ffcc;
+        box-shadow:
+            0 0 30px #00ffcc,          /* brilho externo */
+            0 0 60px rgba(0,255,204,0.3) inset,  /* brilho interno */
+            0 8px 20px rgba(0,255,204,0.4);     /* sombra suave */
+        text-shadow:
+            0 0 10px #00ffcc,
+            0 0 20px #00ffcc,
+            0 0 30px #00ffcc,
+            0 0 40px #00ffcc;
+        transform-style: preserve-3d;
+        transition: transform 0.4s ease, box-shadow 0.4s ease;
+        z-index:1;
+        backdrop-filter: blur(4px);
+    }
+
+    /* Hover ultra 3D com leve movimento */
+    .relogio:hover {
+        transform: translateZ(20px) rotateX(5deg) rotateY(-5deg);
+        box-shadow:
+            0 0 50px #00ffcc,
+            0 0 80px rgba(0,255,204,0.5) inset,
+            0 0 100px rgba(0,255,204,0.25);
+    }
+
+    /* Pulsação do neon */
+    @keyframes neonPulse {
+        0%,100% { text-shadow: 0 0 10px #00ffcc,0 0 20px #00ffcc,0 0 30px #00ffcc,0 0 40px #00ffcc; }
+        50% { text-shadow: 0 0 15px #00ffcc,0 0 30px #00ffcc,0 0 45px #00ffcc,0 0 60px #00ffcc; }
+    }
+
+    .relogio span {
+        display:block;
+        font-size:0.8em;
+        color:#00ffcc;
+        text-shadow:0 0 6px #00ffcc,0 0 12px #00ffcc;
+        animation: neonPulse 2s infinite alternate;
+    }
+
+
+    .linha-siglas {
+        display: flex;
+        gap: 20px; /* espaço entre os quadros */
+        justify-content: center; /* centraliza na tela */
+        align-items: center;
+        margin-top: 20px;
+    }
+
+    #quadroSiglaPlanejamento,
+    #quadroSiglaPosto {
+        width: 300px; /* ou qualquer valor */
+    }
+
+    #btnLimparBusca {
+        padding: 12px 26px;
+        background: linear-gradient(135deg, #ff2e63, #ff6b81);
+        color: white;
+        border: none;
+        font-size: 15px;
+        font-weight: bold;
+        border-radius: 12px;
+        cursor: pointer;
+        letter-spacing: 1px;
+
+        box-shadow: 
+            0 0 12px rgba(255, 46, 99, 0.7),
+            inset 0 0 10px rgba(255, 255, 255, 0.15);
+
+        transition: all 0.25s ease;
+        backdrop-filter: blur(3px);
+    }
+
+    #btnLimparBusca:hover {
+        transform: translateY(-3px) scale(1.06);
+        box-shadow:
+            0 0 20px rgba(255, 46, 99, 0.9),
+            inset 0 0 15px rgba(255, 255, 255, 0.25);
+        filter: brightness(1.15);
+    }
+
+    #btnLimparBusca:active {
+        transform: translateY(0px) scale(0.96);
+        box-shadow:
+            0 0 8px rgba(255, 46, 99, 0.6),
+            inset 0 0 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .resultado-horizontal {
+        display: flex;
+        flex-wrap: wrap; /* quebra linha se não couber */
+        gap: 12px;
+        margin-top: 10px;
+        justify-content: flex-start; /* ou center */
+        max-width: 100%;
+    }
+
+    .resultado-horizontal .loja-item {
+        background: linear-gradient(135deg, #00ffff33, #0ff2ff11);
+        padding: 8px 14px;
+        border-radius: 10px;
+        font-family: 'Orbitron', sans-serif;
+        color: #00ffff;
+        font-weight: bold;
+        text-shadow: 0 0 6px #00ffff;
+        box-shadow: 0 0 8px #00ffff55, inset 0 0 4px #00ffff22;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .resultado-horizontal .loja-item:hover {
+        transform: translateY(-3px) scale(1.05);
+        box-shadow: 0 0 20px #00ffff, inset 0 0 10px #00ffff;
+    }
+
+
+
+    /* Calendário */
+    .calendario {
+        position:absolute;
+        top:20px;
+        left:20px;
+        font-family:'Orbitron', sans-serif;
+        color:#00bfff;
+        background:linear-gradient(145deg, rgba(0,0,50,0.7), rgba(0,50,100,0.5));
+        border:2px solid #00bfff;
+        border-radius:14px;
+        padding:10px;
+        box-shadow:0 0 25px #00bfff,0 0 50px #00bfff inset;
+        text-align:center;
+        transform-style: preserve-3d;
+        z-index:1;
+    }
+    .calendario td:hover { transform: translateZ(10px) rotateX(3deg); box-shadow:0 0 20px #00bfff,0 0 40px #1e90ff inset; }
+    .calendario .hoje { transform: translateZ(10px) rotateY(3deg); box-shadow:0 0 25px #00bfff,0 0 50px #1e90ff inset; }
+
+    @media (max-width:768px){
+        .column{ min-width:180px; max-width:100%; }
+        h1{ font-size:1.5em; }
+        .titulo-quadro{ padding:15px; }
+        .quadro-contadores div{ font-size:1.3em; padding:12px 18px; }
+    }
+    </style>
+    </head>
+    <body>
+
+    <!-- PARTICULAS -->
+    <div id="particles-js" style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1;"></div>
+
+    <!-- Saida da loja -->
+    <div id="saidaLojaQuadro" class="saida-loja">
+        <h2 id="saidaLoja">Saida para a loja: --/--/----</h2>
+    </div>
+
+
+
+
+
+    <div class="card-resultado" id="resultadoCard">
+        <div class="carrego" id="carregoNome"></div>
+        <div class="loja" id="lojaNome"></div>
+    </div>
+
+
+
+    <button id="btnMenu">MENU PRINCIPAL</button>
+
+    <div class="header">
+        <div class="titulo-quadro">
+            <h1>Planejamento de Carrego - <span id="dataAtual"></span></h1>
+            <div class="quadro-contadores">
+                <div id="contadorFiliais">Filiais: 0</div>
+                <div id="contadorPostos">Postos: 0</div>
+                <div id="contadorLojas">Lojas Teresina: 0</div>
+            </div>
+
+            <div class="select-container">
+                <select id="diaSelect"></select>
+            </div>
+        </div>
+    </div>
+
+    <div class="input-area">
+        <div id="autocomplete"></div>
+    </div>
+    
+        <!--  Campo de Pesquisa Neon -->
+            <div class="campo-pesquisa">
+            
+            <div class="campo-pesquisa">
+        <input type="text" id="pesquisaInput" placeholder="Sigla do Carrego">
+        <span class="icone-lupa"></span>
+        
+    </div>
+        <div class="campo-pesquisa">
+        <input id="buscaInput" type="text" placeholder="Sigla da Loja">
+    </div>
+
+    <!-- Container horizontal para resultados -->
+    <div id="resultadoHorizontal" class="resultado-horizontal"></div>
+
+            </div> <button id="btnLimparBusca" style="
+        padding: 10px 18px;
+        background: #ff3b3b;
+        border: none;
+        color: white;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0 0 10px #ff3b3b;
+        transition: 0.2s;
+        margin-top: 8px;
+        <button id="btnLimpar" onclick="limparPesquisa()"> Limpar Pesquisa </button>
+
+
+
+    <div id="relogio" class="relogio"></div>
+    <div id="calendario" class="calendario"></div>
+
+    <div id="quadroPesquisa" class="quadro-pesquisa" style="display:none;">
+        <h3>Pesquisa:</h3>
+        <span id="resultadoPesquisa">---</span>
+    </div>
+
+
+    
+    
+    <div id="listaCarrego"></div>
+
+
+    
+    <div class="container">
+        <div class="column" id="colFiliais">
+            <h2>Filiais <span class="quantidade" id="quantFiliais">0</span></h2>
+            <div class="card-container" id="filiais"></div>
+        </div>
+        <div class="column" id="colPostos">
+            <h2>Postos <span class="quantidade" id="quantPostos">0</span></h2>
+            <div class="card-container" id="postos"></div>
+        </div>
+        <div class="column" id="colLojas">
+            <h2>Lojas Teresina <span class="quantidade" id="quantLojas">0</span></h2>
+            <div class="card-container" id="lojas"></div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+        
+    /* ====== Dados (mantive seu objeto original) ====== */
+    const lojasPorDia = {
+        "segunda": { filiais:["BDF","LED","CDE","PDC","PID"], postos:["SRD","DSJ","CST","SMT","CAD","ALS","ALG","BNT","DBC","DPU"], lojas:["TES","TEU","TMA","TEZ","TIM","TEC","TED","TPP"] },
+        "terca": { filiais:["DPC","FLD","PAR","TUT","DBH","TIA","SBT"], postos:["BDR","PRP","FRL","EVL","VAL","PMT","ARO","INH","DLB","MGL","MTS","PRN","CNE","IPI"], lojas:["TES","TPI","TEU","TMA","TMO","TSJ"] },
+        "quarta": { filiais:["IDC","DAG","CDF","CDP"], postos:["ABR","PAL","ANG","AMA","SFR","REG","OEI","DCO","PBO","SPA"], lojas:["TES","TEU","TMA","TEZ","TIM","TEC","TED","TPP"] },
+        "quinta": { filiais:["DPI","CUM","CHD","CTA","VAG","ITA","ROS","PDF","ARP"], postos:["CCT","DBJ","DCB","EMR","COG","ALS"], lojas:["TES","TPI","TEU","TMA","TMO","TSJ"] },
+        "sexta": { filiais:["BAC","DSI","BCU","DZE","CTP","GDV","AMP","CME","SLP","LDO"], postos:["URU","RGO","BGR","BAR","NSR","LUZ","MIA","PRT","MIO","BAT","ESP","JPR","JFT","UNI"], lojas:["TES","TEU","TMA","TEZ","TIM","TEC","TED"] }
+    };
+
+    const carregos = {
+    "XXX": ["XXX"],
+
+    "BDF": ["BDF","BHM","BHI","ANB","BRA","COT","CRI","FRP","IBO","RNE","SAN","SDE","SMV","SRC","TBV","WAN","BAI","BBH","MAC","SDO","CBA",],
+    "LED": ["LED"],
+    "CDE": ["CDE","COR","GLB","PRG","CUR","JUB","RIF","SEB","MAL","SFO","ALP","CTL",],
+    "PDC": ["PDC"],
+    "PID": ["PID","PIR","BRS","CCA","PRA","SBT","PII","VIC","DGM","MAD","CLG","SJA"],
+    "ARP": ["ARP"],
+    "MCO": ["MCO"],
+
+    "DPC": ["DPC"],
+    "FLD": ["FLD","FLO","CAB","COG","GPE","ITE","MEM","MPA","SJX",],
+    "PAR": ["PAR","BLO","CJP","COC","LCO","PCA","PJS","PPM","ARA","CHV","GRJ","CIM","BPR","CBP","CRB","IGP","MPO","CAV",],
+    "TUT": ["TUT"],
+    "DBH": ["DBH"],
+    "TIA": ["TIA"],
+    "SBT": ["SBT"],
+
+    "IDC": ["IDC"],
+    "DAG": ["DAG"],
+    "CDF": ["CDF"],
+    "CDP": ["CDP","CAX","BRJ","ALA","CXE","CVR","SJE",],
+
+    "DPI": ["DPI","PIN","APA","ALC","BCR","MIZ","PNU","PSA","SBE","SHE","SVF","SJB","TUR","BEQ","CED","CEN","CJA","BCB","PAS","PEM","PME","SER","POM","GUI","TRF",],
+    "CUM": ["CUM"],
+    "CHD": ["CHD"],
+    "CTA": ["CTA"],
+    "VAG": ["VAG"],
+    "ITA": ["ITA"],
+    "ROS": ["ROS"],
+    "PDF": ["PDF"],
+
+    "BAC": ["BAC","ANJ","BBV","CAT","LCU","LGD","LVE","MIR","ALE","MTN","ODC","PIO","PIP","SAM","SLG","VIF","STB","PRM",,"BDA","BLU","AMI",],
+    "DSI": ["DSI"],
+    "BCU": ["BCU"],
+    "DZE": ["DZE"],
+    "CTP": ["CTP"],
+    "GDV": ["GDV"],
+    "AMP": ["AMP"],
+    "CME": ["CME"],
+    "SLP": ["SLP"],
+    "LDO": ["LDO"],
+
+    "URU": ["URU"],
+    "RGO": ["RGO"],
+    "BGR": ["BGR"],
+    "BAR": ["BAR"],
+    "NSR": ["NSR"],
+    "LUZ": ["LUZ"],
+    "MIA": ["MIA"],
+    "PRT": ["PRT"],
+    "MIO": ["MIO"],
+    "BAT": ["BAT"],
+    "ESP": ["ESP"],
+    "JPR": ["JPR"],
+    "JFT": ["JFT"],
+    "UNI": ["UNI"],
+
+    "TES": ["TES"],
+    "TEU": ["TEU"],
+    "TMA": ["TMA"],
+    "TEZ": ["TEZ"],
+    "TIM": ["TIM"],
+    "TEC": ["TEC"],
+    "TED": ["TED"],
+    "TPP": ["TPP"],
+    "TPI": ["TPI"],
+    "TMO": ["TMO"],
+    "TSJ": ["TSJ"],
+
+    "ABR": ["ABR"], 
+    "DPC": ["JAI"],
+    "ANG": ["ANG"],
+    "AMA": ["AMA"],
+    "SFR": ["SFR"],
+    "REG": ["REG"],
+    "OEI": ["OEI"],
+    "DCO": ["DCO"],
+    "PBO": ["PBO"],
+    "SPA": ["SPA"],
+    "CCT": ["CCT"],
+    "DBJ": ["DBJ","BOJ","RGR","SZP",],
+    "DCB": ["DCB"],
+    "EMR": ["EMR"],
+    "COG": ["COG"],
+    "ALS": ["ALS"],
+    "SRD": ["SRD"],
+    "DSJ": ["DSJ"],
+    "CST": ["CST"],
+    "SMT": ["SMT"],
+    "CAD": ["CAD","CAM","BHO","BOP","JUP","LAL","SGP"],
+    "ALS": ["ALS","SJS","NSA"],
+    "ALG": ["ALG"],
+    "BNT": ["BNT"],
+    "DBC": ["DBC"],
+    "DPU": ["DPU"],
+    "BDR": ["DBR"],
+    "PRP": ["PRP"],
+    "FRL": ["FRL"],
+    "EVL": ["EVL"],
+    "VAL": ["VAL"],
+    "PMT": ["PMT"],
+    "ARO": ["ARO"],
+    "INH": ["INH"],
+    "DLB": ["DLB"],
+    "MGL": ["MGL"],
+    "MTS": ["MTS"],
+    "PRN": ["PRN"],
+    "CNE": ["CNE"],
+    "IPI": ["IPI"],
+
+    };
+
+
+    /* ====== Partículas ====== */
+    particlesJS("particles-js", {
+    "particles": {
+        "number":{"value":100,"density":{"enable":true,"value_area":1000}},
+        "color":{"value":"#00ffff"},
+        "shape":{"type":"circle"},
+        "opacity":{"value":0.6,"random":true,"anim":{"enable":true,"speed":1,"opacity_min":0.2,"sync":false}},
+        "size":{"value":3,"random":true,"anim":{"enable":true,"speed":4,"size_min":0.2,"sync":false}},
+        "line_linked":{"enable":true,"distance":160,"color":"#00ffff","opacity":0.5,"width":1},
+        "move":{"enable":true,"speed":2,"direction":"none","random":true,"straight":false,"out_mode":"out"}
+    },
+    "interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":true,"mode":"grab"},"onclick":{"enable":true,"mode":"push"}},"modes":{"grab":{"distance":180,"line_linked":{"opacity":0.6}},"push":{"particles_nb":6}}},
+    "retina_detect":true
+    });
+
+    /* ====== Utilitários ====== */
+    function obterDiaSemana() {
+        const dias=["domingo","segunda","terca","quarta","quinta","sexta","sabado"];
+        return dias[new Date().getDay()];
+    }
+
+    let contadorIntervalos = [];
+
+    function atualizarContadores(filiais, postos, lojas) {
+        contadorIntervalos.forEach(i => clearInterval(i));
+        contadorIntervalos = [];
+        const anim = (el,n,tipo)=>{
+            let i=0;
+            const id = setInterval(()=>{
+                if(i <= n) el.textContent = `${tipo}: ${i}`;
+                else clearInterval(id);
+                i++;
+            },30);
+            contadorIntervalos.push(id);
+        };
+        anim(document.getElementById("contadorFiliais"), filiais.length ?? 0, "Filiais");
+        anim(document.getElementById("contadorPostos"), postos.length ?? 0, "Postos");
+        anim(document.getElementById("contadorLojas"), lojas.length ?? 0, "Lojas Teresina");
+
+        document.getElementById("quantFiliais").textContent = filiais.length ?? 0;
+        document.getElementById("quantPostos").textContent = postos.length ?? 0;
+        document.getElementById("quantLojas").textContent = lojas.length ?? 0;
+    }
+
+    function mostrarCarrego(carrego) {
+        const lista = carregos[carrego];
+        if (!lista) return;
+        document.getElementById("listaCarrego").innerHTML = `
+            <h3>Carrego: <strong>${carrego}</strong></h3>
+            <ul>
+                ${lista.map(loja => `<li>${loja}</li>`).join("")}
+            </ul>
+        `;
+    }
+
+    function formatarData(d) {
+        return d.toLocaleDateString("pt-BR", { weekday:"long", day:"2-digit", month:"2-digit", year:"numeric" });
+    }
+
+    function adicionarDiasUteis(data, dias) {
+        let d = new Date(data);
+        let toAdd = Math.max(0, Math.floor(dias));
+        while(toAdd > 0){
+            d.setDate(d.getDate()+1);
+            if(d.getDay() !== 0 && d.getDay() !== 6) toAdd--;
+        }
+        return d;
+    }
+
+
+
+
+    /* ====== Funções corrigidas: select com datas, carregar pelo dia selecionado, atualizar saida ====== */
+    const todasLojas = Object.values(carregos).flat();
+
+    // --- AUTOCOMPLETE ---
+    const input = document.getElementById("buscaInput");
+    const autocompleteBox = document.getElementById("autocomplete");
+
+    input.addEventListener("input", () => {
+        const value = input.value.toUpperCase().trim();
+        autocompleteBox.innerHTML = "";
+
+        if (!value) {
+            autocompleteBox.style.display = "none";
+            return;
+        }
+
+        const filtradas = todasLojas.filter(l => l.startsWith(value));
+
+        if (filtradas.length === 0) {
+            autocompleteBox.style.display = "none";
+            return;
+        }
+
+        filtradas.forEach(sigla => {
+            let div = document.createElement("div");
+            div.className = "suggest";
+            div.textContent = sigla;
+            div.onclick = () => {
+                input.value = sigla;
+                autocompleteBox.style.display = "none";
+                pesquisar();
+            };
+            autocompleteBox.appendChild(div);
+        });
+
+        autocompleteBox.style.display = "block";
+    });
+
+    // ENTER dispara busca
+    input.addEventListener("keydown", e => {
+        if (e.key === "Enter") {
+            pesquisar();
+        }
+    });
+
+    // Quando apagar o texto, voltar tudo ao normal
+    input.addEventListener('input', () => {
+        const texto = input.value.trim();
+
+        if (texto === "") {
+            document.getElementById('resultado').style.display = "none";
+            caixaSugestoes.style.display = "none";
+        }
+    });
+
+
+    // --- FUNÇÃO DE PESQUISA ---
+    function pesquisar() {
+        const sigla = input.value.toUpperCase().trim();
+        const card = document.getElementById("resultadoCard");
+        const carregoNome = document.getElementById("carregoNome");
+        const lojaNome = document.getElementById("lojaNome");
+
+        autocompleteBox.style.display = "none";
+
+        let encontrado = null;
+
+        for (let carrego in carregos) {
+            if (carregos[carrego].includes(sigla)) {
+                encontrado = carrego;
+                break;
+            }
+        }
+
+        if (encontrado) {
+            carregoNome.textContent = "Carrego: " + encontrado;
+            lojaNome.textContent = sigla;
+            card.style.display = "block";
+            card.classList.remove("notfound");
+        } else {
+            carregoNome.textContent = "";
+            lojaNome.textContent = "digite a sigla da loja";
+            card.style.display = "block";
+            card.classList.add("notfound");
+        }
+    }
+
+
+    /* ====== Funções corrigidas: select com datas, carregar pelo dia selecionado, atualizar saida ====== */
+
+    function atualizarSelectComDatas() {
+        const select = document.getElementById("diaSelect");
+        const hoje = new Date();
+        const diasSemana = ["domingo","segunda","terca","quarta","quinta","sexta","sabado"];
+        select.innerHTML = "";
+
+        // Opção Hoje (auto)
+        const optionHoje = document.createElement("option");
+        optionHoje.value = "auto";
+        optionHoje.textContent = `Hoje - ${String(hoje.getDate()).padStart(2,'0')}/${String(hoje.getMonth()+1).padStart(2,'0')}`;
+        select.appendChild(optionHoje);
+
+        // Próximos 14 dias (só dias úteis) -> value será ISO date YYYY-MM-DD
+        let added = 0, offset = 1;
+        while(added < 14 && offset <= 60){
+            const data = new Date(hoje);
+            data.setDate(hoje.getDate() + offset);
+            offset++;
+            if(data.getDay() === 0 || data.getDay() === 6) continue; // pula fim de semana
+
+            const diaNome = diasSemana[data.getDay()];
+            const diaStrDisplay = `${diaNome.charAt(0).toUpperCase() + diaNome.slice(1)} - ${String(data.getDate()).padStart(2,'0')}/${String(data.getMonth()+1).padStart(2,'0')}`;
+
+            const option = document.createElement("option");
+            // valor = data ISO (yyyy-mm-dd) para ser usada diretamente
+            option.value = data.toISOString().slice(0,10);
+            option.textContent = diaStrDisplay;
+            select.appendChild(option);
+            added++;
+        }
+    }
+
+    /* carregarLojasManualmente agora aceita value = "auto" ou "YYYY-MM-DD" */
+    function carregarLojasManualmente() {
+        const diaSelecionadoValue = document.getElementById("diaSelect").value;
+        const diasSemana = ["domingo","segunda","terca","quarta","quinta","sexta","sabado"];
+        let diaSemanaNome;
+        let dataSelecionadaObj = null;
+
+        if(diaSelecionadoValue === "auto"){
+            const hoje = new Date();
+            diaSemanaNome = diasSemana[hoje.getDay()];
+            dataSelecionadaObj = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+        } else {
+            // diaSelecionadoValue é YYYY-MM-DD
+            dataSelecionadaObj = new Date(diaSelecionadoValue + "T00:00:00");
+            diaSemanaNome = diasSemana[dataSelecionadaObj.getDay()];
+        }
+
+        // fim de semana -> sem planejamento
+        if(diaSemanaNome === "sabado" || diaSemanaNome === "domingo"){
+            ["filiais","postos","lojas"].forEach(id=>{
+                const container = document.getElementById(id);
+                container.innerHTML = `
+    <div class="card-aviso-3d-robusto">
+        <h3>Sem Planejamento de Carrego</h3>
+        <p>Nao ha Registro de Planejamento de Carrego para este Periodo.</p>
+    </div>`;
+            });
+            atualizarContadores([],[],[]);
+            document.getElementById("saidaLoja").textContent = `Nao ha planejamento de carrego neste dia.`;
+            return;
+        }
+
+        const nomesLojas = lojasPorDia[diaSemanaNome] || { filiais: [], postos: [], lojas: [] };
+
+        ["filiais","postos","lojas"].forEach(id=>{
+            const container = document.getElementById(id);
+            container.innerHTML="";
+            (nomesLojas[id]||[]).forEach(nome=>{
+                const card = document.createElement("div");
+                card.className="card";
+                card.textContent = nome;
+                container.appendChild(card);
+            });
+        });
+
+        atualizarContadores(nomesLojas.filiais || [], nomesLojas.postos || [], nomesLojas.lojas || []);
+
+        // atualizarSaidaLoja agora recebe a data selecionada (ou "auto")
+        if(diaSelecionadoValue === "auto") atualizarSaidaLoja("auto");
+        else atualizarSaidaLoja(dataSelecionadaObj.toISOString().slice(0,10));
+    }
+
+    /* atualizarSaidaLoja: calcula saida com base na data passada (YYYY-MM-DD) ou "auto" */
+    function atualizarSaidaLoja(diaSelecionado="auto") {
+        let baseDate;
+        if(diaSelecionado === "auto"){
+            baseDate = new Date();
+        } else {
+            // espera string YYYY-MM-DD
+            baseDate = new Date(diaSelecionado + "T00:00:00");
+        }
+
+        // normaliza hora
+        baseDate.setHours(0,0,0,0);
+
+        // regra fixa: adicionar 2 dias úteis (mantendo sua função)
+        const saida = adicionarDiasUteis(baseDate, 2);
+
+        const diasSemanaNomes = ["Domingo","Segunda-feira","Terca-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sabado"];
+        const dia = saida.getDate(), mes = saida.getMonth()+1, ano = saida.getFullYear();
+        const nomeDia = diasSemanaNomes[saida.getDay()];
+        document.getElementById("saidaLoja").textContent = `Saida para a loja: ${nomeDia}, ${String(dia).padStart(2,'0')}/${String(mes).padStart(2,'0')}/${ano}`;
+    }
+
+    /* destaca célula do calendário — aceita "auto", "YYYY-MM-DD" ou nome do dia ("terca") */
+    function destacarDiaSelecionado(valor) {
+        const diasSemana = ["domingo","segunda","terca","quarta","quinta","sexta","sabado"];
+        const hoje = new Date();
+        const mes = hoje.getMonth();
+        const ano = hoje.getFullYear();
+
+        document.querySelectorAll("#calendario td").forEach(td => td.classList.remove("selecionado"));
+
+        if(!valor || valor === "auto") return;
+
+        // se for YYYY-MM-DD -> extrai dia da semana
+        let targetDiaNum = -1;
+        if(/^\d{4}-\d{2}-\d{2}$/.test(valor)){
+            const d = new Date(valor + "T00:00:00");
+            targetDiaNum = d.getDay();
+        } else {
+            // pode ser 'terca' ou similar
+            targetDiaNum = diasSemana.indexOf(valor.toLowerCase());
+        }
+        if(targetDiaNum === -1) return;
+
+        document.querySelectorAll("#calendario td").forEach(td => {
+            if(td.textContent) {
+                const possible = parseInt(td.textContent, 10);
+                if (!isNaN(possible)) {
+                    const data = new Date(ano, mes, possible);
+                    if(data.getDay() === targetDiaNum) td.classList.add("selecionado");
+                }
+            }
+        });
+    }
+
+    /* ====== Pesquisa ====== */
+    function pesquisarLojasOuDias() {
+        const termoRaw = document.getElementById("pesquisaInput").value;
+        const termo = termoRaw.trim().toLowerCase();
+        const containers = {
+            filiais: document.getElementById("filiais"),
+            postos: document.getElementById("postos"),
+            lojas: document.getElementById("lojas")
+        };
+
+        const quadro = document.getElementById("quadroPesquisa");
+        const texto = document.getElementById("resultadoPesquisa");
+        if (termo === "") {
+            quadro.style.display = "none";
+            carregarLojasManualmente();
+            return;
+        } else {
+            texto.textContent = termoRaw.toUpperCase();
+            quadro.style.display = "block";
+        }
+
+        let resultados = { filiais: [], postos: [], lojas: [] };
+        const diasSemana = ["domingo","segunda","terca","quarta","quinta","sexta","sabado"];
+        const hoje = new Date();
+        const indiceHoje = hoje.getDay();
+
+        for (const [dia, dados] of Object.entries(lojasPorDia)) {
+            for (const tipo of ["filiais", "postos", "lojas"]) {
+                (dados[tipo] || []).forEach(loja => {
+                    if (loja.toLowerCase().includes(termo)) {
+                        const indiceAlvo = diasSemana.indexOf(dia);
+                        let diff = indiceAlvo - indiceHoje;
+                        if (diff < 0) diff += 7;
+                        const dataCarrego = new Date(hoje);
+                        dataCarrego.setDate(hoje.getDate() + diff);
+                        const diaStr = `${String(dataCarrego.getDate()).padStart(2,'0')}/${String(dataCarrego.getMonth()+1).padStart(2,'0')}/${dataCarrego.getFullYear()}`;
+                        const dataSaidaObj = adicionarDiasUteis(dataCarrego, 2);
+                        const dataSaidaStr = `${String(dataSaidaObj.getDate()).padStart(2,'0')}/${String(dataSaidaObj.getMonth()+1).padStart(2,'0')}/${dataSaidaObj.getFullYear()}`;
+                        resultados[tipo].push({
+                            nome: loja,
+                            dia,
+                            dataCarrego: diaStr,
+                            dataSaida: dataSaidaStr
+                        });
+                    }
+                });
+            }
+        }
+
+        Object.keys(containers).forEach(tipo => {
+            containers[tipo].innerHTML = "";
+            if (resultados[tipo].length === 0) {
+            containers[tipo].innerHTML = `
+                                <div class="card-aviso">
+                                <h3>Nenhuma Loja Encontrada</h3>
+                                <p>Nao Existe Loja Correspondente a sua Pesquisa.</p>
+                                </div>
+    `;
+            } else {
+                resultados[tipo].forEach(item => {
+                    const card = document.createElement("div");
+                    card.className = "card";
+                    card.innerHTML = `
+                        <strong style="font-size:1.1em; color:#fff;">${item.nome}</strong><br>
+                        <span style="font-size:0.85em; color:#00ffff;">${item.dia.charAt(0).toUpperCase() + item.dia.slice(1)}</span><br>
+                        <span style="font-size:0.8em; color:#ff0;">Planeja: ${item.dataCarrego}</span><br>
+                        <span style="font-size:0.8em; color:#0f0;">Saida: ${item.dataSaida}</span>
+                    `;
+                    containers[tipo].appendChild(card);
+                });
+            }
+        });
+
+        atualizarContadores(
+            resultados.filiais.map(f=>f.nome),
+            resultados.postos.map(p=>p.nome),
+            resultados.lojas.map(l=>l.nome)
+        );
+        document.getElementById("saidaLoja").textContent = "Resultados da pesquisa";
+    }
+
+    /* ====== Relógio, data e calendário ====== */
+    function atualizarDataAtual() {
+        const hoje = new Date();
+        const diasSemanaNomes = ["Domingo","Segunda-feira","Terca-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sabado"];
+        const nomeDia = diasSemanaNomes[hoje.getDay()];
+        const dataFormatada = hoje.toLocaleDateString("pt-BR",{ day:"2-digit", month:"2-digit", year:"numeric" });
+
+        document.getElementById("dataAtual").innerHTML =
+            `${dataFormatada} <br><span style="font-size:0.8em; color:#fff700;">${nomeDia}</span>`;
+    }
+
+    function atualizarRelogio() {
+        const agora = new Date();
+        const h = String(agora.getHours()).padStart(2,'0');
+        const m = String(agora.getMinutes()).padStart(2,'0');
+        const s = String(agora.getSeconds()).padStart(2,'0');
+        const diasSemanaNomes = ["Domingo","Segunda-feira","Terca-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sabado"];
+        const nomeDia = diasSemanaNomes[agora.getDay()];
+        document.getElementById("relogio").innerHTML = `${h}:${m}:${s} <br><span style="font-size:0.8em; color:#00ffff; font-weight:bold;">${nomeDia}</span>`;
+        setTimeout(atualizarRelogio, 1000);
+    }
+
+    function gerarCalendario() {
+        const hoje = new Date();
+        const mes = hoje.getMonth();
+        const ano = hoje.getFullYear();
+        const primeiroDia = new Date(ano, mes, 1).getDay();
+        const diasNoMes = new Date(ano, mes+1,0).getDate();
+
+        let tabela = "<table><tr>";
+        const diasSemana=["Dom","Seg","Ter","Qua","Qui","Sex","Sab"];
+        diasSemana.forEach(d => tabela += `<th>${d}</th>`); tabela += "</tr><tr>";
+        for(let i=0;i<primeiroDia;i++) tabela+="<td></td>";
+        for(let d=1; d<=diasNoMes; d++){
+            const dataAtual = new Date(ano, mes, d);
+            const classeHoje = dataAtual.toDateString()===hoje.toDateString() ? "hoje" : "";
+            tabela += `<td class="${classeHoje}">${d}</td>`;
+            if((d+primeiroDia)%7===0 && d!==diasNoMes) tabela+="</tr><tr>";
+        }
+        tabela+="</tr></table>";
+        document.getElementById("calendario").innerHTML=tabela;
+    }
+
+    // === PESQUISA NO OBJETO "carregos" ===
+    document.getElementById("pesquisaInput").addEventListener("input", function () {
+        const termo = this.value.trim().toUpperCase();
+        const quadro = document.getElementById("quadroPesquisa");
+        const resultado = document.getElementById("resultadoPesquisa");
+
+        if (termo === "") {
+            quadro.style.display = "none";
+            return;
+        }
+
+        let encontrado = false;
+
+        for (const regional in carregos) {
+            if (carregos[regional].includes(termo)) {
+                resultado.textContent = `A loja ${termo} pertence à regional: ${regional}`;
+                quadro.style.display = "block";
+                encontrado = true;
+            }
+        }
+
+        if (!encontrado) {
+            resultado.textContent = `${termo} não encontrado em nenhuma regional.`;
+            quadro.style.display = "block";
+        }
+    });
+
+    document.getElementById("btnLimparBusca").addEventListener("click", () => {
+
+        // Pega os campos corretos
+        const campoPlanejamento = document.querySelector('input[placeholder="Digite a sigla do Planejamento..."]');
+        const campoSiglaLoja = document.getElementById("buscaInput");
+
+        // Limpa todos os campos
+        if (campoPlanejamento) campoPlanejamento.value = "";
+        if (campoSiglaLoja) campoSiglaLoja.value = "";
+
+        // Atualiza a página automaticamente
+        location.reload();
+    });
+
+    document.getElementById("btnLimparBusca").onclick = function () {
+        document.getElementById("buscaPlanejamento").value = "";
+        document.getElementById("buscaInput").value = "";
+        location.reload();
+    };
+
+
+
+
+    /* ====== Ações e eventos (colocados após a definição das funções) ====== */
+    document.addEventListener("DOMContentLoaded",()=>{
+        // Inicializações
+        atualizarDataAtual();
+        atualizarSelectComDatas();
+        carregarLojasManualmente();
+        atualizarRelogio();
+        gerarCalendario();
+
+        // Eventos
+        document.getElementById("pesquisaInput").addEventListener("input", pesquisarLojasOuDias);
+        document.getElementById("diaSelect").addEventListener("change", (e) => {
+            carregarLojasManualmente();
+            destacarDiaSelecionado(document.getElementById("diaSelect").value);
+        });
+
+        document.getElementById("btnMenu").addEventListener("click", () => {
+            // se quiser outra ação, altere aqui
+            window.location.href = "menu.html";
+        });
+
+        // Exemplo: mostrar um carrego existente
+        // mostrarCarrego("FLD");
+    });
+
+    /* ====== Debug / Exemplo ====== */
+    // console.log("Exemplo de saída calculada:", calcularSaida("2025-11-14"));
+
+    </script>
+    </body>
+    </html>

@@ -1,0 +1,903 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body {
+  background:#0d0d0d;
+  color:#fff;
+  min-height:100vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:30px;
+  overflow-x:hidden;
+}
+
+/* PARTICULAS DE FUNDO */
+#particles-js {
+  position:fixed; top:0; left:0;
+  width:100%; height:100%;
+  z-index:-1;
+}
+
+/* TITULO PRINCIPAL */
+h1 {
+  margin-bottom:40px;
+  color:#00ffff;
+  font-size:3rem;
+  font-weight:900;
+  text-align:center;
+  text-shadow:0 0 10px #00ffff,0 0 20px #00ffff,0 0 40px #00ffff;
+  animation: glowPulse 2s infinite alternate;
+}
+@keyframes glowPulse {
+  0% { text-shadow:0 0 10px #00ffff,0 0 20px #00ffff,0 0 40px #00ffff; }
+  50% { text-shadow:0 0 20px #00ffff,0 0 40px #00ffff,0 0 60px #00ffff; }
+  100% { text-shadow:0 0 30px #00ffff,0 0 60px #00ffff,0 0 80px #00ffff; }
+}
+
+/* INPUT DE PESQUISA */
+#searchBox {
+  width:100%;
+  max-width:800px;  /* aumenta a largura m�xima */
+  padding:20px;     /* aumenta o tamanho interno */
+  font-size:20px;   /* aumenta a fonte */
+  margin-bottom:15px;
+  width:100%;
+  border-radius:15px;
+  border:none;
+  outline:none;
+  text-align:center;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(12px);
+  color:#fff;
+  box-shadow: inset 0 0 15px rgba(0,255,255,0.4),0 0 20px rgba(0,255,255,0.2);
+  transition:0.3s;
+}
+#searchBox:focus { 
+  transform:scale(1.03); 
+  box-shadow: inset 0 0 25px rgba(0,255,255,0.6),0 0 35px rgba(0,255,255,0.4);
+}
+
+/* BADGE GLOBAL ULTRA HD */
+#badgeGlobal {
+  position: fixed;
+  top: 3px;
+  right: 10px;
+  background: linear-gradient(135deg,#090a0a,#00bcd4);
+  padding:15px 20px;
+  border-radius:20px;
+  color:#f1e9e9;
+  font-weight:bold;
+  text-align:center;
+  z-index:1000;
+  box-shadow:0 0 25px #00ffff,0 0 50px #00ffff;
+}
+
+#badgeGlobal h3 { font-size:14px; margin-bottom:5px; }
+#badgeGlobal span { font-size:24px; font-weight:bold; }
+#badgeGlobal div { font-size:12px; margin-top:5px; text-align:left; color:#fff; }
+#badgeGlobal small { font-size:10px; color:#ccc; display:block; margin-top:3px; }
+
+/* CARDS .regionais {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* cards ainda menores */
+  gap: 10px; /* espa�o reduzido entre cards */
+  width: 100%;
+  max-width: 1300px;
+  margin-top: 15px;
+  justify-items: center;
+}
+
+.regionais .regional-card {
+  background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 255, 255, 0.25), 0 0 10px rgba(0, 255, 255, 0.15) inset;
+  color: #00ffff;
+  padding: 10px;
+  width: 100%;
+  min-height: 90px; /* altura mais compacta */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+}
+
+.regionais .regional-card:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 20px rgba(0, 255, 255, 0.4), 0 0 15px rgba(0, 255, 255, 0.2) inset;
+}
+
+.regionais .regional-card h3 {
+  font-size: 1rem; /* t�tulo menor */
+  margin-bottom: 5px;
+}
+
+.regionais .regional-card p {
+  font-size: 0.8rem; /* texto menor */
+  margin: 0;
+}
+
+
+
+
+
+/* CORES DIFERENTES PARA CADA REGIONAL */
+.regional:nth-child(1) { background: linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d); }
+.regional:nth-child(2) { background: linear-gradient(135deg,#283c86,#45a247); }
+.regional:nth-child(3) { background: linear-gradient(135deg,#42275a,#734b6d); }
+.regional:nth-child(4) { background: linear-gradient(135deg,#134e5e,#71b280); }
+.regional:nth-child(5) { background: linear-gradient(135deg,#000428,#004e92,#fdbb2d); }
+.regional:nth-child(6) { background: linear-gradient(135deg,#000428,#06b371); }
+.regional:nth-child(7) { background: linear-gradient(135deg,#000428,#475581,#bd9131); }
+.regional:nth-child(8) { background: linear-gradient(135deg,#000428,#06b371); }
+
+/* RESULTADOS DA PESQUISA */
+#resultadosPesquisa {
+  width:100%;
+  max-width:1100px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  margin-bottom:20px;
+}
+
+.result-card {
+  background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(0,0,0,0.2));
+  border-radius: 20px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff inset;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.result-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px #00ffff, 0 0 80px #00ffff inset;
+}
+.result-card h3 {
+  font-size: 22px;
+  color: #00ffff;
+  font-weight: 900;
+  text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(0,255,255,0.5);
+  padding-bottom: 6px;
+}
+.result-card p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #fff;
+}
+.result-card span {
+  font-weight: bold;
+  color: #00ffff;
+}
+
+/* CORES SUAVES ALTERNADAS POR LINHA */
+.result-card:nth-child(4n+1) { background-color: rgba(255,182,193,0.2); }
+.result-card:nth-child(4n+2) { background-color: rgba(173,216,230,0.2); }
+.result-card:nth-child(4n+3) { background-color: rgba(216,191,216,0.2); }
+.result-card:nth-child(4n+4) { background-color: rgba(255,255,224,0.2); }
+.result-card:nth-child(4n+5) { background-color: rgba(255,255,224,0.2); }
+
+.result-card:hover { transform: scale(1.05); box-shadow:0 0 15px #00ffff,0 0 30px #00ffff; }
+
+/* TELA DE LOJAS */
+#telaLojas { display:none; width:100%; max-width:1100px; margin-top:20px; }
+/* BOT O VOLTAR FLUTUANTE */
+.btnVoltar {
+  position: fixed;
+  top: 20px;
+  left: 10px;
+  padding:10px 20px;
+  border:none;
+  border-radius:20px;
+  background: linear-gradient(135deg,#ff4757,#ff6b81);
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+  z-index:1000;
+  box-shadow:0 0 15px #ff4757,0 0 30px #ff6b81;
+  transition:0.3s, transform 0.2s;
+}
+.btnVoltar:hover { 
+  background: linear-gradient(135deg,#ff6b81,#ff4757);
+  transform: scale(1.05);
+  box-shadow:0 0 25px #ff6b81,0 0 50px #ff4757;
+}
+
+.filial-card {
+  background: rgba(0,255,255,0.05);
+  border-radius:15px;
+  padding:15px;
+  margin-bottom:15px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  box-shadow:0 0 10px #00ffff, inset 0 0 20px rgba(0,255,255,0.2);
+}
+.filial-card h3 { margin:0; color:#00ffff; font-size:18px; }
+.filial-card .count-list { font-size:14px; font-weight:bold; line-height:1.4; }
+.filial-card table { width:100%; border-collapse:collapse; margin-top:8px; }
+.filial-card table td { padding:6px; border-bottom:1px solid rgba(255,255,255,0.2); font-size:13px; }
+.filial-card table td.tipo-filial { color:#0b6fe0; font-weight:bold; }
+.filial-card table td.tipo-posto { color:#feca57; font-weight:bold; }
+.filial-card table td.tipo-representante { color:#f0e007; font-weight:bold; }
+.filial-card table td.tipo-deposito { color:#48dbfb; font-weight:bold; }
+</style>
+</head>
+<body>
+
+<!-- PARTICULAS -->
+<div id="particles-js"></div>
+
+
+
+
+
+
+<!-- PARTICULAS JS -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+particlesJS("particles-js", {
+  "particles": {
+    "number": {"value":80,"density":{"enable":true,"value_area":800}},
+    "color":{"value":"#00ffff"},
+    "shape":{"type":"circle"},
+    "opacity":{"value":0.5,"random":true,"anim":{"enable":true,"speed":1,"opacity_min":0.1,"sync":false}},
+    "size":{"value":3,"random":true,"anim":{"enable":true,"speed":3,"size_min":0.1,"sync":false}},
+    "line_linked":{"enable":true,"distance":150,"color":"#00ffff","opacity":0.4,"width":1},
+    "move":{"enable":true,"speed":2,"direction":"none","random":true,"straight":false,"out_mode":"out"}
+  },
+  "interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":true,"mode":"grab"},"onclick":{"enable":true,"mode":"push"}},"modes":{"grab":{"distance":150,"line_linked":{"opacity":0.5}},"push":{"particles_nb":4}}},
+  "retina_detect":true
+});
+</script>
+
+
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lojas Claudino </title>
+
+<!-- Estilos principais -->
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;}
+body{background:#0d0d0d;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:30px;overflow-x:hidden;}
+
+/* PARTICULAS DE FUNDO */
+#particles-js{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;}
+
+/* TITULO PRINCIPAL */
+h1{margin-bottom:40px;color:#00ffff;font-size:3rem;font-weight:900;text-align:center;text-shadow:0 0 10px #00ffff,0 0 20px #00ffff,0 0 40px #00ffff;animation:glowPulse 2s infinite alternate;}
+@keyframes glowPulse{0%{text-shadow:0 0 10px #00ffff,0 0 20px #00ffff,0 0 40px #00ffff;}50%{text-shadow:0 0 20px #00ffff,0 0 40px #00ffff,0 0 60px #00ffff;}100%{text-shadow:0 0 30px #00ffff,0 0 60px #00ffff,0 0 80px #00ffff;}}
+
+/* INPUT DE PESQUISA */
+#searchBox{margin-bottom:15px;width:100%;max-width:550px;padding:15px;border-radius:15px;border:none;outline:none;font-size:18px;text-align:center;background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);color:#fff;box-shadow:inset 0 0 15px rgba(0,255,255,0.4),0 0 20px rgba(0,255,255,0.2);transition:0.3s;}
+#searchBox:focus{transform:scale(1.03);box-shadow:inset 0 0 25px rgba(0,255,255,0.6),0 0 35px rgba(0,255,255,0.4);}
+
+/* BADGE GLOBAL */
+#badgeGlobal{position:fixed;top:3px;right:10px;background:linear-gradient(135deg,#111111,#00bcd4);padding:15px 20px;border-radius:20px;color:#f1e9e9;font-weight:bold;text-align:center;z-index:1000;box-shadow:0 0 25px #00ffff,0 0 50px #00ffff;}
+#badgeGlobal h3{font-size:14px;margin-bottom:5px;} #badgeGlobal span{font-size:24px;font-weight:bold;} #badgeGlobal small{font-size:10px;color:#ccc;display:block;margin-top:3px;}
+
+/* Tipos */
+.tipo-filial{color:#0b6fe0;font-weight:bold;}
+.tipo-posto{color:#feca57;font-weight:bold;}
+.tipo-representante{color:#f0e007;font-weight:bold;}
+.tipo-deposito{color:#48dbfb;font-weight:bold;}
+
+/* Regionais */
+.regionais{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:25px;width:100%;max-width:1300px;margin-top:20px;}
+.regional{padding:25px;border-radius:20px;text-align:center;cursor:pointer;position:relative;color:#fff;transition:transform 0.5s ease,box-shadow 0.5s ease;box-shadow:0 10px 25px rgba(0,255,255,0.5), inset 0 0 20px rgba(0,255,255,0.2);}
+.regional:hover{transform: scale(1.08) perspective(500px) rotateX(3deg) rotateY(3deg);box-shadow:0 15px 35px rgba(0,255,255,0.7), inset 0 0 30px rgba(0,255,255,0.4);}
+.regional h2{font-size:24px;font-weight:900;color:#00ffff;text-shadow:0 0 10px #00ffff,0 0 20px #00ffff;}
+.badge-total{position:absolute;top:70px;right:15px;background:#f5f2f2;color:#000;padding:10px 16px;font-weight:bold;font-size:20px;border-radius:8px;box-shadow:0 0 15px #00ffff,0 0 30px #00ffff;}
+
+/* Tela de Lojas */
+#telaLojas{display:none;width:100%;max-width:1100px;margin-top:20px;}
+.btnVoltar{position:fixed;top:40px;left:20px;padding:25px 25px;border:2px solid #ff4757;border-radius:0;background:transparent;color:#e7dfdf;font-weight:bold;font-size:28px;cursor:pointer;z-index:1000;box-shadow:0 0 15px #ff4757,0 0 30px #ff6b81;}
+.btnVoltar:hover{background:rgba(255,71,87,0.2);}
+.filial-card{background:rgba(0,255,255,0.05);border-radius:15px;padding:15px;margin-bottom:15px;display:flex;flex-direction:column;gap:6px;box-shadow:0 0 10px #00ffff, inset 0 0 20px rgba(0,255,255,0.2);}
+.filial-card h3{margin:0;color:#00ffff;font-size:18px;}
+.filial-card table{width:100%;border-collapse:collapse;margin-top:8px;}
+.filial-card table td{padding:6px;border-bottom:1px solid rgba(255,255,255,0.2);font-size:13px;}
+.filial-card table td.tipo-filial{color:#0b6fe0;font-weight:bold;}
+.filial-card table td.tipo-posto{color:#feca57;font-weight:bold;}
+.filial-card table td.tipo-representante{color:#f0e007;font-weight:bold;}
+.filial-card table td.tipo-deposito{color:#48dbfb;font-weight:bold;}
+
+/* Resultado filtro lateral */
+/* Container dos resultados */
+
+
+
+
+
+#resultadoFiltro {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* centraliza os cards */
+  gap: 10px;
+  padding: 10px;
+}
+
+.result-card {
+  flex: 0 0 250px;   /* largura fixa */
+  max-width: 250px;  /* n�o deixa esticar */
+}
+
+
+/* BOT�O PARA VOLTAR MENU PRINCIPAL */
+/* Bot�o MENU PRINCIPAL reposicionado no topo da lateral */
+#btnMenu {
+  position: fixed;
+  top: 10px;       /* distancia do topo */
+  left: 290px;      /* fixa na lateral esquerda */
+  width: 240px;    /* largura consistente com o painel lateral */
+  padding: 15px 0;
+  background: linear-gradient(135deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 3px solid #ff0000;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+  transition: all 0.3s ease-in-out;
+  z-index: 1001;   /* acima do painel lateral */
+}
+
+#btnMenu:hover {
+  background: linear-gradient(145deg,#ff0000,#1a1aff);
+  color: #fff;
+  box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
+  transform: scale(1.05);
+}
+
+
+
+/* Mini cards */
+.result-card {
+  background: rgba(0,0,0,0.8);
+  border: 2px solid #00ffff;
+  border-radius: 10px;
+  padding: 8px;
+  font-family: 'Segoe UI', sans-serif;
+  color: #fff;
+  font-size: 11px;
+  box-shadow: 0 0 8px #00ffff, 0 0 15px #00ffff inset;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-align: left;
+}
+
+.result-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #00ffff, 0 0 20px #00ffff inset;
+}
+
+.result-card h4 {
+  color: #0ff;
+  font-weight: 900;
+  font-size: 13px;
+  margin-bottom: 3px;
+  border-bottom: 1px solid rgba(0,255,255,0.5);
+  padding-bottom: 2px;
+}
+
+.result-card p {
+  margin: 1px 0;
+}
+.result-card span {
+  font-weight: bold;
+  color: #0ff;
+}
+
+
+.siglaFilial {
+  color: #ff1a1a;             /* vermelho neon */
+  font-weight: 900;
+  font-size: 14px;
+  text-shadow: 0 0 5px #161515, 0 0 10px #ff1a1a;
+  background: rgba(255,0,0,0.1);
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-right: 6px;
+}
+
+
+.siglaBadge {
+  display: inline-block;
+  background-color: #ff4d4d;  /* cor de destaque */
+  color: white;
+  font-weight: bold;
+  font-size: 15px;           /* bem pequeno */
+  padding: 3px 8px;          /* tamanho do quadrado */
+  border-radius: 8px;        /* cantos arredondados */
+  text-align: center;
+  margin-left: 5px;
+}
+
+
+
+
+
+/* PAINEL LATERAL FILTRO */
+
+#filtroLateral {
+  position: fixed;
+  top: 16%;           /* centraliza verticalmente */
+  left: 0;
+  height: 35vh;       /* altura menor */
+  width: 220px;       /* largura menor */
+  transform: translateY(-50%);
+  background: rgba(0, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 0 10px 10px 0;
+  padding: 10px;      /* padding menor */
+  box-shadow: 2px 0 12px #00ffff, 2px 0 20px #00ffff;
+  color: #fff;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;           /* menor espa�o entre os elementos */
+  z-index: 999;
+}
+
+#filtroLateral select,
+#btnExportFiltro,
+#btnLimparFiltro {
+  padding: 4px 6px;   /* reduz o padding interno dos inputs e bot�es */
+  font-size: 12px;    /* fonte menor */
+}
+
+
+
+#filtroLateral h3{text-align: center;margin-bottom: 12px;color: #00ffff;text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;}
+#filtroLateral select{width:100%;padding:8px 10px;border-radius:10px;border:none;outline:none;background:rgba(255,255,255,0.1);color:#000;font-weight:bold;font-size:14px;box-shadow: inset 0 0 10px rgba(0,255,255,0.2);transition:0.3s;}
+#filtroLateral select:hover,#filtroLateral select:focus{transform:scale(1.03);box-shadow: inset 0 0 20px rgba(0,255,255,0.4),0 0 25px rgba(0,255,255,0.2);}
+#filtroLateral select option{color:#000;}
+#btnExportFiltro,#btnLimparFiltro{width:100%;padding:10px;border:none;border-radius:10px;font-weight:bold;cursor:pointer;transition:0.3s;}
+#btnExportFiltro{margin-top:auto;background:linear-gradient(135deg,#00ffff,#0066ff);color:#fff;box-shadow:0 0 15px #00ffff,0 0 30px #00ffff;}
+#btnExportFiltro:hover{transform:scale(1.05);box-shadow:0 0 25px #00ffff,0 0 45px #00ffff;}
+#btnLimparFiltro{background:linear-gradient(135deg,#ff6b81,#ff4757);color:#fff;box-shadow:0 0 20px #ff6b81,0 0 40px #ff4757;}
+#btnLimparFiltro:hover{transform:scale(1.08);box-shadow:0 0 35px #ff6b81,0 0 60px #ff4757;background:linear-gradient(135deg,#ff4757,#ff6b81);}
+</style>
+
+<!-- SheetJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+</head>
+<body>
+
+<!-- PARTICULAS -->
+<div id="particles-js"></div>
+
+<h1> Regionais - Lojas </h1>
+<input type="text" id="searchBox" placeholder="Pesquisar Regional, Filial, Cidade, Sigla ou Tipo..." onkeyup="pesquisar()" />
+<div id="badgeGlobal"></div>
+
+<!-- Painel lateral -->
+<div id="filtroLateral">
+  <h3>Filtrar por Tipo</h3>
+  <select id="filtroTipo" onchange="aplicarFiltroLateral()">
+    <option value="todos">Todos</option>
+    <option value="Filial">Filial</option>
+    <option value="Posto">Posto</option>
+    <option value="Representante">Representante</option>
+    <option value="Deposito">Deposito</option>
+  </select>
+
+  
+
+  
+  
+  <h3>Filtrar Regional</h3>
+  <select id="filtroRegional" onchange="aplicarFiltroLateral()">
+    <option value="todas">Todas</option>
+    <option value="Regional Afonso">Regional Afonso</option>
+    <option value="Regional Cazuza">Regional Cazuza</option>
+    <option value="Regional Coutinho">Regional Coutinho</option>
+    <option value="Regional Wellington">Regional Wellington</option>
+    <option value="Regional Edivano">Regional Edivano</option>
+    <option value="Regional Erisvaldo">Regional Erisvaldo</option>
+    <option value="Regional Ronnie Von">Regional Ronnie Von</option>
+    <option value="Regional Diretoria">Regional Diretoria</option>
+  </select>
+
+  <button id="btnExportFiltro" onclick="exportarFiltroExcel()">Exportar Filtro</button>
+  <button id="btnLimparFiltro" onclick="limparFiltro()">Limpar Filtro</button>
+</div>
+
+<!-- Regionais e Resultados -->
+<div id="resultadoFiltro"></div>
+<div id="telaRegionais" class="regionais"></div>
+<div id="telaLojas">
+  <button class="btnVoltar" onclick="voltar()"> Voltar</button>
+  <h2 id="tituloRegional">Lojas</h2>
+  <select id="selectTipo" onchange="filtrarPorTipo()">
+    <option value="todos">Todos</option>
+    <option value="Filial">Filial</option>
+    <option value="Posto">Posto</option>
+    <option value="Representante">Representante</option>
+    <option value="Deposito">Deposito</option>
+  </select>
+  <div id="badgeFiltro" style="margin:8px 0;font-weight:700;color:#0004ff;"></div>
+  <div id="tabelaLojas"></div>
+</div>
+
+<button id="btnMenu">MENU PRINCIPAL</button>
+
+
+
+<script>
+particlesJS("particles-js",{particles:{number:{value:80,density:{enable:true,value_area:800}},color:{value:"#00ffff"},shape:{type:"circle"},opacity:{value:0.5,random:true,anim:{enable:true,speed:1,opacity_min:0.1,sync:false}},size:{value:3,random:true,anim:{enable:true,speed:3,size_min:0.1,sync:false}},line_linked:{enable:true,distance:150,color:"#00ffff",opacity:0.4,width:1},move:{enable:true,speed:2,direction:"none",random:true,straight:false,out_mode:"out"}},interactivity:{detect_on:"canvas",events:{onhover:{enable:true,mode:"grab"},onclick:{enable:true,mode:"push"}},modes:{grab:{distance:150,line_linked:{opacity:0.5}},push:{particles_nb:4}}},retina_detect:true});
+</script>
+
+<script>
+// --- Seus dados regionais ---
+const regionais = {
+	
+      
+      "Regional Afonso":[
+    	{sigla:"ACA",cidade:"Acailandia",filial:"ACA",uf:"MA",tipo:"Filial"},
+
+
+  ],
+  "Regional Cazuza":[
+	{sigla:"ABR",cidade:"Agua Branca",filial:"ABR",uf:"PI",tipo:"Filial"},
+   	{sigla:"AMA",cidade:"Amarante",filial:"ABR",uf:"PI",tipo:"Posto"},
+
+
+  ],
+  "Regional Coutinho":[
+	{sigla:"ZED",cidade:"Ze Doca",filial:"ZED",uf:"MA",tipo:"Filial"},
+	{sigla:"AGN",cidade:"Araguana",filial:"ZED",uf:"MA",tipo:"Posto"},
+
+  ],
+  "Regional Wellington":[
+	{sigla:"ALS",cidade:"Altos",filial:"ALS",uf:"PI",tipo:"Filial"},
+    	{sigla:"ALG",cidade:"Alto Longa",filial:"ALS",uf:"PI",tipo:"Posto"},
+
+  ],
+  "Regional Edivano":[
+	{sigla:"BHM",cidade:"Barreiras",filial:"BHM",uf:"BA",tipo:"Filial"},
+	{sigla:"BHI",cidade:"Barreiras Usados",filial:"BHM",uf:"BA",tipo:"Filial"},
+
+  ],
+  "Regional Erisvaldo":[
+       	{sigla:"BHA",cidade:"Barreirinhas",filial:"BHA",uf:"MA",tipo:"Filial"},
+
+
+  ],
+  "Regional Ronnie Von":[
+    	{sigla:"BCO",cidade:"Barra do Corda",filial:"BCO",uf:"MA",tipo:"Filial"},
+
+
+  ],
+  "Regional Diretoria":[
+    	{sigla:"TEZ",cidade:"Teresina Matriz",filial:"TEZ",uf:"PI",tipo:"Filial"},
+    
+
+
+
+  ]
+
+
+ 
+};
+
+let filtroLateralDados=[],regionalAtual=null,listaAtualFiltrada=[];
+const telaRegionais=document.getElementById("telaRegionais");
+
+// --- Monta cards regionais ---
+for(let reg in regionais){
+  const lojas = regionais[reg];
+  let contagem={Filial:0,Posto:0,Deposito:0,Representante:0};
+  lojas.forEach(l=>{if(contagem[l.tipo]!==undefined) contagem[l.tipo]++;});
+  const div=document.createElement("div");
+  div.className="regional";
+  div.innerHTML=`<div class="badge-total">${lojas.length}</div><h2>${reg}</h2>
+    <p>Filiais: <span class="tipo-filial">${contagem.Filial}</span></p>
+    <p>Postos: <span class="tipo-posto">${contagem.Posto}</span></p>
+    <p>Depositos: <span class="tipo-deposito">${contagem.Deposito}</span></p>
+    <p>Representantes: <span class="tipo-representante">${contagem.Representante}</span></p>`;
+  div.onclick=()=>abrirRegional(reg);
+  telaRegionais.appendChild(div);
+}
+
+function atualizarBadgeGlobal(){
+  let contagem={Filial:0,Posto:0,Deposito:0,Representante:0};
+  for(let reg in regionais) regionais[reg].forEach(l=>{if(contagem[l.tipo]!==undefined) contagem[l.tipo]++;});
+  const totalGlobal=contagem.Filial+contagem.Posto+contagem.Deposito+contagem.Representante;
+  const agora=new Date().toLocaleString("pt-BR");
+  document.getElementById("badgeGlobal").innerHTML=`<h3>Total de Lojas</h3><span>${totalGlobal}</span>
+  <p>Filiais: <span class="tipo-filial">${contagem.Filial}</span></p>
+  <p>Postos: <span class="tipo-posto">${contagem.Posto}</span></p>
+  <p>Depositos: <span class="tipo-deposito">${contagem.Deposito}</span></p>
+  <p>Representantes: <span class="tipo-representante">${contagem.Representante}</span></p>
+  <small>Atualizado: ${agora}</small>`;
+}
+atualizarBadgeGlobal();
+
+// --- Fun  es de navega  o ---
+function abrirRegional(reg){
+  regionalAtual = reg;
+  document.getElementById("telaRegionais").style.display = "none";
+  document.getElementById("telaLojas").style.display = "block";
+  document.getElementById("tituloRegional").textContent = `Lojas da ${reg}`;
+  document.getElementById("selectTipo").value = "todos";
+  renderFilialCards(regionais[reg]);
+
+  // Esconder filtro lateral
+document.getElementById("filtroLateral").style.display = "flex"; // mant�m o painel lateral vis�vel
+}
+
+
+
+
+function voltar(){
+  document.getElementById("telaLojas").style.display = "none";
+  telaRegionais.style.display = "grid";
+
+  // Mostrar filtro lateral novamente
+  document.getElementById("filtroLateral").style.display = "flex";
+}
+function voltar(){
+  // Esconde a tela de lojas
+  document.getElementById("telaLojas").style.display = "none";
+
+  // Mostra novamente os cards de regionais
+  telaRegionais.style.display = "grid";
+
+  // Mostra o painel lateral de filtro
+  document.getElementById("filtroLateral").style.display = "flex";
+
+  // Limpa a pesquisa
+  document.getElementById("searchBox").value = "";
+
+  // Limpa resultados do filtro lateral
+  document.getElementById("resultadoFiltro").innerHTML = "";
+
+  // Atualiza o badge global
+  atualizarBadgeGlobal();
+
+  // Reseta a regional atual
+  regionalAtual = null;
+}
+function renderFilialCards(lojas){
+  const tipo=document.getElementById("selectTipo").value||"todos";
+  let filtradas=lojas.filter(l=>tipo==="todos"||l.tipo===tipo);
+  listaAtualFiltrada=filtradas.slice();
+  document.getElementById("badgeFiltro").textContent=`Exibindo ${filtradas.length} de ${lojas.length} lojas`;
+  const agrupado={};
+  filtradas.forEach(l=>{if(!agrupado[l.filial]) agrupado[l.filial]=[];agrupado[l.filial].push(l);});
+  const container=document.getElementById("tabelaLojas");
+  container.innerHTML="";
+  for(let filial in agrupado){
+    let rows="";
+    agrupado[filial].forEach(l=>{rows+=`<tr><td>${l.sigla}</td><td>${l.cidade}</td><td>${l.uf}</td><td class="tipo-${l.tipo.toLowerCase()}">${l.tipo}</td></tr>`;});
+    const card=document.createElement("div");card.className="filial-card";
+    card.innerHTML=`<h3>${filial}</h3><table><thead><tr><th>Sigla</th><th>Cidade</th><th>UF</th><th>Tipo</th></tr></thead><tbody>${rows}</tbody></table>`;
+    container.appendChild(card);
+  }
+}
+function filtrarPorTipo(){if(!regionalAtual) return;renderFilialCards(regionais[regionalAtual]);}
+
+function pesquisar() {
+  const termo = document.getElementById("searchBox").value.toLowerCase().trim();
+  const resultadosDiv = document.getElementById("resultadoFiltro");
+  resultadosDiv.innerHTML = "";
+
+  if (termo !== "") document.getElementById("filtroLateral").style.display = "none";
+  else document.getElementById("filtroLateral").style.display = "flex";
+
+  if (termo === "") {
+    atualizarBadgeGlobal(); // retorna ao estado normal
+    return;
+  }
+
+  let resultados = [];
+  for (let reg in regionais) {
+    const lojas = regionais[reg];
+    if (reg.toLowerCase().includes(termo))
+      resultados.push(...lojas.map(l => ({ ...l, regional: reg })));
+    lojas.forEach(l => {
+      if ([l.filial, l.cidade, l.sigla, l.tipo, l.uf].some(x =>
+        String(x).toLowerCase().includes(termo))) {
+        resultados.push({ ...l, regional: reg });
+      }
+    });
+  }
+
+  filtroLateralDados = resultados;
+
+if (resultados.length === 0) {
+    resultadosDiv.innerHTML = `
+        <div style="
+            color:#ff6b81; 
+            font-size:22px; 
+            text-align:center; 
+            width:100%; 
+            padding:25px; 
+            border:2px dashed #ff6b81; 
+            border-radius:20px;
+            background:rgba(255,107,129,0.1);
+            box-shadow: 0 0 15px rgba(255,107,129,0.5);
+            animation: pulse 1.5s infinite alternate;
+        ">
+            Nao existe loja para a pesquisa realizada 
+        </div>
+        <style>
+            @keyframes pulse {
+                from { box-shadow: 0 0 15px rgba(255,107,129,0.5); }
+                to { box-shadow: 0 0 25px rgba(255,107,129,0.8); }
+            }
+        </style>
+    `;
+    document.getElementById("badgeGlobal").innerHTML = `<h3 style="color:#ff6b81;"> Nenhuma loja encontrada </h3>`;
+    return;
+}
+
+   resultados.forEach(r => {
+  const div = document.createElement("div");
+  div.className = "result-card";
+  div.innerHTML = `
+       <p><span>Filial :</span> ${r.filial}</p>
+       <p><span>Sigla:</span> <span class="siglaBadge">${r.sigla}</span></p>
+       <p><span>Cidade:</span> ${r.cidade}</p>
+       <p><span>Regional:</span> ${r.regional}</p>
+       <p><span>UF:</span> ${r.uf}</p>
+       <p><span>Tipo:</span> ${r.tipo}</p>
+
+  `;
+  resultadosDiv.appendChild(div);
+});
+
+
+  const contagem = {Filial:0, Posto:0, Deposito:0, Representante:0};
+  resultados.forEach(l => { if(contagem[l.tipo]!==undefined) contagem[l.tipo]++; });
+  const totalFiltrado = contagem.Filial + contagem.Posto + contagem.Deposito + contagem.Representante;
+  const agora = new Date().toLocaleString("pt-BR");
+  
+  document.getElementById("badgeGlobal").innerHTML = `
+    <h3>Total de Lojas (Pesquisa: "${termo}")</h3>
+    <span>${totalFiltrado}</span>
+    <p>Filiais: <span class="tipo-filial">${contagem.Filial}</span></p>
+    <p>Postos: <span class="tipo-posto">${contagem.Posto}</span></p>
+    <p>Depositos: <span class="tipo-deposito">${contagem.Deposito}</span></p>
+    <p>Representantes: <span class="tipo-representante">${contagem.Representante}</span></p>
+    <small>Atualizado: ${agora}</small>`;
+}
+
+const btnMenu = document.getElementById("btnMenu");
+btnMenu.addEventListener("click", () => {
+    window.location.href = "menu.html";
+});
+
+
+
+
+// --- Filtro lateral ---
+function aplicarFiltroLateral(){
+  const tipo = document.getElementById("filtroTipo").value;
+  const regionalSel = document.getElementById("filtroRegional").value;
+  const div = document.getElementById("resultadoFiltro");
+  div.innerHTML = "";
+
+  const dadosFiltrados = Object.entries(regionais)
+    .filter(([reg, lojas]) => regionalSel === "todas" || reg === regionalSel)
+    .flatMap(([reg, lojas]) => lojas
+      .filter(l => tipo === "todos" || l.tipo === tipo)
+      .map(l => ({...l, regional: reg}))
+    );
+
+  filtroLateralDados = dadosFiltrados;
+
+  dadosFiltrados.forEach(l => {
+    const card = document.createElement("div");
+    card.className = "result-card";
+    card.innerHTML = `
+      <h3>${l.filial}</h3>
+      <p>Sigla: ${l.sigla}</p>
+      <p>Cidade: ${l.cidade}</p>
+      <p>Regional: ${l.regional}</p>
+      <p>UF: ${l.uf}</p>
+      <p class="tipo-${l.tipo.toLowerCase()}">${l.tipo}</p>`;
+    div.appendChild(card);
+  });
+
+  document.getElementById("btnExportFiltro").style.display = filtroLateralDados.length > 0 ? "block" : "none";
+
+  const contagem = {Filial:0, Posto:0, Deposito:0, Representante:0};
+  filtroLateralDados.forEach(l => { if(contagem[l.tipo] !== undefined) contagem[l.tipo]++; });
+  const totalFiltrado = contagem.Filial + contagem.Posto + contagem.Deposito + contagem.Representante;
+  const agora = new Date().toLocaleString("pt-BR");
+
+  // Badge atualizado mostrando filtro aplicado
+  document.getElementById("badgeGlobal").innerHTML = `
+    <h3>Total de Lojas (Filtro: Tipo="${tipo}" / Regional="${regionalSel}")</h3>
+    <span>${totalFiltrado}</span>
+    <p>Filiais: <span class="tipo-filial">${contagem.Filial}</span></p>
+    <p>Postos: <span class="tipo-posto">${contagem.Posto}</span></p>
+    <p>Depositos: <span class="tipo-deposito">${contagem.Deposito}</span></p>
+    <p>Representantes: <span class="tipo-representante">${contagem.Representante}</span></p>
+    <small>Atualizado: ${agora}</small>`;
+}
+
+
+function limparFiltro() {
+    // Resetar selects
+    document.getElementById("filtroTipo").value = "todos";
+    document.getElementById("filtroRegional").value = "todas";
+
+    // Limpar campo de pesquisa
+    document.getElementById("searchBox").value = "";
+
+    // Limpar painel de resultados do filtro
+    document.getElementById("resultadoFiltro").innerHTML = "";
+
+    // Reexibir todos os cards
+    const todosCards = document.querySelectorAll(".card"); // ajuste a classe se for diferente
+    todosCards.forEach(card => {
+        card.style.display = "block";
+    });
+
+    // Atualizar badge ou contador geral
+    atualizarBadgeGlobal(); // fun��o que voc� j� deve ter para atualizar contadores
+}
+
+
+
+
+// --- Exporta  o Excel ---
+function exportarFiltroExcel(){
+  if(filtroLateralDados.length===0){alert("Nenhum dado para exportar.");return;}
+  const wb=XLSX.utils.book_new();const ws_data=[];
+  const dadosPorRegional={};
+  filtroLateralDados.forEach(l=>{if(!dadosPorRegional[l.regional]) dadosPorRegional[l.regional]=[];dadosPorRegional[l.regional].push(l);});
+  for(const reg in dadosPorRegional){
+    const lojas=dadosPorRegional[reg];
+    ws_data.push([`${reg}`],["Filial","Sigla","Cidade","UF","Tipo"]);
+    lojas.forEach(l=>ws_data.push([l.filial,l.sigla,l.cidade,l.uf,l.tipo]));
+    ws_data.push([]);
+  }
+  const ws=XLSX.utils.aoa_to_sheet(ws_data);
+  ws['!cols']=[{wch:25},{wch:10},{wch:20},{wch:5},{wch:15}];
+  XLSX.utils.book_append_sheet(wb,ws,"Lojas Filtradas");XLSX.writeFile(wb,"lojas_filtradas.xlsx");
+}
+
+
+
+</script>
+</body>
+</html>
+

@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Carrego </title>
+
+<!-- Fontes -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet">
+
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+
+body {
+    background:#0d0d0d;
+    color:#fff;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    perspective:1200px; /* Perspectiva global 3D */
+}
+
+/* Header e Título */
+.header {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin-bottom:20px;
+    z-index:1;
+    position:relative;
+}
+
+.titulo-quadro {
+    background: rgba(0,0,0,0.85);
+    border: 2px solid #F8EC03;
+    border-radius: 12px;
+    padding: 20px 30px;
+    box-shadow: 0 0 25px #0316c2;
+    text-align:center;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+    width:100%;
+    max-width:700px;
+}
+.titulo-quadro:hover {
+    transform: rotateY(10deg) rotateX(5deg) translateZ(20px);
+    box-shadow: 0 0 80px #fff800, 0 0 150px #f8ec03 inset;
+}
+
+h1 {
+    color:#F8EC03;
+    font-size:2em;
+    text-shadow:0 0 15px #f8ec03, 0 0 25px #fff800;
+    letter-spacing:2px;
+    font-family:'Orbitron', sans-serif;
+}
+
+#dataAtual {
+    color:#ffffff;
+    font-family:'Orbitron', sans-serif;
+    font-size:1em;
+    text-shadow:0 0 8px #f8ec03;
+    margin-top:6px;
+}
+
+/* Contadores */
+.quadro-contadores {
+    display:flex;
+    justify-content:space-around;
+    margin-top:15px;
+    gap:15px;
+}
+
+.quadro-contadores div {
+    font-family:'Orbitron', sans-serif;
+    font-weight:bold;
+    padding:18px 25px;
+    border-radius:12px;
+    min-width:140px;
+    text-align:center;
+    font-size:1.6em;
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.quadro-contadores div:hover {
+    transform: translateZ(20px) rotateX(5deg);
+    box-shadow: 0 0 50px #ffec00, 0 0 80px #ffec00 inset;
+}
+
+#contadorFiliais { background:#ff4444; color:#fff; box-shadow:0 0 20px #ff4444; }
+#contadorPostos { background:#44ff44; color:#000; box-shadow:0 0 20px #44ff44; }
+#contadorLojas { background:#0099ff; color:#fff; box-shadow:0 0 20px #0099ff; }
+
+/* Select */
+select {
+    padding:8px 12px;
+    border-radius:6px;
+    border:none;
+    background:#f8ec03;
+    font-weight:bold;
+    cursor:pointer;
+    transition: all 0.3s ease;
+}
+select:hover { background:#333; color:#fff; }
+
+/* Container de colunas */
+.container {
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    width:100%;
+    max-width:1300px;
+    flex-wrap:wrap;
+    margin-top:25px;
+    position:relative;
+    z-index:1;
+}
+.column {
+    background-color: rgba(0,0,0,0.85);
+    border-radius:12px;
+    padding:15px;
+    flex:1;
+    min-width:250px;
+    max-width:350px;
+    box-shadow: 0 0 20px rgba(255,255,0,0.3);
+    opacity:0;
+    animation: aparecer 1s ease forwards;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+.column:hover {
+    transform: translateZ(20px) rotateY(-5deg);
+    box-shadow:0 0 50px rgba(255,255,255,0.4), 0 0 100px rgba(255,255,255,0.2) inset;
+}
+@keyframes aparecer { to { opacity:1; } }
+
+/* Cards */
+.card-container { display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
+.card {
+    background-color:#cc0909;
+    border:1px solid #f6f3f3;
+    border-radius:10px;
+    padding:12px;
+    text-align:center;
+    font-size:1.4em;
+    box-shadow:0 2px 6px rgba(244,241,241,0.8);
+    color:#fff;
+    transform-style: preserve-3d;
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.card:hover {
+    transform: translateZ(15px) rotateX(5deg) rotateY(5deg);
+    box-shadow:0 0 40px #00ff99, 0 0 80px #00ff99 inset;
+}
+
+/* Saida da loja */
+.saida-loja {
+    position:relative;
+    margin-top:20px;
+    background:rgba(0,0,50,0.8);
+    border:2px solid #00ffff;
+    border-radius:12px;
+    padding:15px 25px;
+    text-align:center;
+    box-shadow:0 0 25px #00ffff, 0 0 50px #00ffff inset;
+    font-family:'Orbitron', sans-serif;
+    color:#00ffff;
+    font-size:1.5em;
+    text-shadow:0 0 10px #00ffff, 0 0 20px #00ffff inset;
+    transform-style: preserve-3d;
+    transition: transform 0.5s ease, box-shadow 0.5s ease;
+}
+.saida-loja:hover {
+    transform: translateZ(25px) rotateX(5deg);
+    box-shadow:0 0 60px #00ffff, 0 0 120px #00ffff inset;
+}
+
+/* Selecionado */
+.selecionado {
+    transform: translateZ(20px) rotateX(5deg);
+    box-shadow: 0 0 25px #ffec00, 0 0 50px #ffd700 inset;
+}
+
+/* QUADRO DAS LOJAS */
+.column h2 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    margin-bottom: 10px;
+}
+
+.quantidade {
+    background: rgba(255,255,255,0.1);
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 0.8em;
+    color: #ffec00;
+    box-shadow: 0 0 8px #ffec00;
+}
+
+.card span:last-child {
+  animation: brilhoVerde 2s infinite ease-in-out;
+}
+@keyframes brilhoVerde {
+  0%,100% { text-shadow: 0 0 6px #00ff00, 0 0 12px #00ff00; }
+  50% { text-shadow: 0 0 20px #00ff00, 0 0 35px #00ff00; }
+}
+
+
+#pesquisaInput:focus {
+  box-shadow:0 0 15px #00ffff, 0 0 5px #00ffff inset;
+  background:#000;
+}
+
+.linha-topo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+/*  Campo de pesquisa sofisticado e centralizado */
+.campo-pesquisa {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 20px auto;
+  background: linear-gradient(135deg, #00ffff22, #0ff2ff11);
+  border-radius: 50px;
+  width: 80%;
+  max-width: 450px;
+  padding: 3px;
+  box-shadow: 0 0 20px #00ffff33, inset 0 0 15px #00ffff22;
+  transition: all 0.4s ease;
+}
+
+.campo-pesquisa:hover {
+  box-shadow: 0 0 25px #00ffffaa, inset 0 0 20px #00ffff55;
+  transform: scale(1.02);
+}
+
+.campo-pesquisa input {
+  flex: 1;
+  background: #0a0a0a;
+  border: none;
+  outline: none;
+  color: #00ffff;
+  font-size: 1em;
+  border-radius: 50px;
+  padding: 12px 45px 12px 18px;
+  width: 100%;
+  transition: all 0.4s ease;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 6px #00ffff;
+}
+
+.campo-pesquisa input::placeholder {
+  color: #00ffff99;
+}
+
+.campo-pesquisa input:focus {
+  box-shadow: 0 0 25px #00ffff, 0 0 15px #00ffff inset;
+  background: #000;
+  color: #fff;
+  text-shadow: 0 0 8px #00ffff;
+}
+
+/* Ícone da lupa neon */
+.icone-lupa {
+  position: absolute;
+  right: 18px;
+  color: #00ffffbb;
+  font-size: 1.3em;
+  pointer-events: none;
+  animation: brilhoLupa 3s infinite ease-in-out;
+}
+
+@keyframes brilhoLupa {
+  0%, 100% { text-shadow: 0 0 8px #00ffff55, 0 0 15px #00ffff33; }
+  50% { text-shadow: 0 0 25px #00ffff, 0 0 35px #00ffff; }
+}
+
+
+
+/* Relógio */
+.relogio {
+    position:absolute;
+    top:20px;
+    right:20px;
+    font-family:'Orbitron', sans-serif;
+    font-size:2em;
+    color:#eaf1ee;
+    text-shadow:0 0 5px #00ff99,0 0 10px #00ff99,0 0 20px #00ff99,0 0 30px #00ff99;
+    background:rgba(0,0,0,0.5);
+    padding:10px 20px;
+    border-radius:12px;
+    border:2px solid #00ff99;
+    box-shadow:0 0 20px #00ff99,0 0 40px #00ff99 inset;
+    animation: neonFlicker 1.5s infinite alternate;
+    z-index:1;
+}
+@keyframes neonFlicker {
+    0%,19%,21%,23%,25%,54%,56%,100%{ text-shadow:0 0 5px #00ff99; }
+    20%,22%,24%,55%{ text-shadow:0 0 20px #00ff99,0 0 35px #00ff99; }
+}
+
+
+
+/* Calendário */
+.calendario {
+    position:absolute;
+    top:20px;
+    left:20px;
+    font-family:'Orbitron', sans-serif;
+    color:#00bfff;
+    background:linear-gradient(145deg, rgba(0,0,50,0.7), rgba(0,50,100,0.5));
+    border:2px solid #00bfff;
+    border-radius:14px;
+    padding:10px;
+    box-shadow:0 0 25px #00bfff,0 0 50px #00bfff inset;
+    text-align:center;
+    transform-style: preserve-3d;
+    z-index:1;
+}
+.calendario td:hover { transform: translateZ(10px) rotateX(3deg); box-shadow:0 0 20px #00bfff,0 0 40px #1e90ff inset; }
+.calendario .hoje { transform: translateZ(10px) rotateY(3deg); box-shadow:0 0 25px #00bfff,0 0 50px #1e90ff inset; }
+
+@media (max-width:768px){
+    .column{ min-width:180px; max-width:100%; }
+    h1{ font-size:1.5em; }
+    .titulo-quadro{ padding:15px; }
+    .quadro-contadores div{ font-size:1.3em; padding:12px 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- PARTICULAS -->
+<div id="particles-js" style="position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1;"></div>
+
+<!-- Saida da loja -->
+<div id="saidaLojaQuadro" class="saida-loja">
+    <h2 id="saidaLoja">Saida para a loja: --/--/----</h2>
+</div>
+
+
+<div class="header">
+    <div class="titulo-quadro">
+        <h1>Controle de Carrego - <span id="dataAtual"></span></h1>
+        <div class="quadro-contadores">
+            <div id="contadorFiliais">Filiais: 0</div>
+            <div id="contadorPostos">Postos: 0</div>
+            <div id="contadorLojas">Lojas Teresina: 0</div>
+</div>
+
+<!--  Campo de Pesquisa Neon -->
+<div class="campo-pesquisa">
+  <input 
+    type="text" 
+    id="pesquisaInput" 
+    placeholder="Digite a sigla da loja..."
+    oninput="pesquisarLojasOuDias()" />
+  <span class="icone-lupa"></span>
+</div>
+
+
+
+        <div class="select-container">
+            <select id="diaSelect" onchange="carregarLojasManualmente()"></select>
+        </div>
+    </div>
+</div>
+
+<div id="relogio" class="relogio"></div>
+<div id="calendario" class="calendario"></div>
+
+<div class="container">
+    <div class="column" id="colFiliais">
+        <h2>Filiais <span class="quantidade" id="quantFiliais">0</span></h2>
+        <div class="card-container" id="filiais"></div>
+    </div>
+    <div class="column" id="colPostos">
+        <h2>Postos <span class="quantidade" id="quantPostos">0</span></h2>
+        <div class="card-container" id="postos"></div>
+    </div>
+    <div class="column" id="colLojas">
+        <h2>Lojas Teresina <span class="quantidade" id="quantLojas">0</span></h2>
+        <div class="card-container" id="lojas"></div>
+    </div>
+</div>
+
+
+<!-- SCRIPTS -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+// Partículas
+particlesJS("particles-js", {
+  "particles": {
+    "number":{"value":100,"density":{"enable":true,"value_area":1000}},
+    "color":{"value":"#00ffff"},
+    "shape":{"type":"circle"},
+    "opacity":{"value":0.6,"random":true,"anim":{"enable":true,"speed":1,"opacity_min":0.2,"sync":false}},
+    "size":{"value":3,"random":true,"anim":{"enable":true,"speed":4,"size_min":0.2,"sync":false}},
+    "line_linked":{"enable":true,"distance":160,"color":"#00ffff","opacity":0.5,"width":1},
+    "move":{"enable":true,"speed":2,"direction":"none","random":true,"straight":false,"out_mode":"out"}
+  },
+  "interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":true,"mode":"grab"},"onclick":{"enable":true,"mode":"push"}},"modes":{"grab":{"distance":180,"line_linked":{"opacity":0.6}},"push":{"particles_nb":6}}},
+  "retina_detect":true
+});
+
+// Aqui entra o resto do JS (controle de dias, contadores, calendário e saida da loja)
+// Você pode reaproveitar todo o script que já estava funcionando, mantendo o HTML acima.
+</script>
+
+</body>
+</html>
+
+
+<script>
+const lojasPorDia = {
+    "segunda": { filiais:["BDF","LED","CDE","PDC","PID"], postos:["SRD","DSJ","CST","SMT","CAD","ALS","ALG","BNT","DBC","DPU"], lojas:["TES","TEU","TMA","TEZ","TIM","TEC","TED","TPP"] },
+    "terca": { filiais:["DPC","FLD","PAR","TUT","DBH","TIA","SBT"], postos:["BDR","PRP","FRL","EVL","VAL","PMT","ARO","INH","DLB","MGL","MTS","PRN","CNE","IPI"], lojas:["TES","TPI","TEU","TMA","TMO","TSJ"] },
+    "quarta": { filiais:["IDC","DAG","CDF","CDP"], postos:["ABR","PAL","ANG","AMA","SFR","REG","OEI","DCO","PBO","SPA"], lojas:["TES","TEU","TMA","TEZ","TIM","TEC","TED","TPP"] },
+    "quinta": { filiais:["DPI","CUM","CHD","CTA","VAG","ITA","ROS","PDF","ARP"], postos:["CCT","DBJ","DCB","EMR","COG","ALS"], lojas:["TES","TPI","TEU","TMA","TMO","TSJ"] },
+    "sexta": { filiais:["BAC","DSI","BCU","DZE","CTP","GDV","AMP","CME","SLP","LDO"], postos:["URU","RGO","BGR","BAR","NSR","LUZ","MIA","PRT","MIO","BAT","ESP","JPR","JFT","UNI"], lojas:["TES","TEU","TMA","TEZ","TIM","TEC","TED"] }
+};
+
+function obterDiaSemana() {
+    const dias=["domingo","segunda","terca","quarta","quinta","sexta","sabado"];
+    return dias[new Date().getDay()];
+}
+
+let contadorIntervalos = [];
+
+function atualizarContadores(filiais, postos, lojas) {
+    // Animação superior
+    contadorIntervalos.forEach(i => clearInterval(i));
+    contadorIntervalos = [];
+    const anim = (el,n,tipo)=>{
+        let i=0;
+        const id = setInterval(()=>{
+            if(i <= n) el.textContent = `${tipo}: ${i}`;
+            else clearInterval(id);
+            i++;
+        },50);
+        contadorIntervalos.push(id);
+    };
+    anim(document.getElementById("contadorFiliais"), filiais.length, "Filiais");
+    anim(document.getElementById("contadorPostos"), postos.length, "Postos");
+    anim(document.getElementById("contadorLojas"), lojas.length, "Lojas Teresina");
+
+    // Atualiza quantidade dentro de cada coluna
+    document.getElementById("quantFiliais").textContent = filiais.length;
+    document.getElementById("quantPostos").textContent = postos.length;
+    document.getElementById("quantLojas").textContent = lojas.length;
+}
+
+
+
+function formatarData(d) {
+    return d.toLocaleDateString("pt-BR", { weekday:"long", day:"2-digit", month:"2-digit", year:"numeric" });
+}
+
+function atualizarSaidaLoja(diaSelecionado="auto") {
+    let hoje = new Date();
+    let saida;
+
+    if(diaSelecionado === "auto"){
+        saida = adicionarDiasUteis(hoje, 2); // 2 dias úteis após hoje
+    } else {
+        const diasSemana = {domingo:0, segunda:1, terca:2, quarta:3, quinta:4, sexta:5, sabado:6};
+        let targetDia = diasSemana[diaSelecionado] ?? hoje.getDay();
+        let diff = (targetDia - hoje.getDay() + 7) % 7;
+        if(diff === 0) diff = 7;
+        let diaCarrego = new Date(hoje);
+        diaCarrego.setDate(hoje.getDate() + diff);
+
+        saida = adicionarDiasUteis(diaCarrego, 2); // 2 dias após o dia do carrego
+    }
+
+    const diasSemanaNomes = ["Domingo","Segunda-feira","Terca-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sabado"];
+    const dia = saida.getDate(), mes = saida.getMonth()+1, ano = saida.getFullYear();
+    const nomeDia = diasSemanaNomes[saida.getDay()];
+    document.getElementById("saidaLoja").textContent = `Saida para a loja: ${nomeDia}, ${String(dia).padStart(2,'0')}/${String(mes).padStart(2,'0')}/${ano}`;
+}
+
+
+
+
+function atualizarSelectComDatas() {
+    const select = document.getElementById("diaSelect");
+    const hoje = new Date();
+    const diasSemana = ["domingo","segunda","terca","quarta","quinta","sexta","sabado"];
+    
+    select.innerHTML = "";
+
+    // Opção Hoje
+    const optionHoje = document.createElement("option");
+    optionHoje.value = "auto";
+    optionHoje.textContent = `Hoje - ${String(hoje.getDate()).padStart(2,'0')}/${String(hoje.getMonth()+1).padStart(2,'0')}`;
+    select.appendChild(optionHoje);
+
+    // Próximos 7 dias úteis
+    for(let i=1;i<=7;i++){
+        let data = new Date(hoje);
+        data.setDate(hoje.getDate() + i);
+        if(data.getDay() === 0 || data.getDay() === 6) continue; // pula domingo/sábado
+
+        const diaNome = diasSemana[data.getDay()];
+        const diaStr = `${diaNome.charAt(0).toUpperCase() + diaNome.slice(1)} - ${String(data.getDate()).padStart(2,'0')}/${String(data.getMonth()+1).padStart(2,'0')}`;
+
+        const option = document.createElement("option");
+        option.value = diaNome.toLowerCase(); // mantém compatibilidade
+        option.textContent = diaStr;
+        select.appendChild(option);
+    }
+}
+
+function pesquisarLojasOuDias() {
+    const termo = document.getElementById("pesquisaInput").value.trim().toLowerCase();
+    const containers = {
+        filiais: document.getElementById("filiais"),
+        postos: document.getElementById("postos"),
+        lojas: document.getElementById("lojas")
+    };
+
+    if (termo === "") {
+        carregarLojasManualmente();
+        return;
+    }
+
+    let resultados = { filiais: [], postos: [], lojas: [] };
+
+    for (const [dia, dados] of Object.entries(lojasPorDia)) {
+        for (const tipo of ["filiais", "postos", "lojas"]) {
+            (dados[tipo] || []).forEach(loja => {
+                if (loja.toLowerCase().includes(termo)) {
+                    // Calcula a data do carrego do dia específico
+                    const hoje = new Date();
+                    const diasSemana = ["domingo","segunda","terca","quarta","quinta","sexta","sabado"];
+                    const indiceHoje = hoje.getDay();
+                    const indiceAlvo = diasSemana.indexOf(dia);
+                    let diff = indiceAlvo - indiceHoje;
+                    if (diff < 0) diff += 7;
+                    const dataCarrego = new Date(hoje);
+                    dataCarrego.setDate(hoje.getDate() + diff);
+
+                    const diaStr = `${String(dataCarrego.getDate()).padStart(2,'0')}/${String(dataCarrego.getMonth()+1).padStart(2,'0')}/${dataCarrego.getFullYear()}`;
+                    
+                    // Calcula saída considerando 2 dias úteis
+                    const dataSaidaObj = adicionarDiasUteis(dataCarrego, 2);
+                    const dataSaidaStr = `${String(dataSaidaObj.getDate()).padStart(2,'0')}/${String(dataSaidaObj.getMonth()+1).padStart(2,'0')}/${dataSaidaObj.getFullYear()}`;
+
+                    resultados[tipo].push({ 
+                        nome: loja, 
+                        dia, 
+                        dataCarrego: diaStr,
+                        dataSaida: dataSaidaStr
+                    });
+                }
+            });
+        }
+    }
+
+    // Atualiza containers
+Object.keys(containers).forEach(tipo => {
+    containers[tipo].innerHTML = "";
+
+    if (resultados[tipo].length === 0) {
+        // Mostra mensagem personalizada
+containers[tipo].innerHTML = `
+  <div class="card" style="
+    background: rgba(0, 255, 255, 0.1);
+    color: #00ffff;
+    font-weight: bold;
+    text-shadow: 0 0 6px #00ffff, 0 0 12px #0ff;
+    font-size: 1.1em;
+    padding: 18px 15px;
+    border: 1px solid #00ffff55;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #00ffff33 inset;
+    text-align: center;
+  ">Não existe loja para a pesquisa</div>
+`;
+
+
+// Adicione a animação no seu CSS
+const style = document.createElement('style');
+style.innerHTML = `
+@keyframes brilhoNeon {
+  0% { box-shadow: 0 0 15px #00ffff, 0 0 30px #0ff inset; }
+  50% { box-shadow: 0 0 40px #00ffff, 0 0 80px #0ff inset; }
+  100% { box-shadow: 0 0 15px #00ffff, 0 0 30px #0ff inset; }
+}`;
+document.head.appendChild(style);
+    } else {
+        resultados[tipo].forEach(item => {
+            const card = document.createElement("div");
+            card.className = "card";
+            card.innerHTML = `
+                <strong style="font-size:1.1em; color:#fff;">${item.nome}</strong><br>
+                <span style="font-size:0.85em; color:#00ffff;">${item.dia.charAt(0).toUpperCase() + item.dia.slice(1)}</span><br>
+                <span style="font-size:0.8em; color:#ff0;">Carrego: ${item.dataCarrego}</span><br>
+                <span style="font-size:0.8em; color:#0f0;">Saída: ${item.dataSaida}</span>
+            `;
+            containers[tipo].appendChild(card);
+        });
+    }
+});
+
+
+    atualizarContadores(
+        resultados.filiais.map(f=>f.nome), 
+        resultados.postos.map(p=>p.nome), 
+        resultados.lojas.map(l=>l.nome)
+    );
+    document.getElementById("saidaLoja").textContent = "Resultados da pesquisa";
+}
+
+
+
+function carregarLojasManualmente() {
+    const diaSelecionado = document.getElementById("diaSelect").value;
+    const diaSemana = diaSelecionado === "auto" ? obterDiaSemana() : diaSelecionado;
+
+    // Verifica se Ã© sÃ¡bado ou domingo
+    if(diaSemana === "sabado" || diaSemana === "domingo"){
+        ["filiais","postos","lojas"].forEach(id=>{
+            const container = document.getElementById(id);
+            container.innerHTML = `<div class="card" style="background:#555;text-shadow:none;">Sem planejamento de carrego</div>`;
+        });
+        atualizarContadores([],[],[]);
+        document.getElementById("saidaLoja").textContent = `NÃ£o hÃ¡ planejamento de carrego neste dia.`;
+        return;
+    }
+
+    const nomesLojas = lojasPorDia[diaSemana] || { filiais: [], postos: [], lojas: [] };
+
+    ["filiais","postos","lojas"].forEach(id=>{
+        const container = document.getElementById(id);
+        container.innerHTML="";
+        (nomesLojas[id]||[]).forEach(nome=>{
+            const card = document.createElement("div");
+            card.className="card";
+            card.textContent = nome;
+            container.appendChild(card);
+        });
+    });
+
+    atualizarContadores(nomesLojas.filiais, nomesLojas.postos, nomesLojas.lojas);
+    atualizarSaidaLoja(diaSelecionado);
+}
+
+
+
+function atualizarDataAtual() {
+    const hoje = new Date();
+    const diasSemanaNomes = ["Domingo","Segunda-feira","Terca-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sabado"];
+    const nomeDia = diasSemanaNomes[hoje.getDay()];
+    const dataFormatada = hoje.toLocaleDateString("pt-BR",{ day:"2-digit", month:"2-digit", year:"numeric" });
+
+    document.getElementById("dataAtual").innerHTML = 
+        `${dataFormatada} <br><span style="font-size:0.8em; color:#fff700;">${nomeDia}</span>`;
+}
+
+
+function destacarDiaSelecionado(diaSelecionado) {
+    const diasSemana = ["domingo","segunda","terca","quarta","quinta","sexta","sabado"];
+    const hoje = new Date();
+    const mes = hoje.getMonth();
+    const ano = hoje.getFullYear();
+
+    // Remove destaque anterior
+    document.querySelectorAll("#calendario td").forEach(td => td.classList.remove("selecionado"));
+
+    if(diaSelecionado === "auto") return; // não destaca hoje, ou podemos destacar o dia atual
+
+    const targetDiaNum = diasSemana.indexOf(diaSelecionado);
+    if(targetDiaNum === -1) return;
+
+    // Percorre o calendário e destaca o primeiro td que bate com o dia da semana
+    document.querySelectorAll("#calendario td").forEach(td => {
+        if(td.textContent) {
+            const data = new Date(ano, mes, parseInt(td.textContent));
+            if(data.getDay() === targetDiaNum) td.classList.add("selecionado");
+        }
+    });
+}
+document.getElementById("diaSelect").addEventListener("change", () => {
+    carregarLojasManualmente();
+    destacarDiaSelecionado(document.getElementById("diaSelect").value);
+});
+
+
+
+
+function atualizarRelogio() {
+    const agora = new Date();
+    const h = String(agora.getHours()).padStart(2,'0');
+    const m = String(agora.getMinutes()).padStart(2,'0');
+    const s = String(agora.getSeconds()).padStart(2,'0');
+
+    const diasSemanaNomes = ["Domingo","Segunda-feira","Terca-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sabado"];
+    const nomeDia = diasSemanaNomes[agora.getDay()];
+
+    // Mostra hora + dia da semana maior
+    document.getElementById("relogio").innerHTML = `${h}:${m}:${s} <br><span style="font-size:0.8em; color:#00ffff; font-weight:bold;">${nomeDia}</span>`;
+
+    setTimeout(atualizarRelogio, 1000);
+}
+
+
+
+function adicionarDiasUteis(data, dias) {
+    let d = new Date(data);
+    while(dias > 0){
+        d.setDate(d.getDate()+1);
+        if(d.getDay() !== 0 && d.getDay() !== 6) dias--;
+    }
+    return d;
+}
+
+// Função que calcula a data de saída da loja
+function calcularSaida(dataCarrego) {
+  const partes = dataCarrego.split('-'); // caso venha formato YYYY-MM-DD
+  let data = new Date(dataCarrego);
+
+  // Corrige se vier no formato brasileiro dd/mm/yyyy
+  if (partes.length === 3 && partes[0].length === 2) {
+    const [dia, mes, ano] = partes;
+    data = new Date(`${ano}-${mes}-${dia}`);
+  }
+
+  const diaSemana = data.getDay(); // 0 = domingo, 1 = segunda, ..., 6 = sábado
+  let diasParaSomar = 0;
+
+  switch (diaSemana) {
+    case 1: diasParaSomar = 2; break; // Segunda → Quarta
+    case 2: diasParaSomar = 2; break; // Terça → Quinta
+    case 3: diasParaSomar = 2; break; // Quarta → Sexta
+    case 4: diasParaSomar = 4; break; // Quinta → Segunda
+    case 5: diasParaSomar = 4; break; // Sexta → Terça
+    case 6: diasParaSomar = 3; break; // Sábado → Terça
+    case 0: diasParaSomar = 2; break; // Domingo → Terça
+
+  }
+
+  const dataSaida = new Date(data);
+  dataSaida.setDate(data.getDate() + diasParaSomar);
+
+  const diasSemanaNome = [
+    "Domingo", "Segunda-feira", "Terça-feira",
+    "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"
+  ];
+
+  const nomeDia = diasSemanaNome[dataSaida.getDay()];
+  const dia = String(dataSaida.getDate()).padStart(2, '0');
+  const mes = String(dataSaida.getMonth() + 1).padStart(2, '0');
+  const ano = dataSaida.getFullYear();
+
+  return `${nomeDia}, ${dia}/${mes}/${ano}`;
+}
+
+
+
+const carrego = "2025-11-14"; // Sexta-feira
+console.log("Saída para a loja:", calcularSaida(carrego));
+
+
+function gerarCalendario() {
+    const hoje = new Date();
+    const mes = hoje.getMonth();
+    const ano = hoje.getFullYear();
+    const primeiroDia = new Date(ano, mes, 1).getDay();
+    const diasNoMes = new Date(ano, mes+1,0).getDate();
+
+    let tabela = "<table><tr>";
+    const diasSemana=["Dom","Seg","Ter","Qua","Qui","Sex","Sab"];
+    diasSemana.forEach(d => tabela += `<th>${d}</th>`); tabela += "</tr><tr>";
+    for(let i=0;i<primeiroDia;i++) tabela+="<td></td>";
+    for(let d=1; d<=diasNoMes; d++){
+        const dataAtual = new Date(ano, mes, d);
+        const classeHoje = dataAtual.toDateString()===hoje.toDateString() ? "hoje" : "";
+        tabela += `<td class="${classeHoje}">${d}</td>`;
+        if((d+primeiroDia)%7===0 && d!==diasNoMes) tabela+="</tr><tr>";
+    }
+    tabela+="</tr></table>";
+    document.getElementById("calendario").innerHTML=tabela;
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+    atualizarDataAtual();
+    atualizarSelectComDatas();
+
+    carregarLojasManualmente();
+    atualizarRelogio();
+    gerarCalendario();
+});
+
+</script>
+</body>
+</html>

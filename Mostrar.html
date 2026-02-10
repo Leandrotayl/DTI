@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comparador de Páginas Impressas</title>
+
+<!-- XLSX -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Inter:wght@400;600&display=swap');
+
+body {
+  margin:0;
+  font-family:'Inter',sans-serif;
+  background:radial-gradient(circle at 20% 20%,#041024,#020c18);
+  color:#e4eaf2;
+  min-height:100vh;
+  padding:20px;
+}
+
+h1 {
+  font-family:'Orbitron',sans-serif;
+  text-align:center;
+  font-size:30px;
+  margin-bottom:20px;
+  color:#7ef9c5;
+  text-shadow:0 0 10px #7ef9c5;
+}
+
+.container {
+  width:100%;
+  padding:20px;
+  background: rgba(255,255,255,0.05);
+  border-radius:12px;
+  box-shadow:0 0 20px rgba(0,255,200,0.2);
+}
+
+.uploads {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:15px;
+  flex-wrap:wrap;
+  margin-bottom:25px;
+}
+
+input[type=file], input[type=text] {
+  padding:12px;
+  border-radius:10px;
+  background: rgba(255,255,255,0.08);
+  color:#7ef9c5;
+  border:1px solid rgba(255,255,255,0.15);
+  cursor:pointer;
+  width:230px;
+}
+
+button {
+  cursor:pointer;
+}
+
+#btnMenu {
+  position: fixed;
+  top: 10px;
+  left: 160px;
+  width: 240px;
+  padding: 15px 0;
+  background: linear-gradient(135deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 3px solid #ff0000;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+  transition: all 0.3s ease-in-out;
+  z-index: 1001;
+}
+
+#btnMenu:hover {
+  background: linear-gradient(145deg,#ff0000,#1a1aff);
+  color: #fff;
+  box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
+  transform: scale(1.05);
+}
+
+#btnExportar {
+  background: linear-gradient(135deg,#00ffcc,#00aaff);
+  color:#041520;
+  font-weight:700;
+  font-size:14px;
+  padding:12px 22px;
+  border-radius:12px;
+  border:none;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  box-shadow: 0 0 12px rgba(0,255,200,0.4),0 5px 12px rgba(0,255,200,0.2);
+  transition: all 0.3s ease-in-out;
+}
+
+#btnExportar:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow:0 0 22px rgba(0,255,200,0.6),0 8px 18px rgba(0,255,200,0.3);
+}
+
+#resultados {
+  margin-top:30px;
+  overflow-x:auto;
+}
+
+table {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+}
+
+thead {
+  background: linear-gradient(135deg,#0affb0,#00c4ff);
+  color:#041520;
+}
+
+th, td {
+  padding:8px 10px;
+  text-align:center;
+  font-size:14px;
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255,255,255,0.05);
+  transition: background 0.3s, transform 0.3s;
+}
+
+tbody tr:hover {
+  transform: scale(1.02);
+  background: rgba(0,255,200,0.1);
+}
+
+td.diff-negativo { color:#ff6060; text-shadow:0 0 8px #ff3030; font-weight:600;}
+td.diff-positivo { color:#00ff99; text-shadow:0 0 8px #00ff66; font-weight:600;}
+td.diff-repetido { color:#ffd700; text-shadow:0 0 6px #ffaa00; font-weight:700;}
+td.diff-novo { color:#00ffff; text-shadow:0 0 10px #00ffff; font-weight:700;}
+td.diff-removido { color:#ff8800; text-shadow:0 0 8px #ff6600; font-weight:700;}
+
+#totais {
+  display:flex;
+  justify-content:space-around;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+  gap:10px;
+}
+
+#totais .card {
+  background: rgba(255,255,255,0.05);
+  padding:15px 25px;
+  border-radius:12px;
+  text-align:center;
+  min-width:180px;
+  box-shadow: 0 0 15px rgba(0,255,200,0.2);
+  position: relative;
+}
+
+#totais .card strong { font-size:18px; color:#fff; }
+
+#listaNovos {
+  margin-top:10px;
+  max-height:150px;
+  overflow-y:auto;
+  font-size:13px;
+  color:#00ffff;
+  text-shadow:0 0 8px #00ffff;
+}
+</style>
+</head>
+<body>
+
+<h1>Comparador de Páginas Impressas</h1>
+<button id="btnMenu">MENU PRINCIPAL</button>
+
+<div class="container">
+  <div class="uploads">
+    <div>
+      <label>Mês Atual (Planilha Atual):</label><br>
+      <input type="file" id="mesAtual" accept=".xlsx, .xls">
+    </div>
+    <div>
+      <label>Mês Anterior (Planilha Antiga):</label><br>
+      <input type="file" id="mesAnterior" accept=".xlsx, .xls">
+    </div>
+    <div>
+      <input type="text" id="filtroSerial" placeholder="Pesquisar por Número de Série ou Loja">
+      <button id="btnExportar" onclick="exportarExcel()">Exportar Excel</button>
+    </div>
+  </div>
+
+  <div id="totais">
+    <div class="card" id="cardTotalSeries">Total Números de Série: <strong>0</strong></div>
+    <div class="card" id="cardTotalAtual">Total Mês Atual: <strong>0</strong></div>
+    <div class="card" id="cardTotalAnterior">Total Mês Anterior: <strong>0</strong></div>
+    <div class="card" id="cardDiferenca">Diferença Total: <strong>0</strong></div>
+    <div class="card" id="cardNovos">
+      Novos Números de Série: <strong>0</strong>
+      <div id="listaNovos"></div>
+    </div>
+    <div class="card" id="cardRemovidos">Removidos: <strong>0</strong></div>
+    <div class="card" id="cardExtras">Extras (Duplicados): <strong>0</strong></div>
+  </div>
+
+  <div id="resultados"></div>
+</div>
+
+<script>
+let listaComparativa = [];
+let anteriorLista = [];
+
+// Função para ler planilha
+async function lerPlanilha(file, incluirLoja=false){
+  return new Promise((resolve,reject)=>{
+    const reader = new FileReader();
+    reader.onload = e=>{
+      const data = new Uint8Array(e.target.result);
+      const workbook = XLSX.read(data,{type:'array'});
+      const sheet = workbook.Sheets[workbook.SheetNames[0]];
+      const json = XLSX.utils.sheet_to_json(sheet,{header:1});
+      let resultado = [];
+
+      json.forEach((linha,index)=>{
+        if(!linha || linha.length < 3) return;
+
+        // Normaliza a linha para verificar cabeçalho duplicado
+        const linhaTexto = linha.join(' ').toUpperCase();
+
+        // Remove linha se for cabeçalho (com LOJA / MODELO / NÚMEROSERIAL)
+        if(linhaTexto.includes("LOJA") && linhaTexto.includes("MODELO") && linhaTexto.includes("NUMEROSERIAL")){
+          return; // ignora essa linha
+        }
+
+        const loja = incluirLoja ? linha[0] : null;
+        const modelo = incluirLoja ? linha[5] : null;
+        const serial = linha[6] ? String(linha[6]).trim() : null;
+        const paginas = linha[8] && !isNaN(linha[8]) ? Number(linha[8]) : 0;
+
+        if(serial) resultado.push({loja, modelo, serial, paginas});
+      });
+
+      resolve(resultado);
+    };
+    reader.onerror=err=>reject(err);
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+
+// Função auxiliar para detectar duplicados em um array (retorna set de valores duplicados)
+function encontrarDuplicados(arr){
+  const contagem = {};
+  arr.forEach(v=>{ if(!v) return; contagem[v] = (contagem[v]||0) + 1; });
+  return new Set(Object.keys(contagem).filter(k=>contagem[k] > 1));
+}
+
+// Ao selecionar o mês atual
+document.getElementById('mesAtual').addEventListener('change', async (e)=>{
+  const file=e.target.files[0];
+  if(!file) return;
+  const atual = await lerPlanilha(file,true);
+
+  // monta lista inicial (pode conter duplicados)
+  listaComparativa = atual.map((l,i)=>({
+    item: String(i+1).padStart(2,'0'),
+    loja: l.loja || '-',
+    modelo: l.modelo || '-',
+    serial: l.serial || '-',
+    atual: l.paginas,
+    anterior: 0,
+    diff: 0,
+    cor: ''
+  }));
+
+  // detectar duplicados na própria planilha atual
+  const seriaisAtuais = listaComparativa.map(x=>x.serial);
+  const duplicadosAtuais = encontrarDuplicados(seriaisAtuais);
+
+  // marcar duplicados (diff-repetido) — e contar extras
+  let extrasCount = 0;
+  listaComparativa = listaComparativa.map(item=>{
+    if(duplicadosAtuais.has(item.serial)){
+      item.cor = 'diff-repetido';
+      extrasCount++;
+    }
+    return item;
+  });
+
+  // atualizar a exibição e os totais: totalSeries como TOTAL ÚNICO (set)
+  mostrarResultados(listaComparativa);
+  atualizarTotais(0,0,extrasCount);
+});
+
+// Ao selecionar o mês anterior
+document.getElementById('mesAnterior').addEventListener('change', async (e)=>{
+  const file=e.target.files[0];
+  if(!file) return;
+  anteriorLista = await lerPlanilha(file,true);
+
+  const mapaAnterior = {};
+  anteriorLista.forEach(a=>mapaAnterior[a.serial]=a.paginas);
+
+  // Detectar duplicados entre atual+anterior (qualquer repetição)
+  const todosSeriais = [...listaComparativa.map(l=>l.serial), ...anteriorLista.map(a=>a.serial)];
+  const duplicadosGlobais = encontrarDuplicados(todosSeriais);
+
+  let novos = 0;
+  let removidos = 0;
+  let extras = 0;
+  let listaNovos = [];
+
+  // Atualiza comparativa (faz diff com anterior)
+  listaComparativa = listaComparativa.map(l=>{
+    const anteriorPag = mapaAnterior[l.serial] || 0;
+    const diff = l.atual - anteriorPag;
+    let cor = diff>0 ? 'diff-positivo' : (diff<0 ? 'diff-negativo' : '');
+    if(!mapaAnterior[l.serial]) {
+      cor = 'diff-novo';
+      novos++;
+      listaNovos.push(l.serial);
+    }
+    if(duplicadosGlobais.has(l.serial)){
+      cor = 'diff-repetido';
+      extras++;
+    }
+    return {...l, anterior: anteriorPag, diff, cor};
+  });
+
+  // Itens que existiam antes e não existem agora
+  anteriorLista.forEach(a=>{
+    const existe = listaComparativa.find(l=>l.serial===a.serial);
+    if(!existe){
+      removidos++;
+      listaComparativa.push({
+        item: '—',
+        loja: a.loja || '-',
+        modelo: a.modelo || '-',
+        serial: a.serial,
+        atual: 0,
+        anterior: a.paginas,
+        diff: -a.paginas,
+        cor: duplicadosGlobais.has(a.serial) ? 'diff-repetido' : 'diff-removido'
+      });
+      if(duplicadosGlobais.has(a.serial)) extras++;
+    }
+  });
+
+  // recalcular extras caso tenham sido detectados
+  // (se duplicadosGlobais contém N seriais, queremos o número total de ocorrências duplicadas)
+  // mas aqui usamos a contagem simples de ocorrências extras já feita acima
+  mostrarResultados(listaComparativa);
+  atualizarTotais(novos, removidos, extras, listaNovos);
+});
+
+// Exibe tabela
+function mostrarResultados(lista){
+  const container = document.getElementById('resultados');
+  let html = `<table><thead><tr>
+    <th>Item</th><th>Loja</th><th>Modelo</th><th>Serial</th><th>Mês Anterior</th><th>Mês Atual</th><th>Diferença</th>
+  </tr></thead><tbody>`;
+  lista.forEach((l,i)=>{
+    html += `<tr>
+      <td>${l.item}</td>
+      <td>${l.loja}</td>
+      <td>${l.modelo}</td>
+      <td class="${l.cor}">${l.serial}</td>
+      <td>${l.anterior}</td>
+      <td>${l.atual}</td>
+      <td class="${l.cor}">${l.diff}</td>
+    </tr>`;
+  });
+  html += `</tbody></table>`;
+  container.innerHTML = html;
+}
+
+// Atualiza contadores
+// extrasCount opcional; listaNovos opcional para preencher a lista dentro do card Novos
+function atualizarTotais(novos=0, removidos=0, extras=0, listaNovos=[]){
+  // totalSeries = quantidade de seriais únicos na listaComparativa (para evitar duplicados duplos)
+  const setUnicos = new Set(listaComparativa.map(x=>x.serial).filter(s=>s && s !== '-'));
+  const totalSeries = setUnicos.size;
+  const totalAtual = listaComparativa.reduce((a,b)=>a+b.atual,0);
+  const totalAnterior = listaComparativa.reduce((a,b)=>a+b.anterior,0);
+  const diff = totalAtual-totalAnterior;
+  document.querySelector('#cardTotalSeries strong').innerText=totalSeries;
+  document.querySelector('#cardTotalAtual strong').innerText=totalAtual;
+  document.querySelector('#cardTotalAnterior strong').innerText=totalAnterior;
+  document.querySelector('#cardDiferenca strong').innerText=diff;
+  document.querySelector('#cardNovos strong').innerText=novos;
+  document.querySelector('#cardRemovidos strong').innerText=removidos;
+  document.querySelector('#cardExtras strong').innerText=extras;
+
+  // preencher lista de novos dentro do card (se fornecida)
+  const listaDiv = document.getElementById("listaNovos");
+  if(Array.isArray(listaNovos) && listaNovos.length){
+    // garantir unicidade visual
+    const unicos = Array.from(new Set(listaNovos));
+    listaDiv.innerHTML = unicos.map(s=>`<div>🆕 ${s}</div>`).join('');
+  } else {
+    listaDiv.innerHTML = "<em>Nenhum novo número encontrado</em>";
+  }
+}
+
+// Filtro rápido
+document.getElementById('filtroSerial').addEventListener('input',()=>{
+  const termo = document.getElementById('filtroSerial').value.toLowerCase();
+  const filtrado = listaComparativa.filter(l=>
+    (l.serial && l.serial.toLowerCase().includes(termo)) || (l.loja && l.loja.toLowerCase().includes(termo))
+  );
+  mostrarResultados(filtrado);
+});
+
+// Exportar Excel
+function exportarExcel(){
+  if(listaComparativa.length===0){ alert("Nenhum dado para exportar!"); return; }
+  const ws_data = [["Item","Loja","Modelo","Serial","Mês Anterior","Mês Atual","Diferença"]];
+  listaComparativa.forEach(l=>{
+    ws_data.push([l.item,l.loja,l.modelo,l.serial,l.anterior,l.atual,l.diff]);
+  });
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(ws_data);
+  XLSX.utils.book_append_sheet(wb, ws, "Comparação");
+  XLSX.writeFile(wb, `Comparacao_${new Date().toISOString().split('T')[0]}.xlsx`);
+}
+
+document.getElementById("btnMenu").addEventListener("click",()=>window.location.href="menu.html");
+</script>
+</body>
+</html>

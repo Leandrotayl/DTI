@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerar Termo</title>
+
+<style>
+body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #4b79a1, #283e51);
+    font-family: Arial, sans-serif;
+}
+
+.btn-termo {
+    padding: 20px 40px;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    background: #00c853;
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+    transition: 0.3s;
+}
+
+.btn-termo:hover {
+    background: #00e676;
+    transform: scale(1.07);
+}
+
+.btn-termo:active {
+    transform: scale(0.97);
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 25px 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+}
+
+.modal-content h2 {
+    margin-top:0;
+    margin-bottom:15px;
+    text-align:center;
+    color:#1976d2;
+}
+
+.modal-content label {
+    display:block;
+    font-weight:bold;
+    margin-top:10px;
+    margin-bottom:5px;
+}
+
+.modal-content input {
+    width:100%;
+    padding:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    margin-bottom:10px;
+    font-size:14px;
+}
+
+.modal-content button {
+    padding:10px 18px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    margin-top:10px;
+}
+
+.btn-create {
+    background:#1976d2;
+    color:white;
+    margin-right:10px;
+}
+
+.btn-cancel {
+    background:#777;
+    color:white;
+}
+/* Adicione dentro do style */
+#previewTermo h1 {
+    font-size: 18px; /* diminuiu para 18px, você pode ajustar */
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+</style>
+</head>
+<body>
+
+<button class="btn-termo" id="openModalBtn">Gerar Termo</button>
+
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <h2>Gerar Termo</h2>
+
+        <label>Termo Nº :</label>
+        <input type="text" id="termoID" placeholder="Numero do Chamado do ServiceDesk">
+
+        <label>Descrição do Produto:</label>
+        <input type="text" id="descProduto" placeholder="Ex: Notebook Dell">
+
+        <label>Marca:</label>
+        <input type="text" id="marca" placeholder="Ex: Dell">
+
+        <label>Inventário da T.I:</label>
+        <input type="text" id="inventario" placeholder="Ex: TI-12345">
+
+        <label>Nº de Série:</label>
+        <input type="text" id="numeroSerie" placeholder="Ex: SN123456">
+
+        <div style="text-align:center;">
+            <button class="btn-create" id="createTermBtn">Visualizar Termo</button>
+            <button class="btn-cancel" id="cancelBtn">Cancelar</button>
+        </div>
+
+        <div id="previewTermo">Preencha os campos acima e clique em Visualizar Termo.</div>
+        <div style="margin-top:10px; text-align:center;">
+            <button class="btn-create" id="printBtn">Imprimir / Salvar PDF</button>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const modal = document.getElementById('modal');
+const openModalBtn = document.getElementById('openModalBtn');
+const cancelBtn = document.getElementById('cancelBtn');
+const createTermBtn = document.getElementById('createTermBtn');
+const preview = document.getElementById('previewTermo');
+const printBtn = document.getElementById('printBtn');
+
+openModalBtn.onclick = () => modal.style.display = 'flex';
+cancelBtn.onclick = () => modal.style.display = 'none';
+window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; }
+
+createTermBtn.onclick = () => {
+    const id = document.getElementById('termoID').value || '(não informado)';
+    const d = document.getElementById('descProduto').value || '(não informado)';
+    const m = document.getElementById('marca').value || '(não informado)';
+    const i = document.getElementById('inventario').value || '(não informado)';
+    const s = document.getElementById('numeroSerie').value || '(não informado)';
+
+    const termoTexto = `
+TERMO DE RESPONSABILIDADE DE USO E GUARDA DOS EQUIPAMENTOS CORPORATIVOS                               Termo Nr.: ${id}
+
+                                                                                                     
+
+
+IDENTIFICAÇÃO DO COLABORADOR (A)
+
+Nome:___________________________________________________
+
+Função:__________________________________________________
+
+Matrícula:________________________________________________
+
+
+
+    Pelo presente Instrumento, declaro que recebi de CLAUDINO S/A - LOJAS DE DEPARTAMENTOS, com sede à rua.
+João Cabral, 607, centro, Teresina - Piauí, CEP: 64000-030, inscrita no CNPJ sob n° 06.862.627/0001-38, a título de.
+empréstimo e para uso exclusivo e profissional, os equipamentos especificados no presente termo de.
+responsabilidade, comprometendo-me a mantê-los em perfeito estado de conservação.  
+
+    Estou plenamente ciente que: 
+
+    1 -  Em caso de dano (Físico ou Logico), Inutilização ou Extravio do equipamento, deverá ser comunicado.
+         imediatamente ao setor competente-DTI, por meio do portal Service Desk e seguindo o padrão de.
+         solicitação. Em observância ao art. 462, § 1º da CLT, declaro plena ciência e anuo que uma vez comprovado.
+         que dei causa ao prejuízo da empresa por ato doloso, (deliberadamente, com a intenção e buscando.
+         conscientemente aquele resultado), ou por culpa, poderá o empregador descontar do meu salário os valores.
+         destinados ao ressarcimento dos respectivos danos. 
+    2 -  Em caso de perda, roubo ou extravio, quando da comunicação, deverá ser enviado o Boletim de Ocorrência. 
+    3 -  Terminando os serviços e/ou no caso de rescisão do contrato de trabalho, tenho a obrigação de devolver, ao.
+         Departamento de Tecnologia da Informação (DTI), o(s) equipamento(s) completo(s) em perfeito estado.
+         de conservação e funcionamento, considerando-se o tempo do uso do mesmo (tempo de vida útil). 
+    4 -  A empresa reserva-se ao direito de inspecionar, sem prévio aviso, e a qualquer momento, os equipamentos.
+         cedidos para uso profissional.
+
+
+        DESCRIÇÃO DO PRODUTO:|         MARCA:|         INVENTÁRIO TI:             | Nº DE SÉRIE:
+            ${d}                        ${m}               ${i}                        ${s}
+
+
+Teresina ____de _____________de 20____.
+
+Gerente: ___________________________      N° Matricula: ________________________
+Assinatura do Colaborador(A)______________________
+Chefe de Escritório:____________________      N° Matricula: _________________________
+
+1° Via: Termo fica na responsabilidade do Gerente e/ou Chefe Escritório
+2° Via: Termo fica na responsabilidade da DTI.
+`;
+
+    preview.textContent = termoTexto;
+}
+
+// Imprimir ou salvar PDF
+printBtn.onclick = () => {
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(`<pre style="font-family: Arial; white-space: pre-wrap;">${preview.textContent}</pre>`);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+};
+</script>
+</body>
+</html>

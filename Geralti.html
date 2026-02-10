@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Colaboradores</title>
+
+<style>
+    body {
+        margin: 0;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #0d1b2a, #1b263b, #415a77);
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    .login-box {
+        width: 360px;
+        padding: 30px;
+        border-radius: 15px;
+        backdrop-filter: blur(12px);
+        background: rgba(255, 255, 255, 0.08);
+        box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+        color: #fff;
+        text-align: center;
+        border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .login-box h2 {
+        margin-bottom: 25px;
+        font-size: 26px;
+        letter-spacing: 1px;
+    }
+
+    .login-box input {
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border: none;
+        outline: none;
+        font-size: 15px;
+        background: rgba(255,255,255,0.12);
+        color: #fff;
+    }
+
+    .login-box input::placeholder {
+        color: #d1d1d1;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 13px;
+        margin-top: 15px;
+        font-size: 16px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background: #00aaff;
+        color: #fff;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        background: #0093dd;
+    }
+
+    .show-pass {
+        margin-top: 8px;
+        font-size: 13px;
+        cursor: pointer;
+        color: #cfcfcf;
+    }
+
+</style>
+</head>
+<body>
+
+<div class="login-box">
+    <h2>Login de Colaboradores</h2>
+
+    <input type="text" id="user" placeholder="Usuário" />
+
+    <input type="password" id="pass" placeholder="Senha" />
+
+    <div class="show-pass" onclick="togglePass()">👁 Mostrar senha</div>
+
+    <button class="btn" onclick="entrar()">Entrar</button>
+</div>
+
+<script>
+/* 🔒 DEFINA AQUI O USUÁRIO E A SENHA FIXOS */
+const usuarioCorreto = "suporte"; 
+const senhaCorreta   = "minhaSenha";  
+
+function togglePass() {
+    const pass = document.getElementById("pass");
+    pass.type = pass.type === "password" ? "text" : "password";
+}
+
+function entrar() {
+    const user = document.getElementById("user").value.trim();
+    const pass = document.getElementById("pass").value.trim();
+
+    if (user === usuarioCorreto && pass === senhaCorreta) {
+        alert("Login efetuado com sucesso!");
+        // Aqui você coloca a página que quer abrir após login
+        // location.href = "dashboard.html";
+    } else {
+        alert("Usuário ou senha incorretos!");
+    }
+}
+</script>
+
+</body>
+</html>

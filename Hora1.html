@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dados DTI</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Roboto', sans-serif; }
+body { min-height:100vh; display:flex; justify-content:center; align-items:center; background: linear-gradient(135deg,#4b6cb7,#182848); color:#fff; position:relative; }
+
+/* Botões */
+#logoutBtn {
+    position: fixed;
+    top: 3px;
+    right: 15px;
+    background: #ff4d4d;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: none;
+    z-index: 1000;
+    transition: 0.3s;
+}
+#logoutBtn:hover { background:#e63939; }
+
+#changePassBtn {
+    position: fixed;
+    top: 3px;
+    right: 120px;
+    background:#00ffcc;
+    color:#182848;
+    border:none;
+    border-radius:8px;
+    padding:10px 20px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:0.3s;
+    z-index:1000;
+    display: none;
+}
+#changePassBtn:hover { background:#00e6b8; }
+
+#loginForm { 
+    background: rgba(255,255,255,0.05); 
+    padding:30px; 
+    border-radius:15px; 
+    width:350px; 
+    box-shadow:0 8px 30px rgba(0,0,0,0.3); 
+    backdrop-filter:blur(10px); 
+    text-align:center;
+}
+#loginForm input { width:100%; padding:12px; margin:10px 0; border-radius:8px; border:none; outline:none; font-size:16px;}
+#loginForm input:focus { box-shadow:0 0 10px #00ffcc;}
+#loginForm button { width:100%; padding:12px; margin-top:10px; border:none; border-radius:8px; background:#00ffcc; color:#182848; font-weight:bold; cursor:pointer; transition:0.3s;}
+#loginForm button:hover { background:#00e6b8; }
+.error { color:#ff4d4d; font-size:14px; margin-top:10px; display:none; }
+
+#mainScreen { 
+    display:none; 
+    flex-direction:column; 
+    align-items:center; 
+    width:100%; 
+    min-height:100vh; 
+    padding:20px; 
+    box-sizing:border-box;
+}
+
+#addBtn {
+    position: fixed;
+    top: 3px;
+    right: 250px;
+    font-size: 20px;
+    color: #00ffcc;
+    background: none;
+    border: 2px solid #00ffcc;
+    border-radius: 8px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 1000;
+}
+#addBtn:hover { background: rgba(0,255,204,0.1); transform: scale(1.2); }
+
+#senhaDeleteModal .modal-content input:focus {
+    box-shadow: 0 0 10px #00ffcc;
+}
+
+#senhaDeleteModal .modal-content button:hover {
+    transform: scale(1.05);
+}
+
+/* Mensagem de senha incorreta moderna */
+#senhaDeleteError {
+    color: #ff4d4d;
+    font-size: 14px;
+    margin-top: 5px;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.4s ease-in-out;
+    text-align: center;
+    background: rgba(255,0,0,0.2);
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px #ff0000, 0 0 20px #ff4d4d inset;
+}
+#senhaDeleteError.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-5px); }
+  40% { transform: translateX(5px); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+  100% { transform: translateX(0); }
+}
+
+/* BOTÃO PARA VOLTAR MENU PRINCIPAL */
+#btnMenu {
+  position: fixed;
+  top: 2px;
+  left: 4px;
+  width: 140px;
+  padding: 15px 0;
+  background: linear-gradient(135deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 3px solid #ff0000;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+  transition: all 0.3s ease-in-out;
+  z-index: 1001;
+}
+
+#btnMenu:hover {
+  background: linear-gradient(145deg,#ff0000,#1a1aff);
+  color: #fff;
+  box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
+  transform: scale(1.05);
+}
+
+#tabelaRegistros { 
+    width:100%;  
+    max-width:none; 
+    border-collapse:collapse; 
+    margin-top:41px; 
+    background: rgba(255,255,255,0.05); 
+    border-radius:10px; 
+    overflow:hidden;
+}
+#tabelaRegistros th, #tabelaRegistros td { 
+    padding:12px 8px; 
+    text-align:center; 
+    border-bottom:1px solid #fff;
+    font-size:14px; 
+}
+#tabelaRegistros th { 
+    background: rgba(0,255,204,0.2); 
+    font-size:15px; 
+}
+#tabelaRegistros tbody { 
+    display:block; 
+    max-height:70vh;  
+    overflow-y:auto; 
+}
+#tabelaRegistros thead, #tabelaRegistros tbody tr { 
+    display:table; 
+    width:100%; 
+    table-layout:fixed; 
+}
+
+
+#alterarSenhaModal input {
+    width: 80%;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border: 2px solid #00ffcc;
+    outline: none;
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+#alterarSenhaModal input:focus {
+    box-shadow: 0 0 10px #00ffcc;
+}
+
+#alterarSenhaModal button:hover {
+    background: #00e6b8 !important;
+    transform: scale(1.05);
+}
+
+
+#tabelaRegistros button { padding:3px 6px; margin:0 2px; border:none; border-radius:5px; cursor:pointer; font-size:12px; }
+.btn-edit { background:#00ffcc; color:#182848; }
+.btn-edit:hover { background:#00e6b8; }
+.btn-delete { background:#ff4d4d; color:#fff; }
+.btn-delete:hover { background:#e63939; }
+
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:1000; }
+.modal-content { background: rgba(255,255,255,0.05); padding:30px; border-radius:15px; width:350px; box-shadow:0 8px 30px rgba(0,0,0,0.3); backdrop-filter:blur(10px); position:relative; }
+.modal-content h2 { text-align:center; margin-bottom:20px; }
+.modal-content input, .modal-content textarea { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:none; outline:none; font-size:16px;}
+.modal-content textarea { resize:none; }
+.modal-content input:focus, .modal-content textarea:focus { box-shadow:0 0 10px #00ffcc;}
+.modal-content button { width:100%; padding:12px; margin-top:15px; border:none; border-radius:8px; background:#00ffcc; color:#182848; font-weight:bold; cursor:pointer; transition:0.3s;}
+.modal-content button:hover { background:#00e6b8; }
+.closeBtn { position:absolute; top:10px; right:15px; background:#ff4d4d; color:#fff; border:none; border-radius:5px; padding:8px 15px; font-size:14px; cursor:pointer; }
+
+#previewModal .modal-content { width:auto; max-width:90%; text-align:center; }
+#previewModal img, #previewModal iframe { border-radius:8px; max-width:100%; max-height:80vh; }
+#previewModal iframe { width:80vw; height:80vh; border:none; cursor:default; }
+#previewModal p { color:#fff; }
+
+#alertaUsuario {
+    display:none;
+    position:fixed;
+    top:30px;
+    left:50%;
+    transform:translateX(-50%) translateY(-50px);
+    background: linear-gradient(135deg, #ff4d4d, #ff0000);
+    color:#fff;
+    padding:18px 30px;
+    border-radius:15px;
+    font-weight:bold;
+    font-size:16px;
+    box-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff0000 inset;
+    z-index:9999;
+    opacity:0;
+    transition: all 0.5s ease-in-out;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+#alertaUsuario button { margin-left:15px; background:transparent; border:none; color:#fff; font-weight:bold; font-size:18px; cursor:pointer; text-shadow:0 0 5px #000; }
+
+</style>
+</head>
+<body>
+
+<button id="logoutBtn" onclick="logout()">Logout</button>
+<button id="changePassBtn" onclick="abrirAlterarSenha()">Alterar Senha</button>
+
+<div id="loginForm">
+  <h1>Login</h1>
+  <input type="text" id="Usuario" placeholder="Usuario">
+  <input type="password" id="senha" placeholder="Senha">
+  <button onclick="validarLogin()">Entrar</button>
+  <div class="error" id="error-msg"></div>
+  <div style="margin-top:15px; font-size:14px;">
+    <span>Ja e cadastrado?</span>
+    <span style="color:#00ffcc; cursor:pointer;" onclick="abrirCadastro()">Ainda nao e Cadastrado?</span>
+  </div>
+</div>
+
+<!-- Modal de cadastro -->
+<div id="cadastroModal" class="modal">
+  <div class="modal-content">
+    <button class="closeBtn" onclick="fecharCadastro()">Fechar</button>
+    <h2>Cadastrar Novo Usuario</h2>
+    <input type="text" id="novoUsuario" placeholder="Novo Usuario">
+    <input type="password" id="novaSenha" placeholder="Senha">
+    <input type="password" id="confirmaSenha" placeholder="Confirmar Senha">
+    <button onclick="cadastrarUsuario()">Cadastrar</button>
+    <div class="error" id="cadastro-msg"></div>
+    <button style="margin-top:10px; background:#ff4d4d; color:#fff;" onclick="voltarLogin()">Voltar ao Login</button>
+  </div>
+</div>
+
+<!-- Modal de confirmação de exclusão com senha -->
+<div id="senhaDeleteModal" class="modal">
+  <div class="modal-content" style="max-width:400px; text-align:center; background: rgba(0,0,0,0.9); border: 2px solid #00ffcc; box-shadow: 0 0 20px #00ffcc, 0 0 40px #00ffcc inset;">
+    <button class="closeBtn" onclick="fecharSenhaDeleteModal()">Fechar</button>
+    <h2 style="color:#00ffcc; text-shadow:0 0 10px #00ffcc;">Confirmacao de Exclusao</h2>
+    <p style="margin:15px 0; font-size:16px; color:#fff;" id="msgSenhaDelete">Digite sua Senha para Confirmar a Exclusao do Registro:</p>
+    <input type="text" id="usuarioSenhaDelete" readonly style="background:rgba(255,255,255,0.1); color:#fff; font-weight:bold; border:2px solid #00ffcc; text-align:center; margin:10px 0;">
+    <input type="password" id="senhaDeleteInput" placeholder="Digite sua senha" style="width:80%; padding:10px; border-radius:8px; border:2px solid #00ffcc; outline:none;">
+    <div id="senhaDeleteError"></div>
+    <div style="display:flex; justify-content:space-around; margin-top:20px;">
+        <button style="padding:12px 25px; border:none; border-radius:10px; background:#00ffcc; color:#182848; font-weight:bold; cursor:pointer; transition:0.3s;" id="btnConfirmDelete">Confirmar</button>
+        <button style="padding:12px 25px; border:none; border-radius:10px; background:#ff4d4d; color:#fff; font-weight:bold; cursor:pointer; transition:0.3s;" onclick="fecharSenhaDeleteModal()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<div id="mainScreen">
+  <button id="addBtn" onclick="abrirModal()">Adicionar</button>
+  <table id="tabelaRegistros">
+    <thead>
+      <tr>
+        <th>Colaborador</th>
+        <th>Data Inicial</th>
+        <th>Data Final</th>
+        <th>Anexo</th>
+        <th>Comentario</th>
+        <th>Acoes</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<div id="alertaUsuario">
+    <span id="alertaMsg"></span>
+    <button onclick="fecharAlerta()">?</button>
+</div>
+
+<!-- Modal Alterar Senha -->
+<div id="alterarSenhaModal" class="modal">
+  <div class="modal-content" style="max-width:400px; background: rgba(0,0,0,0.9); border: 2px solid #00ffcc; box-shadow: 0 0 30px #00ffcc, 0 0 60px #00ffcc inset; text-align:center;">
+    <button class="closeBtn" onclick="fecharAlterarSenhaModal()">Fechar</button>
+    <h2 style="color:#00ffcc; text-shadow: 0 0 10px #00ffcc;">Alterar Senha</h2>
+
+    <input type="password" id="senhaAtualModal" placeholder="Senha Atual">
+    <input type="password" id="novaSenhaModal" placeholder="Nova Senha">
+    <input type="password" id="confirmaSenhaModal" placeholder="Confirmar Nova Senha">
+    
+    <div id="senhaError" style="color:#ff4d4d; font-size:14px; margin-top:5px; min-height:18px;"></div>
+
+    <button id="btnAlterarSenha" style="margin-top:15px; background:#00ffcc; color:#182848; border:none; border-radius:8px; padding:12px; font-weight:bold; cursor:pointer; transition:0.3s;">
+      Confirmar Alteração
+    </button>
+  </div>
+</div>
+
+
+
+
+<button id="btnMenu">MENU PRINCIPAL</button>
+
+<!-- Modal de registro -->
+<div id="registroModal" class="modal">
+  <div class="modal-content">
+    <button class="closeBtn" onclick="fecharModal()">Fechar</button>
+    <h2 id="modalTitle">Salvar Registro de Pontos</h2>
+    
+    <label>Colaborador</label>
+    <input type="text" id="colaborador" placeholder="Digite o nome do colaborador">
+
+    <label>Data Inicial</label>
+    <input type="date" id="dataInicial">
+    
+    <label>Data Final</label>
+    <input type="date" id="dataFinal">
+    
+    <label>Anexar Arquivo</label>
+    <input type="file" id="arquivo" onchange="previewArquivo()">
+    <div id="previewArquivo" style="margin-top:10px; text-align:center;"></div>
+    
+    <label>Comentario</label>
+    <textarea id="comentario" placeholder="Digite um comentario..." rows="3"></textarea>
+    
+    <button onclick="salvarRegistro()">Salvar Registro</button>
+  </div>
+</div>
+
+
+<div id="previewModal" class="modal">
+  <div class="modal-content" style="position:relative; display:flex; justify-content:center; align-items:center;">
+    <div style="position:absolute; top:10px; right:10px; display:flex; gap:10px; z-index:10;">
+      <button onclick="fecharPreview()" style="background:#ff4d4d; color:#fff; border:none; border-radius:5px; padding:6px 12px; cursor:pointer;">Fechar</button>
+      <button onclick="imprimirAnexo()" style="background:#00ffcc; color:#182848; border:none; border-radius:5px; padding:6px 12px; cursor:pointer;">Imprimir</button>
+      <button onclick="baixarAnexo()" style="background:#00bfff; color:#fff; border:none; border-radius:5px; padding:6px 12px; cursor:pointer;">Baixar</button>
+    </div>
+    <div id="previewContainer" style="text-align:center; max-width:90%; max-height:90vh;"></div>
+  </div>
+</div>
+
+<script>
+// ==========================
+// Lógica do sistema (usuários, login, registros, preview, exclusão)
+// ==========================
+
+let usuarios = JSON.parse(localStorage.getItem('usuarios')) || {};
+let anexoAtual = null;
+
+function validarLogin(){
+    const user = document.getElementById('Usuario').value.trim().toLowerCase();
+    const pass = document.getElementById('senha').value;
+    if(!usuarios[user]){ mostrarAlerta("Usuario nao Cadastrado!"); return; }
+    if(usuarios[user] === pass){ localStorage.setItem('usuarioLogado', user); mostrarTelaPrincipal(); } 
+    else { mostrarAlerta(" Senha incorreta "); }
+}
+
+function mostrarTelaPrincipal(){
+    const user = localStorage.getItem('usuarioLogado');
+    if(!user) return;
+    loginForm.style.display = 'none';
+    mainScreen.style.display = 'flex';
+    document.getElementById('logoutBtn').style.display = 'block';
+    document.getElementById('changePassBtn').style.display = 'block';
+    carregarRegistros();
+}
+
+function logout(){ localStorage.removeItem('usuarioLogado'); location.reload(); }
+function mostrarAlerta(msg){
+    const alerta = document.getElementById('alertaUsuario');
+    document.getElementById('alertaMsg').innerText = msg;
+    alerta.style.display = 'flex';
+    void alerta.offsetWidth; 
+    alerta.style.transform = 'translateX(-50%) translateY(20px)';
+    alerta.style.opacity = 1;
+    setTimeout(() => { fecharAlerta(); },3000);
+}
+function fecharAlerta(){
+    const alerta = document.getElementById('alertaUsuario');
+    alerta.style.transform = 'translateX(-50%) translateY(-50px)';
+    alerta.style.opacity=0;
+    setTimeout(()=>{ alerta.style.display='none'; },500);
+}
+
+// ==========================
+// Modal exclusão com senha
+// ==========================
+let deleteColaborador = null;
+let deleteIndex = null;
+
+function abrirSenhaDelete(colaborador, index){
+    deleteColaborador = colaborador;
+    deleteIndex = index;
+    document.getElementById('usuarioSenhaDelete').value = localStorage.getItem('usuarioLogado');
+    document.getElementById('senhaDeleteInput').value = '';
+    document.getElementById('senhaDeleteError').classList.remove('show');
+    document.getElementById('senhaDeleteModal').style.display = 'flex';
+}
+
+function fecharSenhaDeleteModal(){ document.getElementById('senhaDeleteModal').style.display='none'; }
+
+document.getElementById('btnConfirmDelete').addEventListener('click', ()=>{
+    const senha = document.getElementById('senhaDeleteInput').value;
+    const usuarioLogado = localStorage.getItem('usuarioLogado');
+    if(senha === usuarios[usuarioLogado]){
+        fecharSenhaDeleteModal();
+        let registros = JSON.parse(localStorage.getItem('registros')) || [];
+        const registrosUsuario = registros.filter(reg => reg.colaborador.toLowerCase() === deleteColaborador.toLowerCase());
+        const reg = registrosUsuario[deleteIndex];
+        const realIndex = registros.indexOf(reg);
+        registros.splice(realIndex,1);
+        localStorage.setItem('registros', JSON.stringify(registros));
+        carregarRegistros();
+        mostrarAlerta("Registro deletado!");
+    } else {
+        const erro = document.getElementById('senhaDeleteError');
+        erro.innerText = " Senha incorreta  Tente novamente.";
+        erro.classList.add('show');
+        erro.style.animation = 'shake 0.5s';
+        erro.addEventListener('animationend', ()=>{ erro.style.animation=''; });
+        setTimeout(()=>{ erro.classList.remove('show'); },3000);
+    }
+});
+
+
+
+function abrirAlterarSenha() {
+    document.getElementById('senhaAtualModal').value = '';
+    document.getElementById('novaSenhaModal').value = '';
+    document.getElementById('confirmaSenhaModal').value = '';
+    document.getElementById('senhaError').innerText = '';
+    document.getElementById('alterarSenhaModal').style.display = 'flex';
+}
+
+function fecharAlterarSenhaModal() {
+    document.getElementById('alterarSenhaModal').style.display = 'none';
+}
+
+document.getElementById('btnAlterarSenha').addEventListener('click', ()=>{
+    const usuario = localStorage.getItem('usuarioLogado');
+    const senhaAtual = document.getElementById('senhaAtualModal').value;
+    const novaSenha = document.getElementById('novaSenhaModal').value;
+    const confirmaSenha = document.getElementById('confirmaSenhaModal').value;
+    const errorDiv = document.getElementById('senhaError');
+
+    if(!senhaAtual || !novaSenha || !confirmaSenha){
+        errorDiv.innerText = "Preencha todos os campos!";
+        return;
+    }
+
+    if(senhaAtual !== usuarios[usuario]){
+        errorDiv.innerText = "Senha atual incorreta!";
+        return;
+    }
+
+    if(novaSenha !== confirmaSenha){
+        errorDiv.innerText = "Senhas não conferem!";
+        return;
+    }
+
+    usuarios[usuario] = novaSenha;
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    fecharAlterarSenhaModal();
+    mostrarAlerta("Senha alterada com sucesso!");
+});
+
+
+
+
+// ==========================
+// Carregar registros (simples demo)
+// ==========================
+function carregarRegistros(){
+    const tbody = document.querySelector('#tabelaRegistros tbody');
+    tbody.innerHTML = '';
+    let registros = JSON.parse(localStorage.getItem('registros')) || [];
+    registros.forEach((reg,i)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${reg.colaborador}</td>
+            <td>${reg.dataInicial}</td>
+            <td>${reg.dataFinal}</td>
+            <td>${reg.anexo||''}</td>
+            <td>${reg.comentario||''}</td>
+            <td>
+                <button class="btn-edit" onclick="abrirModal(${i})">Editar</button>
+                <button class="btn-delete" onclick="abrirSenhaDelete('${reg.colaborador}',${i})">Excluir</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// ==========================
+// Preview Arquivo
+// ==========================
+function previewArquivo(){
+    const arquivo = document.getElementById('arquivo').files[0];
+    anexoAtual = arquivo;
+    const container = document.getElementById('previewArquivo');
+    container.innerHTML='';
+    if(!arquivo) return;
+    if(arquivo.type.startsWith('image/')){
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(arquivo);
+        img.style.maxWidth='100%';
+        container.appendChild(img);
+    } else if(arquivo.type==='application/pdf'){
+        const iframe = document.createElement('iframe');
+        iframe.src = URL.createObjectURL(arquivo);
+        iframe.style.width='100%';
+        iframe.style.height='300px';
+        container.appendChild(iframe);
+    } else {
+        container.innerText = 'Preview nao disponivel';
+    }
+}
+
+function formatarData(data){
+    if(!data) return '';
+    const d = new Date(data);
+    const dia = String(d.getDate()).padStart(2,'0');
+    const mes = String(d.getMonth()+1).padStart(2,'0');
+    const ano = d.getFullYear();
+    return `${dia}/${mes}/${ano}`;
+}
+
+function carregarRegistros(){
+    const tbody = document.querySelector('#tabelaRegistros tbody');
+    tbody.innerHTML = '';
+    let registros = JSON.parse(localStorage.getItem('registros')) || [];
+    registros.forEach((reg,i)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${reg.colaborador}</td>
+            <td>${formatarData(reg.dataInicial)}</td>
+            <td>${formatarData(reg.dataFinal)}</td>
+            <td>${reg.anexo||''}</td>
+            <td>${reg.comentario||''}</td>
+            <td>
+                <button class="btn-edit" onclick="abrirModal(${i})">Editar</button>
+                <button class="btn-delete" onclick="abrirSenhaDelete('${reg.colaborador}',${i})">Excluir</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+
+
+// ==========================
+// Modal registro
+// ==========================
+function abrirModal(index=null){
+    document.getElementById('registroModal').style.display='flex';
+    if(index!==null){
+        // editar registro existente
+        let registros = JSON.parse(localStorage.getItem('registros')) || [];
+        const reg = registros[index];
+        document.getElementById('colaborador').value = reg.colaborador;
+        document.getElementById('dataInicial').value = reg.dataInicial;
+        document.getElementById('dataFinal').value = reg.dataFinal;
+        document.getElementById('comentario').value = reg.comentario;
+    } else {
+        // novo registro: preencher com usuário logado, mas editável
+        document.getElementById('colaborador').value = localStorage.getItem('usuarioLogado');
+        document.getElementById('dataInicial').value = '';
+        document.getElementById('dataFinal').value = '';
+        document.getElementById('comentario').value = '';
+    }
+}
+
+
+function fecharModal(){ document.getElementById('registroModal').style.display='none'; }
+function salvarRegistro(){
+    let registros = JSON.parse(localStorage.getItem('registros')) || [];
+    const reg = {
+        colaborador: document.getElementById('colaborador').value,
+        dataInicial: document.getElementById('dataInicial').value,
+        dataFinal: document.getElementById('dataFinal').value,
+        comentario: document.getElementById('comentario').value,
+        anexo: anexoAtual ? anexoAtual.name : ''
+    };
+    registros.push(reg);
+    localStorage.setItem('registros', JSON.stringify(registros));
+    fecharModal();
+    carregarRegistros();
+}
+
+// ==========================
+// Cadastro e login
+// ==========================
+function abrirCadastro(){ document.getElementById('cadastroModal').style.display='flex'; loginForm.style.display='none'; }
+function fecharCadastro(){ document.getElementById('cadastroModal').style.display='none'; loginForm.style.display='block'; }
+function voltarLogin(){ fecharCadastro(); }
+
+function cadastrarUsuario(){
+    const u = document.getElementById('novoUsuario').value.trim().toLowerCase();
+    const s = document.getElementById('novaSenha').value;
+    const c = document.getElementById('confirmaSenha').value;
+    if(!u || !s || !c){ document.getElementById('cadastro-msg').innerText="Preencha todos os campos!"; return; }
+    if(s!==c){ document.getElementById('cadastro-msg').innerText="Senhas nao conferem!"; return; }
+    usuarios[u]=s;
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    mostrarAlerta("Usuario cadastrado!");
+    fecharCadastro();
+}
+
+window.onload = function(){ if(localStorage.getItem('usuarioLogado')) mostrarTelaPrincipal(); }
+</script>
+
+</body>
+</html>

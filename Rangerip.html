@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Painel Ranger de IPs — Dashboard Futurista Fullscreen</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Roboto:wght@400&display=swap" rel="stylesheet">
+
+<style>
+/* ---------------- GLOBAL ---------------- */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background: radial-gradient(circle at top, #020d1f, #000);
+    color: #0ff;
+    font-family: "Roboto", sans-serif;
+    display: flex;
+    flex-direction: column;
+}
+
+h1 {
+    text-align: center;
+    margin: 20px 0;
+    font-family: "Orbitron", sans-serif;
+    font-weight: 500;
+    font-size: 2.2em;
+    letter-spacing: 2px;
+    color: #0ff;
+    text-shadow: 0 0 15px #00ffff, 0 0 30px #00f2ff;
+}
+
+/* ---------------- CONTAINERS ---------------- */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 25px;
+    flex-wrap: wrap;
+    flex: 1;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.box {
+    flex: 1 1 48%;
+    min-width: 350px;
+    max-width: 700px;
+    background: rgba(0, 10, 20, 0.85);
+    border: 1px solid #00eaff;
+    border-radius: 16px;
+    box-shadow: 0 0 30px #00eaff88;
+    padding: 20px;
+    backdrop-filter: blur(14px);
+    transition: 0.3s;
+    display: flex;
+    flex-direction: column;
+    height: 95%; /* ocupa quase toda altura da tela */
+}
+
+.box:hover {
+    box-shadow: 0 0 40px #00eaffcc, 0 0 60px #00ff9d44 inset;
+}
+
+.box h2 {
+    margin-top: 0;
+    font-family: "Orbitron", sans-serif;
+    text-shadow: 0 0 12px #00eaff;
+    border-bottom: 1px solid #00eaff44;
+    padding-bottom: 8px;
+}
+
+/* ---------------- MAPA ---------------- */
+.map {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px,1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.node {
+    border: 1px solid #0ff;
+    padding: 12px;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 14px;
+    background: rgba(0, 30, 40, 0.6);
+    transition: 0.25s;
+    color: #0ff;
+}
+
+.node:hover {
+    background: rgba(0,255,255,0.2);
+    transform: scale(1.05);
+    box-shadow: 0 0 12px #0ff;
+}
+
+.node.active {
+    background: rgba(0,255,255,0.35);
+    box-shadow: 0 0 18px #0ff, 0 0 30px #00ff9d inset;
+}
+
+/* ---------------- BUSCA ---------------- */
+.search {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    background: #01131f;
+    border: 1px solid #00eaff;
+    color: #0ff;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+/* ---------------- BOTÃO LIMPAR ---------------- */
+.clear-btn {
+    display: none;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 10px 28px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 35px;
+    letter-spacing: 1px;
+    background: linear-gradient(135deg, #00eaff, #00ff9d);
+    color: #fff;
+    text-shadow: 0 0 12px #00f2ff;
+    border: 2px solid rgba(0,255,255,0.5);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 0 12px #00eaff, 0 0 20px #00ff9d inset;
+    transition: 0.25s ease-in-out;
+    overflow: visible;
+    animation: floatBtn 2.5s ease-in-out infinite;
+}
+
+@keyframes floatBtn {
+    0% { transform: translateY(-50%) translateY(0px); }
+    50% { transform: translateY(-50%) translateY(-6px); }
+    100% { transform: translateY(-50%) translateY(0px); }
+}
+
+.clear-btn::before {
+    content: "";
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    width: calc(100% + 16px);
+    height: calc(100% + 16px);
+    border: 2px solid transparent;
+    border-top: 2px solid #00eaff;
+    border-right: 2px solid #00ff9d;
+    border-radius: 50%;
+    animation: rotateRing 1.5s linear infinite;
+    pointer-events: none;
+    box-shadow: 0 0 12px #00eaff, 0 0 8px #00ff9d inset;
+}
+
+@keyframes rotateRing {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.clear-btn::after {
+    content: "";
+    position: absolute;
+    top: -12px;
+    left: -12px;
+    width: calc(100% + 24px);
+    height: calc(100% + 24px);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,255,255,0.35), transparent 70%);
+    filter: blur(8px);
+    opacity: 0.7;
+    animation: pulseAura 2s ease-in-out infinite;
+    pointer-events: none;
+}
+
+@keyframes pulseAura {
+    0% { transform: scale(0.95); opacity: 0.6; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(0.95); opacity: 0.6; }
+}
+
+.clear-btn:hover {
+    transform: translateY(-50%) scale(1.2);
+    background: linear-gradient(135deg, #00fffa, #00cfff);
+    box-shadow: 0 0 25px #00eaff, 0 0 35px #00ff9d inset, 0 0 50px #00cfff;
+}
+
+.clear-btn:active {
+    transform: translateY(-50%) scale(0.95);
+    box-shadow: 0 0 12px #00eaff inset;
+}
+
+/* ---------------- TABELA ---------------- */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+th, td {
+    padding: 10px;
+    border-bottom: 1px solid #0ff3;
+    color: #fff;
+}
+
+th {
+    background: rgba(0, 50, 70, 0.5);
+}
+
+tbody tr:hover {
+    background: rgba(0, 255, 255, 0.15);
+}
+
+/* ---------------- RESPONSIVO ---------------- */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        align-items: center;
+    }
+    .box {
+        width: 95%;
+        height: auto;
+    }
+}
+</style>
+</head>
+
+<body>
+<h1> Painel Ranger de IPs — Dashboard Futurista Fullscreen</h1>
+
+<div class="container">
+
+    <!-- FILIAL -->
+    <div class="box">
+        <h2>🏢 FILIAL</h2>
+        <div style="position: relative;">
+            <input type="text" class="search" id="search-filial"
+                placeholder="🔍 Buscar..." oninput="filter('filial', this.value)">
+            <button class="clear-btn" id="clear-filial" onclick="playClickSound(); clearSearch('filial')">LIMPAR</button>
+        </div>
+        <div class="map" id="map-filial"></div>
+        <table id="table-filial">
+            <thead>
+                <tr>
+                    <th style="width:140px">Ranger / Faixa</th>
+                    <th>Dispositivo</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <!-- POSTOS -->
+    <div class="box">
+        <h2>⛽ POSTOS</h2>
+        <div style="position: relative;">
+            <input type="text" class="search" id="search-postos"
+                placeholder="🔍 Buscar..." oninput="filter('postos', this.value)">
+            <button class="clear-btn" id="clear-postos" onclick="playClickSound(); clearSearch('postos')">LIMPAR</button>
+        </div>
+        <div class="map" id="map-postos"></div>
+        <table id="table-postos">
+            <thead>
+                <tr>
+                    <th style="width:140px">Ranger / Faixa</th>
+                    <th>Dispositivo</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+</div>
+
+<script>
+// =================== DADOS ===================
+const filial = [
+    ["01 a 08", "Reservado"], ["09 a 10", "No-Break"], ["11 a 12", "Reservado"], ["13", "Servidor Mirror"],
+    ["14 a 20", "Reservado"], ["21 a 22", "Cofre"], ["23", "Servidor WF"], ["24 a 26", "Credishop"],
+    ["27 a 39", "Switch"], ["40 a 45", "Relógios de Ponto"], ["46 a 75", "Impressoras"], ["76 a 100", "Desktop"],
+    ["101 a 140", "Terminal Axel"], ["141 a 199", "Terminal THI"], ["200 a 229", "PDV / Caixa"],
+    ["230", "Central de Alarme"], ["231 a 235", "DVR"], ["236 a 248", "AP"], ["249 a 251", "Roteadores"],
+    ["252", "Rádio Paraíba"], ["253", "Reservado"], ["254", "Reservado"]
+];
+
+const postos = [
+    ["01 a 08", "Reservado"], ["09 a 10", "No-Break"], ["11 a 12", "Reservado"], ["13", "Servidor Mirror"],
+    ["14 a 20", "Reservado"], ["21 a 22", "Cofre"], ["23", "Servidor WF"], ["24 a 26", "Credishop"],
+    ["27 a 39", "Switch"], ["40 a 45", "Relógios de Ponto"], ["50 a 99", "Desktop"], ["76 a 199", "Term / Desktop / THI"],
+    ["100 a 109", "PDV / Caixa"], ["110 a 119", "Impressoras"], ["141 a 199", "Terminal THI"],
+    ["230", "Central de Alarme"], ["231 a 235", "DVR"], ["236 a 248", "AP"], ["249 a 251", "Roteadores"],
+    ["252", "Rádio Paraíba"], ["253", "Reservado"], ["254", "Reservado"]
+];
+
+// =================== FUNÇÕES ===================
+function load(category, data) {
+    let map = document.getElementById(`map-${category}`);
+    let tbody = document.querySelector(`#table-${category} tbody`);
+    data.forEach(item => {
+        let [range,label] = item;
+        let node = document.createElement("div");
+        node.className = "node";
+        node.innerHTML = `<strong>${range}</strong><br>${label}`;
+        node.onclick = () => filter(category,label);
+        map.appendChild(node);
+
+        let tr = document.createElement("tr");
+        tr.innerHTML = `<td>${range}</td><td>${label}</td>`;
+        tbody.appendChild(tr);
+    });
+}
+
+function filter(category, term) {
+    term = term.toLowerCase();
+    const btn = document.getElementById(`clear-${category}`);
+    btn.style.display = term.length ? "block" : "none";
+
+    document.querySelectorAll(`#table-${category} tbody tr`).forEach(tr=>{
+        tr.style.display = tr.innerText.toLowerCase().includes(term) ? "" : "none";
+    });
+
+    document.querySelectorAll(`#map-${category} .node`).forEach(node=>{
+        node.classList.toggle("active", node.innerText.toLowerCase().includes(term));
+    });
+}
+
+function clearSearch(category) {
+    const input = document.getElementById(`search-${category}`);
+    input.value = "";
+    filter(category,"");
+}
+
+// =================== SOM SCI-FI ===================
+const clickSound = new Audio('https://freesound.org/data/previews/342/342756_3248244-lq.mp3');
+clickSound.volume = 0.25;
+
+function playClickSound() {
+    clickSound.currentTime = 0;
+    clickSound.play();
+}
+
+// =================== LOAD ===================
+load("filial", filial);
+load("postos", postos);
+</script>
+</body>
+</html>

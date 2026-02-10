@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Viagens de Projeto - T.I</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Roboto',sans-serif}
+
+body{
+  background: 
+    url('http://172.16.2.7/DTI/img/1.png') no-repeat center center fixed,
+    linear-gradient(135deg,#0f2027,#203a43,#2c5364); /* fallback degradê */
+  background-size: cover;
+  color:#fff;
+  min-height:100vh;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+}
+
+header{
+  margin-bottom:20px;
+}
+header h1{
+  font-size:32px;
+  margin-bottom:4px;
+  text-shadow:1px 1px 6px rgba(0,0,0,0.7);
+}
+header span{opacity:.8;font-size:14px}
+
+/* DASHBOARD FLUTUANTE */
+.dashboard-float{
+  position:fixed;
+  top:5px;
+  right:20px;
+  display:flex;
+  gap:12px;
+  z-index:100;
+  flex-wrap:wrap;
+}
+
+.dashboard-box, .add-card{
+  min-width:100px;
+  padding:6px 8px;
+  border-radius:10px;
+  text-align:center;
+  box-shadow:0 12px 25px rgba(0,0,0,.5);
+  transition:all .3s ease;
+  cursor:pointer;
+  color:#fff;
+  font-weight:600;
+  transform-style: preserve-3d;
+}
+
+.dashboard-box:hover, .add-card:hover{
+  transform:translateY(-6px) scale(1.05);
+  box-shadow:0 20px 40px rgba(0,0,0,0.6), 0 0 15px rgba(255,255,255,0.2) inset;
+}
+
+/* GRADIENTES ANIMADOS */
+.card-total{
+  background:linear-gradient(270deg,#00c6ff,#0072ff);
+  background-size:400% 400%;
+  animation:gradientBG 8s ease infinite;
+}
+.card-andamento{
+  background:linear-gradient(270deg,#fbc02d,#f57f17);
+  background-size:400% 400%;
+  animation:gradientBG 8s ease infinite;
+}
+.card-fechado{
+  background:linear-gradient(270deg,#66bb6a,#2e7d32);
+  background-size:400% 400%;
+  animation:gradientBG 8s ease infinite;
+}
+
+@keyframes gradientBG{
+  0%{background-position:0% 50%}
+  50%{background-position:100% 50%}
+  100%{background-position:0% 50%}
+}
+
+.dashboard-box span{
+  font-size:13px;
+  opacity:.85;
+  display:block;
+  text-transform:uppercase;
+  letter-spacing:0.5px;
+}
+.dashboard-box strong{
+  font-size:20px;
+  display:block;
+  margin-top:6px;
+  font-weight:800;
+  text-shadow:1px 1px 6px rgba(0,0,0,0.5);
+}
+
+/* CARD ADICIONAR */
+.add-card{
+  background:linear-gradient(145deg,#1e2f38,#142128);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  border:2px dashed #00f0ff;
+}
+.add-plus{
+  font-size:38px;
+  font-weight:bold;
+  text-shadow:0 0 10px #00f0ff;
+}
+.add-card span{
+  font-size:12px;
+  opacity:.8;
+  margin-top:4px;
+}
+
+/* TABELA */
+.table-container{
+  background:#1e2f38;
+  border-radius:14px;
+  padding:1px;
+  width:100%;
+  overflow-x:auto;
+  margin-top:1px;
+}
+
+table{width:100%;border-collapse:separate;border-spacing:0 10px;}
+th,td{padding:10px;text-align:center}
+th{background:#16232b;font-weight:500;border-radius:10px;}
+td{
+  background:rgba(0,0,0,0.3);
+  border-radius:10px;
+  transition:all 0.3s ease;
+}
+td.status-andamento{color:#ffeb3b;font-weight:bold;}
+td.status-fechado{color:#4caf50;font-weight:bold;}
+
+tr td:first-child{border-top-left-radius:10px;border-bottom-left-radius:10px;}
+tr td:last-child{border-top-right-radius:10px;border-bottom-right-radius:10px;}
+
+tr:hover td{
+  background:rgba(255,255,255,0.05);
+  box-shadow:0 0 10px rgba(0,255,255,0.3);
+}
+
+/* ACTION BUTTONS */
+.actions button{
+  padding:6px 10px;
+  font-size:12px;
+  border-radius:5px;
+  margin:2px;
+  color:#fff;
+  border:none;
+  cursor:pointer;
+}
+.btn-save{background:#2196f3}
+.btn-delete{background:#f44336}
+
+/* MODAL */
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.7);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:999;
+  backdrop-filter:blur(5px);
+}
+
+.modal-viagem{
+  background:linear-gradient(145deg, #203a43, #2c5364);
+  padding:25px 30px;
+  border-radius:24px;
+  width:400px;
+  max-width:90%;
+  display:flex;
+  flex-direction:column;
+  gap:15px;
+  box-shadow:0 20px 40px rgba(0,0,0,.6);
+  animation:fadeIn 0.3s ease;
+  transform-style: preserve-3d;
+}
+
+.modal-viagem h3{
+  text-align:center;
+  margin-bottom:10px;
+  font-size:22px;
+  text-shadow:1px 1px 4px rgba(0,0,0,0.6);
+}
+
+.modal-viagem input,
+.modal-viagem select{
+  padding:12px 15px;
+  border-radius:12px;
+  border:none;
+  outline:none;
+  width:100%;
+  background:rgba(239, 240, 245, 0.89);
+  color:#111010;
+  font-size:14px;
+  transition:0.2s;
+}
+
+.modal-viagem input:focus,
+.modal-viagem select:focus{
+  background:rgba(236, 226, 226, 0.925);
+  box-shadow:0 0 8px rgba(0,123,255,0.5);
+}
+
+.modal-viagem label{
+  font-size:13px;
+  opacity:.85;
+}
+
+.modal-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:12px;
+}
+
+.modal-actions button{
+  padding:10px 18px;
+  font-size:15px;
+  border-radius:20px;
+  margin:2px;
+  color:#166bda;
+  border:none;
+  cursor:pointer;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  transition:0.3s;
+  box-shadow:0 6px 15px rgba(0,0,0,0.4), 0 0 10px rgba(0,0,0,0.2) inset;
+}
+
+.btn-save{
+  background:linear-gradient(135deg,#00f0ff,#0066ff);
+  box-shadow:0 6px 15px rgba(0,102,255,0.5), 0 0 15px rgba(0,255,255,0.5) inset;
+}
+
+.btn-delete{
+  background:linear-gradient(135deg,#ff3b3b,#b20000);
+  box-shadow:0 6px 15px rgba(255,0,0,0.5), 0 0 15px rgba(255,59,59,0.5) inset;
+}
+
+.modal-actions button:hover{
+  transform:translateY(-3px) scale(1.05);
+  box-shadow:0 10px 20px rgba(0,0,0,0.6), 0 0 25px rgba(255,255,255,0.3) inset;
+}
+
+/* HIDDEN */
+.hidden{display:none;}
+
+/* RESPONSIVO */
+@media(max-width:768px){
+  .dashboard-float{
+    position:relative;
+    flex-direction:column;
+    gap:8px;
+    top:auto;
+    right:auto;
+    margin-bottom:15px;
+  }
+  table th, table td{padding:6px;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1> Viagens de Projeto - T.I</h1>
+  <span>Controle de viagens corporativas</span>
+</header>
+
+<div class="dashboard-float">
+  <div class="dashboard-box card-total">
+    <span>Total</span>
+    <strong id="total">0</strong>
+  </div>
+  <div class="dashboard-box card-andamento">
+    <span>Em Andamento</span>
+    <strong id="andamento">0</strong>
+  </div>
+  <div class="dashboard-box card-fechado">
+    <span>Concluido</span>
+    <strong id="fechadas">0</strong>
+  </div>
+  <div class="add-card" onclick="abrirModal()">
+    <div class="add-plus">+</div>
+    <span>Adicionar</span>
+  </div>
+</div>
+
+<section class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>Colaborador</th>
+        <th>Tipo</th>
+        <th>Sigla</th>
+        <th>Data Viagem</th>
+        <th>Data Retorno</th>
+        <th>Duracao</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="lista"></tbody>
+  </table>
+</section>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+  <div class="modal-viagem">
+    <h3> Nova Viagem</h3>
+
+    <input id="colaborador" placeholder="Nome do colaborador">
+
+    <select id="tipo" onchange="verificaTipo()">
+      <option value="">Tipo da viagem</option>
+      <option>Reinauguracao</option>
+      <option>Inauguracao</option>
+      <option>Mudanca de Layout</option>
+      <option>Outros</option>
+    </select>
+
+    <input id="tipoOutro" class="hidden" placeholder="Descreva o tipo da viagem">
+
+    <input id="sigla" placeholder="Sigla da loja">
+
+    <label>Data da viagem</label>
+    <input type="date" id="dataViagem">
+
+    <label>Data do projeto</label>
+    <input type="date" id="dataProjeto">
+
+    <select id="status">
+    <option value="Em andamento" selected>Em andamento</option>
+    <option value="Fechado">Concluido</option>
+</select>
+
+    <div class="modal-actions">
+      <button onclick="fecharModal()">Cancelar</button>
+      <button class="btn-save" onclick="salvar()">Salvar Viagem</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL SENHA -->
+<div class="modal" id="modalSenha">
+  <div class="modal-viagem">
+    <h3> Acesso Administrador</h3>
+    <input type="password" id="senhaAdmin" placeholder="Digite a senha">
+    <div class="modal-actions">
+      <button onclick="fecharModalSenha()">Cancelar</button>
+      <button class="btn-save" onclick="confirmarSenha()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const SENHA_ADMIN = "Dti@1111";
+let indexEdicao = null;
+let viagens = JSON.parse(localStorage.getItem("viagensTI")) || [];
+
+function capitalizar(texto){
+  return texto.toLowerCase().split(" ").map(p=>p.charAt(0).toUpperCase()+p.slice(1)).join(" ");
+}
+
+function abrirModal(){ modal.style.display="flex"; }
+function fecharModal(){ modal.style.display="none"; }
+
+function verificaTipo(){
+  if(tipo.value==="Outros"){ tipoOutro.classList.remove("hidden"); tipoOutro.focus(); } 
+  else { tipoOutro.classList.add("hidden"); tipoOutro.value=""; }
+}
+
+// Função para calcular duração entre dataViagem e dataProjeto
+function calcularDuracao(inicio,fim){
+  if(!inicio) return 0;
+  const dataInicio = new Date(inicio);
+  const dataFim = fim ? new Date(fim) : new Date();
+  const diffTime = dataFim - dataInicio;
+  return Math.ceil(diffTime / (1000*60*60*24));
+}
+
+function salvar(){
+  if(!colaborador.value || !tipo.value || !sigla.value || !dataViagem.value){
+    alert("Preencha os campos obrigatórios");
+    return;
+  }
+
+  let dados = {
+    colaborador: capitalizar(colaborador.value),
+    tipo: tipo.value==="Outros"?tipoOutro.value:tipo.value,
+    sigla: sigla.value.toUpperCase(),
+    dataViagem: dataViagem.value,
+    dataProjeto: dataProjeto.value,
+    status: status.value
+  };
+
+  if(indexEdicao===null){ viagens.push(dados); }
+  else { viagens[indexEdicao]=dados; indexEdicao=null; }
+
+  localStorage.setItem("viagensTI", JSON.stringify(viagens));
+
+  document.querySelector(".modal-viagem h3").textContent="?? Nova Viagem";
+  document.querySelector(".btn-save").textContent="Salvar Viagem";
+
+  fecharModal();
+  location.reload(); // Atualiza a página automaticamente
+}
+
+function formatarData(data){
+  if(!data) return "";
+  const d = new Date(data);
+  const dia = String(d.getDate()).padStart(2,'0');
+  const mes = String(d.getMonth()+1).padStart(2,'0');
+  const ano = d.getFullYear();
+  return `${dia}/${mes}/${ano}`;
+}
+
+// Renderiza tabela e atualiza dashboard
+function renderizar(){
+  lista.innerHTML="";
+  let a=0,f=0,totalDiasConcluidos=0;
+  viagens.forEach((v,i)=>{
+    let duracao = calcularDuracao(v.dataViagem, v.dataProjeto);
+    if(v.status==="Fechado"){ 
+      f++; 
+      totalDiasConcluidos += duracao; 
+    } else a++;
+
+    lista.innerHTML+=`
+      <tr>
+        <td>${v.colaborador}</td>
+        <td>${v.tipo}</td>
+        <td>${v.sigla}</td>
+        <td>${formatarData(v.dataViagem)}</td>
+        <td>${formatarData(v.dataProjeto)}</td>
+        <td>${duracao}</td>
+        <td class="${v.status==="Fechado"?"status-fechado":"status-andamento"}">${v.status==="Fechado"?"Concluído":"Em andamento"}</td>
+        <td class="actions">
+          <button class="btn-save" onclick="editar(${i})">Editar</button>
+          <button class="btn-delete" onclick="excluir(${i})">Excluir</button>
+        </td>
+      </tr>`;
+  });
+
+  total.textContent = viagens.length;
+  andamento.textContent = a;
+  fechadas.textContent = f;
+
+  // Se quiser adicionar um card extra para dias concluídos
+  if(document.getElementById("totalDias")){
+    totalDias.textContent = totalDiasConcluidos;
+  }
+}
+
+function editar(i){
+  indexEdicao=i;
+  modalSenha.style.display="flex";
+}
+
+function fecharModalSenha(){ modalSenha.style.display="none"; senhaAdmin.value=""; }
+
+function confirmarSenha(){
+  if(senhaAdmin.value!==SENHA_ADMIN){ alert("Senha incorreta"); return; }
+  fecharModalSenha();
+  abrirModalEdicao();
+}
+
+function abrirModalEdicao(){
+  let v=viagens[indexEdicao];
+  if(["Reinauguração","Inauguração","Mudança de Layout"].includes(v.tipo)){ tipo.value=v.tipo; tipoOutro.classList.add("hidden"); } 
+  else { tipo.value="Outros"; tipoOutro.value=v.tipo; tipoOutro.classList.remove("hidden"); }
+
+  colaborador.value=v.colaborador;
+  sigla.value=v.sigla;
+  dataViagem.value=v.dataViagem;
+  dataProjeto.value=v.dataProjeto||"";
+  status.value=v.status;
+
+  document.querySelector(".modal-viagem h3").textContent="?? Editar Viagem";
+  document.querySelector(".btn-save").textContent="Atualizar Viagem";
+
+  modal.style.display="flex";
+}
+
+function excluir(i){
+  if(confirm("Excluir viagem?")){
+    viagens.splice(i,1);
+    localStorage.setItem("viagensTI",JSON.stringify(viagens));
+    renderizar();
+  }
+}
+
+renderizar();
+</script>
+
+</body>
+</html>

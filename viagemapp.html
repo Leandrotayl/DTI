@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dados DTI</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Roboto', sans-serif; }
+body { min-height:100vh; display:flex; justify-content:center; align-items:center; background: linear-gradient(135deg,#4b6cb7,#182848); color:#fff; position:relative; }
+
+#logoutBtn, #changePassBtn, #addBtn, #btnMenu {
+  border-radius: 8px; cursor:pointer; transition:0.3s; position:fixed; z-index:1000;
+}
+#logoutBtn { top:15px; right:15px; background:#ff4d4d; color:#fff; border:none; padding:10px 20px; display:none; }
+#logoutBtn:hover { background:#e63939; }
+#changePassBtn { top:15px; right:120px; background:#00ffcc; color:#182848; border:none; padding:10px 20px; display:none; }
+#changePassBtn:hover { background:#00e6b8; }
+#addBtn { top:15px; right:250px; font-size:20px; color:#00ffcc; background:none; border:2px solid #00ffcc; padding:6px 12px; }
+#addBtn:hover { background: rgba(0,255,204,0.1); transform: scale(1.2); }
+#btnMenu { top:2px; left:4px; width:140px; padding:15px 0; background: linear-gradient(135deg,#0d47a1,#1976d2); color:#0ff; border:3px solid #ff0000; font-weight:bold; text-align:center; text-shadow:0 0 5px #ff0000,0 0 15px #ff0000; box-shadow:0 0 15px #ff0000,0 0 30px #ff0000 inset; }
+#btnMenu:hover { background: linear-gradient(145deg,#ff0000,#1a1aff); color:#fff; box-shadow:0 0 25px #ff4d4d,0 0 50px #ff4d4d inset; transform: scale(1.05); }
+
+#loginForm, .modal-content { background: rgba(255,255,255,0.05); padding:30px; border-radius:15px; width:350px; box-shadow:0 8px 30px rgba(0,0,0,0.3); backdrop-filter:blur(10px); text-align:center; }
+#loginForm input, .modal-content input, .modal-content textarea { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:none; outline:none; font-size:16px;}
+#loginForm input:focus, .modal-content input:focus, .modal-content textarea:focus { box-shadow:0 0 10px #00ffcc; }
+#loginForm button, .modal-content button { width:100%; padding:12px; margin-top:10px; border:none; border-radius:8px; background:#00ffcc; color:#182848; font-weight:bold; cursor:pointer; transition:0.3s; }
+#loginForm button:hover, .modal-content button:hover { background:#00e6b8; }
+.error { color:#ff4d4d; font-size:14px; margin-top:10px; display:none; }
+
+#mainScreen { display:none; flex-direction:column; align-items:center; width:100%; min-height:100vh; padding:20px; box-sizing:border-box; }
+#tabelaRegistros {
+  width:100%;
+  border-collapse:collapse;
+  margin-top:60px; /* Aumentei de 20px para 60px para empurrar a tabela para baixo */
+  background: rgba(255,255,255,0.05);
+  border-radius:10px;
+  overflow:hidden;
+}
+
+#tabelaRegistros th, #tabelaRegistros td {
+  padding:18px 8px; /* Aumentei de 12px para 18px verticalmente */
+  text-align:center;
+  border-bottom:1px solid #fff;
+  font-size:14px;
+}
+
+#tabelaRegistros th { background: rgba(0,255,204,0.2); font-size:15px; }
+#tabelaRegistros tbody { display:block; max-height:70vh; overflow-y:auto; }
+#tabelaRegistros thead, #tabelaRegistros tbody tr { display:table; width:100%; table-layout:fixed; }
+#tabelaRegistros button { padding:3px 6px; margin:0 2px; border:none; border-radius:5px; cursor:pointer; font-size:12px; }
+.btn-edit { background:#00ffcc; color:#182848; }
+.btn-edit:hover { background:#00e6b8; }
+.btn-delete { background:#ff4d4d; color:#fff; }
+.btn-delete:hover { background:#e63939; }
+
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:1000; }
+.closeBtn { position:absolute; top:10px; right:15px; background:#ff4d4d; color:#fff; border:none; border-radius:5px; padding:8px 15px; font-size:14px; cursor:pointer; }
+
+#previewModal .modal-content img, 
+#previewModal .modal-content iframe { 
+  border-radius:8px; 
+  max-width:100%; 
+  max-height:80vh; 
+  display:block; 
+  margin:0 auto; 
+}
+#previewModal .modal-content { 
+  width:auto; 
+  max-width:90%; 
+  text-align:center; 
+  padding-top:40px; 
+}
+#previewModal img, #previewModal iframe { border-radius:8px; max-width:100%; max-height:80vh; }
+#previewModal iframe { width:80vw; height:80vh; border:none; cursor:default; }
+
+#alertaUsuario { display:none; position:fixed; top:30px; left:50%; transform:translateX(-50%) translateY(-50px); background: linear-gradient(135deg, #ff4d4d, #ff0000); color:#fff; padding:18px 30px; border-radius:15px; font-weight:bold; font-size:16px; box-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff0000 inset; z-index:9999; opacity:0; transition: all 0.5s ease-in-out; display:flex; align-items:center; justify-content:center;}
+#alertaUsuario button { margin-left:15px; background:transparent; border:none; color:#fff; font-weight:bold; font-size:18px; cursor:pointer; text-shadow:0 0 5px #000; }
+
+#totalQuadro {
+  position: fixed;
+  top: 3px;
+  left: 150px; /* Alterado de right:15px para left:15px */
+  background: linear-gradient(145deg, #00ffcc, #0099cc);
+  padding: 8px 20px;
+  border-radius: 15px;
+  box-shadow: 0 5px 20px rgba(0,255,204,0.5), 0 0 30px #00ffcc inset;
+  color: #182848;
+  font-weight: bold;
+  text-align: center;
+  z-index: 1000;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+#totalQuadro:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 30px rgba(0,255,204,0.7), 0 0 50px #00ffcc inset;
+}
+#totalQuadro h3 {
+  margin-bottom: 10px;
+  font-size: 16px;
+  text-shadow: 0 0 5px #fff, 0 0 15px #00ffcc;
+}
+#totalQuadro span {
+  font-size: 20px;
+  text-shadow: 0 0 5px #fff, 0 0 10px #00ffcc;
+}
+
+
+</style>
+</head>
+<body>
+
+<!-- Totalizador -->
+<div id="totalQuadro" style="display:none;">
+  <h3>Total de Gastos</h3>
+  <span id="totalValor">R$ 0,00</span>
+</div>
+
+
+
+<button id="logoutBtn" onclick="logout()">Logout</button>
+<button id="changePassBtn" onclick="abrirAlterarSenha()">Alterar Senha</button>
+
+<div id="loginForm">
+  <h1>Login</h1>
+  <input type="text" id="Usuario" placeholder="Usuario">
+  <input type="password" id="senha" placeholder="Senha">
+  <button onclick="validarLogin()">Entrar</button>
+  <div class="error" id="error-msg"></div>
+  <div style="margin-top:15px; font-size:14px;">
+    <span>Ja e cadastrado?</span>
+    <span style="color:#00ffcc; cursor:pointer;" onclick="abrirCadastro()">Ainda nao e Cadastrado?</span>
+  </div>
+</div>
+
+<div id="cadastroModal" class="modal">
+  <div class="modal-content">
+    <button class="closeBtn" onclick="fecharCadastro()">Fechar</button>
+    <h2>Cadastrar Novo Usuario</h2>
+    <input type="text" id="novoUsuario" placeholder="Novo Usuario">
+    <input type="password" id="novaSenha" placeholder="Senha">
+    <input type="password" id="confirmaSenha" placeholder="Confirmar Senha">
+    <button onclick="cadastrarUsuario()">Cadastrar</button>
+    <div class="error" id="cadastro-msg"></div>
+    <button style="margin-top:10px; background:#ff4d4d; color:#fff;" onclick="voltarLogin()">Voltar ao Login</button>
+  </div>
+</div>
+
+<div id="senhaModal" class="modal">
+  <div class="modal-content">
+    <button class="closeBtn" onclick="fecharAlterarSenha()">Fechar</button>
+    <h2>Alterar Senha</h2>
+    <input type="password" id="senhaAtual" placeholder="Senha Atual">
+    <input type="password" id="novaSenhaAlt" placeholder="Nova Senha">
+    <input type="password" id="confirmaNovaSenha" placeholder="Confirmar Nova Senha">
+    <button onclick="alterarSenha()">Salvar Nova Senha</button>
+    <div class="error" id="senha-msg"></div>
+  </div>
+</div>
+
+<div id="mainScreen">
+  <button id="addBtn" onclick="abrirModal()">Adicionar</button>
+  <table id="tabelaRegistros">
+    <thead>
+      <tr>
+        <th>Colaborador</th>
+        <th>Data</th>
+        <th>Loja</th>
+        <th>Valor</th>
+        <th>Anexo</th>
+        <th>Comentario</th>
+        <th>Acoes</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<div id="alertaUsuario">
+  <span id="alertaMsg"></span>
+  <button onclick="fecharAlerta()">?</button>
+</div>
+
+<button id="btnMenu">MENU PRINCIPAL</button>
+
+<!-- Modal Principal de Registro -->
+<div id="registroModal" class="modal">
+  <div class="modal-content">
+    <button class="closeBtn" onclick="fecharModal()">Fechar</button>
+    <h2 id="modalTitle">Salvar Registro de Pontos</h2>
+    <label>Colaborador</label>
+    <input type="text" id="colaborador" readonly>
+    <label>Data</label>
+    <input type="date" id="data">
+    <label>Loja</label>
+    <input type="text" id="loja" placeholder="Digite a loja">
+    <label>Valor</label>
+    <input type="text" id="valor" placeholder="Digite o valor" oninput="formatarValor(this)">
+    <label>Anexar Arquivo</label>
+    <input type="file" id="arquivo" onchange="previewArquivo()">
+    <div id="previewArquivo" style="margin-top:10px; text-align:center;"></div>
+    <label>Comentario</label>
+    <textarea id="comentario" placeholder="Digite um comentario..." rows="3"></textarea>
+    <button onclick="salvarRegistro()">Salvar Registro</button>
+  </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div id="deleteModal" class="modal">
+  <div class="modal-content" style="width:350px; max-width:90%;">
+    <button class="closeBtn" onclick="fecharDeleteModal()">Fechar</button>
+    <h2>Confirmar Exclusão</h2>
+    <p>Digite sua Senha para Confirmar a Exclusao Deste Rsegistro:</p>
+    <input type="password" id="senhaDelete" placeholder="Senha do usuario">
+    <div style="margin-top:15px; display:flex; justify-content:space-between;">
+      <button style="background:#ff4d4d; color:#fff; flex:1; margin-right:5px;" onclick="confirmarDelete()">Excluir</button>
+      <button style="background:#00ffcc; color:#182848; flex:1; margin-left:5px;" onclick="fecharDeleteModal()">Cancelar</button>
+    </div>
+    <div class="error" id="delete-msg" style="margin-top:10px; display:none;"></div>
+  </div>
+</div>
+
+
+
+<!-- Modal de Preview de Arquivo -->
+<div id="previewModal" class="modal">
+  <div class="modal-content" style="position:relative;">
+    <div style="position:absolute; top:10px; right:10px; display:flex; gap:5px; z-index:10;">
+      <button onclick="fecharPreview()" style="padding:5px 8px; font-size:12px; border:none; border-radius:5px; background:#ff4d4d; color:#fff; cursor:pointer;">Fechar</button>
+      <button onclick="imprimirAnexo()" style="padding:5px 8px; font-size:12px; border:none; border-radius:5px; background:#00ffcc; color:#182848; cursor:pointer;">imprimir</button>
+      <button onclick="baixarAnexo()" style="padding:5px 8px; font-size:12px; border:none; border-radius:5px; background:#00bfff; color:#fff; cursor:pointer;">Baixar</button>
+    </div>
+    <div id="previewContainer" style="margin-top:10px; text-align:center;"></div>
+  </div>
+</div>
+
+<script>
+//================== Dados ==================
+let usuarios = JSON.parse(localStorage.getItem('usuarios')) || {};
+let registroEditIndex = null;
+let anexoAtual = null;
+
+//================== LOGIN ==================
+function validarLogin(){
+  const user = document.getElementById('Usuario').value.trim().toLowerCase();
+  const pass = document.getElementById('senha').value;
+  if(!usuarios[user]){ mostrarAlerta("Usuario nao Cadastrado!"); return; }
+  if(usuarios[user] === pass){ localStorage.setItem('usuarioLogado', user); mostrarTelaPrincipal(); } 
+  else { mostrarAlerta(" Senha Incorreta"); }
+}
+function mostrarTelaPrincipal(){
+  const user = localStorage.getItem('usuarioLogado');
+  if(!user) return;
+  document.getElementById('loginForm').style.display='none';
+  document.getElementById('mainScreen').style.display='flex';
+  document.getElementById('logoutBtn').style.display='block';
+  document.getElementById('changePassBtn').style.display='block';
+  
+  // Exibir totalizador somente na segunda tela
+  document.getElementById('totalQuadro').style.display='block';
+
+  carregarRegistros();
+}
+
+
+function logout(){ localStorage.removeItem('usuarioLogado'); location.reload(); }
+function mostrarAlerta(msg){
+  const alerta = document.getElementById('alertaUsuario');
+  document.getElementById('alertaMsg').innerText=msg;
+  alerta.style.display='flex';
+  void alerta.offsetWidth;
+  alerta.style.transform="translateX(-50%) translateY(0)";
+  alerta.style.opacity=1;
+  setTimeout(fecharAlerta,3000);
+}
+function fecharAlerta(){
+  const alerta=document.getElementById('alertaUsuario');
+  alerta.style.transform="translateX(-50%) translateY(-50px)";
+  alerta.style.opacity=0;
+  setTimeout(()=>{alerta.style.display='none';},500);
+}
+
+//================== VALOR ==================
+function formatarValor(input){
+  let valor = input.value.replace(/\D/g,'');
+  if(valor) valor = (parseInt(valor)/100).toLocaleString('pt-BR',{style:'currency', currency:'BRL'});
+  input.value = valor ? valor : '';
+}
+
+//================== CRUD ==================
+const tabelaBody = document.querySelector('#tabelaRegistros tbody');
+
+function abrirModal(){
+  registroEditIndex=null;
+  document.getElementById('modalTitle').innerText="Salvar Registro de Pontos";
+  const user = localStorage.getItem('usuarioLogado');
+  document.getElementById('colaborador').value=user.charAt(0).toUpperCase()+user.slice(1);
+  document.getElementById('data').value=new Date().toISOString().split('T')[0];
+  document.getElementById('loja').value='';
+  document.getElementById('valor').value='';
+  document.getElementById('arquivo').value='';
+  document.getElementById('previewArquivo').innerHTML='';
+  document.getElementById('comentario').value='';
+  document.getElementById('registroModal').style.display='flex';
+}
+function fecharModal(){ document.getElementById('registroModal').style.display='none'; }
+
+function salvarRegistro(){
+  let registros = JSON.parse(localStorage.getItem('registros'))||[];
+  const colaborador=document.getElementById('colaborador').value;
+  const data=document.getElementById('data').value;
+  const loja=document.getElementById('loja').value;
+  const valor=document.getElementById('valor').value;
+  const comentario=document.getElementById('comentario').value;
+  let anexo=null;
+  const fileInput=document.getElementById('arquivo');
+
+  const salvarNoLocalStorage=()=> {
+    const registro={colaborador,data,loja,valor,comentario,anexo};
+    if(registroEditIndex!==null){ registros[registroEditIndex]=registro; registroEditIndex=null; mostrarAlerta("Registro atualizado!"); }
+    else { registros.push(registro); mostrarAlerta("Registro salvo!"); }
+    localStorage.setItem('registros',JSON.stringify(registros));
+    carregarRegistros();
+    fecharModal();
+  }
+
+  if(fileInput.files && fileInput.files[0]){
+    const reader=new FileReader();
+    reader.onload=function(e){ anexo=e.target.result; salvarNoLocalStorage(); }
+    reader.readAsDataURL(fileInput.files[0]);
+  } else { salvarNoLocalStorage(); }
+}
+
+function carregarRegistros(){
+  tabelaBody.innerHTML='';
+  const registros=JSON.parse(localStorage.getItem('registros'))||[];
+  const usuarioLogado=localStorage.getItem('usuarioLogado');
+  const registrosUsuario=registros.filter(r=>r.colaborador.toLowerCase()===usuarioLogado);
+  
+  registrosUsuario.forEach((reg,i)=>{
+    const dataFormatada = reg.data.split('-').reverse().join('/');
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${reg.colaborador}</td>
+                  <td>${dataFormatada}</td>
+                  <td>${reg.loja}</td>
+                  <td>${reg.valor}</td>
+                  <td>${reg.anexo?`<button onclick="previewArquivoModal(${i})">Visualizar</button>`:''}</td>
+                  <td>${reg.comentario}</td>
+                  <td><button class="btn-edit" onclick="editarRegistro(${i})">Editar</button>
+                  <button class="btn-delete" onclick="deletarRegistro(${i})">Deletar</button></td>`;
+    tabelaBody.appendChild(tr);
+  });
+
+  atualizarTotal();
+}
+
+function editarRegistro(index){
+  registroEditIndex=index;
+  const registros=JSON.parse(localStorage.getItem('registros'))||[];
+  const reg=registros[index];
+  document.getElementById('modalTitle').innerText="Editar Registro de Pontos";
+  document.getElementById('colaborador').value=reg.colaborador;
+  document.getElementById('data').value=reg.data;
+  document.getElementById('loja').value=reg.loja;
+  document.getElementById('valor').value=reg.valor;
+  document.getElementById('comentario').value=reg.comentario;
+  document.getElementById('previewArquivo').innerHTML=reg.anexo?`<img src="${reg.anexo}" style="max-width:100px; max-height:100px;">`:``;
+  document.getElementById('registroModal').style.display='flex';
+}
+
+let deleteIndex = null;
+
+// Função chamada ao clicar no botão de deletar
+function deletarRegistro(index){
+  deleteIndex = index;
+  document.getElementById('senhaDelete').value = '';
+  document.getElementById('delete-msg').style.display = 'none';
+  document.getElementById('deleteModal').style.display = 'flex';
+}
+
+// Fechar modal de exclusão
+function fecharDeleteModal(){
+  document.getElementById('deleteModal').style.display = 'none';
+  deleteIndex = null;
+}
+
+// Confirmar exclusão
+function confirmarDelete(){
+  const user = localStorage.getItem('usuarioLogado');
+  const senhaInput = document.getElementById('senhaDelete').value;
+
+  if(!senhaInput){
+    mostrarDeleteErro("Digite sua senha!");
+    return;
+  }
+
+  if(usuarios[user] !== senhaInput){
+    mostrarDeleteErro("Senha incorreta!");
+    return;
+  }
+
+  // Exibir confirmação adicional
+  if(!confirm("Deseja realmente excluir este registro?")) return;
+
+  let registros = JSON.parse(localStorage.getItem('registros')) || [];
+  registros.splice(deleteIndex, 1);
+  localStorage.setItem('registros', JSON.stringify(registros));
+  mostrarAlerta("Registro excluído com sucesso!");
+  carregarRegistros();
+  fecharDeleteModal();
+}
+
+// Exibir mensagem de erro dentro do modal
+function mostrarDeleteErro(msg){
+  const div = document.getElementById('delete-msg');
+  div.innerText = msg;
+  div.style.display = 'block';
+}
+
+
+
+//================== PREVIEW ==================
+function previewArquivoModal(index){
+  const registros=JSON.parse(localStorage.getItem('registros'))||[];
+  const reg=registros[index];
+  const previewContainer=document.getElementById('previewContainer');
+  previewContainer.innerHTML='';
+  if(reg.anexo.startsWith('data:image')) previewContainer.innerHTML=`<img src="${reg.anexo}">`;
+  else previewContainer.innerHTML=`<iframe src="${reg.anexo}"></iframe>`;
+  document.getElementById('previewModal').style.display='flex';
+  anexoAtual=reg.anexo;
+}
+function fecharPreview(){ document.getElementById('previewModal').style.display='none'; anexoAtual=null; }
+function imprimirAnexo(){ if(anexoAtual) window.open(anexoAtual).print(); }
+function baixarAnexo(){ if(anexoAtual){ const link=document.createElement('a'); link.href=anexoAtual; link.download='arquivo'; link.click(); } }
+
+//================== USUARIOS ==================
+function abrirCadastro(){ document.getElementById('cadastroModal').style.display='flex'; document.getElementById('loginForm').style.display='none'; }
+function fecharCadastro(){ document.getElementById('cadastroModal').style.display='none'; }
+function voltarLogin(){ fecharCadastro(); document.getElementById('loginForm').style.display='block'; }
+
+function cadastrarUsuario(){
+  const user=document.getElementById('novoUsuario').value.trim().toLowerCase();
+  const pass=document.getElementById('novaSenha').value;
+  const conf=document.getElementById('confirmaSenha').value;
+  if(!user || !pass){ document.getElementById('cadastro-msg').innerText="Preencha todos campos!"; return; }
+  if(pass!==conf){ document.getElementById('cadastro-msg').innerText="Senhas diferentes!"; return; }
+  if(usuarios[user]){ document.getElementById('cadastro-msg').innerText="Usuario ja existe!"; return; }
+  usuarios[user]=pass;
+  localStorage.setItem('usuarios',JSON.stringify(usuarios));
+  mostrarAlerta("Usuario cadastrado com sucesso!");
+  fecharCadastro();
+  document.getElementById('loginForm').style.display='block';
+}
+
+//================== ALTERAR SENHA ==================
+function abrirAlterarSenha(){ document.getElementById('senhaModal').style.display='flex'; }
+function fecharAlterarSenha(){ document.getElementById('senhaModal').style.display='none'; }
+function alterarSenha(){
+  const atual=document.getElementById('senhaAtual').value;
+  const nova=document.getElementById('novaSenhaAlt').value;
+  const conf=document.getElementById('confirmaNovaSenha').value;
+  const user=localStorage.getItem('usuarioLogado');
+  if(!atual || !nova || !conf){ document.getElementById('senha-msg').innerText="Preencha todos os campos!"; return; }
+  if(usuarios[user]!==atual){ document.getElementById('senha-msg').innerText="Senha atual incorreta!"; return; }
+  if(nova!==conf){ document.getElementById('senha-msg').innerText="Senhas nao conferem!"; return; }
+  usuarios[user]=nova;
+  localStorage.setItem('usuarios',JSON.stringify(usuarios));
+  mostrarAlerta("Senha alterada com sucesso!");
+  fecharAlterarSenha();
+}
+
+//================== TOTAL ==================
+function atualizarTotal(){
+  const registros = JSON.parse(localStorage.getItem('registros')) || [];
+  const usuarioLogado = localStorage.getItem('usuarioLogado');
+  const registrosUsuario = registros.filter(r => r.colaborador.toLowerCase() === usuarioLogado);
+  
+  let total = 0;
+  registrosUsuario.forEach(r => {
+    if(r.valor){
+      const num = Number(r.valor.replace(/[^\d,]/g,'').replace(',','.'));
+      total += isNaN(num)?0:num;
+    }
+  });
+  
+  document.getElementById('totalValor').innerText = total.toLocaleString('pt-BR',{style:'currency', currency:'BRL'});
+}
+
+//================== PREVIEW DE ARQUIVO ==================
+function previewArquivo(){
+  const file=document.getElementById('arquivo').files[0];
+  const preview=document.getElementById('previewArquivo');
+  preview.innerHTML='';
+  if(file){
+    const reader=new FileReader();
+    reader.onload=function(e){
+      if(file.type.startsWith('image')) preview.innerHTML=`<img src="${e.target.result}" style="max-width:100px; max-height:100px;">`;
+      else preview.innerHTML=`<iframe src="${e.target.result}" style="max-width:100px; max-height:100px;"></iframe>`;
+    }
+    reader.readAsDataURL(file);
+  }
+}
+</script>
+
+</body>
+</html>

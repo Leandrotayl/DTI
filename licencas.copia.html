@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Licenças Office </title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body, html { width:100%; height:100%; background:#0a0a0a; }
+
+canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
+.content { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; padding:40px; gap:40px; min-height:100vh; color:#fff; }
+
+.top-bar { display:flex; align-items:center; justify-content:center; gap:30px; flex-wrap:wrap; width:100%; }
+.datetime-group { display:flex; gap:20px; align-items:center; }
+
+.time-card, .date-card { background: linear-gradient(145deg,#1976d2,#0d47a1); border:2px solid #0ff; border-radius:20px; padding:15px 25px; text-align:center; color:#0ff; box-shadow:0 5px 20px rgba(0,255,255,0.5); min-width:180px; font-size:1.5rem; }
+.time-card {
+  font-family:'Orbitron',sans-serif;
+  font-size:2.2rem;
+  letter-spacing:2px;
+}
+
+.search-card {
+  background: linear-gradient(145deg,#001f3f,#003366);
+  border:3px solid #0ff;
+  border-radius:20px;
+  padding:40px 10px;
+  text-align:center;
+  width:300px;
+  box-shadow:0 10px 25px rgba(0,255,255,0.4);
+}
+.search-card input {
+  width:100%;
+  padding:10px 12px;
+  border-radius:15px;
+  border:2px solid #0ff;
+  outline:none;
+  font-size:0.95rem;
+  color:#0ff;
+  background: rgba(0,255,255,0.05);
+  box-shadow:0 0 8px #0ff inset;
+  text-align:center;
+  transition: all 0.3s ease;
+}
+.search-card input::placeholder { color: rgba(0,255,255,0.6); }
+
+.email-text {
+  display: inline-block;
+  max-width: 180px;         /* largura máxima da área de texto */
+  overflow: hidden;
+  text-overflow: ellipsis;  /* mostra "..." ao ultrapassar o limite */
+  white-space: nowrap;      /* impede quebra de linha */
+  vertical-align: middle;
+}
+.email-text:hover {
+  white-space: normal;
+  overflow: visible;
+  background: rgba(0, 255, 255, 0.15);
+  padding: 2px 6px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px #00ffff, 0 0 25px #00e6e6;
+  position: relative;
+  z-index: 5000; /* 👈 sobe acima de todos os cards laterais */
+}
+
+/* === QUADRO ULTRA HD+ COM TEXTO PRETO === */
+.email-overlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  min-width: 300px;
+  max-width: 480px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(220,255,255,0.95), rgba(200,255,255,0.9));
+  color: #000; /* 👈 texto preto */
+  padding: 22px 28px;
+  border-radius: 20px;
+  border: 3px solid rgba(0,255,255,1);
+  box-shadow:
+    0 0 50px rgba(0,255,255,0.9),
+    0 0 100px rgba(0,255,255,0.6),
+    0 0 180px rgba(0,180,255,0.5),
+    inset 0 0 25px rgba(255,255,255,0.6);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-align: center;
+  text-shadow: none; /* 👈 sem brilho no texto */
+  backdrop-filter: blur(15px) brightness(1.3);
+  z-index: 9999999999 !important;
+  white-space: normal;
+  opacity: 0;
+  transform: scale(0.9) translateY(10px);
+  transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+  animation: borderPulseBright 1.4s infinite alternate;
+}
+
+.email-overlay.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+@keyframes borderPulseBright {
+  0% {
+    box-shadow:
+      0 0 40px rgba(0,255,255,0.9),
+      0 0 80px rgba(0,220,255,0.6),
+      inset 0 0 20px rgba(255,255,255,0.4);
+  }
+  100% {
+    box-shadow:
+      0 0 70px rgba(0,255,255,1),
+      0 0 150px rgba(0,240,255,0.8),
+      inset 0 0 40px rgba(255,255,255,0.8);
+  }
+}
+
+
+
+
+
+
+.highlight {
+  background: linear-gradient(90deg, #ffeb3b, #ffcc00);
+  color: #000;
+  font-weight: bold;
+  padding: 2px 4px;
+  border-radius: 4px;
+  box-shadow: 0 0 8px #ffea00, 0 0 15px #ffcc00;
+  transition: all 0.3s ease;
+}
+
+
+#btnTop {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 99;
+  background: linear-gradient(145deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 2px solid #0ff;
+  border-radius: 50px;
+  padding: 15px 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  text-shadow: 0 0 5px #0ff, 0 0 15px #0ff;
+  box-shadow: 0 0 10px #0ff, 0 0 30px #0ff inset;
+  transition: all 0.3s ease-in-out;
+  display: none;
+}
+#btnTop:hover {
+  background: linear-gradient(145deg,#ff0000,#1a1aff);
+  color: #fff;
+  box-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff4d4d inset;
+  transform: scale(1.1);
+}
+
+#btnMenu {
+  position: fixed;
+  top: 10px;
+  left: 160px;
+  width: 240px;
+  padding: 15px 0;
+  background: linear-gradient(135deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 3px solid #ff0000;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+  transition: all 0.3s ease-in-out;
+  z-index: 1001;
+}
+#btnMenu:hover {
+  background: linear-gradient(145deg,#ff0000,#1a1aff);
+  color: #fff;
+  box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
+  transform: scale(1.05);
+}
+
+/* Estilo do popup de cópia */
+.copy-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.7);
+  background: radial-gradient(circle at center, rgba(0, 255, 255, 0.2), rgba(0, 0, 0, 0.9));
+  border: 3px solid rgba(0, 255, 255, 0.7);
+  border-radius: 30px;
+  padding: 60px 80px;
+  overflow: hidden;
+  box-shadow: 
+    0 0 40px rgba(0, 255, 255, 0.8),
+    inset 0 0 30px rgba(0, 255, 255, 0.4),
+    0 0 100px rgba(0, 150, 255, 0.5);
+  opacity: 0;
+  z-index: 3000;
+  pointer-events: none;
+  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  backdrop-filter: blur(25px);
+}
+
+.copy-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+.popup-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  color: #00ffff;
+  letter-spacing: 1.5px;
+  text-shadow:
+    0 0 8px #00ffff,
+    0 0 25px #00ffff,
+    0 0 45px #0088ff;
+  animation: floatPopup 2s ease-in-out infinite alternate;
+}
+
+/* Ícone e texto */
+.popup-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.popup-icon {
+  font-size: 2.5rem;
+  color: #00eaff;
+  text-shadow:
+    0 0 15px #00ffff,
+    0 0 40px #00aaff;
+  animation: iconSpin 3s linear infinite;
+}
+
+/* Efeitos visuais */
+.popup-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  border: 3px solid rgba(0, 255, 255, 0.4);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: pulseRing 1.6s ease-out forwards;
+}
+
+.popup-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(0, 255, 255, 0.3) 0%, rgba(0, 255, 255, 0) 70%);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  animation: glowExpand 1.4s ease-out forwards;
+}
+
+.popup-reflex {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0, 255, 255, 0.2), transparent);
+  filter: blur(10px);
+  animation: reflexFade 2s ease-out forwards;
+}
+
+.popup-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Animações */
+@keyframes floatPopup {
+  from { transform: translateY(0); }
+  to { transform: translateY(-5px); }
+}
+
+@keyframes iconSpin {
+  from { transform: rotate(0deg) scale(1); }
+  to { transform: rotate(360deg) scale(1.05); }
+}
+
+@keyframes pulseRing {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+}
+
+@keyframes glowExpand {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(2.8); opacity: 0; }
+}
+
+@keyframes reflexFade {
+  0% { opacity: 0.7; }
+  100% { opacity: 0; }
+}
+
+
+
+
+.total-card {
+  position: fixed;
+  top: 0px;
+  right: 6px;
+  background: linear-gradient(145deg,#ff8f0c,#ffb74d);
+  border: 3px solid #0ff;
+  border-radius: 25px;
+  padding: 30px 50px;
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 0 8px #000;
+  box-shadow: 0 10px 30px rgba(255,255,255,0.5);
+  min-width: 200px;
+  z-index: 1000;
+}
+
+.licenca-container { display:flex; flex-direction:column; align-items:center; width:100%; }
+.loja-quadro {
+  border:3px solid #0d47a1;
+  border-radius:20px;
+  background:linear-gradient(145deg,#001f3f,#003366);
+  padding:40px;
+  margin-bottom:30px;
+  width:100%;
+  box-shadow:0 12px 30px rgba(0,255,255,0.4);
+}
+.loja-quadro h2 {
+  text-align:center;
+  margin-bottom:20px;
+  color:#0ff;
+  font-size:2rem;
+  text-shadow:0 0 10px #00ffff,0 0 20px #00ffff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+}
+.badge { background:#f38f0c; color:white; padding:5px 15px; border-radius:15px; font-size:1rem; box-shadow:0 3px 8px rgba(0,0,0,0.5); }
+
+.box-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.licenca-box {
+  background: linear-gradient(145deg,#0d47a1,#1976d2);
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 10px 0px rgba(0,255,255,0.5),0 0 30px #00ffff inset;
+  transition: transform 0.25s ease, box-shadow 0.3s ease, background 0.3s ease;
+  cursor:pointer;
+  user-select:none;
+  position:relative;
+}
+.licenca-box p { margin:5px 0; font-size:1rem; }
+.licenca-box:hover { transform: scale(1.15); background: linear-gradient(145deg,#ff0000,#1a1aff); box-shadow:0 0 50px #ff4d4d inset; }
+
+.copy-btn {
+  margin-top:8px;
+  background:linear-gradient(145deg,#00ffff,#0077ff);
+  color:#000;
+  font-weight:bold;
+  border:none;
+  border-radius:10px;
+  padding:6px 10px;
+  cursor:pointer;
+  font-size:0.9rem;
+  width:100%;
+  transition: all 0.3s ease;
+  box-shadow:0 0 10px #00ffff;
+}
+.copy-btn:hover {
+  background:linear-gradient(145deg,#ff0000,#ff6600);
+  color:#fff;
+  box-shadow:0 0 20px #ff6600;
+  transform:scale(1.05);
+}
+
+footer { text-align:center; padding:15px; font-size:1rem; color:#ccc; margin-top:auto; }
+
+@keyframes pulseNeon {
+  from { box-shadow:0 0 20px #00ffff, inset 0 0 10px #00ffff; }
+  to { box-shadow:0 0 40px #00ffff, inset 0 0 25px #00ffff; }
+}
+
+@media (max-width:768px){
+  .time-card,.date-card{font-size:1.2rem;min-width:140px;}
+  .search-card{width:90%;}
+  .total-card{font-size:1.6rem;padding:20px 30px;}
+}
+</style>
+</head>
+<body>
+
+<div id="copyPopup" class="copy-popup">
+  <div class="popup-inner">
+    <div class="popup-particles" id="popupParticles"></div>
+    <div class="popup-ring"></div>
+    <div class="popup-reflex"></div>
+    <div class="popup-glow"></div>
+    <div class="popup-content">
+      <span class="popup-icon"> </span>
+      <span class="popup-text">E-mail copiado com sucesso!</span>
+    </div>
+  </div>
+</div>
+
+
+<span class="highlight">$1</span>
+
+
+<canvas id="networkCanvas"></canvas>
+
+<div class="content">
+  <div class="top-bar">
+    <div class="datetime-group">
+      <div class="time-card" id="time-card">--:--:--<br><small>Turno</small></div>
+    </div>
+
+    <div class="search-card">
+      <h3>Pesquisar Aqui</h3>
+      <input type="text" id="search-bar" placeholder="Digite para buscar..." autocomplete="off">
+    </div>
+
+    <button id="btnTop">IR PARA O TOPO</button>
+    <button id="btnMenu">MENU PRINCIPAL</button>
+    <div class="total-card" id="total-card">0 / 0</div>
+  </div>
+
+  <div class="licenca-container" id="licenca-container"></div>
+
+  <footer>&copy; 2025 Gerência de Suporte</footer>
+</div>
+
+<script>
+// Fundo animado
+const canvas = document.getElementById('networkCanvas');
+const ctx = canvas.getContext('2d');
+let width = canvas.width = window.innerWidth;
+let height = canvas.height = window.innerHeight;
+const nodeCount = 60;
+const nodes = [];
+for (let i = 0; i < nodeCount; i++) 
+  nodes.push({ x: Math.random()*width, y: Math.random()*height, vx:(Math.random()-0.5)*0.7, vy:(Math.random()-0.5)*0.7, radius:2+Math.random()*4, depth:Math.random() });
+function draw() {
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(0,0,width,height);
+  for (let i=0;i<nodes.length;i++){
+    for (let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].x-nodes[j].x;
+      const dy=nodes[i].y-nodes[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<180){
+        const alpha=(1-dist/180)*0.8;
+        ctx.strokeStyle=`rgba(0,255,255,${alpha})`;
+        ctx.lineWidth=1.2;
+        ctx.shadowBlur=4;
+        ctx.shadowColor='#0ff';
+        ctx.beginPath();
+        ctx.moveTo(nodes[i].x,nodes[i].y);
+        ctx.lineTo(nodes[j].x,nodes[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+  nodes.forEach(node=>{
+    ctx.fillStyle='#0ff';
+    ctx.shadowBlur=10*node.depth;
+    ctx.shadowColor='#0ff';
+    ctx.beginPath();
+    ctx.arc(node.x,node.y,node.radius,0,Math.PI*2);
+    ctx.fill();
+    node.x+=node.vx*(0.5+node.depth);
+    node.y+=node.vy*(0.5+node.depth);
+    if(node.x<0||node.x>width)node.vx*=-1;
+    if(node.y<0||node.y>height)node.vy*=-1;
+  });
+  requestAnimationFrame(draw);
+}
+window.addEventListener('resize',()=>{ width=canvas.width=window.innerWidth; height=canvas.height=window.innerHeight; });
+draw();
+
+  // Codigo do Licencas Office
+  const dadosFixos = [
+
+      
+ 
+      { usuario: "Carla", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Cesar", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "David", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Deposito", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+
+          
+  
+  
+    ];
+
+ 
+function destacar(texto,filtro){ if(!filtro) return texto; const regex=new RegExp(`(${filtro})`,'gi'); return texto.replace(regex,'<span class="highlight">$1</span>'); }
+const searchInput=document.getElementById('search-bar');
+searchInput.addEventListener('input',()=>{ atualizarDashboard(dadosFixos); });
+
+function atualizarDashboard(licencas){
+  const container=document.getElementById('licenca-container'); 
+  container.innerHTML='';
+  const filtro=searchInput.value.toLowerCase();
+  let filtradas=licencas;
+
+  if(filtro) {
+    filtradas=licencas.filter(item=> 
+      item.usuario.toLowerCase().includes(filtro) || 
+      item.loja.toLowerCase().includes(filtro) || 
+      (item.email && item.email.toLowerCase().includes(filtro)) || 
+      item.modelo.toLowerCase().includes(filtro) || 
+      (item.tagEquipamento && item.tagEquipamento.toLowerCase().includes(filtro))
+    );
+  }
+
+  document.getElementById('total-card').textContent = `${filtradas.length} / ${licencas.length}`;
+
+  if(filtradas.length === 0){
+    container.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;width:100%;margin-top:60px;">
+        <div style="background:linear-gradient(145deg,#001f3f,#003366);border:3px solid #0ff;border-radius:25px;
+        padding:40px 60px;text-align:center;font-size:2rem;font-weight:bold;color:#0ff;text-shadow:0 0 10px #0ff,0 0 20px #00e6e6,0 0 40px #00ffff;
+        box-shadow:0 0 25px rgba(0,255,255,0.7), inset 0 0 30px rgba(0,255,255,0.3);animation:pulseNeon 2s infinite alternate;max-width:700px;">
+         Não existe licença para a pesquisa realizada 
+        </div>
+      </div>`;
+    return;
+  }
+
+  const grupos={};
+  filtradas.forEach(item=>{ if(!grupos[item.loja]) grupos[item.loja]=[]; grupos[item.loja].push(item); });
+
+  Object.keys(grupos).sort().forEach(loja=>{
+    const quadro=document.createElement('div'); 
+    quadro.classList.add('loja-quadro');
+    const titulo=document.createElement('h2'); 
+    titulo.innerHTML=`${loja} <span class="badge">${grupos[loja].length}</span>`;
+    quadro.appendChild(titulo);
+
+    const boxContainer=document.createElement('div'); 
+    boxContainer.classList.add('box-container');
+
+    grupos[loja].forEach(item=>{
+      const box=document.createElement('div'); 
+      box.classList.add('licenca-box');
+      box.innerHTML=`
+        <p>Usuario: ${destacar(item.usuario,filtro)}</p>
+        <p>Quantidade: ${item.licencas}</p>
+        <p>Tipo: ${destacar(item.modelo,filtro)}</p>
+        <p>Email: <span class="email-text">${destacar(item.email||'N/A',filtro)}</span></p>
+        <p>Tag_Equipamento: ${destacar(item.tagEquipamento||'N/A',filtro)}</p>
+        <button class="copy-btn" data-email="${item.email}">Copiar E-mail</button>
+      `;
+      boxContainer.appendChild(box);
+    });
+
+    quadro.appendChild(boxContainer);
+    container.appendChild(quadro);
+  });
+
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const email = btn.getAttribute('data-email');
+
+    // --- Método híbrido: HTTPS e HTTP ---
+    if (navigator.clipboard && window.isSecureContext) {
+      // HTTPS ? usa API moderna
+      navigator.clipboard.writeText(email).then(() => {
+        mostrarPopup();
+        btn.textContent = 'Copiado!';
+        setTimeout(() => btn.textContent = 'Copiar E-mail', 2000);
+      }).catch(() => {
+        copiarAntigo(email, btn);
+      });
+    } else {
+      // HTTP ? usa método antigo compatível
+      copiarAntigo(email, btn);
+    }
+  });
+});
+}
+
+
+
+// Função de cópia compatível com servidores HTTP
+function copiarAntigo(texto, btn) {
+  const tempInput = document.createElement('textarea');
+  tempInput.value = texto;
+  tempInput.style.position = 'fixed';
+  tempInput.style.left = '-9999px';
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  try {
+    const sucesso = document.execCommand('copy');
+    if (sucesso) {
+      mostrarPopup();
+      btn.textContent = 'Copiado!';
+      setTimeout(() => btn.textContent = 'Copiar E-mail', 2000);
+    } else {
+      alert('Não foi possível copiar. Copie manualmente.');
+    }
+  } catch (err) {
+    alert('Erro ao copiar. Copie manualmente.');
+  }
+  document.body.removeChild(tempInput);
+}
+atualizarDashboard(dadosFixos);
+
+
+function mostrarPopup() {
+  const popup = document.getElementById('copyPopup');
+  const particlesContainer = document.getElementById('popupParticles');
+
+  // Remove partículas antigas
+  particlesContainer.innerHTML = '';
+
+  // Cria partículas dinâmicas
+  for (let i = 0; i < 25; i++) {
+    const particle = document.createElement('div');
+    particle.style.position = 'absolute';
+    particle.style.width = `${2 + Math.random() * 4}px`;
+    particle.style.height = particle.style.width;
+    particle.style.background = `rgba(0, 255, 255, ${0.4 + Math.random() * 0.6})`;
+    particle.style.borderRadius = '50%';
+    particle.style.top = '50%';
+    particle.style.left = '50%';
+    particle.style.transform = `translate(-50%, -50%)`;
+    particlesContainer.appendChild(particle);
+
+    // Anima cada partícula com expansão aleatória
+    const x = (Math.random() - 0.5) * 400;
+    const y = (Math.random() - 0.5) * 400;
+    particle.animate([
+      { transform: `translate(-50%, -50%) scale(1)`, opacity: 1 },
+      { transform: `translate(${x}px, ${y}px) scale(0)`, opacity: 0 }
+    ], {
+      duration: 1200 + Math.random() * 600,
+      easing: 'ease-out',
+      fill: 'forwards'
+    });
+  }
+
+  // Mostra popup com animações
+  popup.classList.add('show');
+  setTimeout(() => popup.classList.remove('show'), 2200);
+}
+
+
+function atualizarDataHora() {
+  const agora = new Date();
+
+  // Hora formatada
+  const horas = String(agora.getHours()).padStart(2, '0');
+  const minutos = String(agora.getMinutes()).padStart(2, '0');
+  const segundos = String(agora.getSeconds()).padStart(2, '0');
+
+  // Data formatada
+  const diasSemana = [
+    "Domingo", "Segunda-feira", "Terça-feira",
+    "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"
+  ];
+  const meses = [
+    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ];
+  const diaSemana = diasSemana[agora.getDay()];
+  const dia = agora.getDate();
+  const mes = meses[agora.getMonth()];
+  const ano = agora.getFullYear();
+
+  // Turno
+  const turno =
+    horas >= 6 && horas < 12
+      ? "🌅 Manhã"
+      : horas >= 12 && horas < 18
+      ? "🌇 Tarde"
+      : "🌙 Noite";
+
+  // Atualiza o conteúdo no mesmo card
+  const timeCard = document.getElementById('time-card');
+  timeCard.innerHTML = `
+    <div style="font-size:1.8rem; font-weight:bold;">${horas}:${minutos}:${segundos}</div>
+    <div style="font-size:1.1rem; margin-top:5px;">${diaSemana}, ${dia} de ${mes} de ${ano}</div>
+    <div style="font-size:1rem; margin-top:8px; opacity:0.9;">${turno}</div>
+  `;
+}
+
+// Atualiza continuamente
+setInterval(atualizarDataHora, 1000);
+atualizarDataHora();
+
+
+
+(function(){
+  const overlay = document.createElement('div');
+  overlay.className = 'email-overlay';
+  document.body.appendChild(overlay);
+
+  document.addEventListener('mouseover', e => {
+    const el = e.target.closest('.email-text');
+    if (!el) return;
+
+    overlay.textContent = el.textContent.trim();
+
+    const rect = el.getBoundingClientRect();
+    const padding = 15;
+
+    let left = rect.left + (rect.width / 2) - 200;
+    let top = rect.top - 100;
+
+    if (top < 20) top = rect.bottom + padding;
+    if (left < 20) left = 20;
+    if (left + 450 > window.innerWidth) left = window.innerWidth - 470;
+
+    overlay.style.left = `${left}px`;
+    overlay.style.top = `${top}px`;
+
+    requestAnimationFrame(() => overlay.classList.add('show'));
+  });
+
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest('.email-text')) overlay.classList.remove('show');
+  });
+})();
+
+setInterval(atualizarHora,1000);
+atualizarHora();
+atualizarData();
+</script>
+</body>
+</html>

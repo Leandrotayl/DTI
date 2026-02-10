@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Painel de Colaboradores</title>
+<link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3132/3132083.png">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&family=Open+Sans:wght@400;600&display=swap');
+
+:root{
+  --bg1:#0b0c10; --bg2:#1f2833; --neon:#66fcf1;
+  --nome-dup:#f1f100; --ramal-dup:#ff4c4c; --both-dup:#b349ff;
+}
+
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Open Sans',sans-serif;}
+body{
+  background: radial-gradient(circle at top left, var(--bg1), var(--bg2));
+  color:#fff; min-height:100vh; overflow-x:hidden;
+}
+body::before{
+  content:""; position:fixed; inset:0; background:url('https://i.ibb.co/Qm1p4rV/particles.png') repeat; opacity:0.04; z-index:0;
+}
+
+header{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:18px 24px; background:rgba(11,12,16,0.95);
+  position:sticky; top:0; z-index:100; box-shadow:0 3px 12px rgba(0,0,0,0.6);
+}
+header h1{ font-family:'Orbitron',sans-serif; color:var(--neon); font-size:1.5rem; text-shadow:0 0 8px #66fcf1;}
+header .actions-header{
+  display:flex; gap:12px; align-items:center;
+}
+header .actions-header input{
+  padding:8px 12px; border-radius:6px; border:1px solid rgba(102,252,241,0.3);
+  background: rgba(31,40,51,0.85); color:#fff; font-size:0.9rem; outline:none;
+  transition:0.2s;
+}
+header .actions-header input:focus{ border-color:var(--neon); box-shadow:0 0 8px var(--neon);}
+
+.container{ max-width:1400px; margin:16px auto; padding:16px; position:relative; z-index:1; }
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap:12px;
+}
+
+.card{
+  background: rgba(31,40,51,0.85); border-radius:14px; padding:16px; text-align:center;
+  box-shadow:0 8px 24px rgba(0,0,0,0.5); transition: all 0.25s ease, box-shadow 0.25s ease;
+  position:relative; opacity:0; transform:translateY(20px);
+  animation:fadeIn 0.5s forwards;
+}
+.card:hover{
+  transform:translateY(-8px) scale(1.03);
+  box-shadow:0 0 20px var(--neon),0 0 40px var(--neon),0 8px 40px rgba(0,0,0,0.7);
+}
+.card img{
+  width:72px; height:72px; object-fit:cover; border-radius:50%; border:2px solid var(--neon); margin-bottom:10px;
+}
+.card h3{ color:var(--neon); margin:6px 0; font-size:1rem; text-shadow:0 0 6px #66fcf1;}
+.card p{ margin:2px 0; color:rgba(230,247,246,0.85); font-size:0.85rem; }
+
+@keyframes fadeIn{0%{opacity:0;}100%{opacity:1;}}
+@keyframes slideUp{0%{opacity:0; transform:translateY(20px);}100%{opacity:1; transform:translateY(0);}}
+
+@media(max-width:1400px){ .grid{ grid-template-columns: repeat(10,1fr); } }
+@media(max-width:1200px){ .grid{ grid-template-columns: repeat(8,1fr); } }
+@media(max-width:1024px){ .grid{ grid-template-columns: repeat(6,1fr); } }
+@media(max-width:768px){ .grid{ grid-template-columns: repeat(3,1fr); } }
+@media(max-width:480px){ .grid{ grid-template-columns: repeat(2,1fr); } }
+</style>
+</head>
+<body>
+<header>
+  <h1> Colaboradores de T.I </h1>
+  <div class="actions-header">
+    <input type="text" id="searchInput" placeholder="Pesquisar..."/>
+  </div>
+</header>
+
+<main class="container">
+  <div class="grid" id="listaColaboradores"></div>
+</main>
+
+<script>
+let colaboradores = [
+  { nome: 'Leandro ', ramal: '868642', setor: 'Gerencia de Suporte', foto: 'https://i.ibb.co/7pBv4yF/user.png' },
+  { nome: 'Anna Braz', ramal: '102', setor: 'Gerencia de Infra', foto: 'https://i.ibb.co/7pBv4yF/user.png' },
+  { nome: 'Carlos Lima', ramal: '103', setor: 'Gerencia de Desenvolvimento', foto: 'https://i.ibb.co/7pBv4yF/user.png' },
+  { nome: 'Ana Souza', ramal: '104', setor: 'Gerencia de Suporte', foto: 'https://i.ibb.co/7pBv4yF/user.png' },
+];
+
+const listaEl = document.getElementById('listaColaboradores');
+
+function escapeHtml(s=''){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function capitalizeName(str){return str.replace(/\b\w/g,c=>c.toUpperCase()); }
+
+function render(filter=''){
+  listaEl.innerHTML='';
+  const filtered = colaboradores.filter(c => (c.nome + c.ramal + c.setor).toLowerCase().includes(filter.toLowerCase()));
+  filtered.sort((a,b)=> a.nome.localeCompare(b.nome,'pt',{sensitivity:'base'}));
+
+  const nomesCount = {}; const ramaisCount = {};
+  colaboradores.forEach(c => { nomesCount[c.nome.toLowerCase()] = (nomesCount[c.nome.toLowerCase()]||0)+1; ramaisCount[c.ramal] = (ramaisCount[c.ramal]||0)+1; });
+
+  if(!filtered.length){
+    listaEl.innerHTML='<div style="grid-column:1/-1;text-align:center;color:rgba(255,255,255,0.3);padding:20px">Nenhum colaborador encontrado</div>'; 
+    return;
+  }
+
+  filtered.forEach(c => {
+    const card = document.createElement('div'); 
+    card.className = 'card';
+    const nomeDup = nomesCount[c.nome.toLowerCase()]>1; 
+    const ramalDup = ramaisCount[c.ramal]>1;
+    if(nomeDup && ramalDup) card.style.border = `2px solid var(--both-dup)`;
+    else if(nomeDup) card.style.border = `2px solid var(--nome-dup)`;
+    else if(ramalDup) card.style.border = `2px solid var(--ramal-dup)`;
+    
+    card.innerHTML = `<img src="${c.foto||'https://i.ibb.co/7pBv4yF/user.png'}" alt="Foto">
+      <h3>${escapeHtml(c.nome)}</h3>
+      <p>Ramal: ${escapeHtml(c.ramal)}</p>
+      <p>Setor: ${escapeHtml(c.setor)}</p>`;
+    listaEl.appendChild(card);
+  });
+}
+
+document.getElementById('searchInput').oninput = (e)=> render(e.target.value);
+
+render();
+</script>
+</body>
+</html>

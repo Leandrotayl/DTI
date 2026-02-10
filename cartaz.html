@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login - Sistema de Cartazes</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Orbitron', sans-serif;
+  background: radial-gradient(circle at top, #050d1a, #000);
+  color: #fff;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Fundo com partículas */
+canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+.container {
+  background: rgba(20, 20, 40, 0.85);
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 0 0 25px #0ff;
+  width: 320px;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  animation: fadeIn 1.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #00ffff;
+  text-shadow: 0 0 8px #00ffff;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 8px;
+  background: #111;
+  color: #0ff;
+  font-family: 'Orbitron';
+  text-align: center;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: 0 0 10px #0ff;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #0ff, #00f);
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #0ff;
+}
+
+small {
+  display: block;
+  margin-top: 15px;
+  color: #888;
+  cursor: pointer;
+}
+
+.error {
+  color: #ff4444;
+  font-size: 13px;
+  margin-top: 5px;
+  min-height: 20px;
+}
+</style>
+</head>
+<body>
+
+<canvas id="particles"></canvas>
+
+<div class="container" id="login-container">
+  <h2>Login</h2>
+  <input type="email" id="email" placeholder="Email corporativo" required>
+  <input type="password" id="senha" placeholder="Senha" required>
+  <div class="error" id="loginErro"></div>
+  <button onclick="login()">Entrar</button>
+  <small onclick="mostrarCadastro()">Primeiro acesso? Criar usuário</small>
+</div>
+
+<div class="container" id="cadastro-container" style="display:none;">
+  <h2>Criar Usuário</h2>
+  <input type="email" id="novoEmail" placeholder="Email corporativo" required>
+  <input type="password" id="novaSenha" placeholder="Crie uma senha" required>
+  <div class="error" id="cadastroErro"></div>
+  <button onclick="criarUsuario()">Cadastrar</button>
+  <small onclick="mostrarLogin()">Voltar ao login</small>
+</div>
+
+<script>
+// Fundo com partículas leves
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resize() {
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+for (let i = 0; i < 70; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    dx: (Math.random() - 0.5) * 1.2,
+    dy: (Math.random() - 0.5) * 1.2,
+    r: Math.random() * 2
+  });
+}
+
+function drawParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.fillStyle = '#0ff';
+  particles.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    ctx.fill();
+    p.x += p.dx;
+    p.y += p.dy;
+    if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+    if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
+  });
+  requestAnimationFrame(drawParticles);
+}
+drawParticles();
+
+// Alternar telas
+function mostrarCadastro() {
+  document.getElementById('login-container').style.display = 'none';
+  document.getElementById('cadastro-container').style.display = 'block';
+}
+function mostrarLogin() {
+  document.getElementById('cadastro-container').style.display = 'none';
+  document.getElementById('login-container').style.display = 'block';
+}
+
+// Criar novo usuário
+function criarUsuario() {
+  const email = document.getElementById('novoEmail').value.trim();
+  const senha = document.getElementById('novaSenha').value.trim();
+  const erro = document.getElementById('cadastroErro');
+
+  if (!email.endsWith('@armazemparaiba.com.br')) {
+    erro.textContent = "Use apenas email corporativo @armazemparaiba.com.br";
+    return;
+  }
+
+  if (senha.length < 4) {
+    erro.textContent = "A senha deve ter pelo menos 4 caracteres.";
+    return;
+  }
+
+  if (localStorage.getItem(email)) {
+    erro.textContent = "Usuário já cadastrado.";
+    return;
+  }
+
+  localStorage.setItem(email, senha);
+  erro.style.color = "#0f0";
+  erro.textContent = "Usuário criado com sucesso!";
+  setTimeout(mostrarLogin, 1500);
+}
+
+// Login
+function login() {
+  const email = document.getElementById('email').value.trim();
+  const senha = document.getElementById('senha').value.trim();
+  const erro = document.getElementById('loginErro');
+
+  const senhaSalva = localStorage.getItem(email);
+  if (senhaSalva && senhaSalva === senha) {
+    erro.style.color = "#0f0";
+    erro.textContent = "Login realizado!";
+    setTimeout(() => window.location.href = "cartaz.html", 1000);
+  } else {
+    erro.textContent = "Email ou senha inválidos.";
+  }
+}
+</script>
+
+</body>
+</html>
