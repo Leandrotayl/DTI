@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Editor de PDF Avançado</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
+
+<style>
+body{
+    background:#0f172a;
+    color:#fff;
+    text-align:center;
+    font-family:Arial;
+}
+
+header{
+    padding:10px;
+    background:#020617;
+}
+
+canvas{
+    border:2px solid #38bdf8;
+    margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h2>✏️ Substituir Texto no PDF</h2>
+    <input type="file" id="uploadPDF">
+</header>
+
+<canvas id="canvas"></canvas>
+
+<script>
+
+let canvas = new fabric.Canvas('canvas');
+let pdfDoc = null;
+
+document.getElementById('uploadPDF').addEventListener('change', function(e){
+    const file = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.onload = function(){
+        const typedarray = new Uint8Array(this.result);
+
+        pdfjsLib.getDocument(typedarray).promise.then(function(pdf){
+            pdfDoc = pdf;
+            renderPage(1);
+        });
+    };
+
+    reader.readAsArrayBuffer(file);
+});
+
+function renderPage(num){
+    pdfDoc.getPage(num).then(function(page){
+
+        const viewport = page.getViewport({scale:1.5});
+        const canvasEl = document.getElementById('canvas');
+        const context = canvasEl.getContext('2d');
+
+        canvasEl.height = viewport.height;
+        canvasEl.width = viewport.width;
+
+        page.render({
+            canvasContext: context,
+            viewport: viewport
+        }).promise.then(()=>{
+
+            let bg = canvasEl.toDataURL("image/png");
+
+            fabric.Image.fromURL(bg, function(img){
+                canvas.setWidth(canvasEl.width);
+                canvas.setHeight(canvasEl.height);
+
+                canvas.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+                    scaleX: canvas.width / img.width,
+                    scaleY: canvas.height / img.height
+                });
+            });
+        });
+    });
+}
+
+// 🧠 Clique e substituição
+canvas.on('mouse:down', function(opt){
+    const pointer = canvas.getPointer(opt.e);
+
+    let textoNovo = prompt("Novo texto:");
+
+    if(textoNovo){
+
+        // Apaga "linha" (retângulo branco)
+        let rect = new fabric.Rect({
+            left: pointer.x,
+            top: pointer.y,
+            width: 200,
+            height: 25,
+            fill: '#ffffff'
+        });
+
+        canvas.add(rect);
+
+        // Novo texto
+        let text = new fabric.Text(textoNovo, {
+            left: pointer.x + 5,
+            top: pointer.y + 5,
+            fill: '#000',
+            fontSize: 16
+        });
+
+        canvas.add(text);
+    }
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,772 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Estoque Pulmão - Impressoras</title>
+
+<style>
+
+body{
+font-family: Arial;
+background: linear-gradient(135deg,#1e3c72,#2a5298);
+margin:0;
+padding:20px;
+color:white;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+font-size:20px;
+font-weight:700;
+letter-spacing:0.5px;
+}
+
+.menu{
+text-align:center;
+margin-bottom:20px;
+}
+
+.menu button{
+padding:9px 18px;
+border:none;
+border-radius:7px;
+background:linear-gradient(135deg,#2a5298,#1e3c72);
+color:white;
+font-weight:600;
+font-size:13px;
+cursor:pointer;
+transition:0.25s;
+box-shadow:0 6px 15px rgba(0,0,0,0.25);
+}
+
+button:hover{
+transform:translateY(-2px);
+box-shadow:0 10px 20px rgba(0,0,0,0.35);
+}
+
+.modal-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.6);
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:2000;
+opacity:0;
+pointer-events:none;
+transition:0.3s;
+}
+
+.modal-overlay.ativo{
+opacity:1;
+pointer-events:auto;
+}
+
+.modal-box{
+background:white;
+color:black;
+padding:30px;
+border-radius:14px;
+width:320px;
+text-align:center;
+box-shadow:0 20px 50px rgba(0,0,0,0.4);
+}
+
+.modal-icon{
+font-size:40px;
+margin-bottom:10px;
+}
+
+.modal-buttons{
+display:flex;
+gap:10px;
+justify-content:center;
+margin-top:20px;
+}
+
+.modal-buttons button{
+padding:10px 16px;
+border:none;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.btn-cancelar{
+background:#ccc;
+color:black;
+}
+
+.btn-confirmar{
+background:#2a5298;
+color:white;
+}
+
+.form-container{
+background:rgba(255,255,255,0.95);
+color:black;
+padding:16px 18px;
+border-radius:14px;
+box-shadow:0 15px 40px rgba(0,0,0,0.35);
+max-width:440px;
+margin:auto;
+margin-bottom:20px;
+border-top:4px solid #2a5298;
+}
+
+.titulo-secao{
+grid-column:1 / 3;
+font-weight:bold;
+font-size:18px;
+color:#2a5298;
+border-bottom:2px solid #2a5298;
+padding-bottom:5px;
+margin-top:10px;
+margin-bottom:10px;
+}
+
+.dashboard-cards{
+position:fixed;
+top:20px;
+right:20px;
+display:flex;
+gap:10px;
+}
+
+.card{
+background:white;
+color:black;
+padding:12px 18px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.3);
+font-weight:bold;
+min-width:120px;
+text-align:center;
+}
+
+.card span{
+display:block;
+font-size:22px;
+color:#2a5298;
+margin-top:5px;
+}
+
+.dashboard{
+background:white;
+color:black;
+padding:20px;
+border-radius:10px;
+box-shadow:0 10px 30px rgba(0,0,0,0.3);
+width:100%;
+}
+
+.form-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:7px;
+}
+
+.full{
+grid-column:1 / 3;
+}
+
+.linha-estoque{
+background:#e3f2fd;
+}
+
+.linha-enviada{
+background:#d4edda;
+}
+
+table{
+width:100%;
+margin-top:20px;
+border-collapse:collapse;
+background:white;
+border-radius:10px;
+overflow:hidden;
+box-shadow:0 10px 25px rgba(0,0,0,0.25);
+}
+
+th{
+background:linear-gradient(135deg,#2a5298,#1e3c72);
+color:white;
+font-size:13px;
+letter-spacing:0.4px;
+}
+
+th,td{
+padding:12px;
+border-bottom:1px solid #eee;
+text-align:center;
+font-size:13px;
+}
+
+tr:hover{
+background:#f4f8ff;
+transition:0.2s;
+}
+
+label{
+font-weight:600;
+font-size:13px;
+color:#2a5298;
+}
+
+input, select{
+width:100%;
+padding:7px 9px;
+margin-top:3px;
+margin-bottom:8px;
+border-radius:6px;
+border:1px solid #d0d7de;
+background:#f8fafc;
+font-size:13px;
+}
+
+button{
+padding:10px 20px;
+border:none;
+border-radius:8px;
+background:linear-gradient(135deg,#2a5298,#1e3c72);
+color:white;
+font-weight:600;
+font-size:13px;
+cursor:pointer;
+transition:0.2s;
+box-shadow:0 5px 12px rgba(0,0,0,0.25);
+}
+
+button:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 18px rgba(0,0,0,0.35);
+}
+
+.editar{
+background:linear-gradient(135deg,#28a745,#1e7e34);
+}
+
+.remover{
+background:linear-gradient(135deg,#ff4d4d,#cc0000);
+}
+
+.card-total{
+position:fixed;
+top:20px;
+left:20px;
+background:white;
+color:black;
+padding:12px 18px;
+border-radius:10px;
+box-shadow:0 5px 15px rgba(0,0,0,0.3);
+font-weight:bold;
+min-width:160px;
+text-align:center;
+}
+
+.card-total span{
+display:block;
+font-size:24px;
+color:#2a5298;
+margin-top:5px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- MODAL CONFIRMAÇÃO EXCLUSÃO -->
+
+<div id="modalExcluir" class="modal-overlay">
+
+<div class="modal-box">
+
+<div class="modal-icon">🗑️</div>
+
+<h2>Confirmar Exclusão</h2>
+
+<p>Tem certeza que deseja excluir esta impressora?<br>
+Essa ação não poderá ser desfeita.</p>
+
+<div class="modal-buttons">
+
+<button class="btn-cancelar" onclick="fecharModalExcluir()">Cancelar</button>
+
+<button class="btn-confirmar" style="background:red" onclick="confirmarExclusao()">Excluir</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- MODAL CONFIRMAÇÃO EDIÇÃO -->
+
+<div id="modalEditar" class="modal-overlay">
+
+<div class="modal-box">
+
+<div class="modal-icon">✏️</div>
+
+<h2>Confirmar Edição</h2>
+
+<p>Deseja realmente editar os dados desta impressora?</p>
+
+<div class="modal-buttons">
+
+<button class="btn-cancelar" onclick="fecharModalEditar()">Cancelar</button>
+
+<button class="btn-confirmar" onclick="confirmarEdicao()">Editar Impressora</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="card-total">
+TOTAL EM ESTOQUE
+<span id="totalEstoque">0</span>
+</div>
+
+<div class="menu">
+<button onclick="mostrarCadastro()">Cadastro</button>
+<button onclick="mostrarMonitor()">Monitoramento</button>
+</div>
+
+<div class="dashboard-cards">
+
+  
+<div class="card">
+HP
+<span id="totalHP">0</span>
+</div>
+
+<div class="card">
+XEROX
+<span id="totalXerox">0</span>
+</div>
+
+<div class="card">
+EPSON
+<span id="totalEpson">0</span>
+</div>
+
+<div class="card">
+ENVIADAS
+<span id="totalEnviadas">0</span>
+</div>
+
+</div>
+
+<!-- CADASTRO -->
+
+<div id="telaCadastro">
+
+<h1>Cadastro de Impressoras</h1>
+
+<div class="form-container">
+
+<div class="form-grid">
+
+<div class="titulo-secao">Dados da Impressora</div>
+
+<div>
+<label>Tag</label>
+<input id="tag" value="CSAXXXIMPXX">
+</div>
+
+<div>
+<label>Status</label>
+<input id="status" value="Estoque" readonly>
+</div>
+
+<div>
+<label>Fabricante</label>
+<select id="fabricante" onchange="copiarModelo()">
+<option value="" selected disabled>Selecione o fabricante</option>
+<option>HP 4103</option>
+<option>Xerox 3330</option>
+<option>Xerox 3335</option>
+<option>Epson</option>
+</select>
+</div>
+
+<div>
+<label>Modelo</label>
+<input id="modelo">
+</div>
+
+<div>
+<label>Inventário TI</label>
+<input id="inventario">
+</div>
+
+<div>
+<label>Nº Série</label>
+<input id="serie">
+</div>
+
+<div class="titulo-secao">Destino</div>
+
+<div class="full">
+<label>Loja Destino</label>
+<input id="loja" onkeyup="atualizarStatus()">
+</div>
+
+<div>
+<label>ID ServiceDesk</label>
+<input id="serviceDesk">
+</div>
+
+<div>
+<label>Nº da RUC</label>
+<input id="ruc">
+</div>
+
+<div class="full">
+<button onclick="salvar()">Salvar Impressora</button>
+</div>
+
+</div>
+</div>
+
+</div>
+
+<!-- MONITORAMENTO -->
+
+<div id="telaMonitor" style="display:none">
+
+<h1>Monitoramento de Impressoras</h1>
+
+<div class="dashboard">
+
+<table>
+
+<thead>
+
+<tr>
+<th>Tag</th>
+<th>Status</th>
+<th>Inventário</th>
+<th>Número de Série</th>
+<th>Modelo</th>
+<th>Loja Destino</th>
+<th>Fabricante</th>
+<th>ID ServiceDesk</th>
+<th>Nº da RUC</th>
+<th>Ação</th>
+</tr>
+
+</thead>
+
+<tbody id="tabela"></tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<script>
+
+let dados = JSON.parse(localStorage.getItem("estoqueImpressoras")) || []
+let editIndex = -1
+
+function mostrarCadastro(){
+
+document.getElementById("telaCadastro").style.display="block"
+document.getElementById("telaMonitor").style.display="none"
+
+}
+
+function mostrarMonitor(){
+
+document.getElementById("telaCadastro").style.display="none"
+document.getElementById("telaMonitor").style.display="block"
+
+listar()
+
+}
+
+function salvar(){
+
+let tag = document.getElementById("tag").value.trim().toUpperCase()
+let fabricante = document.getElementById("fabricante").value
+let modelo = document.getElementById("modelo").value.trim()
+let inventario = document.getElementById("inventario").value.trim()
+let serie = document.getElementById("serie").value.trim()
+let loja = document.getElementById("loja").value.trim().toUpperCase()
+
+if(!tag){
+alert("Informe a TAG da impressora")
+return
+}
+
+if(!fabricante){
+alert("Selecione o fabricante")
+return
+}
+
+if(!modelo){
+alert("Informe o modelo")
+return
+}
+
+let impressora = {
+
+tag: tag,
+status: loja ? "Enviada" : "Estoque",
+inventario: inventario || "-",
+serie: serie || "-",
+modelo: modelo,
+loja: loja || "-",
+fabricante: fabricante,
+serviceDesk: document.getElementById("serviceDesk").value || "-",
+ruc: document.getElementById("ruc").value || "-"
+
+}
+
+if(editIndex === -1){
+
+let existe = dados.find(d => d.tag === tag)
+
+if(existe){
+alert("⚠️ Essa TAG já está cadastrada!")
+return
+}
+
+dados.push(impressora)
+
+}else{
+
+dados[editIndex] = impressora
+editIndex = -1
+
+}
+
+localStorage.setItem("estoqueImpressoras",JSON.stringify(dados))
+
+listar()
+limpar()
+
+}
+
+function listar(){
+
+let tabela = document.getElementById("tabela")
+
+tabela.innerHTML = dados.map((d,i)=>{
+
+let classe = (!d.loja || d.loja === "-") ? "linha-estoque" : "linha-enviada"
+
+return `
+<tr class="${classe}">
+<td>${d.tag}</td>
+<td>${d.status}</td>
+<td>${d.inventario}</td>
+<td>${d.serie}</td>
+<td>${d.modelo}</td>
+<td>${d.loja}</td>
+<td>${d.fabricante}</td>
+<td>${d.serviceDesk}</td>
+<td>${d.ruc}</td>
+<td>
+<button class="editar" onclick="abrirModalEditar(${i})">Editar</button>
+<button class="remover" onclick="abrirModalExcluir(${i})">Excluir</button>
+</td>
+</tr>
+`
+
+}).join("")
+
+atualizarContador()
+atualizarCards()
+
+}
+
+function editar(i){
+
+let d = dados[i]
+
+mostrarCadastro()
+
+document.getElementById("tag").value = d.tag
+document.getElementById("inventario").value = d.inventario
+document.getElementById("serie").value = d.serie
+document.getElementById("modelo").value = d.modelo
+document.getElementById("loja").value = d.loja
+document.getElementById("fabricante").value = d.fabricante
+document.getElementById("serviceDesk").value = d.serviceDesk
+document.getElementById("ruc").value = d.ruc
+
+editIndex = i
+
+}
+
+function remover(i){
+
+
+dados.splice(i,1)
+
+localStorage.setItem("estoqueImpressoras",JSON.stringify(dados))
+
+listar()
+
+}
+
+
+
+function atualizarContador(){
+
+let total = 0
+let enviadas = 0
+
+dados.forEach(d => {
+
+if(!d.loja || d.loja === "-"){
+total++
+}else{
+enviadas++
+}
+
+})
+
+document.getElementById("totalEstoque").innerText = total
+document.getElementById("totalEnviadas").innerText = enviadas
+
+}
+
+let indiceExcluir = null
+
+function abrirModalExcluir(i){
+
+indiceExcluir = i
+
+document.getElementById("modalExcluir").classList.add("ativo")
+
+}
+
+function atualizarStatus(){
+
+let loja = document.getElementById("loja").value
+let status = document.getElementById("status")
+
+if(loja){
+status.value = "Enviada"
+}else{
+status.value = "Estoque"
+}
+
+}
+
+function fecharModalExcluir(){
+
+document.getElementById("modalExcluir").classList.remove("ativo")
+
+}
+
+function confirmarExclusao(){
+
+dados.splice(indiceExcluir,1)
+
+localStorage.setItem("estoqueImpressoras",JSON.stringify(dados))
+
+listar()
+
+fecharModalExcluir()
+
+}
+
+function atualizarCards(){
+
+let hp = 0
+let xerox = 0
+let epson = 0
+
+dados.forEach(d=>{
+
+if(d.loja && d.loja !== "-") return
+
+let fab = d.fabricante.toLowerCase()
+
+if(fab.includes("hp")) hp++
+if(fab.includes("xerox")) xerox++
+if(fab.includes("epson")) epson++
+
+})
+
+document.getElementById("totalHP").innerText = hp
+document.getElementById("totalXerox").innerText = xerox
+document.getElementById("totalEpson").innerText = epson
+
+}
+
+let indiceEditar = null
+
+function abrirModalEditar(i){
+
+indiceEditar = i
+
+document.getElementById("modalEditar").classList.add("ativo")
+
+}
+
+function fecharModalEditar(){
+
+document.getElementById("modalEditar").classList.remove("ativo")
+
+}
+
+function confirmarEdicao(){
+
+fecharModalEditar()
+
+editar(indiceEditar)
+
+}
+
+function copiarModelo(){
+
+let fabricante = document.getElementById("fabricante").value
+let campoModelo = document.getElementById("modelo")
+
+if(fabricante){
+campoModelo.value = fabricante
+}else{
+campoModelo.value = ""
+}
+
+}
+
+function limpar(){
+
+document.getElementById("tag").value="CSAXXXIMPXX"
+document.getElementById("inventario").value=""
+document.getElementById("serie").value=""
+document.getElementById("modelo").value=""
+document.getElementById("loja").value=""
+document.getElementById("fabricante").value=""
+document.getElementById("serviceDesk").value=""
+document.getElementById("ruc").value=""
+
+}
+
+window.onload = function(){
+listar()
+atualizarCards()
+atualizarContador()
+}
+
+</script>
+
+</body>
+</html>

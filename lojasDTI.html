@@ -1,0 +1,2104 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel de Regionais</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+  background: url('http://172.16.2.7/DTI/img/1.png') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+}
+
+/* Container ocupa toda a largura */
+.container { 
+  max-width: 100%;
+  margin: 20px auto; 
+  padding: 0 20px; 
+}
+
+/* Pesquisa */
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.search-container input {
+  width: 50%;
+  max-width: 400px;
+  min-width: 250px;
+  padding: 12px 20px;
+  font-size: 0.95em;
+  border-radius: 25px;
+  background: rgba(255, 204, 0, 0.2); /* fundo mais claro */
+  color: #1a1a1a; /* letras escuras para contraste */
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(255, 204, 0, 0.6), inset 0 0 6px rgba(255, 204, 0, 0.4);
+  transition: all 0.3s;
+}
+
+.search-container input::placeholder {
+  color: #1a1a1a; /* placeholder mais vis vel */
+  font-weight: 500;
+  opacity: 0.8;
+}
+
+.search-container input:focus {
+  background: #fffbcc; /* amarelo claro ao focar */
+  box-shadow: 0 0 18px rgba(255, 204, 0, 0.8), inset 0 0 8px rgba(255, 204, 0, 0.5);
+  outline: none;
+}
+
+
+/* Tabela de resultados elegante */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  margin-top: 20px;
+  font-size: 0.95em;
+}
+thead th {
+  background: #ffcc00;
+  color: #1a1a1a;
+  font-weight: 700;
+  padding: 12px 10px;
+  text-align: center; /* CENTRALIZADO */
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+tbody tr {
+  background: #2a2a2a;
+  color: #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+tbody tr:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px rgba(0,0,0,0.6);
+}
+
+tbody td {
+  padding: 10px;
+  text-align: center; /* CENTRALIZA OS DADOS */
+  vertical-align: middle;
+}
+
+tbody td { padding: 10px; }
+.action-btn {
+  padding: 6px 12px;
+  margin: 2px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #fff;
+}
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+/* ================= BOTÃO VOLTAR ESTILIZADO ================= */
+.back-btn {
+  margin-bottom: 20px;
+  padding: 12px 26px;          /* maior padding */
+  background: #ffcc00;         /* mantém cor amarela */
+  color: #1a1a1a;              /* letras escuras */
+  border: none;
+  border-radius: 18px;         /* cantos mais arredondados */
+  font-weight: 700;
+  font-size: 1em;              /* texto um pouco maior */
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.4), 0 0 10px #ffcc00 inset; /* sombra moderna */
+}
+
+/* Efeito hover */
+.back-btn:hover {
+  background: linear-gradient(135deg, #ffd633, #ffb700); /* degradê suave */
+  transform: translateY(-3px) scale(1.05);               /* animação sutil */
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 15px #ffcc00 inset; /* mais destaque */
+}
+
+/* Efeito clique rápido */
+.back-btn:active {
+  transform: translateY(-1px) scale(0.98); /* leve feedback ao clicar */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4), 0 0 8px #ffcc00 inset;
+}
+.top-left, .top-right {
+  position: fixed;
+  top: 4px;
+  z-index: 1000;
+  font-family: 'Poppins', sans-serif;
+}
+.top-left { left: 20px; }
+.top-right { right: 20px; }
+
+.card-dispositivo, 
+
+/* Quadro de resumo mais forte */
+.cards-resumo {
+  display: grid;
+  grid-template-columns: repeat(2, 70px);
+  gap: 6px;
+  padding: 6px;
+  border: 2px solid #ffcc00;
+  border-radius: 12px;
+  background: rgba(255,204,0,0.05);
+  box-shadow: 0 0 10px #ffcc00, 0 0 20px rgba(255,204,0,0.3);
+
+  /* NOVO: posicionamento fixo no topo direito */
+  position: fixed;
+  top: 2px;      /* distância do topo */
+  right: 6px;    /* distância da lateral direita */
+  z-index: 1000;  /* para ficar acima do resto */
+}
+
+
+.card .badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #ffcc00;
+  color: #1a1a1a;
+  font-size: 0.85em;
+  font-weight: 700;
+  width: 32px;       /* tamanho maior e quadrado */
+  height: 32px;      /* igual   largura para ficar quadrado */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px; /* cantos arredondados */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 10px #ffcc00 inset;
+}
+
+
+
+/* Cards internos menores */
+.card-mini {
+  background:#2a2a2a;
+  border-radius:10px;
+  padding:8px 6px;
+  text-align:center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4), 0 0 4px #ffcc00 inset;
+  cursor: default;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-mini:hover {
+  transform:translateY(-1px);
+  box-shadow:0 6px 12px rgba(0,0,0,0.6),0 0 6px #ffcc00 inset;
+}
+
+.card-mini span {
+  display:block;
+  font-size:0.7em; /* menor para caber no card */
+  color:#ffd966;
+  margin-bottom:2px;
+  text-transform: uppercase;
+  letter-spacing:0.5px;
+  font-weight:600;
+}
+
+.card-mini h2 {
+  font-size:1.1em; /* proporcional ao card menor */
+  font-weight:700;
+  color:#ffcc00;
+  margin:0;
+  text-shadow:1px 1px 3px #000;
+}
+
+/* Atualizado em */
+#atualizado {
+  font-size:0.6em;
+  color:#ffd966;
+  text-align:center;
+  letter-spacing:0.5px;
+  margin-top:2px;
+}
+
+.cards-dispositivo-resumo {
+  display: grid;
+  grid-template-columns: repeat(2, 70px); /* mesmo tamanho do resumo */
+  gap: 6px;
+  padding: 6px;
+  border: 2px solid #ffcc00;
+  border-radius: 12px;
+  background: rgba(255,204,0,0.05);
+  box-shadow: 0 0 10px #ffcc00, 0 0 20px rgba(255,204,0,0.3);
+}
+
+/* Cards internos */
+.card-mini-dispositivo {
+  background:#2a2a2a;
+  border-radius:10px;
+  padding:8px 6px;
+  text-align:center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4), 0 0 4px #ffcc00 inset;
+  cursor: default;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-mini-dispositivo:hover {
+  transform:translateY(-1px);
+  box-shadow:0 6px 12px rgba(0,0,0,0.6),0 0 6px #ffcc00 inset;
+}
+
+.card-mini-dispositivo span {
+  display:block;
+  font-size:0.7em; 
+  color:#ffd966;
+  margin-bottom:2px;
+  text-transform: uppercase;
+  letter-spacing:0.5px;
+  font-weight:600;
+}
+
+.card-mini-dispositivo h2 {
+  font-size:1.1em; 
+  font-weight:700;
+  color:#ffcc00;
+  margin:0;
+  text-shadow:1px 1px 3px #000;
+}
+
+/* Cards regionais */
+/* ================= CARDS REGIONAIS MENOR ================= */
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px; /* menor espaçamento entre cards */
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-top: 50px; /* distância do topo */
+}
+
+.card {
+  background:#2a2a2a;
+  border-radius: 10px; /* menor arredondamento */
+  padding: 12px 16px; /* menos padding */
+  text-align:center;
+  cursor:pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow:0 4px 10px rgba(0,0,0,0.5);
+  border:2px solid #ffcc00;
+  overflow:hidden;
+}
+
+.card:hover {
+  transform:translateY(-5px);
+  box-shadow:0 8px 20px rgba(0,0,0,0.7),0 0 15px #ffcc00 inset;
+}
+
+.card h2 {
+  color:#ffdd57;
+  font-size:1em; /* menor título */
+  margin-bottom: 8px;
+  text-shadow:1px 1px 5px #000;
+}
+
+.card .contagem-tipos {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap: 6px; /* menor espaçamento interno */
+  margin-top: 10px;
+}
+
+.card .contagem-tipos .tipo {
+  background:#3a3a3a;
+  padding: 6px; /* menor padding nos mini-cards */
+  border-radius:6px; /* menor arredondamento */
+  text-align:center;
+  box-shadow:0 4px 10px rgba(0,0,0,0.5);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card .contagem-tipos .tipo span {
+  display:block;
+  font-size:0.7em; /* texto menor */
+  color:#aaa;
+}
+
+.card .contagem-tipos .tipo p {
+  font-weight:700;
+  font-size:0.9em; /* menor valor */
+  color:#ffcc00;
+  margin-top:2px;
+}
+
+.card .contagem-tipos .tipo:hover {
+  transform:translateY(-3px);
+  box-shadow:0 8px 15px rgba(0,0,0,0.7);
+}
+
+.card .badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #ffcc00;
+  color: #1a1a1a;
+  font-size: 0.7em; /* menor badge */
+  font-weight: 700;
+  width: 24px; /* menor */
+  height: 24px; /* menor */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 10px #ffcc00 inset;
+}
+
+/* Modal autentica  o */
+.modal { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); backdrop-filter:blur(4px); justify-content:center; align-items:center; z-index:9999; transition: opacity 0.3s; }
+.modal-content {
+  background: linear-gradient(145deg,#2a2a2a,#1a1a1a);
+  padding:35px 50px; border-radius:25px; max-width:400px; width:90%; text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 25px #ffcc00; transform:rotateX(-10deg); transition: transform 0.3s ease;
+}
+.modal-content h3 { color:#ffcc00; margin-bottom:20px; text-shadow:1px 1px 3px #000; }
+.modal-content input { width:80%; padding:12px; margin-bottom:20px; border-radius:12px; border:none; outline:none; font-size:1em; text-align:center; box-shadow:inset 0 0 6px rgba(255,204,0,0.4); }
+.modal-content button { padding:10px 22px; border:none; border-radius:12px; background:#ffcc00; color:#1a1a1a; font-weight:700; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.5); transition: all 0.2s; }
+.modal-content button:hover { background:#e6b800; transform:translateY(-2px); }
+.error-msg { color:#ff4444; margin-bottom:12px; font-weight:700; font-size:0.95em; }
+
+.filtro-select {
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #00ffcc, #0099ff);
+  color: #000;
+  font-weight: bold;
+  border: none;
+  box-shadow: 0 0 10px #00ffcc;
+  cursor: pointer;
+  z-index: 9999;
+}
+
+
+#meuBotao {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 9999;
+}
+
+.top-bar {
+  display: flex;
+  justify-content: flex-start;
+  margin-bottom: 20px;
+}
+
+.filtro-select {
+  position: fixed;
+  top: 15px;
+  left: 366px;
+  background: linear-gradient(135deg, #00ffcc, #0099ff);
+  color: #000;
+  font-weight: bold;
+  border: none;
+  box-shadow: 0 0 10px #00ffcc;
+  cursor: pointer;
+}
+
+#btnDownload {
+  position: fixed;
+  top: 14px; /* abaixo do filtro */
+  left: 520px; /* move mais para direita */
+  padding: 8px 12px;
+  background: #1ce701;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  z-index: 9999;
+}
+
+
+#btnDownload:hover {
+  background: #00ccaa;
+}
+
+#telaLojas .card {
+  margin-top: 68px; /* aumenta o espaço do topo */
+  animation: slideDown 0.4s ease;
+}
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* ===== LINHA AMARELA ENTRE COLUNAS ===== */
+
+/* Cabe alho */
+/* ===== LINHA TRACEJADA GROSSA ENTRE COLUNAS ===== */
+
+thead th {
+  border-right: 4px dashed #ffcc00;  /* MAIS GROSSA */
+}
+
+tbody td {
+  border-right: 6px dashed rgba(255, 204, 0, 0.8); /* MAIS GROSSA */
+}
+
+/* Remove da  ltima coluna */
+thead th:last-child,
+tbody td:last-child {
+  border-right: none;
+}
+
+thead th,
+tbody td {
+  border-right: 1px solid #ffcc00;
+}
+
+/* Glow leve na tabela */
+table {
+  box-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+}
+
+thead th:last-child,
+tbody td:last-child {
+  border-right: none;
+}
+
+/* Linha neon entre colunas */
+thead th,
+tbody td {
+  border-right: 1px solid #ffcc00;
+}
+
+thead th:last-child,
+tbody td:last-child {
+  border-right: none;
+}
+
+/* Glow suave */
+table {
+  box-shadow: 0 0 15px rgba(255,204,0,0.3);
+}
+
+.regional-card .badge {
+  background: #00ffcc;
+  color: #000;
+  box-shadow: 0 0 15px #00ffcc;
+}
+
+.consulta-alert{
+  position:relative;
+  margin:25px 0 35px;
+  padding:20px 28px;
+  border-radius:14px;
+
+  font-size:16px;
+  font-weight:700;
+  color:#ffffff;
+
+  background:rgba(20,20,20,0.8);
+}
+
+/* Vertical */
+.consulta-alert::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:14px;
+  padding:2px;
+  background:
+    linear-gradient(#00ffc8,#00ffc8) left,
+    linear-gradient(#00ffc8,#00ffc8) right,
+    linear-gradient(#ffcc00,#ffcc00) top,
+    linear-gradient(#ffcc00,#ffcc00) bottom;
+
+  background-size:
+    2px 100%,
+    2px 100%,
+    100% 2px,
+    100% 2px;
+
+  background-repeat:no-repeat;
+  pointer-events:none;
+}
+
+.cidadeResumo{
+  position:relative;
+  display:inline-block;
+  margin-top:8px;
+  padding:10px 20px;
+
+  font-size:0.80em;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+
+  color:#7CFFB2;
+
+  text-shadow:
+    0 0 6px rgba(124,255,178,0.6),
+    0 0 18px rgba(124,255,178,0.3);
+
+  animation:fadeCidade 0.5s ease forwards;
+}
+
+/* Moldura animada */
+.cidadeResumo::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border:2px solid transparent;
+  border-radius:6px;
+
+  background:
+    linear-gradient(#00ff88,#00ff88) top left,
+    linear-gradient(#00ff88,#00ff88) top right,
+    linear-gradient(#00ff88,#00ff88) bottom right,
+    linear-gradient(#00ff88,#00ff88) bottom left;
+
+  background-size:0% 2px, 2px 0%, 0% 2px, 2px 0%;
+  background-repeat:no-repeat;
+
+  animation:fecharQuadro 0.8s ease forwards;
+}
+
+.pdv-item.sem-ip {
+  border: 1px solid red;
+  color: #ff6b6b;
+}
+
+/* Animação fechando o quadro */
+@keyframes fecharQuadro{
+  0%{
+    background-size:
+      0% 2px,
+      2px 0%,
+      0% 2px,
+      2px 0%;
+  }
+  25%{
+    background-size:
+      100% 2px,
+      2px 0%,
+      0% 2px,
+      2px 0%;
+  }
+  50%{
+    background-size:
+      100% 2px,
+      2px 100%,
+      0% 2px,
+      2px 0%;
+  }
+  75%{
+    background-size:
+      100% 2px,
+      2px 100%,
+      100% 2px,
+      2px 0%;
+  }
+  100%{
+    background-size:
+      100% 2px,
+      2px 100%,
+      100% 2px,
+      2px 100%;
+  }
+}
+
+@keyframes fadeCidade{
+  from{
+    opacity:0;
+    transform:translateY(5px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.card-loja-pesquisada.encontrado .cidadeResumo{
+  color:#ffcc00;
+  text-shadow:0 0 8px rgba(255,215,0,0.6);
+}
+
+/* Bot o MENU PRINCIPAL reposicionado no topo da lateral */
+#btnMenu {
+  position: fixed;
+  top: 10px;       /* distancia do topo */
+  left: 182px;      /* fixa na lateral esquerda */
+  width: 240px;    /* largura consistente com o painel lateral */
+  padding: 15px 0;
+  background: linear-gradient(135deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 3px solid #ff0000;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+  transition: all 0.3s ease-in-out;
+  z-index: 1001;   /* acima do painel lateral */
+}
+
+#btnMenu:hover {
+  background: linear-gradient(145deg,#ff0000,#1a1aff);
+  color: #fff;
+  box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
+  transform: scale(1.05);
+}
+
+/* Quadro Loja Pesquisada ao lado do resumo */
+.top-loja {
+  position: fixed;
+  top: 4px;
+  right: 190px; /* Ajuste fino ao lado do resumo */
+  z-index: 1000;
+  font-family: 'Poppins', sans-serif;
+}
+
+.card-loja-pesquisada {
+  width: 200px;       /* largura fixa */
+  height: 96px;       /* altura fixa */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;   /* impede estourar o card */
+}
+
+.card-loja-pesquisada h2,
+.card-loja-pesquisada .cidadeResumo {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* coloca "..." se for grande */
+  max-width: 100%;
+}
+
+.card-loja-pesquisada span {
+  font-size: 0.6em;
+}
+
+.card-loja-pesquisada h2 {
+  font-size: 1.2em;
+}
+
+.cidadeResumo {
+  font-size: 0.7em;
+}
+
+/* 🔥 Oculta coluna PDVs quando estiver pesquisando */
+.ocultar-pdv th:nth-child(6),
+.ocultar-pdv td:nth-child(6) {
+  display: none !important;
+}
+
+/* brilho interno sutil */
+.card-loja-pesquisada::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+/* efeito passando brilho */
+.card-loja-pesquisada:hover::after {
+  transform: translateX(100%);
+}
+
+.card-loja-pesquisada span {
+  display:block;
+  font-size:0.65em;
+  color:#00ffcc;
+  margin-bottom:4px;
+  text-transform:uppercase;
+  font-weight:600;
+  letter-spacing:1px;
+}
+
+.card-loja-pesquisada h2 {
+  margin:0;
+  font-size:1.3em;
+  font-weight:800;
+  letter-spacing:1.5px;
+  color:#ffffff;
+  text-shadow: 0 0 8px rgba(0,255,204,0.6);
+  transition: all 0.3s ease;
+}
+
+.filial-quadro {
+  display: inline-block;
+  padding: 8px 16px;
+  margin-bottom: 12px;
+  border: 2px solid #ffcc00;       /* borda amarela */
+  border-radius: 10px;             /* cantos arredondados */
+  background: rgba(255, 204, 0, 0.1);  /* fundo leve amarelo */
+  color: #ffcc00;                  /* texto amarelo */
+  font-weight: 700;
+  font-size: 1.1em;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+}
+
+/* Quando encontrar loja (mantendo sua l gica atual) */
+.card-loja-pesquisada.encontrado {
+  border-color:#ffcc00;
+  box-shadow:
+    0 0 18px #ffcc00,
+    0 0 35px rgba(255,204,0,0.4),
+    0 6px 15px rgba(0,0,0,0.6);
+}
+
+.card-loja-pesquisada.encontrado h2 {
+  color:#ffcc00;
+  text-shadow:
+    0 0 12px #ffd700,
+    0 0 25px rgba(255,215,0,0.8);
+  transform: scale(1.08);
+}
+
+.top-loja-container {
+  position: fixed;
+  top: 4px;
+  right: 190px;
+  display: flex;
+  gap: 10px;
+  z-index: 1000;
+}
+
+/* NOVO CARD PDV */
+.card-pdv-pesquisado {
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  border-radius: 14px;
+  padding: 12px 16px;
+  border: 2px solid #00ffcc;
+  box-shadow:
+    0 0 12px rgba(0,255,204,0.5),
+    0 6px 15px rgba(0,0,0,0.6);
+  min-width: 160px;
+  max-width: 220px;
+}
+
+
+
+/* Título */
+.card-pdv-pesquisado span {
+  display: block;
+  text-align: center;   /* 🔥 CENTRALIZA O TÍTULO */
+  font-size: 0.75em;
+  color: #f3c808;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.header-pdv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* Título centralizado */
+.header-pdv span {
+  text-align: center;
+  width: 100%;
+  font-size: 0.75em;
+  color: #00ffcc;
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+.pdv-grid {
+  display: grid;
+  gap: 8px;
+}
+
+.pdv-grid.muitos {
+  grid-auto-flow: column;
+  grid-template-rows: repeat(5, auto);
+}
+
+/* 🔥 CONTADOR NO CANTO */
+.qtd-pdv {
+  position: absolute;
+  right: 0;
+  top: -1px;
+
+  background: #ffcc00;
+  color: #002b27;
+
+  font-size: 0.9em;
+  font-weight: bold;
+
+  padding: 4px 8px;
+  border-radius: 6px;
+
+  box-shadow: 0 0 6px rgba(0,255,204,0.6);
+}
+
+.sem-pdv {
+  width: 100%;
+  text-align: center;
+
+  padding: 12px;
+  margin-top: 5px;
+  
+
+  border: 1px dashed rgba(255,255,255,0.15);
+  border-radius: 8px;
+
+  background: rgba(255,255,255,0.03);
+
+  color: #b0b0b0;
+  font-size: 0.85em;
+  font-style: italic;
+  letter-spacing: 0.5px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  min-height: 40px;
+}
+
+/* Lista PDVs */
+  #pdvResumo {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr); /* 🔥 5 por linha */
+  gap: 10px;
+  justify-content: center;
+
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px; /* 🔥 um pouco maior */
+}
+
+#pdvResumo div {
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  border: 1px solid #ebd304;
+  color: #00ffcc;
+
+  font-size: 0.75em;        /* 🔥 um pouco maior */
+  padding: 8px 17px;        /* 🔥 mais espaço interno */
+  border-radius: 14px;
+
+  font-weight: 800;
+  letter-spacing: 0.5px;
+
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+
+  min-width: 70px;          /* 🔥 evita esmagar */
+  text-align: center;
+}
+
+#pdvResumo div:hover {
+  background: #00ffcc;
+  color: #002b27;
+  transform: translateY(-1px);
+}
+
+.pdv-item {
+  position: relative;
+  cursor: pointer;
+}
+
+/* Tooltip cyberpunk futurista */
+/* Tooltip futurista aprimorada */
+.tooltip-pdv {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.95);
+  padding: 16px 24px;
+  border-radius: 18px;
+
+  background: linear-gradient(135deg, rgba(0,255,204,0.15), rgba(0,128,255,0.15));
+  backdrop-filter: blur(12px);
+
+  color: #00ffcc;
+  font-size: 1.2em;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px #00ffc8, 0 0 18px #00ffcc, 0 0 30px #00ffcc;
+
+  border: 2px solid #00ffcc;
+  box-shadow:
+    0 0 16px #00ffcc,
+    0 0 50px rgba(0,255,204,0.5),
+    inset 0 0 16px rgba(0,255,204,0.3);
+
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s ease, box-shadow 0.6s ease-in-out;
+  z-index: 10000;
+
+  animation: neonPulse 2s infinite alternate, floatSlight 3s infinite ease-in-out;
+  overflow: visible;
+}
+
+/* Hover mostra tooltip */
+.pdv-item:hover .tooltip-pdv {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.12);
+  box-shadow:
+    0 0 26px #00ffcc,
+    0 0 70px rgba(0,255,204,0.7),
+    inset 0 0 20px rgba(0,255,204,0.5);
+}
+
+/* Pulsar neon */
+@keyframes neonPulse {
+  0%,100% {
+    box-shadow: 0 0 16px #00ffcc, 0 0 50px rgba(0,255,204,0.5), inset 0 0 16px rgba(0,255,204,0.3);
+  }
+  50% {
+    box-shadow: 0 0 28px #00ffcc, 0 0 65px rgba(0,255,204,0.7), inset 0 0 22px rgba(0,255,204,0.4);
+  }
+}
+
+/* Leve flutuação */
+@keyframes floatSlight {
+  0%, 100% { transform: translate(-50%, -50%) scale(1.05); }
+  50% { transform: translate(-50%, -53%) scale(1.12); }
+}
+
+/* Triângulo indicador neon */
+.tooltip-pdv::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 10px;
+  border-style: solid;
+  border-color: #00ffcc transparent transparent transparent;
+  filter: drop-shadow(0 0 10px #00ffcc);
+}
+
+/* Destaque especial para o IP */
+.tooltip-pdv .ip {
+  display: block;
+  font-size: 1.8em;
+  color: #00ffff;
+  text-shadow: 0 0 10px #00ffff, 0 0 25px #00ffff, 0 0 50px #00ffff;
+  animation: ipGlow 1.5s infinite alternate;
+  position: relative;
+}
+
+/* Glow animado no IP */
+@keyframes ipGlow {
+  0% { text-shadow: 0 0 10px #00ffff, 0 0 25px #00ffff, 0 0 50px #00ffff; }
+  50% { text-shadow: 0 0 18px #00ffff, 0 0 45px #00ffff, 0 0 70px #00ffff; }
+  100% { text-shadow: 0 0 14px #00ffff, 0 0 35px #00ffff, 0 0 60px #00ffff; }
+}
+
+/* Linhas neon saindo da tooltip */
+.tooltip-pdv::before {
+  content: "";
+  position: absolute;
+  top: -4px; left: -4px; right: -4px; bottom: -4px;
+  border: 2px solid #00ffcc;
+  border-radius: 20px;
+  box-shadow:
+    0 0 8px #00ffcc,
+    0 0 16px #00ffcc,
+    0 0 32px rgba(0,255,204,0.4),
+    0 0 60px rgba(0,255,204,0.2);
+  animation: neonPulse 2s infinite alternate;
+  pointer-events: none;
+}
+
+/* IP SUPER VISÍVEL */
+.ip-destaque {
+  display: inline-block;
+
+  font-size: 2.0em;   /* 🔥 AQUI aumentamos */
+  font-weight: 900;
+
+  color: #00ffcc;
+
+  padding: 10px 18px;  /* 🔥 mais espaço interno */
+  border-radius: 10px;
+
+  background: linear-gradient(145deg, #001a17, #002b27);
+
+  border: 1px solid rgba(0,255,204,0.6);
+
+  box-shadow:
+    0 0 12px rgba(0,255,204,0.7),
+    inset 0 0 8px rgba(0,255,204,0.5);
+
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1.5px;
+}
+
+/* HOVER MAIS FORTE (SEM SUMIR) */
+.pdv-item:hover .ip-destaque {
+  transform: scale(1.15);
+  color: #ffffff;
+
+  background: #00332d;
+
+  box-shadow:
+    0 0 15px #00ffcc,
+    0 0 30px rgba(0,255,204,0.9),
+    inset 0 0 10px rgba(0,255,204,0.6);
+}
+
+/* Container dos PDVs */
+.pdv-grid {
+  display: grid;
+  gap: 8px;
+}
+
+/* Quando tiver muitos PDVs */
+.pdv-grid.muitos {
+  grid-auto-flow: column;       /* 🔥 cria colunas automaticamente */
+  grid-template-rows: repeat(5, auto); /* 🔥 máximo 5 por coluna */
+}
+
+.ip-fixo {
+  position: fixed;
+
+  top: 95px;      /* abaixo da loja pesquisada */
+  right: 190px;   /* alinhado com os cards */
+
+  width: 180px;
+
+  padding: 12px;
+  border-radius: 12px;
+
+  background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
+
+  border: 2px solid #00ffcc;
+
+  box-shadow:
+    0 0 12px rgba(0,255,204,0.6),
+    0 6px 15px rgba(0,0,0,0.6);
+
+  text-align: center;
+
+  z-index: 1000;
+}
+
+.ip-fixo span {
+  display: block;
+  font-size: 0.7em;
+  color: #00ffcc;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+}
+
+#ipValor {
+  font-size: 1.4em;
+  font-weight: 900;
+  color: #ffffff;
+
+  background: #002b27;
+  padding: 6px 10px;
+  border-radius: 8px;
+
+  border: 1px solid #00ffcc;
+
+  box-shadow: 0 0 10px rgba(0,255,204,0.6);
+}
+
+
+/* Mensagem copiado */
+.copy-msg {
+  position: fixed;
+  top: 30px;
+  right: -600px;
+  z-index: 10000;
+
+  padding: 22px 45px;
+  border-radius: 18px;
+
+  font-size: 1.15em;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  border: 3px solid #ffffff;
+
+  transform: scale(0.9);
+  opacity: 0;
+
+  transition:
+    right 0.6s cubic-bezier(.68,-0.55,.27,1.55),
+    transform 0.5s ease,
+    opacity 0.4s ease;
+}
+
+.tooltip-pdv::after {
+  content: "";
+  position: absolute;
+  bottom: 100%;     /* seta apontando para cima do tooltip */
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: #00ffcc transparent transparent transparent; /* mantém cor da seta */
+}
+
+/* 🔴 PDV SEM IP */
+.pdv-item.sem-ip {
+  border: 1px solid #ff4d4d;
+  color: #ff4d4d;
+  background: linear-gradient(145deg, #2a1a1a, #1a0f0f);
+}
+
+/* 🔴 Hover mais forte */
+.pdv-item.sem-ip:hover {
+  box-shadow: 0 0 10px #ff4d4d;
+  transform: scale(1.08);
+}
+
+/* 🔴 Tooltip vermelho */
+.pdv-item.sem-ip .tooltip-pdv {
+  border: 1px solid #ff4d4d;
+  color: #ff4d4d;
+}
+
+.pdv-item.sem-ip::after {
+  content: "⚠";
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 12px;
+  color: #ff4d4d;
+}
+
+/* SUCESSO (dourado premium) */
+.copy-msg.success {
+  background: linear-gradient(145deg, #ffd700, #ffcc00);
+  color: #111;
+  box-shadow:
+    0 0 0 4px rgba(255,204,0,0.4),
+    0 10px 35px rgba(0,0,0,0.7),
+    0 0 30px rgba(255,215,0,0.9);
+}
+
+/* ERRO (vermelho suave elegante) */
+.copy-msg.error {
+  background: linear-gradient(145deg, #ff6b6b, #d90429);
+  color: #fff;
+  box-shadow:
+    0 0 0 4px rgba(255,0,0,0.3),
+    0 10px 35px rgba(0,0,0,0.7),
+    0 0 25px rgba(255,0,0,0.6);
+}
+
+/* Mostrar */
+.copy-msg.show {
+  right: 30px;
+  transform: scale(1);
+  opacity: 1;
+}
+
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+
+  <!-- Filtro por Tipo -->
+  <!--<select id="filtroTipo" onchange="aplicarFiltros()" class="filtro-select">
+    <option value="todos">Todos os Tipos</option>
+    <option value="Filial">Filial</option>
+    <option value="Posto">Posto</option>
+    <option value="Deposito">Deposito</option>
+    <option value="Representante">Representante</option>
+  </select>
+
+  <!-- Filtro por Dispositivo -->
+   <!-- <select id="filtroDispositivo" onchange="aplicarFiltros()" class="filtro-select" style="left:190px;">
+    <option value="todos">Todos Dispositivos</option>
+    <option value="FortiGate">FortiGate</option>
+    <option value="Mikrotik">Mikrotik</option>
+  </select>
+-->
+</div>
+
+
+</div>
+
+  <!--<button id="btnDownload" onclick="baixarExcel()">
+   Baixar Excel
+</button>-->
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+
+<button id="btnMenu">MENU PRINCIPAL</button>
+
+
+
+<!-- Resumo neon no canto superior direito -->
+ 
+<div class="top-loja-container">
+
+  <!-- QUADRO LOJA -->
+  <div class="card-loja-pesquisada">
+    <span>Loja Pesquisada</span>
+    <h2 id="siglaResumo">---</h2>
+    <div class="cidadeResumo" id="cidadeResumo">---</div>
+  </div>
+
+  <div class="card-pdv-pesquisado">
+  
+    
+  <div class="header-pdv">
+    <span>PDVs</span>
+    <div id="qtdPDV" class="qtd-pdv">0</div>
+  </div>
+
+<div id="pdvResumo" class="pdv-grid"></div>
+
+
+</div>
+
+
+
+
+  <div class="cards-resumo">
+      <!-- NOVO TOTAL GERAL -->
+  <div class="card-mini" style="grid-column: span 2;">
+    <span>Total Geral</span>
+    <h2 id="totalGeral">0</h2>
+  </div>
+
+    
+    <div class="card-mini">
+      <span>Filial</span>
+      <h2 id="totalFilial">0</h2>
+    </div>
+    <div class="card-mini">
+      <span>Postos</span>
+      <h2 id="totalPostos">0</h2>
+    </div>
+    <div class="card-mini">
+      <span>Depositos</span>
+      <h2 id="totalDeposito">0</h2>
+    </div>
+    <div class="card-mini">
+      <span>Reps</span>
+      <h2 id="totalRep">0</h2>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Dispositivos no canto superior esquerdo -->
+<div class="top-left">
+  <div class="cards-dispositivo-resumo">
+    <div class="card-mini-dispositivo">
+      <span>FortiGate</span>
+      <h2 id="totalForti">0</h2>
+    </div>
+    <div class="card-mini-dispositivo">
+      <span>Mikrotik</span>
+      <h2 id="totalMikrotik">0</h2>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Pesquisar por SIGLA ou PDV..." oninput="filtrar()">
+  </div>
+
+  <button class="back-btn" id="backBtn" onclick="voltar()"> Voltar </button>
+
+  <div id="telaRegionais" class="cards"></div>
+  <div id="telaLojas"></div>
+</div>
+
+<div class="modal" id="modalAuth">
+  <div class="modal-content">
+    <h3>Autenticacao - Liberar Senha</h3>
+    <div class="error-msg" id="errorMsg"></div>
+    <input type="password" id="authPassword" placeholder=" Digite o Usuario ">
+    <br>
+    <button onclick="validarSenha()">Confirmar</button>
+  </div>
+</div>
+
+<div class="copy-msg" id="copyMsg"></div>
+
+<script>
+const LIBERACAO_SENHA="Gertec20";
+let textoParaCopiar="",btnParaMensagem=null;
+
+
+const lojas=[
+
+ // Regional Afonso
+
+{sigla:"ACA",   	filial:"ACA",   	cidade:"Acailandia",              	tipo:"Filial",      	ip:"172.16.88.251",      	dispositivo:"Fortigate",      	regional:"Regional Afonso",     pdvs:["pdvaca01","pdvaca02","pdvaca03","pdvaca04","pdvaca05","pdvaca06","pdvaca07","pdvaca08","pdvaca09","pdvaca10","pdvaca12",]},
+{sigla:"BJS",   	filial:"ACA",   	cidade:"Bom Jesus Da Selva",      	tipo:"Posto",      	ip:"172.19.56.251",         	dispositivo:"Fortigate",      	regional:"Regional Afonso",     pdvs:["pdvbjs01","pdvbjs02"]},
+
+{sigla:"AUG",   	filial:"AUG ",  	cidade:"Augustinopolis",        	tipo:"Filial",      	ip:"172.16.153.251",    	dispositivo:"Fortigate",       regional:"Regional Afonso",     pdvs:["pdvaug01","pdvaug02","pdvaug03"]},
+{sigla:"AXI",   	filial:"AUG ",  	cidade:"Axixa Do Tocantins",        	tipo:"Posto",      	ip:"172.19.2.251",         	dispositivo:"Fortigate",       regional:"Regional Afonso",     pdvs:["pdvaxi01","pdvaxi02"]},
+
+  // Regional Coutinho
+
+   
+  {sigla:"BAC",   	filial:"BAC", 		cidade:"Bacabal",      			tipo:"Filial",        	ip:"172.16.82.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvbac01","pdvbac02","pdvbac03","pdvbac04","pdvbac05","pdvbac06","pdvbac07","pdvbac08","pdvbac09","pdvbac10","pdvbac11","pdvbac12","pdvbac19","pdvbac20",]},
+  {sigla:"ANJ",   	filial:"BAC", 		cidade:"Anajatuba",      		tipo:"Posto",        	ip:"172.19.26.251",        	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvanj01","pdvanj02"]},
+
+
+  // Regional Cazuza
+  {sigla:"ABR",   	filial:"ABR", 		cidade:"Agua Branca",       		tipo:"Filial",        	ip:"172.16.186.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvabr01","pdvabr02","pdvabr07"]},
+  {sigla:"AMA",   	filial:"ABR", 		cidade:"Amarante Do Piaui",       	tipo:"Posto",        	ip:"172.16.188.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvama01","pdvama02"]},
+
+
+
+  // Regional Edivano
+  {sigla:"BHM",   	filial:"BHM", 		cidade:"Berreiras",       		tipo:"Filial",        	ip:"172.16.70.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvbhm01","pdvbhm02","pdvbhm03","pdvbhm04","pdvbhm05","pdvbhm06","pdvbhm07"]},
+  {sigla:"BHI",   	filial:"BHM", 		cidade:"barreiras Usados",       	tipo:"Filial",        	ip:"172.26.70.65",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvbhi01","pdvbhi02","pdvbhi03","pdvbhi04"]},
+ 
+
+
+  // Regional Erisvaldo
+  {sigla:"BHA",   	filial:"BHA", 		cidade:"barreirinhas",       	 	tipo:"Filial", 		ip:"172.16.218.251",         	dispositivo:"Fortigate",             	regional:"Regional Erisvaldo",      pdvs:["pdvbha01","pdvbha02","pdvbha03","pdvbha04","pdvbha05","pdvbha06","pdvbha07"]},
+  {sigla:"HBC",   	filial:"BHA", 		cidade:"Humberto De Campos",        	tipo:"Posto", 		ip:"172.16.232.251",         	dispositivo:"Fortigate",             	regional:"Regional Erisvaldo",      pdvs:["pdvhbc01","pdvhbc02"]},
+
+
+  // Regional Ronnie Von
+
+  {sigla:"BCO",         filial:"BCO",     cidade:"Barra Do Corda",                    tipo:"Filial",            	ip:"172.16.166.251",         	dispositivo:"Fortigate",            regional:"Regional Ronnie Von",     pdvs:["pdvbco01","pdvbco02","pdvbco03","pdvbco04","pdvbco05","pdvbco08","pdvbco09"]},
+  {sigla:"BCO / BDC",   filial:"BCO",     cidade:"Deposito De Barra Do Corda",        tipo:"Deposito",            	ip:"172.26.166.1",         	dispositivo:"Mikrotik",             regional:"Regional Ronnie Von",     pdvs:["pdvdbc01"]},
+
+
+  // Regional Wellington
+  {sigla:"ALS",   	filial:"ALS", cidade:"Altos",        		tipo:"Filial", 		ip:"172.16.196.251",         	dispositivo:"Fortigate",             regional:"Regional Wellington",         pdvs:["pdvals01","pdvals02","pdvals03"]},
+  {sigla:"ALG",   	filial:"ALS", cidade:"Alto Longa",        	tipo:"Posto", 		ip:"172.16.227.251",         	dispositivo:"Fortigate",             regional:"Regional Wellington",         pdvs:["pdvalg01","pdvalg02"]},
+
+
+
+];
+
+
+const const_ip_pdvs = {
+  "ACA": {
+    "pdvaca01": "172.16.88.101",
+    "pdvaca02": "172.16.88.102",
+    "pdvaca03": "172.16.88.103",
+    "pdvaca04": "172.16.88.104",
+   
+
+  },
+
+
+  "AUG": {
+    "pdvaug01": "172.16.77.101"
+  }
+};
+
+
+
+
+const regionais = [...new Set(lojas.map(l => l.regional))].sort();
+const telaRegionais=document.getElementById('telaRegionais'),telaLojas=document.getElementById('telaLojas'),backBtn=document.getElementById('backBtn'),searchInput=document.getElementById('searchInput');
+const modal=document.getElementById('modalAuth'),authInput=document.getElementById('authPassword'),errorMsg=document.getElementById('errorMsg');
+const copyMsg=document.getElementById('copyMsg');
+
+function mostrarRegionais(){
+  telaRegionais.innerHTML="";
+  regionais.forEach(reg=>{
+    const lojasDaRegional=lojas.filter(l=>l.regional===reg);
+    const contagem={
+      Filial:lojasDaRegional.filter(l=>l.tipo.toLowerCase()==="filial").length,
+      Postos:lojasDaRegional.filter(l=>l.tipo.toLowerCase()==="posto").length,
+      Depositos:lojasDaRegional.filter(l=>l.tipo.toLowerCase()==="deposito").length,
+      Representantes:lojasDaRegional.filter(l=>l.tipo.toLowerCase()==="representante").length
+    };
+    const totalLojas = lojasDaRegional.length; // total geral da regional
+const card=document.createElement('div'); 
+card.className='card regional-card';
+card.style.position='relative'; // necess rio para o badge
+card.innerHTML=`
+  <h2>${reg}</h2>
+  <div class="badge">${totalLojas}</div>
+  <div class="contagem-tipos">
+    <div class="tipo"><span>Filial</span><p>${contagem.Filial}</p></div>
+    <div class="tipo"><span>Postos</span><p>${contagem.Postos}</p></div>
+    <div class="tipo"><span>Depositos</span><p>${contagem.Depositos}</p></div>
+    <div class="tipo"><span>Representantes</span><p>${contagem.Representantes}</p></div>
+  </div>`;
+
+    card.onclick=()=>mostrarLojasPorRegional(reg);
+    telaRegionais.appendChild(card);
+  });
+}
+
+mostrarRegionais();
+
+function mostrarLojasPorRegional(regional){
+  backBtn.style.display='inline-block';
+  telaRegionais.style.display='none';
+  mostrarTabela(lojas.filter(l=>l.regional===regional));
+}
+
+function voltar(){
+  searchInput.value='';
+  telaLojas.innerHTML='';
+  mostrarRegionais();
+  telaRegionais.style.display='flex';
+  backBtn.style.display='none';
+}
+
+function mostrarTabela(lista, ocultarPDV = false){
+  telaLojas.innerHTML=''; 
+  if(lista.length===0) return;
+
+  // Agrupa lojas por filial
+  const agrupadas = {};
+  lista.forEach(l => {
+    if(!agrupadas[l.filial]) agrupadas[l.filial] = [];
+    agrupadas[l.filial].push(l);
+  });
+
+  for(const filial in agrupadas){
+    const lojasFilial = agrupadas[filial];
+
+    const cardFilial = document.createElement('div');
+    cardFilial.className = 'card';
+    cardFilial.style.position='relative';
+
+    cardFilial.innerHTML = `
+      <div class="filial-quadro">
+        FILIAL : <strong>${filial}</strong>
+      </div>
+
+      <div class="badge">${lojasFilial.length}</div>
+
+      <div style="margin-top:15px;">
+        <table style="width:100%; border-collapse: separate; border-spacing: 0 6px;">
+          
+          <thead>
+            <tr>
+              <th>Sigla</th>
+              <th>Tipo</th>
+              <th>IP</th>
+              <th>Cidade</th>
+              <th>Dispositivo</th>
+              ${!ocultarPDV ? '<th>PDVs</th>' : ''}
+              <th>Acao</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            ${lojasFilial.map(l=>{
+              const pdvs1 = l.pdvs.slice(0, Math.ceil(l.pdvs.length / 2));
+              const pdvs2 = l.pdvs.slice(Math.ceil(l.pdvs.length / 2));
+
+              return `
+              <tr>
+                <td>${l.sigla}</td>
+                <td>${l.tipo}</td>
+                <td>${l.ip}</td>
+                <td>${l.cidade}</td>
+                <td>${l.dispositivo}</td>
+
+                ${!ocultarPDV ? `
+                <td>
+                  <div style="display:flex; gap:6px; justify-content:center;">
+                    
+                    <ul style="padding:0; margin:0; flex:1;">
+                      ${pdvs1.map(p=>`
+                        <li style="list-style:none;background: rgba(255,204,0,0.1);margin:2px 0;padding:3px 6px;border-radius:6px;">
+                          ${p}
+                        </li>
+                      `).join('')}
+                    </ul>
+
+                    ${pdvs2.length>0 ? `
+                    <ul style="padding:0; margin:0; flex:1;">
+                      ${pdvs2.map(p=>`
+                        <li style="list-style:none;background: rgba(255,204,0,0.2);margin:2px 0;padding:3px 6px;border-radius:6px;">
+                          ${p}
+                        </li>
+                      `).join('')}
+                    </ul>
+                    ` : ''}
+
+                  </div>
+                </td>
+                ` : ''}
+
+                <td id="acoes-${l.sigla}"></td>
+              </tr>
+              `;
+            }).join('')}
+          </tbody>
+
+        </table>
+      </div>
+    `;
+
+    telaLojas.appendChild(cardFilial);
+
+    // Botões de ação
+    lojasFilial.forEach(l=>{
+      const td = document.getElementById(`acoes-${l.sigla}`);
+      const ip = l.ip;
+
+      if(l.dispositivo.toLowerCase()==="mikrotik"){
+        const btn = document.createElement('button'); 
+        btn.className='action-btn'; 
+        btn.style.backgroundColor='#2ecc71'; 
+        btn.textContent='Copiar';
+        btn.onclick=()=>copiarDireto(`${ip}:5819`);
+        td.appendChild(btn);
+      }
+
+      if(l.dispositivo.toLowerCase()==="fortigate"){
+        const openBtn=document.createElement('button'); 
+        openBtn.className='action-btn'; 
+        openBtn.style.backgroundColor='#3498db'; 
+        openBtn.textContent='Abrir';
+        openBtn.onclick=()=>window.open(`https://${ip}:5413`,'_blank'); 
+        td.appendChild(openBtn);
+
+        const senha = l.senha || 'Hrt5M-jgExN7';
+        const senhaBtn=document.createElement('button'); 
+        senhaBtn.className='action-btn'; 
+        senhaBtn.style.backgroundColor='#e67e22'; 
+        senhaBtn.textContent='Senha';
+        senhaBtn.onclick = () => abrirModal(senha);
+        td.appendChild(senhaBtn);
+      }
+    });
+  }
+}
+
+let resultadoAtual = [];
+
+function aplicarFiltros() {
+
+  const termoBusca = document.getElementById('searchInput').value.toLowerCase();
+
+  const filtroTipo = document.getElementById('filtroTipo');
+  const filtroDispositivo = document.getElementById('filtroDispositivo');
+
+  const tipoSelecionado = filtroTipo ? filtroTipo.value : 'todos';
+  const dispositivoSelecionado = filtroDispositivo ? filtroDispositivo.value : 'todos';
+
+  resultadoAtual = lojas.filter(loja => {
+
+    const correspondeBusca =
+      loja.sigla.toLowerCase().includes(termoBusca) ||
+      loja.ip.toLowerCase().includes(termoBusca);
+
+    const correspondeTipo =
+      tipoSelecionado === 'todos' ||
+      loja.tipo === tipoSelecionado;
+
+    const correspondeDispositivo =
+      dispositivoSelecionado === 'todos' ||
+      loja.dispositivo === dispositivoSelecionado;
+
+    return correspondeBusca && correspondeTipo && correspondeDispositivo;
+  });
+
+  if (resultadoAtual.length === 0) {
+    telaLojas.innerHTML = "<p style='margin-top:30px;'>Nenhum Resultado Encontrado.</p>";
+  } else {
+    mostrarTabela(resultadoAtual);
+  }
+
+  telaRegionais.style.display = 'none';
+  backBtn.style.display = 'inline-block';
+
+  atualizarResumo(resultadoAtual);
+
+  document.getElementById('btnDownload').style.display =
+    resultadoAtual.length > 0 ? 'inline-block' : 'none';
+}
+
+const btnMenu = document.getElementById("btnMenu");
+btnMenu.addEventListener("click", () => {
+    window.location.href = "menu.html";
+});
+
+
+function baixarResultado() {
+  if (resultadoAtual.length === 0) return;
+
+  let csv = "Sigla,Filial,Tipo,IP,Dispositivo\n";
+
+  resultadoAtual.forEach(loja => {
+    csv += `${loja.sigla},${loja.filial},${loja.tipo},${loja.ip},${loja.dispositivo}\n`;
+  });
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "resultado_filtro_claudino.csv";
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+function baixarExcel() {
+  if (resultadoAtual.length === 0) return;
+
+  // Cria uma planilha XLSX
+  const ws_data = [
+    ["Sigla","Filial","Tipo","IP","Dispositivo","Cidade","PDVs"]
+  ];
+
+  resultadoAtual.forEach(loja => {
+    ws_data.push([
+      loja.sigla,
+      loja.filial,
+      loja.tipo,
+      loja.ip,
+      loja.dispositivo,
+      loja.cidade,
+      loja.pdvs.join(", ")
+    ]);
+  });
+
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(ws_data);
+  XLSX.utils.book_append_sheet(wb, ws, "Resultado");
+  XLSX.writeFile(wb, "resultado_filtro_claudino.xlsx");
+}
+
+function removerLoja(sigla) {
+  const index = lojas.findIndex(l => l.sigla === sigla);
+
+  if (index !== -1) {
+    lojas.splice(index, 1);
+
+    // 🔥 Atualiza automaticamente
+    filtrar(); // se estiver pesquisando
+    mostrarRegionais(); // se estiver na tela inicial
+    atualizarResumo();
+  }
+}
+
+function atualizarTelaAtual() {
+  const termo = searchInput.value.trim();
+
+  if (termo) {
+    filtrar();
+  } else if (telaRegionais.style.display !== "none") {
+    mostrarRegionais();
+  } else {
+    // se estiver dentro de uma regional
+    const regionalAtual = document.querySelector('.card h2')?.textContent;
+    if (regionalAtual) {
+      mostrarLojasPorRegional(regionalAtual);
+    }
+  }
+
+  atualizarResumo();
+}
+
+function destacarLoja(sigla) {
+  document.querySelectorAll('.card-loja-pesquisada').forEach(card=>{
+    card.classList.remove('encontrado');
+  });
+  const card = document.querySelector('.card-loja-pesquisada h2');
+  if(card.textContent === sigla) {
+    card.parentElement.classList.add('encontrado');
+  }
+}
+
+// Atualiza a cada segundo
+atualizarResumo();
+
+
+
+function abrirModal(texto){
+  textoParaCopiar = texto;
+  authInput.value = '';
+  errorMsg.textContent = '';
+  modal.style.display = 'flex';
+  authInput.focus();
+}
+
+
+authInput.addEventListener('keydown', e=>{
+  if(e.key==='Enter'){ e.preventDefault(); validarSenha(); }
+});
+
+function copiarDireto(texto){
+  const temp = document.createElement('textarea');
+  temp.value = texto;
+  document.body.appendChild(temp);
+  temp.select();
+  temp.setSelectionRange(0,99999);
+  document.execCommand('copy');
+  document.body.removeChild(temp);
+
+  // MOSTRA APENAS SUCESSO
+  copyMsg.className = "copy-msg success show";
+  copyMsg.textContent = " COPIADO COM SUCESSO";
+
+  setTimeout(() => {
+    copyMsg.classList.remove("show");
+  }, 3000);
+}
+
+
+
+
+function validarSenha(){
+
+  if(authInput.value.trim() === LIBERACAO_SENHA){
+
+    if(!textoParaCopiar){
+      return;
+    }
+
+    const temp = document.createElement('textarea');
+    temp.value = textoParaCopiar;
+    document.body.appendChild(temp);
+    temp.select();
+    temp.setSelectionRange(0, 99999);
+    document.execCommand('copy');
+    document.body.removeChild(temp);
+
+    modal.style.display = 'none';
+
+    // SUCESSO
+    copyMsg.className = "copy-msg success show";
+    copyMsg.textContent = " ACESSO LIBERADO E COPIADO";
+
+    setTimeout(() => {
+      copyMsg.classList.remove("show");
+    }, 3000);
+
+  } else {
+
+    // ERRO no mesmo estilo visual
+    copyMsg.className = "copy-msg error show";
+    copyMsg.textContent = " USUARIO INCORRETO - DIGITE NOVAMENTE";
+
+    setTimeout(() => {
+      copyMsg.classList.remove("show");
+    }, 3000);
+
+    authInput.focus();
+  }
+
+  authInput.value = '';
+}
+
+
+
+function filtrar(){
+  const termo = searchInput.value.toLowerCase().trim();
+  
+
+  // ?? Sempre ocultar regionais ao pesquisar
+  if(termo){
+    telaRegionais.style.display = 'none';
+    backBtn.style.display = 'inline-block';
+  }
+
+  // Se pesquisa estiver vazia, mostra tudo
+  if(!termo){
+    document.getElementById("siglaResumo").textContent = "---";
+    document.querySelector(".card-loja-pesquisada").classList.remove("encontrado"); 
+    telaLojas.innerHTML='';
+    mostrarRegionais();
+    telaRegionais.style.display='flex';
+    backBtn.style.display='none';
+    atualizarResumo();
+    return;
+  }
+  
+  // Filtra as lojas
+  const resultado = lojas.filter(l=>l.sigla.toLowerCase().includes(termo) 
+    || l.pdvs.some(p=>p.toLowerCase().includes(termo)));
+const campoSigla = document.getElementById("siglaResumo");
+const campoCidade = document.getElementById("cidadeResumo");
+const cardLoja = document.querySelector(".card-loja-pesquisada");
+const campoPDV = document.getElementById("pdvResumo");
+const campoQtdPDV = document.getElementById("qtdPDV");
+
+
+if (resultado.length > 0) {
+
+  const primeiraLoja = resultado[0];
+
+  campoSigla.textContent = primeiraLoja.sigla;
+  campoCidade.textContent = primeiraLoja.cidade;
+
+  // 🔥 VERIFICA SE TEM PDVs
+  if (primeiraLoja.pdvs && primeiraLoja.pdvs.length > 0) {
+
+    campoPDV.innerHTML = primeiraLoja.pdvs
+  .map((p) => {
+
+    const ip = const_ip_pdvs[primeiraLoja.sigla]?.[p] || "IP não cadastrado";
+   const semIp = ip === "IP não cadastrado" ? "sem-ip" : "";
+
+return `
+  <div class="pdv-item ${semIp}" 
+       onmouseover="mostrarIP('${ip}')"
+       onmouseleave="limparIP()">
+       
+    ${p}
+
+    <div class="tooltip-pdv">
+      <span class="ip-destaque">${ip}</span>
+    </div>
+    
+  </div>
+`;
+
+  }).join('');
+
+  // 🔥 ATIVA GRID DINÂMICO
+if (primeiraLoja.pdvs.length > 10) {
+  campoPDV.classList.add("muitos");
+} else {
+  campoPDV.classList.remove("muitos");
+}
+
+    campoQtdPDV.textContent = primeiraLoja.pdvs.length;
+
+  } else {
+
+    // 🔥 MENSAGEM QUANDO NÃO TEM
+    campoPDV.innerHTML = `<div class="sem-pdv">Não Possui PDVs</div>`;
+    campoQtdPDV.textContent = "0";
+
+  }
+
+  cardLoja.classList.add("encontrado");
+
+} else {
+
+  campoSigla.textContent = "---";
+  campoCidade.textContent = "---";
+  campoPDV.innerHTML = "";
+  campoQtdPDV.textContent = "0";
+
+  cardLoja.classList.remove("encontrado");
+}
+
+
+function mostrarIP(ip) {
+  document.getElementById("ipValor").textContent = ip;
+}
+
+function limparIP() {
+  document.getElementById("ipValor").textContent = "---";
+}
+  // Atualiza quadros com o filtro
+  atualizarResumo(resultado);
+
+  if (resultado.length === 0) {
+
+  telaLojas.innerHTML = `
+  <div class="consulta-wrapper">
+
+    <div class="consulta-card">
+
+      <div class="consulta-topbar"></div>
+
+      <div class="consulta-header">
+        CENTRAL DE CONSULTA
+      </div>
+
+      <div class="consulta-title">
+        PESQUISA NAO LOCALIZADA
+      </div>
+
+      <div class="consulta-text">
+        Nenhum resultado encontrado para
+      </div>
+
+      <div class="consulta-search">
+        "${searchInput.value}"
+      </div>
+
+      <div class="consulta-alert">
+         Verifique se a <strong>SIGLA DA LOJA</strong> ou o <strong>PDV</strong> estao corretos.
+      </div>
+
+      <button onclick="voltar()" class="consulta-btn">
+        VOLTAR AO PAINEL
+      </button>
+
+    </div>
+
+  </div>
+
+  <style>
+
+  .consulta-wrapper{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-top:120px;
+    animation:fadeWrapper 0.6s ease-out;
+  }
+
+  @keyframes fadeWrapper{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  .consulta-card{
+    width:650px;
+    padding:65px 55px;
+    border-radius:22px;
+    background:linear-gradient(145deg,#121212,#1c1c1c);
+    border:1px solid rgba(255,255,255,0.06);
+    text-align:center;
+    position:relative;
+    box-shadow:
+      0 40px 100px rgba(0,0,0,0.9),
+      0 0 60px rgba(255, 200, 0, 0.08);
+  }
+
+  /* Barra superior elegante */
+  .consulta-topbar{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:5px;
+    border-radius:22px 22px 0 0;
+    background:linear-gradient(90deg,#ffcc00,#ffd700,#ffcc00);
+    box-shadow:0 0 20px rgba(255,200,0,0.5);
+  }
+
+  .consulta-header{
+    font-size:13px;
+    letter-spacing:4px;
+    color:#ffcc00;
+    margin-bottom:25px;
+    font-weight:700;
+  }
+
+  .consulta-title{
+    font-size:30px;
+    font-weight:900;
+    letter-spacing:3px;
+    color:#ffffff;
+    margin-bottom:25px;
+  }
+
+  .consulta-text{
+    font-size:17px;
+    color:#bbb;
+    margin-bottom:12px;
+  }
+
+  .consulta-search{
+    font-size:24px;
+    font-weight:800;
+    color:#ffcc00;
+    margin-bottom:35px;
+    text-shadow:0 0 15px rgba(255,200,0,0.6);
+  }
+
+  .consulta-alert{
+    margin:0 0 40px;
+    padding:20px 30px;
+    border-radius:14px;
+    font-size:17px;
+    font-weight:700;
+    color:#fff;
+
+    background:rgba(255, 200, 0, 0.08);
+    border:1px solid rgba(255, 200, 0, 0.6);
+
+    box-shadow:
+      0 0 25px rgba(255, 200, 0, 0.35),
+      0 0 70px rgba(255, 200, 0, 0.15);
+
+    animation:alertFade 0.8s ease-out;
+  }
+
+  @keyframes alertFade{
+    from{opacity:0; transform:translateY(15px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  .consulta-btn{
+    padding:15px 42px;
+    border-radius:14px;
+    border:none;
+    cursor:pointer;
+    font-weight:800;
+    font-size:14px;
+    letter-spacing:1px;
+    background:linear-gradient(135deg,#ffcc00,#ffaa00);
+    color:#000;
+    transition:0.3s ease;
+    box-shadow:
+      0 0 20px rgba(255,200,0,0.6),
+      0 0 60px rgba(255,200,0,0.3);
+  }
+
+  .consulta-btn:hover{
+    transform:scale(1.05);
+    box-shadow:
+      0 0 35px rgba(255,200,0,0.9),
+      0 0 80px rgba(255,200,0,0.6);
+  }
+
+  </style>
+  `;
+
+  return;
+}
+
+
+ mostrarTabela(resultado, true); // 🔥 esconde PDVs
+}
+
+function atualizarResumo(lista = lojas) {
+
+  const totalForti = lista.filter(l=>l.dispositivo.toLowerCase()==="fortigate").length;
+  const totalMikrotik = lista.filter(l=>l.dispositivo.toLowerCase()==="mikrotik").length;
+  const totalFilial = lista.filter(l=>l.tipo.toLowerCase()==="filial").length;
+  const totalPostos = lista.filter(l=>l.tipo.toLowerCase()==="posto").length;
+  const totalDeposito = lista.filter(l=>l.tipo.toLowerCase()==="deposito").length;
+  const totalRep = lista.filter(l=>l.tipo.toLowerCase()==="representante").length;
+  const totalGeral = lista.length;
+
+  document.getElementById('totalForti').textContent = totalForti;
+  document.getElementById('totalMikrotik').textContent = totalMikrotik;
+  document.getElementById('totalFilial').textContent = totalFilial;
+  document.getElementById('totalPostos').textContent = totalPostos;
+  document.getElementById('totalDeposito').textContent = totalDeposito;
+  document.getElementById('totalRep').textContent = totalRep;
+  document.getElementById('totalGeral').textContent = totalGeral;
+}
+
+
+
+</script>
+</body>
+</html>

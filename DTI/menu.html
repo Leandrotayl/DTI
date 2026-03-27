@@ -1,0 +1,255 @@
+  <!DOCTYPE html>
+  <html lang="pt-br">
+  <head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Painel GS</title>
+  <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/3132/3132083.png" type="image/png">
+
+  <style>
+  @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap');
+
+  /* ===== VARIÁVEIS ===== */
+  :root{
+    --bg:#000;
+    --accent:#00ffff;
+    --accent-2:#00aaff;
+    --glass:rgba(255,255,255,0.04);
+    --card-radius:18px;
+    --ease:cubic-bezier(.2,.9,.2,1);
+  }
+
+
+  /* ===== RESET ===== */
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body {
+    font-family:'Orbitron',sans-serif;
+    background: url('http://172.16.2.7/DTI/img/1.png') no-repeat center center fixed;
+    background-size: cover; /* Faz a imagem cobrir toda a tela */
+    color: var(--accent);
+    -webkit-font-smoothing: antialiased;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 50px;
+  }
+
+  /* Reduz animação para acessibilidade */
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+  /* BACKDROP NEBULAS, PARTICULAS, LUZES */
+  #backdrop{
+    position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+    background:radial-gradient(1200px 600px at 10% 20%,rgba(0,255,255,0.06),transparent),
+              radial-gradient(900px 500px at 80% 80%,rgba(128,0,255,0.05),transparent),
+              linear-gradient(180deg,rgba(0,0,0,0.4),rgba(0,0,0,0.6));
+    mix-blend-mode:screen;
+  }
+  .nebula{
+    position:absolute;inset:-20%;filter:blur(60px) saturate(140%) contrast(110%);
+    opacity:0.9;background:radial-gradient(circle at 30% 40%,rgba(0,255,255,0.35),transparent 10%),
+                        radial-gradient(circle at 70% 60%,rgba(170,0,255,0.24),transparent 14%),
+                        radial-gradient(circle at 40% 80%,rgba(255,60,140,0.12),transparent 18%);
+    animation:nebMove 26s linear infinite alternate;
+  }
+  .nebula.layer2{filter:blur(80px) saturate(120%);transform:scale(1.05) rotate(8deg);animation-duration:34s;opacity:0.8;}
+  @keyframes nebMove{0%{transform:translate(-3%,-2%) scale(1) rotate(-2deg)}100%{transform:translate(3%,2%) scale(1.04) rotate(2deg)}}
+
+  .light-streak{
+    position:absolute;left:-40%;top:-10%;width:220%;height:160%;
+    background:linear-gradient(90deg,transparent 15%,rgba(255,255,255,0.04) 30%,rgba(0,170,255,0.06) 50%,rgba(255,255,255,0.02) 70%,transparent 90%);
+    transform:rotate(-12deg);animation:streak 18s linear infinite;mix-blend-mode:screen;pointer-events:none;
+  }
+  @keyframes streak{0%{transform:translateX(-100%) rotate(-12deg)}100%{transform:translateX(100%) rotate(-12deg)}}
+
+  .scanlines{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.006) 1px,transparent 1px);background-size:100% 18px;mix-blend-mode:overlay;opacity:0.8;pointer-events:none;}
+
+  /* CABECALHO */
+  header{z-index:3;position:relative;margin-bottom:18px;text-align:center;}
+  header h1{
+    font-size:3.2rem;letter-spacing:3px;
+    background:linear-gradient(90deg,var(--accent),#7f4dff,var(--accent-2));
+    background-size:200% auto;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    animation:titleShine 6s linear infinite;text-shadow:0 0 10px rgba(0,255,255,0.06);
+  }
+  @keyframes titleShine{to{background-position:200% center}}
+
+  /* MENU CARDS */
+  nav[role="navigation"]{
+    z-index:3;width:100%;max-width:980px;display:flex;gap:26px;flex-wrap:wrap;justify-content:center;align-items:center;perspective:1200px;padding:0 18px;
+  }
+
+  .card{
+    width:220px;height:140px;border-radius:var(--card-radius);position:relative;overflow:hidden;
+    display:flex;align-items:center;justify-content:center;text-align:center;color:#fff;text-decoration:none;
+    transform-style:preserve-3d;transition:transform 420ms var(--ease),box-shadow 420ms var(--ease),filter 320ms var(--ease);
+    border:10px solid rgba(255,255,255,0.06);backdrop-filter:blur(10px) saturate(160%);
+    box-shadow:0 12px 40px rgba(0,0,0,0.5),inset 0 -6px 24px rgba(0,0,0,0.15);
+    cursor:pointer;font-size:1.12rem;font-weight:600;letter-spacing:0.3px;
+  }
+  .card .inner{z-index:2;padding:14px;text-shadow:0 0 4px rgba(255,255,255,0.2);}
+  .card .sub{position:absolute;bottom:10px;width:100%;text-align:center;font-size:0.78rem;color:rgba(255,255,255,0.92);text-shadow:0 0 8px currentColor;}
+  .card::before{content:"";position:absolute;inset:-40%;background:linear-gradient(60deg,transparent,rgba(255,255,255,0.06),transparent);
+    transform:rotate(45deg);animation:cardGlow 4s ease-in-out infinite alternate;pointer-events:none;mix-blend-mode:screen;opacity:0.7;}
+  @keyframes cardGlow{from{transform:translate(-120%,-120%) rotate(45deg)}to{transform:translate(120%,120%) rotate(45deg)}}
+  .card:hover{transform:translateY(-18px) scale(1.14) rotateX(8deg) rotateY(6deg);filter:saturate(1.18);
+    box-shadow:0 30px 90px rgba(0,150,255,0.08),0 12px 40px rgba(0,0,0,0.6);}
+
+  .card.c1{background:linear-gradient(135deg,#a08d8d,#022c2c 60%);}
+  .card.c2{background:linear-gradient(135deg,#676b77,#3b3f47 60%);}
+  .card.c3{background:linear-gradient(135deg,#4d5253,#113b2a 60%);}
+  .card.c4{background:linear-gradient(135deg,#57574e,#444037 60%);}
+  .card.c5{background:linear-gradient(135deg,#5c5552,#5a3a2b 60%);}
+  .card.c6{background:linear-gradient(135deg,#d1d1c6,#444037 60%);}
+  .card.c7{background:linear-gradient(135deg,#4c5247,#5a3a2b 60%);}
+  .card.c8{background:linear-gradient(135deg,#5c7e73,#5a3a2b 60%);}
+
+  .badge{position:absolute;top:12px;right:12px;background:linear-gradient(90deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));
+    border-radius:10px;padding:6px 8px;font-size:0.72rem;color:var(--accent);box-shadow:0 6px 18px rgba(0,0,0,0.5);}
+
+  /* CALENDÁRIO */
+  #calendar{
+    position:fixed;left:20px;top:2px;width:260px;background:linear-gradient(180deg,rgba(0,0,0,0.55),rgba(0,0,0,0.45));
+    padding:12px;border-radius:12px;border:2px solid rgba(0,255,255,0.12);box-shadow:0 8px 30px rgba(0,0,0,0.6);
+    z-index:4;color:var(--accent);font-size:0.9rem;backdrop-filter:blur(6px);
+  }
+  #calendar h2{text-align:center;margin-bottom:8px;font-size:1rem;color:var(--accent);text-shadow:0 0 6px var(--accent);}
+  #calendar table{width:100%;border-collapse:collapse}
+  #calendar th{color:var(--accent);font-weight:600;padding-bottom:6px;}
+  #calendar td{text-align:center;padding:6px;border-radius:6px;cursor:pointer;transition:transform 160ms var(--ease),box-shadow 160ms var(--ease);color:#bfe;}
+  #calendar td.empty{cursor:default;color:rgba(0,255,255,0.08);}
+  #calendar td:hover:not(.empty){transform:translateY(-6px) scale(1.08);box-shadow:0 0 20px rgba(0,255,255,0.08);}
+  #calendar td.today{background:linear-gradient(90deg,#ff3a3a,#ff6a6a);color:#fff;font-weight:700;border:2px solid rgba(255,255,255,0.04);box-shadow:0 6px 20px rgba(255,0,0,0.08);}
+  #calendar td.selected{outline:2px solid var(--accent);box-shadow:0 0 18px rgba(0,255,255,0.12);}
+  #calendar .controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+  #calendar button{background:none;border:none;color:var(--accent);cursor:pointer;font-size:1rem;font-weight:600;transition:transform .2s;}
+  #calendar button:hover{transform:scale(1.2);color:#fff;}
+  #calendar .today-btn{width:100%;margin-bottom:6px;background:none;border:1px solid rgba(0,255,255,0.2);border-radius:8px;color:var(--accent);cursor:pointer;font-size:0.9rem;padding:4px 0;transition:all .3s;}
+  #calendar .today-btn:hover{background:rgba(0,255,255,0.08);}
+
+  /* HUD CLOCK */
+  #hud-clock{
+    position:fixed;right:10px;top:8px;z-index:4;min-width:260px;padding:10px 12px;border-radius:14px;
+    border:2px solid rgba(0,255,255,0.12);background:linear-gradient(180deg,rgba(0,255,255,0.02),rgba(0,0,0,0.06));
+    box-shadow:0 12px 36px rgba(0,0,0,0.6);color:var(--accent);text-align:center;backdrop-filter:blur(6px);
+  }
+  #hud-clock span{display:block;margin:6px 0;}
+  #hud-time{font-size:1.6rem;font-weight:700;letter-spacing:2px;text-shadow:0 0 10px rgba(0,255,255,0.06);}
+
+  /* CURSOR GLOW */
+  .cursor-glow{position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:screen;width:30px;height:30px;border-radius:50%;
+    background:radial-gradient(circle,rgba(0,255,255,0.95) 0%,rgba(0,170,255,0.12) 30%,transparent 70%);transform:translate(-50%,-50%);transition:width .12s,height .12s;}
+
+  /* LOGO FLOUTANTE */
+  #logo {
+    position: fixed;
+    top: 20px;            
+    left: 300px;          
+    width: 120px;         
+    height: auto;
+    z-index: 5;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    opacity: 0.85;
+  }
+
+  @media(max-width:720px){
+    nav[role="navigation"]{gap:12px;}
+    .card{width:92%;max-width:480px;}
+    #calendar{left:10px;width:180px;font-size:0.78rem;}
+    #hud-clock{right:10px;top:auto;bottom:12px;min-width:170px;font-size:0.9rem;}
+    header h1{font-size:1.6rem;}
+  }
+  </style>
+  </head>
+  <body>
+  <!--<img id="logo" src="http://172.16.2.7/DTI/painel.png" alt="IMAGEM">-->
+
+  <div id="backdrop">
+    <div class="nebula"></div>
+    <div class="nebula layer2"></div>
+    <div class="light-streak"></div>
+    <div class="scanlines"></div>
+  </div>
+
+  <header><h1>Menu Principal</h1></header>
+
+  <nav role="navigation">
+    <a class="card c1" href="redes.html"><div class="badge">Rede</div><div class="inner">Redes Claudino com IPs</div><div class="sub">Gerenciar IPs</div></a>
+    <a class="card c2" href="compara.html"><div class="badge">Compara</div><div class="inner">Comparar Numeros de Serie</div><div class="sub">Comparar Series</div></a>
+    <a class="card c3" href="dados.html"><div class="badge">Arquivos T.I</div><div class="inner">Arquivos T.I</div><div class="sub">Arquivos T.I</div></a>
+    <a class="card c4" href="licencas.html"><div class="badge">Licencas</div><div class="inner">Licencas Office</div><div class="sub">Gerenciar Licencas</div></a>
+    <a class="card c5" href="lojas.html"><div class="badge">Lojas</div><div class="inner">Lojas Claudino</div><div class="sub">Visualizar Lojas</div></a>
+    <a class="card c6" href="ramal.html"><div class="badge">Ramais</div><div class="inner">Ramal Gerencia de Suporte</div><div class="sub">Visualizar Ramais</div></a>
+    <a class="card c7" href="carrego.html"><div class="badge">Carrego</div><div class="inner">Carrego Claudino</div><div class="sub">Visualizar Carregos</div></a>
+    <a class="card c8" href="comparapagina.html"><div class="badge">Impressoes</div><div class="inner">Comparar Paginas Impressas</div><div class="sub">Comparar Impressoes</div></a>
+  </nav>
+
+  <div id="calendar"></div>
+  <div id="hud-clock"><span id="hud-date"></span><span id="hud-time"></span></div>
+  <div class="cursor-glow"></div>
+
+  <script defer>
+  const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+
+  function updateClock(){
+    const n=new Date(),w=n.toLocaleDateString('pt-BR',{weekday:'long'});
+    $('#hud-date').innerHTML=`${w.charAt(0).toUpperCase()+w.slice(1)}<br>${n.getDate()} de ${n.toLocaleDateString('pt-BR',{month:'long'})} de ${n.getFullYear()}`;
+    $('#hud-time').textContent=n.toLocaleTimeString('pt-BR');
+  }
+  setInterval(updateClock,1000);updateClock();
+
+  const feriados = {
+    "1-1": "Confraternizacao Universal",
+    "17-2": "Carnaval",
+    "8-3": "Dia da Mulher",
+    "3-4": "Paixao de Cristo",
+    "5-4": "Pascoa",
+    "21-4": "Tiradentes",
+    "1-5": "Dia do Trabalhador",
+    "10-5": "Dia das Maes",
+    "4-6": "Corpus Chsisti",
+    "12-6": "Dias Dos Namorados",
+    "19-7": "Aniversario Paraiba",
+    "8-8": "Dia Dos Pais",
+    "7-9": "Independencia do Brasil",
+    "12-10": "Nossa Senhora Aparecida",
+    "2-11": "Finados",
+    "15-11": "Proclamacao da Republica",
+    "20-11": "Conciencia Negra",
+    "25-12": "Natal",
+  };
+
+  let cy=new Date().getFullYear(),cm=new Date().getMonth();
+  function generateCalendar(y=cy,m=cm){
+    const ms=['Janeiro','Fevereiro','Marco','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+          ws=['Dom','Seg','Ter','Qua','Qui','Sex','Sab'];
+    const f=new Date(y,m,1).getDay(),days=new Date(y,m+1,0).getDate(),now=new Date();
+    let html=`<div class="controls"><button onclick="changeMonth(-1)">Anterior</button><h2>${ms[m]} ${y}</h2><button onclick="changeMonth(1)">Proximo</button></div>
+    <button class="today-btn" onclick="goToToday()">Hoje</button><table><thead><tr>`;
+    ws.forEach(w=>html+=`<th>${w}</th>`);html+=`</tr></thead><tbody><tr>`;
+    for(let i=0;i<f;i++)html+=`<td class="empty"></td>`;
+    for(let d=1;d<=days;d++){
+      const today=y===now.getFullYear()&&m===now.getMonth()&&d===now.getDate();
+      const key=`${d}-${m+1}`;
+      const feriado=feriados[key]?feriados[key]:'';
+
+      html+=`<td class="${today?'today':''}" title="${feriado}">${d}</td>`;
+      if((d+f)%7===0)html+=`</tr><tr>`;
+    }
+    html+=`</tr></tbody></table>`;
+    $('#calendar').innerHTML=html;
+  }
+  function changeMonth(dir){cm+=dir;if(cm>11){cm=0;cy++;}else if(cm<0){cm=11;cy--;}generateCalendar(cy,cm);}
+  function goToToday(){const n=new Date();cy=n.getFullYear();cm=n.getMonth();generateCalendar(cy,cm);}
+  generateCalendar(cy,cm);
+
+  document.addEventListener('mousemove',e=>{
+    const c=$('.cursor-glow');c.style.left=e.clientX+'px';c.style.top=e.clientY+'px';
+  });
+  </script>
+  </body>
+  </html>

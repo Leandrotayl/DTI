@@ -25,7 +25,7 @@ body {
   padding-top: 2px;
 }
 
-/* Header e Título */
+/* Header e Tï¿½tulo */
 .header {
     display:flex;
     flex-direction:column;
@@ -159,7 +159,7 @@ select:hover { background:#333; color:#fff; }
     box-shadow:0 0 40px #00ff99, 0 0 80px #00ff99 inset;
 }
 
-/* Card de aviso robusto, porém suave */
+/* Card de aviso robusto, porï¿½m suave */
 .card-aviso {
     background: #444; /* fundo escuro suave */
     border: 2px solid #88c0d0; /* borda azul suave */
@@ -184,7 +184,7 @@ select:hover { background:#333; color:#fff; }
         0 0 25px #555 inset;
 }
 
-/* Título do aviso */
+/* Tï¿½tulo do aviso */
 .card-aviso h3 {
     margin-bottom: 8px;
     font-size: 1.2em;
@@ -354,7 +354,7 @@ select:hover { background:#333; color:#fff; }
   text-shadow: 0 0 8px #00ffff;
 }
 
-/* Ícone da lupa neon */
+/* ï¿½cone da lupa neon */
 .icone-lupa {
   position: absolute;
   right: 18px;
@@ -369,7 +369,7 @@ select:hover { background:#333; color:#fff; }
   50% { text-shadow: 0 0 25px #00ffff, 0 0 35px #00ffff; }
 }
 
-/* BOTÃO PARA VOLTAR MENU PRINCIPAL */
+/* BOTï¿½O PARA VOLTAR MENU PRINCIPAL */
 #btnMenu {
   position: fixed;
   top: 220px;       /* distancia do topo */
@@ -401,7 +401,7 @@ select:hover { background:#333; color:#fff; }
 .quadro-pesquisa {
     position: fixed;
     top: 140px; /* ligeiramente mais alto */
-    right: 20px; /* mais próximo da borda */
+    right: 20px; /* mais prï¿½ximo da borda */
     width: 218px;
     max-width: 90%;
     background: linear-gradient(145deg, rgba(0,255,255,0.15), rgba(0,200,255,0.25));
@@ -433,7 +433,7 @@ select:hover { background:#333; color:#fff; }
         0 0 150px rgba(0,255,255,0.15) inset;
 }
 
-/* Título h3 mais destacado */
+/* Tï¿½tulo h3 mais destacado */
 .quadro-pesquisa h3 {
     margin-bottom: 12px;
     font-size: 1em;
@@ -458,7 +458,7 @@ select:hover { background:#333; color:#fff; }
 }
 
 
-/* Relógio */
+/* Relï¿½gio */
 .relogio {
     position:absolute;
     top:20px;
@@ -495,7 +495,7 @@ select:hover { background:#333; color:#fff; }
         0 0 100px rgba(0,255,204,0.25);
 }
 
-/* Pulsação do neon */
+/* Pulsaï¿½ï¿½o do neon */
 @keyframes neonPulse {
     0%,100% { text-shadow: 0 0 10px #00ffcc,0 0 20px #00ffcc,0 0 30px #00ffcc,0 0 40px #00ffcc; }
     50% { text-shadow: 0 0 15px #00ffcc,0 0 30px #00ffcc,0 0 45px #00ffcc,0 0 60px #00ffcc; }
@@ -511,7 +511,7 @@ select:hover { background:#333; color:#fff; }
 
 
 
-/* Calendário */
+/* Calendï¿½rio */
 .calendario {
     position:absolute;
     top:20px;
@@ -653,7 +653,6 @@ const carregos = {
    "BCU": ["BCU"],
    "DZE": ["DZE"],
    "CTP": ["CTP"],
-   "GDV": ["GDV"],
    "AMP": ["AMP"],
    "CME": ["CME"],
    "SLP": ["SLP"],
@@ -730,7 +729,7 @@ const carregos = {
 };
 
 
-/* ====== Utilitários ====== */
+/* ====== Utilitï¿½rios ====== */
 function obterDiaSemana() {
     const dias=["Somingo","Segunda","Terca","Quarta","Quinta","Sexta","Sabado"];
     return dias[new Date().getDay()];
@@ -784,7 +783,7 @@ function adicionarDiasUteis(data, dias) {
     return d;
 }
 
-/* ====== Funções corrigidas: select com datas, carregar pelo dia selecionado, atualizar saida ====== */
+/* ====== Funï¿½ï¿½es corrigidas: select com datas, carregar pelo dia selecionado, atualizar saida ====== */
 
 function atualizarSelectComDatas() {
     const select = document.getElementById("diaSelect");
@@ -792,13 +791,13 @@ function atualizarSelectComDatas() {
     const diasSemana = ["Domingo","Segunda","Terca","Quarta","Quinta","Sexta","Sabado"];
     select.innerHTML = "";
 
-    // Opção Hoje (auto)
+    // Opï¿½ï¿½o Hoje (auto)
     const optionHoje = document.createElement("option");
     optionHoje.value = "auto";
     optionHoje.textContent = `Hoje - ${String(hoje.getDate()).padStart(2,'0')}/${String(hoje.getMonth()+1).padStart(2,'0')}`;
     select.appendChild(optionHoje);
 
-    // Próximos 14 dias (só dias úteis) -> value será ISO date YYYY-MM-DD
+    // Prï¿½ximos 14 dias (sï¿½ dias ï¿½teis) -> value serï¿½ ISO date YYYY-MM-DD
     let added = 0, offset = 1;
     while(added < 14 && offset <= 60){
         const data = new Date(hoje);
@@ -830,7 +829,7 @@ function carregarLojasManualmente() {
         diaSemanaNome = diasSemana[hoje.getDay()];
         dataSelecionadaObj = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
     } else {
-        // diaSelecionadoValue é YYYY-MM-DD
+        // diaSelecionadoValue ï¿½ YYYY-MM-DD
         dataSelecionadaObj = new Date(diaSelecionadoValue + "T00:00:00");
         diaSemanaNome = diasSemana[dataSelecionadaObj.getDay()];
     }
@@ -883,7 +882,7 @@ function atualizarSaidaLoja(diaSelecionado="auto") {
     // normaliza hora
     baseDate.setHours(0,0,0,0);
 
-    // regra fixa: adicionar 2 dias úteis (mantendo sua função)
+    // regra fixa: adicionar 2 dias ï¿½teis (mantendo sua funï¿½ï¿½o)
     const saida = adicionarDiasUteis(baseDate, 2);
 
     const diasSemanaNomes = ["Domingo","Segunda-feira","Terca-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sabado"];
@@ -892,7 +891,7 @@ function atualizarSaidaLoja(diaSelecionado="auto") {
     document.getElementById("saidaLoja").textContent = `Saida para a loja: ${nomeDia}, ${String(dia).padStart(2,'0')}/${String(mes).padStart(2,'0')}/${ano}`;
 }
 
-/* destaca célula do calendário — aceita "auto", "YYYY-MM-DD" ou nome do dia ("terca") */
+/* destaca cï¿½lula do calendï¿½rio ï¿½ aceita "auto", "YYYY-MM-DD" ou nome do dia ("terca") */
 function destacarDiaSelecionado(valor) {
     const diasSemana = ["domingo","segunda","terca","quarta","quinta","sexta","sabado"];
     const hoje = new Date();
@@ -948,7 +947,7 @@ function pesquisarLojasOuDias() {
     }
 
     const resultados = { filiais: [], postos: [], lojas: [] };
-    const diasSemana = ["domingo","segunda","terça","quarta","quinta","sexta","sábado"];
+    const diasSemana = ["domingo","segunda","terï¿½a","quarta","quinta","sexta","sï¿½bado"];
     const hoje = new Date();
     const indiceHoje = hoje.getDay();
 
@@ -1069,7 +1068,7 @@ Object.keys(containers).forEach(tipo => {
         </div>
 
         <div style="margin-top: 6px;">
-            <strong style="color:#00eaff;">Saída:</strong> ${r.saida}
+            <strong style="color:#00eaff;">Saida:</strong> ${r.saida}
         </div>
 
     </div>
@@ -1091,7 +1090,7 @@ Object.keys(containers).forEach(tipo => {
     document.getElementById("saidaLoja").textContent = "Resultados da pesquisa";
 }
 
-/* ====== Relógio, data e calendário ====== */
+/* ====== Relï¿½gio, data e calendï¿½rio ====== */
 function atualizarDataAtual() {
     const hoje = new Date();
     const diasSemanaNomes = ["Domingo","Segunda-feira","Terca-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sabado"];
@@ -1160,9 +1159,9 @@ function gerarCalendario() {
     document.getElementById("calendario").innerHTML=tabela;
 }
 
-/* ====== Ações e eventos (colocados após a definição das funções) ====== */
+/* ====== Aï¿½ï¿½es e eventos (colocados apï¿½s a definiï¿½ï¿½o das funï¿½ï¿½es) ====== */
 document.addEventListener("DOMContentLoaded",()=>{
-    // Inicializações
+    // Inicializaï¿½ï¿½es
     atualizarDataAtual();
     atualizarSelectComDatas();
     carregarLojasManualmente();
@@ -1177,7 +1176,7 @@ document.addEventListener("DOMContentLoaded",()=>{
     });
 
     document.getElementById("btnMenu").addEventListener("click", () => {
-        // se quiser outra ação, altere aqui
+        // se quiser outra aï¿½ï¿½o, altere aqui
         window.location.href = "menu.html";
     });
 
@@ -1186,7 +1185,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 });
 
 /* ====== Debug / Exemplo ====== */
-// console.log("Exemplo de saída calculada:", calcularSaida("2025-11-14"));
+// console.log("Exemplo de saï¿½da calculada:", calcularSaida("2025-11-14"));
 
 </script>
 </body>

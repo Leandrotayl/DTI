@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lojas Claudino S/A</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+}
+h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-weight: 700;
+    color: #ffdd57;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.7);
+}
+.lojas-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+}
+.loja-card {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    backdrop-filter: blur(10px);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    border: 1px solid rgba(255,255,255,0.2);
+}
+.loja-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+}
+.loja-card h2 { 
+    margin: 0 0 10px 0; 
+    font-size: 22px; 
+    color: #ffdd57; 
+    text-shadow: 1px 1px 4px #000;
+}
+.loja-card p { 
+    margin: 5px 0; 
+    font-weight: 500; 
+    font-size: 16px;
+}
+.back-button {
+    display: none;
+    margin: 30px auto 0 auto;
+    padding: 12px 25px;
+    background: #ffdd57;
+    color: #0f2027;
+    font-weight: 700;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.4);
+    transition: background 0.3s, transform 0.2s;
+}
+.back-button:hover { 
+    background: #ffe680;
+    transform: scale(1.05);
+}
+#distancia {
+    text-align: center;
+    margin-top: 25px;
+    font-size: 22px;
+    font-weight: 700;
+    color: #00ffc2;
+    display: none;
+    text-shadow: 1px 1px 6px rgba(0,0,0,0.6);
+}
+</style>
+</head>
+<body>
+
+<h1>Lojas Claudino S/A</h1>
+
+<div class="lojas-container" id="lojasContainer"></div>
+<button class="back-button" id="backButton">← Voltar para todas as lojas</button>
+<div id="distancia"></div>
+
+<script>
+// Lista de lojas Claudino S/A com coordenadas aproximadas (lat, lng)
+const lojas = [
+    { sigla: 'FLO', cidade: 'Floriano', uf: 'PI', lat: -6.766, lng: -43.028 },
+    { sigla: 'PAR', cidade: 'Parnaíba', uf: 'PI', lat: -2.910, lng: -41.774 },
+    { sigla: 'PIC', cidade: 'Picos', uf: 'PI', lat: -7.077, lng: -41.467 },
+    { sigla: 'PIN', cidade: 'Pinheiro', uf: 'MA', lat: -2.518, lng: -44.301 },
+    { sigla: 'CIM', cidade: 'Camocim', uf: 'CE', lat: -2.900, lng: -40.833 },
+    { sigla: 'TER', cidade: 'Teresina', uf: 'PI', lat: -5.091, lng: -42.801 },
+    { sigla: 'SÃO', cidade: 'São Raimundo', uf: 'PI', lat: -6.327, lng: -42.023 },
+    { sigla: 'ITA', cidade: 'Itapipoca', uf: 'CE', lat: -3.546, lng: -39.578 },
+    { sigla: 'CAM', cidade: 'Caxias', uf: 'MA', lat: -4.864, lng: -43.333 }
+];
+
+// Coordenadas de Teresina
+const teresina = { lat: -5.091, lng: -42.801 };
+
+const container = document.getElementById('lojasContainer');
+const backButton = document.getElementById('backButton');
+const distanciaDiv = document.getElementById('distancia');
+
+// Função de Haversine para calcular distância em KM
+function calcularDistancia(lat1, lon1, lat2, lon2) {
+    const R = 6371;
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLon/2) * Math.sin(dLon/2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    return R * c;
+}
+
+// Criar os cards de cada loja
+lojas.forEach(loja => {
+    const card = document.createElement('div');
+    card.className = 'loja-card';
+    card.innerHTML = `
+        <h2>${loja.sigla}</h2>
+        <p><strong>Cidade:</strong> ${loja.cidade}</p>
+        <p><strong>UF:</strong> ${loja.uf}</p>
+    `;
+
+    card.onclick = () => {
+        document.querySelectorAll('.loja-card').forEach(c => c.style.display = 'none');
+        backButton.style.display = 'block';
+        distanciaDiv.style.display = 'block';
+
+        const km = calcularDistancia(teresina.lat, teresina.lng, loja.lat, loja.lng);
+        distanciaDiv.textContent = `Distância aproximada de Teresina - PI até ${loja.sigla}: ${km.toFixed(1)} km`;
+    };
+
+    container.appendChild(card);
+});
+
+// Botão voltar
+backButton.onclick = () => {
+    document.querySelectorAll('.loja-card').forEach(c => c.style.display = 'block');
+    backButton.style.display = 'none';
+    distanciaDiv.style.display = 'none';
+};
+</script>
+
+</body>
+</html>

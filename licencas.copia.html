@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -131,30 +132,81 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
   transition: all 0.3s ease;
 }
 
+/* ===================================== */
+/* BOTÃO 3D REAL COM COR DINÂMICA */
+/* ===================================== */
 
 #btnTop {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
-  z-index: 99;
-  background: linear-gradient(145deg,#0d47a1,#1976d2);
-  color: #0ff;
-  border: 2px solid #0ff;
-  border-radius: 50px;
-  padding: 15px 25px;
-  font-size: 1rem;
-  font-weight: bold;
+  bottom: 40px;
+  right: 40px;
+  min-width: 210px;
+  height: 60px;
+  padding: 0 32px;
+  border-radius: 14px;
+  border: none;
   cursor: pointer;
-  text-shadow: 0 0 5px #0ff, 0 0 15px #0ff;
-  box-shadow: 0 0 10px #0ff, 0 0 30px #0ff inset;
-  transition: all 0.3s ease-in-out;
-  display: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.4s ease;
+  z-index: 9999;
+  overflow: hidden;
+
+  /* COR PADRÃO (VERMELHO) */
+  background: linear-gradient(145deg, #1a0000, #3a0000);
+
+  box-shadow:
+    0 18px 35px rgba(0,0,0,0.7), /* sombra externa profunda */
+    inset 0 4px 8px rgba(255,255,255,0.08), /* luz superior */
+    inset 0 -6px 12px rgba(0,0,0,0.6), /* sombra interna */
+    0 0 25px rgba(255,0,0,0.3);
 }
+
+/* Quando aparece */
+#btnTop.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* TEXTO */
+#btnTop .btn-core {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(255,0,0,0.7);
+  transition: 0.4s;
+}
+
+/* HOVER 3D */
 #btnTop:hover {
-  background: linear-gradient(145deg,#ff0000,#1a1aff);
-  color: #fff;
-  box-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff4d4d inset;
-  transform: scale(1.1);
+  transform: scale(1.05) translateY(-3px);
+  box-shadow:
+    0 25px 45px rgba(0,0,0,0.8),
+    0 0 35px rgba(255,0,0,0.6),
+    0 0 70px rgba(255,0,0,0.4);
+}
+
+/* ===================================== */
+/* ESTADO TOPO (VERDE APROVADO) */
+/* ===================================== */
+
+#btnTop.top-active {
+  background: linear-gradient(145deg, #002b15, #004d26);
+
+  box-shadow:
+    0 18px 35px rgba(0,0,0,0.7),
+    inset 0 4px 8px rgba(255,255,255,0.08),
+    inset 0 -6px 12px rgba(0,0,0,0.6),
+    0 0 25px rgba(0,255,100,0.4);
+}
+
+#btnTop.top-active .btn-core {
+  text-shadow: 0 0 8px rgba(0,255,100,0.8);
 }
 
 #btnMenu {
@@ -184,31 +236,101 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
 }
 
 /* Estilo do popup de cópia */
+/* ===== POPUP PREMIUM CORPORATIVO ===== */
 .copy-popup {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.7);
-  background: radial-gradient(circle at center, rgba(0, 255, 255, 0.2), rgba(0, 0, 0, 0.9));
-  border: 3px solid rgba(0, 255, 255, 0.7);
-  border-radius: 30px;
-  padding: 60px 80px;
-  overflow: hidden;
-  box-shadow: 
-    0 0 40px rgba(0, 255, 255, 0.8),
-    inset 0 0 30px rgba(0, 255, 255, 0.4),
-    0 0 100px rgba(0, 150, 255, 0.5);
+  top: 40px;
+  right: 80px;
+  min-width: 420px;
+  padding: 22px 30px;
+  border-radius: 22px;
+
+  background: linear-gradient(145deg, #0c1b22, #132f3a);
+  border: 1px solid rgba(0,255,120,0.4);
+
+  box-shadow:
+    0 0 30px rgba(0,255,120,0.5),
+    0 0 60px rgba(0,255,120,0.2),
+    inset 0 0 20px rgba(0,255,120,0.1);
+
+  color: #ffffff;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 500;
+
+  display: flex;
+  align-items: center;
+  gap: 18px;
+
   opacity: 0;
-  z-index: 3000;
-  pointer-events: none;
-  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-  backdrop-filter: blur(25px);
+  transform: translateX(140%) scale(0.95);
+  transition: all 0.45s cubic-bezier(0.23, 1, 0.32, 1);
+
+  z-index: 9999;
+  backdrop-filter: blur(14px);
+  overflow: hidden;
 }
 
+/* Estado ativo */
 .copy-popup.show {
   opacity: 1;
-  transform: translate(-50%, -50%) scale(1);
-  pointer-events: auto;
+  transform: translateX(0) scale(1);
+}
+
+/* ===== ENERGIA 360° NAS BORDAS ===== */
+
+.copy-popup::before,
+.copy-popup::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+}
+
+/* TOPO */
+.copy-popup::before {
+  top: 0;
+  left: -120%;
+  height: 5px;
+  width: 300%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #00ff66,
+    #00ffcc,
+    #00ff66,
+    transparent
+  );
+  box-shadow: 0 0 15px #00ff66, 0 0 30px #00ff99;
+  animation: energiaTopo 2s linear infinite;
+}
+
+/* BASE */
+.copy-popup::after {
+  bottom: 0;
+  left: -120%;
+  height: 5px;
+  width: 400%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    #00ff66,
+    #00ffcc,
+    #00ff66,
+    transparent
+  );
+  box-shadow: 0 0 15px #00ff66, 0 0 30px #00ff99;
+  animation: energiaBase 2s linear infinite;
+  animation-delay: 1s;
+}
+
+@keyframes energiaTopo {
+  0% { left: -120%; }
+  100% { left: 120%; }
+}
+
+@keyframes energiaBase {
+  0% { left: -120%; }
+  100% { left: 120%; }
 }
 
 .popup-inner {
@@ -266,7 +388,7 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
   left: 50%;
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(0, 255, 255, 0.3) 0%, rgba(0, 255, 255, 0) 70%);
+  background: radial-gradient(circle, rgba(255, 230, 0, 0.3) 0%, rgba(0, 255, 255, 0) 70%);
   transform: translate(-50%, -50%) scale(0);
   opacity: 0;
   animation: glowExpand 1.4s ease-out forwards;
@@ -315,9 +437,6 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
   0% { opacity: 0.7; }
   100% { opacity: 0; }
 }
-
-
-
 
 .total-card {
   position: fixed;
@@ -380,10 +499,30 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
 .licenca-box p { margin:5px 0; font-size:1rem; }
 .licenca-box:hover { transform: scale(1.15); background: linear-gradient(145deg,#ff0000,#1a1aff); box-shadow:0 0 50px #ff4d4d inset; }
 
+.copy-btn.copiado {
+  background: linear-gradient(145deg, #00ff66, #00cc44);
+  color: #003300;
+  font-weight: bold;
+  border: 2px solid #00ff66;
+  box-shadow:
+    0 0 15px #00ff66,
+    0 0 30px #00ff66,
+    inset 0 0 15px rgba(255,255,255,0.4);
+  transform: scale(1.07);
+  animation: aprovadoPulse 0.6s ease;
+  transition: all 0.3s ease;
+}
+
+@keyframes aprovadoPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1.07); }
+}
+
 .copy-btn {
   margin-top:8px;
   background:linear-gradient(145deg,#00ffff,#0077ff);
-  color:#000;
+  color:#000000;
   font-weight:bold;
   border:none;
   border-radius:10px;
@@ -413,11 +552,15 @@ footer { text-align:center; padding:15px; font-size:1rem; color:#ccc; margin-top
   .search-card{width:90%;}
   .total-card{font-size:1.6rem;padding:20px 30px;}
 }
+
+
+
 </style>
 </head>
 <body>
 
 <div id="copyPopup" class="copy-popup">
+  <span style="font-size:1.3rem;"></span>
   <div class="popup-inner">
     <div class="popup-particles" id="popupParticles"></div>
     <div class="popup-ring"></div>
@@ -432,6 +575,10 @@ footer { text-align:center; padding:15px; font-size:1rem; color:#ccc; margin-top
 
 
 <span class="highlight">$1</span>
+
+<button id="btnTop" title="Ir para o topo">
+  <span class="btn-core">Ir para o início</span>
+</button>
 
 
 <canvas id="networkCanvas"></canvas>
@@ -507,18 +654,32 @@ draw();
 
   // Codigo do Licencas Office
   const dadosFixos = [
-
       
- 
+      { usuario: "Adecio", loja: "HALLEY", licencas: 01, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00"  },
+      { usuario: "Tarcisio", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00"  },
+      { usuario: "Almoxarifado", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Arielson", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Assistente", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Atemisto", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Aurea", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Bruna", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
       { usuario: "Carla", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
       { usuario: "Cesar", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
       { usuario: "David", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
       { usuario: "Deposito", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-
-          
-  
+      { usuario: "Estevam", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Gracione", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Graziheli", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Halemb", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Indiara", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Lindomar", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Marciano", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Maria Eduarda", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+ 
   
     ];
+
+
 
  
 function destacar(texto,filtro){ if(!filtro) return texto; const regex=new RegExp(`(${filtro})`,'gi'); return texto.replace(regex,'<span class="highlight">$1</span>'); }
@@ -592,11 +753,16 @@ function atualizarDashboard(licencas){
 
     // --- Método híbrido: HTTPS e HTTP ---
     if (navigator.clipboard && window.isSecureContext) {
-      // HTTPS ? usa API moderna
+           // HTTPS ? usa API moderna
       navigator.clipboard.writeText(email).then(() => {
         mostrarPopup();
-        btn.textContent = 'Copiado!';
-        setTimeout(() => btn.textContent = 'Copiar E-mail', 2000);
+        btn.textContent = 'Email Copiado com Sucesso!';
+        btn.classList.add('copiado');
+
+setTimeout(() => {
+        btn.textContent = 'Copiar E-mail';
+        btn.classList.remove('copiado');
+}, 3000);
       }).catch(() => {
         copiarAntigo(email, btn);
       });
@@ -608,6 +774,33 @@ function atualizarDashboard(licencas){
 });
 }
 
+const btnTop = document.getElementById("btnTop");
+
+window.addEventListener("scroll", () => {
+
+  // Mostrar botão depois de rolar
+  if (window.scrollY > 200) {
+    btnTop.classList.add("show");
+  } else {
+    btnTop.classList.remove("show");
+  }
+
+  // Se estiver no topo (até 10px)
+  if (window.scrollY <= 10) {
+    btnTop.classList.add("top-active");  // Fica verde
+  } else {
+    btnTop.classList.remove("top-active"); // Fica vermelho
+  }
+
+});
+
+// Scroll suave
+btnTop.addEventListener("click", () => {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+});
 
 
 // Função de cópia compatível com servidores HTTP
@@ -648,7 +841,8 @@ function mostrarPopup() {
     particle.style.position = 'absolute';
     particle.style.width = `${2 + Math.random() * 4}px`;
     particle.style.height = particle.style.width;
-    particle.style.background = `rgba(0, 255, 255, ${0.4 + Math.random() * 0.6})`;
+    particle.style.background = `rgba(0, 255, 120, ${0.5 + Math.random() * 0.5})`;
+    particle.style.boxShadow = "0 0 10px #00ff66, 0 0 20px #00ff66";
     particle.style.borderRadius = '50%';
     particle.style.top = '50%';
     particle.style.left = '50%';
@@ -684,11 +878,11 @@ function atualizarDataHora() {
 
   // Data formatada
   const diasSemana = [
-    "Domingo", "Segunda-feira", "Terça-feira",
-    "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"
+    "Domingo", "Segunda-feira", "Terca-feira",
+    "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sabado"
   ];
   const meses = [
-    "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho",
+    "Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho",
     "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
   ];
   const diaSemana = diasSemana[agora.getDay()];

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dados DTI</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Roboto', sans-serif; }
+body { min-height:100vh; display:flex; justify-content:center; align-items:center; background: linear-gradient(135deg,#4b6cb7,#182848); color:#fff; position:relative; }
+
+/* BOTÕES FIXOS PRINCIPAIS */
+#logoutBtn, #changePassBtn, #addBtn {
+    position: fixed;
+    top: 5px;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,255,204,0.5);
+    transition: all 0.3s ease-in-out;
+    text-shadow: 0 0 5px #00ffd5;
+    display: none; /* inicialmente invisível */
+}
+
+/* Botão Logout */
+#logoutBtn {
+    right: 15px;
+    background: linear-gradient(45deg,#ff4d4d,#ff0000);
+    color:#fff;
+}
+#logoutBtn:hover { transform: scale(1.05); background: linear-gradient(45deg,#e63939,#b30000); }
+
+/* Botão Alterar Senha */
+#changePassBtn {
+    right: 150px;
+    background: linear-gradient(45deg,#00ffcc,#0066ff);
+    color:#182848;
+}
+#changePassBtn:hover { transform: scale(1.05); background: linear-gradient(45deg,#00e6b8,#004db3); }
+
+/* Botão Adicionar */
+#addBtn {
+    right: 300px;
+    background: linear-gradient(45deg,#00ffcc,#0066ff);
+    color:#182848;
+}
+#addBtn:hover { transform: scale(1.1); background: linear-gradient(45deg,#00e6b8,#004db3); }
+
+/* Formulário Login */
+#loginForm { background: rgba(255,255,255,0.05); padding:30px; border-radius:15px; width:350px; box-shadow:0 8px 30px rgba(0,0,0,0.3); backdrop-filter:blur(10px); text-align:center;}
+#loginForm input, #loginForm button { width:100%; padding:12px; margin:10px 0; border-radius:8px; border:none; outline:none; font-size:16px;}
+#loginForm input:focus { box-shadow:0 0 10px #00ffcc;}
+#loginForm button { background:#00ffcc; color:#182848; font-weight:bold; cursor:pointer; transition:0.3s;}
+#loginForm button:hover { background:#00e6b8; }
+.error { color:#ff4d4d; font-size:14px; margin-top:10px; display:block; }
+
+/* Menu principal */
+#btnMenu {
+  position: fixed;
+  top: 2px;
+  left: 2px;
+  width: 180px;
+  padding: 14px 0;
+  background: linear-gradient(135deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 3px solid #ff0000;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+  transition: all 0.3s ease-in-out;
+  z-index: 1001;
+}
+#btnMenu:hover { transform: scale(1.05); background: linear-gradient(145deg,#ff0000,#1a1aff); color:#fff; box-shadow:0 0 25px #ff4d4d,0 0 50px #ff4d4d inset; }
+
+/* Tela principal */
+#mainScreen { display:none; flex-direction:column; align-items:center; width:100%; min-height:100vh; padding:5px 20px 20px 20px; box-sizing:border-box; }
+
+#tabelaRegistros { width: 100%; border-collapse: collapse; margin-top: 50px; background: rgba(255,255,255,0.05); border-radius: 10px; overflow: hidden; }
+#tabelaRegistros th, #tabelaRegistros td { padding:10px 20px; text-align:center; border-bottom:1px solid #fff; font-size:14px; }
+#tabelaRegistros th { background: rgba(0,255,204,0.2); font-size:15px; }
+#tabelaRegistros tbody { display:block; max-height:70vh; overflow-y:auto; }
+#tabelaRegistros thead, #tabelaRegistros tbody tr { display:table; width:100%; table-layout:fixed; }
+#tabelaRegistros button { padding:3px 6px; margin:0 2px; border:none; border-radius:5px; cursor:pointer; font-size:12px; }
+.btn-edit { background:#00ffcc; color:#182848; }
+.btn-edit:hover { background:#00e6b8; }
+.btn-delete { background:#ff4d4d; color:#fff; }
+.btn-delete:hover { background:#e63939; }
+
+.group-title {
+  background: linear-gradient(90deg, rgba(0,255,204,0.15), rgba(0,255,204,0.05));
+  padding: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  color: #00ffcc;
+  border-left: 4px solid #00ffcc;
+  text-shadow: 0 0 6px #00ffcc;
+}
+
+.group-title .icon {
+  display: inline-block;
+  margin-right: 6px;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0%   { opacity: .6; transform: scale(1); }
+  50%  { opacity: 1; transform: scale(1.18); }
+  100% { opacity: .6; transform: scale(1); }
+}
+
+.group-spacing {
+  height: 6px;
+}
+
+
+/* Modal geral */
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.7); justify-content:center; align-items:center; z-index:1000; }
+.modal-content { background: rgba(255,255,255,0.05); padding:30px; border-radius:15px; width:350px; box-shadow:0 8px 30px rgba(0,0,0,0.3); backdrop-filter:blur(10px); position:relative; text-align:center; }
+.modal-content h2 { margin-bottom:20px; color:#fff; text-shadow:0 0 5px #00ffcc; }
+.modal-content input, .modal-content textarea { width:100%; padding:10px; margin:10px 0; border-radius:8px; border:none; outline:none; font-size:16px; }
+.modal-content textarea { resize:none; }
+.modal-content input:focus, .modal-content textarea:focus { box-shadow:0 0 10px #00ffcc; }
+.modal-content button { width:100%; padding:12px; margin-top:15px; border:none; border-radius:8px; background:#00ffcc; color:#182848; font-weight:bold; cursor:pointer; transition:0.3s;}
+.modal-content button:hover { background:#00e6b8; }
+.closeBtn { position:absolute; top:10px; right:15px; background:#ff4d4d; color:#fff; border:none; border-radius:5px; padding:8px 15px; font-size:14px; cursor:pointer; }
+
+/* Preview Modal Fullscreen */
+#previewModal { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background: rgba(0,0,0,0.95); z-index:10000; justify-content:center; align-items:center; }
+#previewModal #previewContainer img, #previewModal #previewContainer iframe { max-width:100%; max-height:100%; }
+#previewModal .preview-buttons { position: fixed; top: 20px; right: 20px; display:flex; gap:10px; z-index:10001; }
+#previewModal .preview-buttons button { padding:10px 15px; font-size:16px; background: rgba(0,255,204,0.9); color:#182848; border:none; border-radius:5px; cursor:pointer; transition:0.2s; }
+#previewModal .preview-buttons button:hover { background: rgba(0,230,184,1); }
+
+/* Delete modal */
+#deleteModal .modal-content { width:350px; background: rgba(0,0,0,0.85); padding:30px; border-radius:15px; box-shadow:0 8px 30px rgba(0,0,0,0.6); backdrop-filter:blur(10px); text-align:center; position:relative; }
+#deleteModal h2 { color:#fff; text-shadow:0 0 10px #ff4d4d; }
+
+/* Alerta */
+#alertaUsuario { display:none; position:fixed; top:30px; left:50%; transform:translateX(-50%) translateY(-50px); background: linear-gradient(135deg, #ff4d4d, #ff0000); color:#fff; padding:18px 30px; border-radius:15px; font-weight:bold; font-size:16px; box-shadow:0 0 20px #ff4d4d,0 0 40px #ff0000 inset; z-index:9999; opacity:0; transition: all 0.5s ease-in-out; display:flex; align-items:center; justify-content:center; }
+#alertaUsuario button { margin-left:15px; background:transparent; border:none; color:#fff; font-weight:bold; font-size:18px; cursor:pointer; text-shadow:0 0 5px #000; }
+</style>
+</head>
+<body>
+
+<!-- Botões fixos -->
+<button id="logoutBtn" onclick="logout()">Logout</button>
+<button id="changePassBtn" onclick="abrirAlterarSenha()">Alterar Senha</button>
+<button id="addBtn" onclick="abrirModal()">Adicionar</button>
+
+
+
+<!-- Login Form -->
+<div id="loginForm">
+  <h1>Login</h1>
+  <input type="text" id="Usuario" placeholder="Usuario">
+  <input type="password" id="senha" placeholder="Senha">
+  <button onclick="validarLogin()">Entrar</button>
+  <div class="error" id="error-msg"></div>
+  <div style="margin-top:15px; font-size:14px;">
+    <span> Nao e Cadastrado </span>
+    <span style="color:#00ffcc; cursor:pointer;" onclick="abrirCadastro()"> Cadastre-se</span>
+  </div>
+</div>
+
+<button id="btnMenu">MENU PRINCIPAL</button>
+
+<!-- Cadastro Modal -->
+<div id="cadastroModal" class="modal">
+  <div class="modal-content">
+    <button class="closeBtn" onclick="fecharCadastro()">Fechar</button>
+    <h2>Cadastrar Novo Usuario</h2>
+    <input type="text" id="novoUsuario" placeholder="Novo Usuario">
+    <input type="password" id="novaSenha" placeholder="Senha">
+    <input type="password" id="confirmaSenha" placeholder="Confirmar Senha">
+    <button onclick="cadastrarUsuario()">Cadastrar</button>
+    <div class="error" id="cadastro-msg"></div>
+    <button style="margin-top:10px; background:#ff4d4d; color:#fff;" onclick="voltarLogin()">Voltar ao Login</button>
+  </div>
+</div>
+
+<!-- Alterar senha modal -->
+<div id="senhaModal" class="modal">
+  <div class="modal-content">
+    <button class="closeBtn" onclick="fecharAlterarSenha()">Fechar</button>
+    <h2>Alterar Senha</h2>
+    <input type="password" id="senhaAtual" placeholder="Senha Atual">
+    <input type="password" id="novaSenhaAlt" placeholder="Nova Senha">
+    <input type="password" id="confirmaNovaSenha" placeholder="Confirmar Nova Senha">
+    <button onclick="alterarSenha()">Salvar Nova Senha</button>
+    <div class="error" id="senha-msg"></div>
+  </div>
+</div>
+
+<!-- Tela principal -->
+<div id="mainScreen">
+  <table id="tabelaRegistros">
+    <thead>
+      <tr>
+        <th>Colaborador</th>
+        <th>Data Inicial</th>
+        <th>Data Final</th>
+        <th>Anexo</th>
+        <th>Comentario</th>
+        <th>Acoes</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<!-- Modal Registro -->
+<div id="registroModal" class="modal">
+  <div class="modal-content">
+    <button class="closeBtn" onclick="fecharModal()">Fechar</button>
+    <h2 id="modalTitle">Salvar Registro</h2>
+    <label>Colaborador</label>
+    <input type="text" id="colaborador">
+    <label>Data Inicial</label>
+    <input type="date" id="dataInicial">
+    <label>Data Final</label>
+    <input type="date" id="dataFinal">
+    <label>Anexar Arquivo</label>
+    <input type="file" id="arquivo" onchange="previewArquivo()">
+    <div id="previewArquivo" style="margin-top:10px; text-align:center;"></div>
+    <label>Comentario</label>
+    <textarea id="comentario" rows="3"></textarea>
+    <button onclick="salvarRegistro()">Salvar Registro</button>
+  </div>
+</div>
+
+<!-- Preview Modal Fullscreen -->
+<div id="previewModal" class="modal">
+  <div class="preview-buttons">
+      <button onclick="fecharPreview()">Fechar</button>
+      <button onclick="baixarArquivo()">Baixar</button>
+      <button onclick="imprimirArquivo()">Imprimir</button>
+  </div>
+  <div id="previewContainer" style="width:100%; height:100%; display:flex; justify-content:center; align-items:center;"></div>
+</div>
+
+<!-- Delete Modal -->
+<div id="deleteModal" class="modal">
+  <div class="modal-content">
+    <h2>Excluir Registro</h2>
+    <p>Digite sua senha para confirmar:</p>
+    <input type="password" id="senhaExcluir" placeholder="Senha do usuario">
+    <div style="display:flex; justify-content:space-around; margin-top:20px;">
+      <button id="confirmSenhaBtn">Confirmar</button>
+      <button onclick="fecharDeleteModal()">Cancelar</button>
+    </div>
+    <div id="confirmacaoExclusao" style="display:none; margin-top:20px;">
+      <p>Tem Certeza? Esta Acao Nao pode ser Desfeita.</p>
+      <div style="display:flex; justify-content:space-around; margin-top:15px;">
+        <button id="deleteFinalBtn">Excluir</button>
+        <button onclick="voltarSenha()">Cancelar</button>
+      </div>
+    </div>
+    <button class="closeBtn" onclick="fecharDeleteModal()">Fechar</button>
+  </div>
+</div>
+
+<!-- Alerta -->
+<div id="alertaUsuario">
+    <span id="alertaMsg"></span>
+    <button onclick="fecharAlerta()"></button>
+</div>
+
+
+
+<script>
+// ---------- Variáveis ----------
+let usuarios = JSON.parse(localStorage.getItem('usuarios')) || {};
+let registros = JSON.parse(localStorage.getItem('registros')) || [];
+let registroEditIndex = null;
+let registroExcluirIndex = null;
+let arquivoAtual = null;
+
+// ---------- Funções Gerais ----------
+function mostrarAlerta(msg){
+    const alerta = document.getElementById('alertaUsuario');
+    document.getElementById('alertaMsg').innerText = msg;
+    alerta.style.display = 'flex';
+    void alerta.offsetWidth;
+    alerta.style.transform = "translateX(-50%) translateY(0)";
+    alerta.style.opacity = 1;
+    setTimeout(()=>{ fecharAlerta(); }, 3000);
+}
+function fecharAlerta(){
+    const alerta = document.getElementById('alertaUsuario');
+    alerta.style.transform = "translateX(-50%) translateY(-50px)";
+    alerta.style.opacity = 0;
+    setTimeout(()=>{ alerta.style.display='none'; },500);
+}
+function formatarData(dataStr){
+    if(!dataStr) return '';
+    const partes = dataStr.split('-');
+    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+}
+
+// ---------- Login ----------
+function validarLogin(){
+    const user = document.getElementById('Usuario').value.trim().toLowerCase();
+    const pass = document.getElementById('senha').value;
+    if(!usuarios[user]){ mostrarAlerta(" Usuario Nao Cadastrado "); return; }
+    if(usuarios[user] === pass){
+        localStorage.setItem('usuarioLogado', user);
+        mostrarTelaPrincipal();
+    } else { mostrarAlerta("Senha incorreta"); }
+}
+function mostrarTelaPrincipal(){
+    const user = localStorage.getItem('usuarioLogado');
+    if(!user) return;
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('mainScreen').style.display = 'flex';
+    document.getElementById('logoutBtn').style.display = 'block';
+    document.getElementById('changePassBtn').style.display = 'block';
+    document.getElementById('addBtn').style.display = 'block';
+    carregarRegistros();
+}
+function logout(){
+    localStorage.removeItem('usuarioLogado');
+    document.getElementById('loginForm').style.display = 'block';
+    document.getElementById('mainScreen').style.display = 'none';
+    document.getElementById('logoutBtn').style.display = 'none';
+    document.getElementById('changePassBtn').style.display = 'none';
+    document.getElementById('addBtn').style.display = 'none';
+}
+
+function renderTabela(list){
+  tbody.innerHTML = "";
+
+  // ordenar pela data
+  list.sort((a,b)=> a.dataInicial.localeCompare(b.dataInicial));
+
+  let mesAtual = null;
+  let diaAtual = null;
+
+  list.forEach(r => {
+
+    // extrair ano-mês e dia
+    const [ano, mes, dia] = r.dataInicial.split("-");
+    const chaveMes = `${ano}-${mes}`;
+    const chaveDia = `${ano}-${mes}-${dia}`;
+
+    // --- GRUPO DO MÊS ---
+    if(chaveMes !== mesAtual){
+      mesAtual = chaveMes;
+
+      const trMes = document.createElement("tr");
+      trMes.innerHTML = `
+        <td colspan="5" style="
+          padding:12px;
+          background:rgba(0,255,204,0.10);
+          font-weight:800;
+          font-size:17px;
+          border-left:4px solid #00ffcc;
+          color:#00ffcc;
+          text-shadow:0 0 6px #00ffcc;
+        ">
+          ??? ${mesNome(mes)} / ${ano}
+        </td>
+      `;
+      tbody.appendChild(trMes);
+
+      diaAtual = null; // resetar o agrupamento diário ao trocar de mês
+    }
+
+    // --- GRUPO DO DIA ---
+    if(chaveDia !== diaAtual){
+      diaAtual = chaveDia;
+
+      const trDia = document.createElement("tr");
+      trDia.innerHTML = `
+        <td colspan="5" style="
+          padding:8px;
+          background:rgba(0,255,204,0.06);
+          font-weight:700;
+          font-size:14px;
+          border-left:3px solid #00e6b0;
+          color:#00e6b0;
+          text-shadow:0 0 4px #00e6b0;
+        ">
+          ?? ${dia}/${mes}/${ano}
+        </td>
+      `;
+      tbody.appendChild(trDia);
+    }
+
+    // --- LINHA NORMAL ---
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${r.colaborador}</td>
+      <td>${formatarData(r.dataInicial)}</td>
+      <td>${formatarData(r.dataFinal)}</td>
+      <td>${r.arquivo ? "Sim" : "—"}</td>
+      <td>${r.comentario || "—"}</td>
+    `;
+    tbody.appendChild(tr);
+
+  });
+}
+
+function mesNome(m){
+  const meses = {
+    "01": "Janeiro",
+    "02": "Fevereiro",
+    "03": "Março",
+    "04": "Abril",
+    "05": "Maio",
+    "06": "Junho",
+    "07": "Julho",
+    "08": "Agosto",
+    "09": "Setembro",
+    "10": "Outubro",
+    "11": "Novembro",
+    "12": "Dezembro"
+  };
+  return meses[m] || m;
+}
+
+
+
+// ---------- Cadastro ----------
+function abrirCadastro(){ document.getElementById('cadastroModal').style.display='flex'; }
+function fecharCadastro(){ document.getElementById('cadastroModal').style.display='none'; }
+function voltarLogin(){ fecharCadastro(); document.getElementById('loginForm').style.display='block'; }
+function cadastrarUsuario(){
+    const user = document.getElementById('novoUsuario').value.trim().toLowerCase();
+    const pass = document.getElementById('novaSenha').value;
+    const conf = document.getElementById('confirmaSenha').value;
+    if(!user || !pass || !conf){ mostrarAlerta("Preencha todos os campos!"); return; }
+    if(pass !== conf){ mostrarAlerta("Senhas diferentes!"); return; }
+    if(usuarios[user]){ mostrarAlerta("Usuario ja existe!"); return; }
+    usuarios[user] = pass;
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    mostrarAlerta("Usuario cadastrado com sucesso!");
+    fecharCadastro();
+}
+
+const btnMenu = document.getElementById("btnMenu");
+btnMenu.addEventListener("click", () => {
+    window.location.href = "menu.html";
+});
+
+
+// Permitir login ao pressionar ENTER
+document.getElementById("loginForm").addEventListener("keydown", function(e){
+    if(e.key === "Enter"){
+        e.preventDefault(); // evita recarregar a página
+        validarLogin();     // chama a função de login
+    }
+});
+
+
+// ---------- Alterar senha ----------
+function abrirAlterarSenha(){ document.getElementById('senhaModal').style.display='flex'; }
+function fecharAlterarSenha(){ document.getElementById('senhaModal').style.display='none'; }
+function alterarSenha(){
+    const atual = document.getElementById('senhaAtual').value;
+    const nova = document.getElementById('novaSenhaAlt').value;
+    const conf = document.getElementById('confirmaNovaSenha').value;
+    const user = localStorage.getItem('usuarioLogado');
+    if(usuarios[user] !== atual){ mostrarAlerta("Senha atual incorreta!"); return; }
+    if(nova !== conf){ mostrarAlerta("Senhas nao conferem!"); return; }
+    usuarios[user] = nova;
+    localStorage.setItem('usuarios', JSON.stringify(usuarios));
+    mostrarAlerta("Senha alterada com sucesso!");
+    fecharAlterarSenha();
+}
+
+// ---------- Modal Registro ----------
+function abrirModal(editIndex=null){
+    registroEditIndex = editIndex;
+    document.getElementById('registroModal').style.display='flex';
+    if(editIndex !== null){
+        const reg = registros[editIndex];
+        document.getElementById('colaborador').value = reg.colaborador;
+        document.getElementById('dataInicial').value = reg.dataInicial;
+        document.getElementById('dataFinal').value = reg.dataFinal;
+        document.getElementById('comentario').value = reg.comentario;
+        arquivoAtual = reg.arquivo || null;
+        previewArquivo();
+    } else {
+        document.getElementById('colaborador').value='';
+        document.getElementById('dataInicial').value='';
+        document.getElementById('dataFinal').value='';
+        document.getElementById('comentario').value='';
+        document.getElementById('arquivo').value='';
+        arquivoAtual=null;
+        document.getElementById('previewArquivo').innerHTML='';
+    }
+}
+function fecharModal(){ document.getElementById('registroModal').style.display='none'; arquivoAtual=null; }
+
+function previewArquivo(){
+    const fileInput = document.getElementById('arquivo');
+    const previewDiv = document.getElementById('previewArquivo');
+    let file = fileInput.files[0];
+    if(!file && arquivoAtual){ // já existe arquivoAtual (edição)
+        file = arquivoAtual;
+    }
+    if(!file){ previewDiv.innerHTML=''; return; }
+
+    const reader = new FileReader();
+    reader.onload = function(e){
+        const url = e.target.result; // data URL
+        arquivoAtual = { url: url, tipo: file.type };
+        if(file.type.startsWith('image/')){
+            previewDiv.innerHTML = `<img src="${url}" alt="Preview" style="max-width:100px; max-height:100px; cursor:pointer;" onclick="abrirPreview('${url}','image')">`;
+        } else if(file.type==='application/pdf'){
+            previewDiv.innerHTML = `<iframe src="${url}" style="width:100px; height:100px; cursor:pointer;" onclick="abrirPreview('${url}','pdf')"></iframe>`;
+        } else {
+            previewDiv.innerHTML = 'Arquivo selecionado';
+        }
+    };
+    reader.readAsDataURL(file);
+}
+
+
+function abrirPreview(url,tipo){
+    const cont = document.getElementById('previewContainer');
+    cont.innerHTML = tipo==='image'?`<img src="${url}">`:`<iframe src="${url}" style="width:90%;height:90%;"></iframe>`;
+    document.getElementById('previewModal').style.display='flex';
+    arquivoAtual = {url: url, tipo: tipo};
+}
+function fecharPreview(){ document.getElementById('previewModal').style.display='none'; arquivoAtual=null; }
+
+function baixarArquivo(){
+    if(!arquivoAtual) return;
+    let a = document.createElement('a');
+    a.href = arquivoAtual.url || arquivoAtual;
+    a.download = 'arquivo';
+    a.click();
+}
+
+function imprimirArquivo(){
+    if(!arquivoAtual) return;
+    let w = window.open(arquivoAtual.url || arquivoAtual);
+    w.print();
+}
+
+// ---------- CRUD Registros ----------
+function salvarRegistro(){
+    const colab = document.getElementById('colaborador').value.trim();
+    const dIni = document.getElementById('dataInicial').value;
+    const dFin = document.getElementById('dataFinal').value;
+    const comm = document.getElementById('comentario').value.trim();
+
+    const regObj = { colaborador: colab, dataInicial:dIni, dataFinal:dFin, comentario:comm, arquivo:arquivoAtual };
+    if(registroEditIndex !== null){
+        registros[registroEditIndex] = regObj;
+        mostrarAlerta("Registro editado com sucesso!");
+    } else {
+        registros.push(regObj);
+        mostrarAlerta("Registro salvo com sucesso!");
+    }
+    localStorage.setItem('registros', JSON.stringify(registros));
+    fecharModal();
+    carregarRegistros();
+}
+
+function capitalizeFirstLetter(str){
+    if(!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function salvarRegistro(){
+    let colab = document.getElementById('colaborador').value.trim();
+    colab = capitalizeFirstLetter(colab); // primeira letra maiúscula
+    const dIni = document.getElementById('dataInicial').value;
+    const dFin = document.getElementById('dataFinal').value;
+    const comm = document.getElementById('comentario').value.trim();
+
+    // Preservar arquivo existente se não for alterado
+    let arquivoParaSalvar = arquivoAtual;
+    if(registroEditIndex !== null && !arquivoAtual){
+        arquivoParaSalvar = registros[registroEditIndex].arquivo || null;
+    }
+
+    const regObj = { colaborador: colab, dataInicial: dIni, dataFinal: dFin, comentario: comm, arquivo: arquivoParaSalvar };
+
+    if(registroEditIndex !== null){
+        registros[registroEditIndex] = regObj;
+        mostrarAlerta("Registro editado com sucesso!");
+    } else {
+        registros.push(regObj);
+        mostrarAlerta("Registro salvo com sucesso!");
+    }
+
+    localStorage.setItem('registros', JSON.stringify(registros));
+    fecharModal();
+    carregarRegistros();
+}
+
+function carregarRegistros(){
+    const tbody = document.querySelector('#tabelaRegistros tbody');
+    tbody.innerHTML='';
+    registros.forEach((r,i)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${r.colaborador}</td>
+            <td>${formatarData(r.dataInicial)}</td>
+            <td>${formatarData(r.dataFinal)}</td>
+<td>
+    ${r.arquivo ? `
+        <button class="btn-edit" onclick="abrirPreview('${r.arquivo.url||r.arquivo}','${r.arquivo.tipo||'file'}')">Ver_Anexo</button>
+        <button class="btn-delete" onclick="removerAnexo(${i})">Remover</button>
+    ` : ''}
+</td>
+            <td>${r.comentario}</td>
+            <td>
+                <button class="btn-edit" onclick="abrirModal(${i})">Editar</button>
+                <button class="btn-delete" onclick="deletarRegistro(${i})">Excluir</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+let indexAnexoParaRemover = null;
+
+function removerAnexo(index){
+    indexAnexoParaRemover = index;
+    document.getElementById('senhaExcluir').value = '';
+    document.getElementById('confirmacaoExclusao').style.display = 'none';
+    document.getElementById('deleteModal').style.display = 'flex';
+}
+
+
+// ---------- Exclusão ----------
+function deletarRegistro(index){
+    registroExcluirIndex = index;
+    document.getElementById('senhaExcluir').value='';
+    document.getElementById('confirmacaoExclusao').style.display='none';
+    document.getElementById('deleteModal').style.display='flex';
+}
+document.getElementById('confirmSenhaBtn').addEventListener('click', ()=>{
+    const senha = document.getElementById('senhaExcluir').value;
+    const usuario = localStorage.getItem('usuarioLogado');
+    if(!senha){ mostrarAlerta("Digite a senha!"); return; }
+    if(usuarios[usuario] !== senha){ mostrarAlerta("Senha incorreta "); return; }
+    document.getElementById('confirmacaoExclusao').style.display='block';
+});
+
+document.getElementById('deleteFinalBtn').addEventListener('click', ()=>{
+
+    /* remover registro completo */
+    if(registroExcluirIndex !== null){
+        registros.splice(registroExcluirIndex,1);
+        localStorage.setItem('registros', JSON.stringify(registros));
+        carregarRegistros();
+        mostrarAlerta("Registro Excluido com Sucesso!");
+        fecharDeleteModal();
+        return;
+    }
+
+    /* remover SOMENTE o anexo */
+    if(indexAnexoParaRemover !== null){
+        registros[indexAnexoParaRemover].arquivo = null;
+        localStorage.setItem('registros', JSON.stringify(registros));
+        carregarRegistros();
+        mostrarAlerta("Anexo removido com sucesso!");
+        fecharDeleteModal();
+        return;
+    }
+});
+
+/* Cancelar exclusão e resetar variáveis */
+function fecharDeleteModal(){
+    document.getElementById('deleteModal').style.display = 'none';
+    registroExcluirIndex = null;
+    indexAnexoParaRemover = null;
+}
+
+/* Voltar da segunda etapa da confirmação */
+function voltarSenha(){
+    document.getElementById('confirmacaoExclusao').style.display = 'none';
+}
+
+validarLogin();
+
+</script>
+
+</body>
+</html>

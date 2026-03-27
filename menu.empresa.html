@@ -9,7 +9,7 @@
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap');
 
-/* ===== VARIÃVEIS ===== */
+/* ===== VARIÁVEIS ===== */
 :root{
   --bg:#000;
   --accent:#00ffff;
@@ -24,11 +24,13 @@
 html,body{height:100%}
 body {
   font-family:'Orbitron',sans-serif;
-  background: url('http://172.16.2.7/DTI/img/1.png') no-repeat center center fixed;
+  background: url('http://172.16.2.7/DTI/img/Fundo1.png') no-repeat center center fixed;
   background-size: cover; /* Faz a imagem cobrir toda a tela */
   color: var(--accent);
   -webkit-font-smoothing: antialiased;
-  overflow: hidden;
+  padding-bottom: 80px;
+  overflow-x: hidden;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -36,7 +38,33 @@ body {
   padding-top: 50px;
 }
 
-/* Reduz animaÃ§Ã£o para acessibilidade */
+nav[role="navigation"]{
+  z-index:3;
+  width:100%;
+  max-width:980px;
+  display:flex;
+  gap:26px;
+  flex-wrap:wrap;
+  justify-content:center;
+  align-items:center;
+  padding:0 18px;
+}
+
+/* RESPONSIVO MELHOR */
+@media(max-width:720px){
+  nav[role="navigation"]{
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .card{
+    width:95%;
+    max-width:350px;
+    height:120px;
+  }
+}
+
+/* Reduz animação para acessibilidade */
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 /* BACKDROP NEBULAS, PARTICULAS, LUZES */
@@ -66,7 +94,7 @@ body {
 
 .scanlines{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,0.006) 1px,transparent 1px);background-size:100% 18px;mix-blend-mode:overlay;opacity:0.8;pointer-events:none;}
 
-/* CABEÃ‡ALHO */
+/* CABEÇALHO */
 header{z-index:3;position:relative;margin-bottom:18px;text-align:center;}
 header h1{
   font-size:3.2rem;letter-spacing:3px;
@@ -98,14 +126,17 @@ nav[role="navigation"]{
   box-shadow:0 30px 90px rgba(0,150,255,0.08),0 12px 40px rgba(0,0,0,0.6);}
 .card.c1{background:linear-gradient(135deg,#081111,#022c2c 60%);}
 .card.c2{background:linear-gradient(135deg,#2b0f2b,#3b3f47 60%);}
-.card.c3{background:linear-gradient(135deg,#062b16,#113b2a 60%);}
+.card.c3{background:linear-gradient(135deg,#062b16,#444037 60%);}
 .card.c4{background:linear-gradient(135deg,#2a2a10,#444037 60%);}
 .card.c5{background:linear-gradient(135deg,#3b2518,#5a3a2b 60%);}
+.card.c6{background:linear-gradient(135deg,#6b5549,#444037 60%);}
+.card.c7{background:linear-gradient(135deg,#413935,#444037 60%);}
+.card.c8{background:linear-gradient(135deg,#413935,#444037 60%);}
 
 .badge{position:absolute;top:12px;right:12px;background:linear-gradient(90deg,rgba(255,255,255,0.06),rgba(255,255,255,0.02));
   border-radius:10px;padding:6px 8px;font-size:0.72rem;color:var(--accent);box-shadow:0 6px 18px rgba(0,0,0,0.5);}
 
-/* CALENDÃRIO */
+/* CALENDÁRIO */
 #calendar{
   position:fixed;left:20px;top:2px;width:260px;background:linear-gradient(180deg,rgba(0,0,0,0.55),rgba(0,0,0,0.45));
   padding:12px;border-radius:12px;border:2px solid rgba(0,255,255,0.12);box-shadow:0 8px 30px rgba(0,0,0,0.6);
@@ -124,6 +155,14 @@ nav[role="navigation"]{
 #calendar button:hover{transform:scale(1.2);color:#fff;}
 #calendar .today-btn{width:100%;margin-bottom:6px;background:none;border:1px solid rgba(0,255,255,0.2);border-radius:8px;color:var(--accent);cursor:pointer;font-size:0.9rem;padding:4px 0;transition:all .3s;}
 #calendar .today-btn:hover{background:rgba(0,255,255,0.08);}
+
+#calendar td.feriado {
+  background: linear-gradient(90deg, #ffea00, #ffd700);
+  color: #000;
+  font-weight: 700;
+  border: 2px solid rgba(255,255,0,0.4);
+  box-shadow: 0 6px 20px rgba(255,255,0,0.3);
+}
 
 /* HUD CLOCK */
 #hud-clock{
@@ -158,6 +197,138 @@ nav[role="navigation"]{
   #hud-clock{right:10px;top:auto;bottom:12px;min-width:170px;font-size:0.9rem;}
   header h1{font-size:1.6rem;}
 }
+
+#side-image{
+  position: fixed;
+  top: 20px;
+  right: 280px;
+  width: 110px;
+  max-width: 180px;
+  opacity: 1;
+  z-index: 6;
+  pointer-events: none;
+
+  animation: zoomPulse 4s ease-in-out infinite;
+
+  /* 🔥 brilho aplicado */
+  filter: brightness(1.7) contrast(1.1);
+}
+
+/* ===== RESPONSIVIDADE ===== */
+
+/* Telas pequenas: celular */
+@media(max-width: 600px){
+  #side-image{
+    width: 70px;
+    max-width: 70px;
+    top: 10px;
+    right: 10px;
+  }
+
+  #logo{
+    width: 90px;
+    left: 10px;
+    top: 10px;
+  }
+
+  #calendar{ 
+    left: 10px; 
+    width: 180px; 
+    font-size: 0.78rem;
+  }
+
+  #hud-clock{
+    right: 10px;
+    bottom: 12px;
+    min-width: 170px;
+    font-size: 0.9rem;
+  }
+
+  header h1{ font-size: 1.6rem; }
+}
+
+/* Telas médias: tablet */
+@media(max-width: 900px){
+  #side-image{
+    width: 25%;
+    max-width: 200px;
+    right: 20px;
+    top: 20px;
+  }
+
+  #logo{
+    width: 25%;
+    max-width: 180px;
+    left: 20px;
+  }
+
+  #calendar{
+    position: relative;
+    left: 0;
+    top: 0;
+    margin: 10px auto;
+  }
+
+  #hud-clock{
+    position: relative;
+    right: auto;
+    top: auto;
+    margin: 10px auto;
+  }
+
+  .container{
+    flex-direction: column;
+    height: auto;
+  }
+
+  .left-side, .right-side{
+    width: 100%;
+    margin-top: 20px;
+    padding-top: 0;
+  }
+}
+
+/* Telas médias-grandes: desktop pequeno */
+@media(max-width: 1200px){
+  #side-image{
+    right: 150px;
+    width: 100px;
+  }
+
+  #logo{
+    left: 150px;
+    width: 120px;
+  }
+}
+
+#side-image2 {
+  position: fixed;
+  top: 20px;            
+  left: 290px;          
+  width: 120px;         
+  height: auto;
+  z-index: 5;
+  pointer-events: none;
+
+  opacity: 1;
+
+  /* 🔥 Mais brilho ainda */
+  filter: brightness(1.7) contrast(1.1);
+
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Responsivo */
+@media(max-width:600px){
+  #side-image2 {
+    width:80px;
+    max-width:80px;
+    left:10px;
+    top:10px;
+  }
+}
+
 </style>
 </head>
 <body>
@@ -171,19 +342,27 @@ nav[role="navigation"]{
 </div>
 
 <header><h1>Menu Principal</h1></header>
+  <nav role="navigation">
+    <a class="card c1" href="redes.html"><div class="badge">Rede</div><div class="inner">Redes Claudino com IPs</div><div class="sub">Gerenciar IPs</div></a>
+    <a class="card c2" href="compara.html"><div class="badge">Compara</div><div class="inner">Comparar Numeros de Serie</div><div class="sub">Comparar Series</div></a>
+    <a class="card c3" href="dados.html"><div class="badge">Arquivos T.I</div><div class="inner">Arquivos T.I</div><div class="sub">Arquivos T.I</div></a>
+    <a class="card c4" href="licencas.html"><div class="badge">Licencas</div><div class="inner">Licencas Office</div><div class="sub">Gerenciar Licencas</div></a>
+    <a class="card c5" href="lojas.html"><div class="badge">Lojas Claudino</div><div class="inner">Lojas Claudino</div><div class="sub">Visualizar Lojas</div></a>
+    <a class="card c6" href="ramal.html"><div class="badge">Ramais da TI</div><div class="inner">Ramal Gerencia de Suporte</div><div class="sub">Visualizar Ramais</div></a>
+    <a class="card c7" href="carrego.html"><div class="badge">Carrego</div><div class="inner">Carrego Claudino</div><div class="sub">Visualizar Carregos</div></a>
+    <a class="card c8" href="comparapagina.html"><div class="badge">Impressoes</div><div class="inner">Comparar Paginas Impressas</div><div class="sub">Comparar Impressoes</div></a>
+  </nav>
 
-<nav role="navigation">
-  <a class="card c1" href="redes.html"><div class="badge">Rede</div><div class="inner">Redes Claudino com IPs</div><div class="sub">Gerenciar IPs</div></a>
-  <a class="card c2" href="compara.html"><div class="badge">Compara</div><div class="inner">Comparar Numeros de Serie</div><div class="sub">Comparar Series</div></a>
-  <a class="card c2" href="dados.html"><div class="badge">Arquivos T.I</div><div class="inner">Arquivos T.I</div><div class="sub">Arquivos T.I</div></a>
-  <a class="card c3" href="licencas.html"><div class="badge">Licencas</div><div class="inner">Licencas Office</div><div class="sub">Gerenciar Licencas</div></a>
-  <a class="card c4" href="lojas.html"><div class="badge">Lojas</div><div class="inner">Lojas Claudino</div><div class="sub">Visualizar Lojas</div></a>
-  <a class="card c4" href="carrego.html"><div class="badge">Carrego</div><div class="inner">Carrego Claudino</div><div class="sub">Visualizar Carregos</div></a>
-  <a class="card c5" href="comparapagina.html"><div class="badge">Impressoes</div><div class="inner">Comparar Paginas Impressas</div><div class="sub">Comparar Impressoes</div></a>
-</nav>
 
 <div id="calendar"></div>
 <div id="hud-clock"><span id="hud-date"></span><span id="hud-time"></span></div>
+
+ <div class="right-side">
+  <img id="side-image" src="http://172.16.2.7/DTI/img/Bola.png" alt="Bola Futurista">
+  <img id="side-image2" src="http://172.16.2.7/DTI/img/ti.png" alt="Nova Imagem Futurista">
+</div>
+
+
 <div class="cursor-glow"></div>
 
 <script defer>
@@ -197,24 +376,32 @@ function updateClock(){
 setInterval(updateClock,1000);updateClock();
 
 const feriados = {
+  // Feriados fixos
   "1-1": "Confraternizacao Universal",
-  "17-2": "Carnaval",
-  "8-3": "Dia da Mulher",
-  "3-4": "Paixao de Cristo",
-  "5-4": "Pascoa",
   "21-4": "Tiradentes",
   "1-5": "Dia do Trabalhador",
-  "10-5": "Dia das Maes",
-  "4-6": "Corpus Chsisti",
-  "12-6": "Dias Dos Namorados",
-  "19-7": "Aniversario Paraiba",
-  "8-8": "Dia Dos Pais",
   "7-9": "Independencia do Brasil",
   "12-10": "Nossa Senhora Aparecida",
   "2-11": "Finados",
   "15-11": "Proclamacao da Republica",
-  "20-11": "Conciencia Negra",
   "25-12": "Natal",
+  
+  // Feriados móveis 2026
+  "16-2": "Segunda-feira de Carnaval",
+  "17-2": "Terca-feira de Carnaval",
+  "18-2": "Quarta-feira de Cinzas",
+  "3-4": "Sexta-feira Santa",
+  "5-4": "Pascoa",
+  "4-6": "Corpus Christi",
+  
+  // Datas comemorativas opcionais
+  "8-3": "Dia da Mulher",
+  "10-5": "Dia das Maes",
+  "12-6": "Dia dos Namorados",
+  "8-8": "Dia dos Pais",
+  "24-12": "Vespera de Natal",
+  "31-12": "Vespera de Ano Novo",
+  "20-11": "Dia da Consciencia Negra" // nem todos estados têm feriado
 };
 
 let cy=new Date().getFullYear(),cm=new Date().getMonth();
@@ -226,19 +413,34 @@ function generateCalendar(y=cy,m=cm){
   <button class="today-btn" onclick="goToToday()">Hoje</button><table><thead><tr>`;
   ws.forEach(w=>html+=`<th>${w}</th>`);html+=`</tr></thead><tbody><tr>`;
   for(let i=0;i<f;i++)html+=`<td class="empty"></td>`;
-  for(let d=1;d<=days;d++){
-    const today=y===now.getFullYear()&&m===now.getMonth()&&d===now.getDate();
-    const key=`${d}-${m+1}`;
-    const feriado=feriados[key]?feriados[key]:'';
-    html+=`<td class="${today?'today':''}" title="${feriado}">${d}</td>`;
-    if((d+f)%7===0)html+=`</tr><tr>`;
-  }
+  for(let d=1; d<=days; d++){
+  const today = y === now.getFullYear() && m === now.getMonth() && d === now.getDate();
+  const key = `${d}-${m+1}`;
+  const feriado = feriados[key] ? feriados[key] : '';
+  let className = today ? 'today' : '';
+  if(feriado) className += (className ? ' ' : '') + 'feriado';
+  
+  html += `<td class="${className}" title="${feriado}">${d}</td>`;
+  if((d+f)%7===0) html += `</tr><tr>`;
+}
   html+=`</tr></tbody></table>`;
   $('#calendar').innerHTML=html;
 }
-function changeMonth(dir){cm+=dir;if(cm>11){cm=0;cy++;}else if(cm<0){cm=11;cy--;}generateCalendar(cy,cm);}
-function goToToday(){const n=new Date();cy=n.getFullYear();cm=n.getMonth();generateCalendar(cy,cm);}
-generateCalendar(cy,cm);
+function changeMonth(dir){
+  cm += dir;
+  if(cm < 0){ cm = 11; cy--; }
+  if(cm > 11){ cm = 0; cy++; }
+  generateCalendar(cy, cm);
+}
+
+function goToToday(){
+  const now = new Date();
+  cy = now.getFullYear();
+  cm = now.getMonth();
+  generateCalendar(cy, cm);
+}
+
+generateCalendar();
 
 document.addEventListener('mousemove',e=>{
   const c=$('.cursor-glow');c.style.left=e.clientX+'px';c.style.top=e.clientY+'px';
@@ -246,3 +448,6 @@ document.addEventListener('mousemove',e=>{
 </script>
 </body>
 </html>
+
+
+

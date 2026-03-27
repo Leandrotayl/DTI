@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Painel de Lojas</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+    overflow-x: hidden;
+}
+.topo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    padding: 10px 0;
+}
+.topo input {
+    padding: 6px 10px;
+    font-size: 14px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+}
+.topo button {
+    padding: 6px 12px;
+    font-size: 14px;
+    border-radius: 10px;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+    background: #00e5ff;
+    color: #000;
+    transition: 0.3s;
+}
+.topo button:hover { transform: scale(1.05); }
+.resumo-box {
+    display: flex;
+    gap: 25px;
+    padding: 20px 30px;
+    border-radius: 20px;
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(20px);
+    box-shadow: inset 0 0 20px rgba(255,255,255,0.05),0 10px 40px rgba(0,0,0,0.6),0 0 30px rgba(0,229,255,0.2);
+    transform: perspective(800px) rotateX(5deg);
+    transition: 0.4s;
+}
+.resumo-box:hover { transform: perspective(800px) rotateX(0deg) scale(1.03); }
+.resumo-item { flex:1; text-align:center; padding:15px; border-radius:15px; background: linear-gradient(145deg, rgba(255,255,255,0.08), rgba(0,0,0,0.2)); box-shadow: inset 0 0 10px rgba(255,255,255,0.1),0 5px 20px rgba(0,0,0,0.5); position:relative; overflow:hidden; animation: flutuar 4s infinite ease-in-out; }
+.resumo-num { font-size:28px; font-weight:800; transform: translateZ(20px); text-shadow: 0 2px 5px rgba(0,0,0,0.5),0 0 15px currentColor; }
+.resumo-label { font-size:13px; margin-top:5px; opacity:0.8; letter-spacing:1px; }
+.hoje-cor { color: #ff1744; }
+.prox-cor { color: #ffc107; }
+.total-cor { color: #00e5ff; }
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+.card-loja {
+    background: rgba(255,255,255,0.06);
+    padding: 20px;
+    border-radius: 15px;
+    backdrop-filter: blur(12px);
+    transition: 0.3s;
+    box-shadow: 0 0 25px rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.08);
+}
+.card-loja:hover { transform: translateY(-8px) scale(1.04); }
+.sigla { font-size: 22px; font-weight: 800; }
+.colab { font-size: 14px; margin:8px 0; }
+.data { font-size: 14px; }
+.contagem { margin-top:10px; font-weight:bold; }
+.tipo { margin-top:10px; padding:5px 10px; border-radius:8px; font-size:12px; font-weight:bold; display:inline-block; }
+.inauguracao { background:#00c853; }
+.reinauguracao { background:#ff9800; }
+.passado { opacity:0.5; }
+.destaque { border: 2px solid #00e5ff; box-shadow:0 0 20px #00e5ff; }
+
+@keyframes piscar { 0%{opacity:1;}50%{opacity:0.5;}100%{opacity:1;} }
+@keyframes flutuar {0%{transform:translateY(0);}50%{transform:translateY(-5px);}100%{transform:translateY(0);}}
+
+.tv { display:none; height:100vh; align-items:center; justify-content:center; background: radial-gradient(circle at center, #0f2027, #000); }
+
+.card-tv, .card-tv-multi {
+    border-radius: 25px; text-align:center; padding:60px; backdrop-filter: blur(20px);
+    background: linear-gradient(135deg, rgba(0,229,255,0.15), rgba(255,23,68,0.15));
+    box-shadow: 0 0 40px rgba(0,229,255,0.4),0 0 80px rgba(255,23,68,0.3);
+    animation: entrada 0.6s ease;
+}
+.card-tv-multi { padding:40px; }
+.sigla-tv { font-size:90px; font-weight:800; letter-spacing:5px; text-shadow: 0 0 20px #00e5ff, 0 0 40px #00e5ff; }
+.sigla-tv-multi { font-size:50px; font-weight:800; text-shadow:0 0 15px #00e5ff; }
+.info-tv, .info-tv-multi { font-size:22px; margin-top:10px; }
+.contagem-tv { font-size:45px; margin-top:20px; color:#ff1744; text-shadow:0 0 20px #ff1744; animation:piscar 1s infinite; }
+.colab-foto { transition:0.3s; border-radius:50%; width:90px; height:90px; object-fit:cover; border:3px solid #00e5ff; box-shadow:0 0 15px #00e5ff,0 0 30px rgba(0,229,255,0.5); margin-bottom:10px; }
+.colab-foto:hover { transform: scale(1.1); }
+.avatar { width:90px; height:90px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:28px; font-weight:800; background:linear-gradient(135deg,#00e5ff,#ff1744); color:#fff; box-shadow:0 0 15px #00e5ff,0 0 30px #ff1744; margin:0 auto 10px; }
+
+.tv-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(350px,1fr)); gap:30px; width:90%; }
+
+.hoje { border:2px solid #ff1744; animation:piscar 1s infinite; }
+.proximo { border:2px solid #ffc107; }
+
+@keyframes entrada { from {opacity:0; transform: scale(0.8);} to {opacity:1; transform: scale(1);} }
+</style>
+</head>
+<body>
+
+<div class="topo">
+    <div>
+        <button onclick="ativarTV()">📺 Modo TV</button>
+        <button onclick="voltarNormal()">🖥️ Normal</button>
+    </div>
+    <input type="text" id="busca" placeholder="Buscar loja..." onkeyup="carregar()">
+    <div id="resumo" class="resumo-box"></div>
+</div>
+
+<div id="normal">
+    <div class="grid" id="lista"></div>
+</div>
+
+<div id="tv" class="tv">
+    <div id="cardTV"></div>
+</div>
+
+<script>
+// ======= DADOS =======
+let lojas = [
+    { sigla:"SFG", colaboradores:["Douglas Venicius e Sousa"], fotos:["http://172.16.2.7/DTI/Fotos/Avatar.png"], data:"2026-03-25", tipo:"inauguracao" },
+    { sigla:"CBB", colaboradores:["Reinaldo","Heitor"], fotos:["http://172.16.2.7/DTI/Fotos/Avatar.png","http://172.16.2.7/DTI/Fotos/Avatar.png"], data:"2026-03-25", tipo:"reinauguracao" },
+    { sigla:"FAR", colaboradores:["David"], data:"2026-03-30", tipo:"reinauguracao" },
+    { sigla:"CAJ", colaboradores:["Adriel"], data:"2026-03-30", tipo:"reinauguracao" },
+    { sigla:"BCA", colaboradores:["Joao Lucas"], data:"2026-04-13", tipo:"reinauguracao" },
+    { sigla:"TRF", colaboradores:["Rodrigo"], data:"2026-04-13", tipo:"reinauguracao" }
+];
+lojas.forEach(l=>l.tipo=l.tipo.toLowerCase());
+
+// ======= FUNÇÕES =======
+function formatarNome(nome){
+    return nome.map(n=>n.split(" ").map(p=>p.charAt(0).toUpperCase()+p.slice(1)).join(" ")).join(" e ");
+}
+function animarNumero(elemento, valor){
+    let inicio=0, duracao=800, startTime=null;
+    function animar(timestamp){
+        if(!startTime) startTime=timestamp;
+        let progresso = Math.min((timestamp-startTime)/duracao,1);
+        let atual = Math.floor(Math.pow(progresso,0.33)*valor);
+        elemento.innerText = atual;
+        elemento.style.textShadow = `0 0 ${10+atual}px currentColor,0 0 ${20+atual}px currentColor`;
+        if(progresso<1) requestAnimationFrame(animar);
+    }
+    requestAnimationFrame(animar);
+}
+function montarFotos(loja){
+    let html=`<div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-bottom:10px;">`;
+    loja.colaboradores.forEach((nome,i)=>{
+        let foto = (loja.fotos||[])[i];
+        if(foto) html+=`<img src="${foto}" class="colab-foto">`;
+        else html+=`<div class="avatar">${nome.charAt(0).toUpperCase()}</div>`;
+    });
+    html+="</div>";
+    return html;
+}
+function formatar(data){ return new Date(data).toLocaleDateString('pt-BR'); }
+function analisar(data){
+    let hoje=new Date(), d=new Date(data+"T00:00:00");
+    hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
+    let diff = Math.round((d-hoje)/(1000*60*60*24));
+    if(diff===0) return {status:"hoje", texto:"HOJE 🚨"};
+    if(diff>0 && diff<=7) return {status:"proximo", texto:`Faltam ${diff} dias`};
+    if(diff>7) return {status:"", texto:`Faltam ${diff} dias`};
+    if(diff<0) return {status:"passado", texto:"Encerrado"};
+}
+function validarLoja(l){ return l.sigla && l.data; }
+
+// ======= CARREGAR LOJAS =======
+function carregar(){
+    let lista=document.getElementById("lista");
+    let termo=document.getElementById("busca").value.toLowerCase();
+    lista.innerHTML="";
+    lojas.sort((a,b)=>{
+        let ordem={hoje:0,proximo:1,"":2,passado:3};
+        return ordem[analisar(a.data).status]-ordem[analisar(b.data).status] || new Date(a.data)-new Date(b.data);
+    });
+    let proxima = lojas.find(l=>["hoje","proximo"].includes(analisar(l.data).status));
+    lojas.forEach(l=>{
+        if(!validarLoja(l)) return;
+        let colabStr=l.colaboradores.join(" ").toLowerCase();
+        let sigla=l.sigla.toLowerCase();
+        if(!sigla.includes(termo) && !colabStr.includes(termo)) return;
+        let info=analisar(l.data);
+        lista.innerHTML+=`
+        <div class="card-loja ${info.status} ${l===proxima?"destaque":""}">
+            <div class="sigla">${l.sigla}</div>
+            <div class="colab">👥 ${formatarNome(l.colaboradores)}</div>
+            <div class="data">📅 ${formatar(l.data)}</div>
+            <div class="contagem">${info.texto}</div>
+            <div class="tipo ${l.tipo}">${l.tipo==="inauguracao"?"Inauguração":"Reinauguração"}</div>
+        </div>`;
+    });
+    atualizarResumo();
+}
+
+// ======= RESUMO =======
+function atualizarResumo(){
+    let hoje = lojas.filter(l=>analisar(l.data).status==="hoje").length;
+    let prox = lojas.filter(l=>analisar(l.data).status==="proximo").length;
+    let total = lojas.length;
+    document.getElementById("resumo").innerHTML=`
+        <div class="resumo-item"><div class="resumo-num hoje-cor">0</div><div class="resumo-label">Hoje</div></div>
+        <div class="resumo-item"><div class="resumo-num prox-cor">0</div><div class="resumo-label">Próximas</div></div>
+        <div class="resumo-item"><div class="resumo-num total-cor">0</div><div class="resumo-label">Total</div></div>
+    `;
+    setTimeout(()=>{ animarNumero(document.querySelector(".hoje-cor"),hoje);
+                     animarNumero(document.querySelector(".prox-cor"),prox);
+                     animarNumero(document.querySelector(".total-cor"),total); },100);
+}
+
+// ======= MODO TV =======
+<!-- ======= MODO TV ======= -->
+
+
+let lojasHoje=[], intervalo;
+
+// Checa se a loja é hoje
+function ehHoje(data){
+    let hoje = new Date(), d = new Date(data+"T00:00:00");
+    hoje.setHours(0,0,0,0); d.setHours(0,0,0,0);
+    return hoje.getTime() === d.getTime();
+}
+
+// Monta fotos lado a lado, responsivo
+function montarFotos(loja){
+    let html = `<div style="display:flex; gap:15px; justify-content:center; flex-wrap:wrap; margin-bottom:15px;">`;
+    loja.colaboradores.forEach((nome,i)=>{
+        let foto = (loja.fotos||[])[i];
+        if(foto){
+            html += `<img src="${foto}" class="colab-foto">`;
+        } else {
+            html += `<div class="avatar">${nome.charAt(0).toUpperCase()}</div>`;
+        }
+    });
+    html += `</div>`;
+    return html;
+}
+
+// Ativar Modo TV
+function ativarTV(){
+    document.getElementById("normal").style.display = "none";
+    document.getElementById("tv").style.display = "flex";
+    document.getElementById("busca").style.display = "none";
+
+    lojasHoje = lojas.filter(l => ehHoje(l.data));
+
+    clearInterval(intervalo);
+
+    if(lojasHoje.length === 0){
+        document.getElementById("cardTV").innerHTML = `
+        <div class="card-tv" style="position:relative; color:#00e5ff;">
+            <div style="font-size:80px; animation:flutuar 4s infinite alternate; margin-bottom:20px;">🛫</div>
+            <h2 style="font-size:42px; font-weight:800; margin:20px 0;">Nada programado para hoje</h2>
+            <p style="font-size:22px; opacity:0.8;">Relaxe! Aproveite para revisar suas lojas.</p>
+        </div>`;
+        return;
+    }
+
+    mostrarTV();
+    intervalo = setInterval(mostrarTV, 7000); // troca a cada 7s, se quiser animação futura
+}
+
+// Mostrar lojas no modo TV
+function mostrarTV(){
+    let html = '<div style="display:flex; gap:30px; overflow-x:auto; padding:20px;">';
+    lojasHoje.forEach(l=>{
+        html += `
+        <div class="card-tv-multi hoje" style="flex:0 0 400px; scroll-snap-align:start;">
+            <div class="sigla-tv-multi">${l.sigla}</div>
+            ${montarFotos(l)}
+            <div class="info-tv-multi">${l.tipo==="inauguracao"?"Inauguração":"Reinauguração"}</div>
+            <div style="font-size:24px; color:#ff1744; font-weight:800; text-shadow:0 0 15px #ff1744;">🚨 HOJE 🚨</div>
+        </div>`;
+    });
+    html += '</div>';
+    document.getElementById("cardTV").innerHTML = html;
+}
+
+// Voltar para a visualização normal
+function voltarNormal(){
+    clearInterval(intervalo);
+    document.getElementById("tv").style.display = "none";
+    document.getElementById("normal").style.display = "block";
+    document.getElementById("busca").style.display = "inline-block";
+}
+
+
+
+// ======= INIT =======
+carregar();
+</script>
+</body>
+</html>

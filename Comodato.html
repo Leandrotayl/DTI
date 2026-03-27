@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard de Equipamentos</title>
+<style>
+body {
+  background: url('http://172.16.2.7/DTI/img/1.png') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+}
+header {
+    padding: 20px 40px; /* antes era 20px, agora 10px para reduzir altura */
+    text-align: center;
+    background: #141a2b;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+}
+
+header h1 {
+    color: #00ffe0;
+    margin: 0;        /* remove margem extra em cima e embaixo */
+    font-size: 1.8em; /* reduz um pouco o tamanho se quiser */
+}
+nav {
+    display: flex;
+    justify-content: flex-start; /* alinhado à esquerda */
+    gap: 20px;
+    margin: 20px; /* distancia do topo e esquerda */
+    padding-left: 10px; /* opcional, suaviza o alinhamento */
+    position: absolute;
+    top: 20px;
+    left: 20px;
+}
+
+nav button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #00ffe0;
+    color: #0a0f1c;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+nav button:hover {
+    background: #00c9aa;
+}
+.container {
+    padding: 20px;
+    display: none;
+    flex-direction: column;
+    gap: 20px;
+}
+.container.active {
+    display: flex;
+}
+
+/* CARDS FLUTUANTES */
+.quadro-topo {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 6px;
+    z-index: 100;
+}
+
+.card-pequeno {
+    width: 90px;
+    padding: 10px;
+    background: rgba(0,255,224,0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 10px;
+    text-align: center;
+    transition: 0.3s;
+}
+
+.card-pequeno h2 {
+    font-size: 1.2em;
+    color: #00ffe0;
+    margin-top: 5px; /* quantidade embaixo */
+}
+
+.card-pequeno p {
+    font-size: 0.7em;
+    color: #fff;
+    font-weight: bold;
+    margin: 0;
+}
+
+
+
+/* CARDS POR FILIAL */
+.card {
+    background: rgba(0,255,224,0.1);
+    backdrop-filter: blur(10px);
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    min-width: 140px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.5);
+    transition: 0.3s;
+}
+.card:hover { transform: scale(1.05); }
+.card h3 { color: #00ffe0; margin-bottom: 5px; }
+.card p { color: #fff; margin: 2px 0; font-size: 0.9em; }
+
+/* Cards sofisticados */
+/* CARDS POR FILIAL SOFISTICADOS */
+.cards {
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 15px;
+}
+
+.card {
+    position: relative;
+    background: linear-gradient(135deg, rgba(0,255,224,0.15), rgba(0,255,224,0.05));
+    backdrop-filter: blur(15px);
+    border-radius: 20px;
+    min-width: 160px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    overflow: hidden;
+    border: 2px solid rgba(0,255,224,0.5);
+    box-shadow: 0 4px 20px rgba(0,255,224,0.3), inset 0 0 15px rgba(0,255,224,0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: scale(1.08);
+    box-shadow: 0 8px 30px rgba(0,255,224,0.6), inset 0 0 20px rgba(0,255,224,0.2);
+}
+
+/* Glow animado nos cards */
+.card::before {
+    content:'';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg, rgba(0,255,224,0.1), transparent, rgba(0,255,224,0.1));
+    border-radius: inherit;
+    animation: rotateGlow 6s linear infinite;
+    pointer-events: none;
+}
+
+@keyframes rotateGlow {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.card h3 {
+    color: #00ffe0;
+    font-family: 'Orbitron', sans-serif;
+    margin-bottom: 12px;
+    text-shadow: 0 0 8px #00ffe0, 0 0 15px #00c9aa;
+    position: relative;
+    z-index: 1;
+}
+
+.card p {
+    margin: 5px 0;
+    font-size: 0.95em;
+    color: #fff;
+    text-shadow: 0 0 4px #00ffe0;
+    position: relative;
+    z-index: 1;
+}
+
+#quadro-lojas .cards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 15px;
+}
+
+/* Cores suaves para melhor leitura */
+.card p.monitor  { color: #87cefa; }  /* Azul claro suave */
+.card p.desktop  { color: #f0e68c; }  /* Amarelo claro / Khaki */
+.card p.notebook { color: #90ee90; }  /* Verde claro suave */
+
+/* Opcional: um leve text-shadow suave para manter destaque */
+.card p.monitor  { text-shadow: 0 0 3px #87cefa; }
+.card p.desktop  { text-shadow: 0 0 3px #f0e68c; }
+.card p.notebook { text-shadow: 0 0 3px #90ee90; }
+/* TABELA DETALHES */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: rgba(0,0,0,0.6); /* mais contraste */
+    border-radius: 12px;
+    overflow: hidden;
+}
+th, td {
+    padding: 12px 10px;
+    text-align: center;
+    color: #00ffe0; /* mais visível */
+}
+tr:nth-child(even) { background: rgba(0,0,0,0.4); }
+tr:hover { background: rgba(0,255,224,0.2); }
+tr.filial { background: rgba(0,255,224,0.3); font-weight: bold; text-align: left; }
+
+
+</style>
+</head>
+<body>
+
+<header>
+    <h1> Comodato Claudino </h1>
+</header>
+
+<nav>
+    <button onclick="showScreen('geral')">Resumo Geral</button>
+    <button onclick="showScreen('detalhes')">Detalhes</button>
+</nav>
+
+<!-- CARDS FLUTUANTES -->
+<div class="quadro-topo">
+    <div class="card-pequeno">
+        <h2 id="total-monitores">0</h2>
+        <p>Monitores</p>
+    </div>
+    <div class="card-pequeno">
+        <h2 id="total-desktops">0</h2>
+        <p>Desktops</p>
+    </div>
+    <div class="card-pequeno">
+        <h2 id="total-notebooks">0</h2>
+        <p>Notebooks</p>
+    </div>
+</div>
+
+<!-- BOTÃO VOLTAR FIXO NO CANTO SUPERIOR ESQUERDO -->
+<button id="btn-voltar" onclick="voltarTelaInicial()" 
+    style="
+        position: fixed;
+        top: 80px;
+        left: 20px;
+        z-index: 120;
+        padding: 10px 20px;
+        font-size: 1em;
+        border: none;
+        border-radius: 12px;
+        background: #d0f30b;
+        color: #0a0f1c;
+        font-weight: bold;
+        cursor: pointer;
+        box-shadow: 0 0 10px #00ffe0, 0 0 20px #00ffe0 inset;
+        transition: 0.3s;
+        display: none; /* escondido por padrão */
+    ">
+    VOLTAR
+</button>
+
+<!-- CAMPO DE PESQUISA NO CANTO SUPERIOR ESQUERDO -->
+<div style="
+    position: fixed;
+    top: 20px; 
+    left: 300px; 
+    z-index: 110; 
+">
+    <input type="text" id="pesquisa-detalhes" placeholder=" Pesquise por Loja, TAG ou Usuario..." 
+        style="
+            padding: 10px 18px;
+            border-radius: 12px;
+            border: 2px solid #555e5d;
+            outline: none;
+            background: rgba(0,0,0,0.6);
+            color: #dfdb0e;
+            font-size: 1em;
+            font-weight: bold;
+            text-align: left;
+            box-shadow: 0 0 15px #3e4140, 0 0 25px #323333 inset;
+            font-family: 'Arial Black', sans-serif;
+            min-width: 250px;
+            transition: 0.3s;
+        "
+    >
+</div>
+
+<!-- DIV PARA RESULTADOS -->
+<div id="resultado-pesquisa" style="margin-top:10px;"></div>
+
+
+<!-- RESUMO GERAL -->
+<!-- CARDS POR FILIAL MODERNOS -->
+<div id="quadro-lojas" style="margin-top:20px;">
+    <h2 style="text-align:center; color:#00ffe0; font-family: 'Orbitron', sans-serif; text-shadow: 0 0 10px #00ffe0;">Total por Filial</h2>
+    <div class="cards" id="cards-lojas"></div>
+</div>
+
+<!-- DETALHES -->
+<div class="container" id="detalhes">
+    <div class="tabela-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>Loja</th>
+                    <th>TAG Equipamento</th>
+                    <th>Tipo</th>
+                    <th>Inventario T.I</th>
+                    <th>Fabricante</th>
+                    <th>Nome Usuario</th>
+                    <th>Quantidade</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-detalhes"></tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+function showScreen(screen){
+    // Esconde todos os containers
+    document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
+    
+    const quadroLojas = document.getElementById('quadro-lojas');
+    const quadroTopo = document.querySelector('.quadro-topo');
+    const btnVoltar = document.getElementById('btn-voltar');
+
+    if(screen==='detalhes'){
+        document.getElementById(screen).classList.add('active');
+        quadroLojas.style.display = 'none';
+        quadroTopo.style.display = 'none';
+        btnVoltar.style.display = 'block'; // mostra botão
+    } else {
+        quadroLojas.style.display = 'flex';
+        quadroTopo.style.display = 'flex';
+        btnVoltar.style.display = 'none'; // esconde botão
+    }
+
+    // Limpa pesquisa se voltar para geral
+    if(screen==='geral'){
+        inputPesquisa.value = '';
+        resultadoPesquisa.innerHTML = '';
+    }
+}
+
+// DADOS DE EXEMPLO
+const equipamentos = [
+
+
+    { loja:'ABR', tag:'CSAABRDSK001', tipo:'Desktop', inventario:'041337', fabricante:'Dell', usuario:'João', quantidade:1 },
+    { loja:'ABR', tag:'CSAABRMON001', tipo:'Monitor', inventario:'041311', fabricante:'Dell', usuario:'Leal', quantidade:1 },
+    { loja:'ABR', tag:'CSAABRNOT001', tipo:'Notebook', inventario:'041332', fabricante:'Dell', usuario:'Leal', quantidade:1 },
+
+		// LOJA FLORIANO - FLO
+    { loja:'FLO', 	tag:'CSAFLODSK002', 		tipo:'Desktop', 	inventario:'031708', 	fabricante:'Lenovo', 	usuario:'Hosana', 	quantidade:1 },
+    { loja:'FLO', 	tag:'CSAFLODSK004',	 	tipo:'Desktop', 	inventario:'031711', 	fabricante:'Lenovo', 	usuario:'Hetersia', 	quantidade:1 },
+    { loja:'FLO', 	tag:'CSAFLODSK006',	 	tipo:'Desktop', 	inventario:'031709', 	fabricante:'Lenovo', 	usuario:'Ironaldo', 	quantidade:1 },
+    { loja:'FLO', 	tag:'CSAFLODSK017', 		tipo:'Desktop', 	inventario:'031710', 	fabricante:'Lenovo', 	usuario:'Conceicao', 	quantidade:1 },
+    { loja:'FLO', 	tag:'CSAFLODSK012', 		tipo:'Desktop', 	inventario:'031712', 	fabricante:'Lenovo', 	usuario:'Wlisses', 	quantidade:1 },
+
+    { loja:'FLO', 	tag:'CSAFLOMON01', 		tipo:'Monitor', 	inventario:'031712', 	fabricante:'Dell', 	usuario:'Wlisses', 	quantidade:1 },
+
+    { loja:'FLO', 	tag:'CSAFLONOT01', 		tipo:'Notebook', 	inventario:'031965', 	fabricante:'Lenovo', 	usuario:'Joelson', 	quantidade:1 },
+    { loja:'FLO', 	tag:'CSAFLONOT02', 		tipo:'Notebook', 	inventario:'031716', 	fabricante:'Lenovo', 	usuario:'Noleto', 	quantidade:1 },
+    { loja:'FLO', 	tag:'CSAFLONOT03', 		tipo:'Notebook', 	inventario:'031717', 	fabricante:'Lenovo', 	usuario:'Thiago', 	quantidade:1 },
+    { loja:'FLO', 	tag:'CSAFLONOT04', 		tipo:'Notebook', 	inventario:'033403', 	fabricante:'Lenovo', 	usuario:'Flavio', 	quantidade:1 },
+
+
+
+    { loja:'PIC', tag:'CSAPICDSK001', tipo:'Desktop', inventario:'041339', fabricante:'Lenovo', usuario:'Carlos', quantidade:1 },
+    { loja:'PIC', tag:'CSAPICMON001', tipo:'Monitor', inventario:'041311', fabricante:'Dell', usuario:'Leal', quantidade:1 },
+    { loja:'PIC', tag:'CSAPICNOT001', tipo:'Notebook', inventario:'041332', fabricante:'Dell', usuario:'Leal', quantidade:1 },
+
+
+    { loja:'ALS', tag:'CSAALSNOT001', tipo:'Notebook', inventario:'041332', fabricante:'Dell', usuario:'Leal', quantidade:1 },
+
+
+
+];
+
+// AGRUPA POR FILIAL
+const equipamentosPorFilial = {};
+equipamentos.forEach(eq => {
+    if(!equipamentosPorFilial[eq.loja]) equipamentosPorFilial[eq.loja] = [];
+    equipamentosPorFilial[eq.loja].push(eq);
+});
+
+// TABELA DETALHES AGRUPADA POR FILIAL
+const tabela = document.getElementById('tabela-detalhes');
+tabela.innerHTML = "";
+for(const filial in equipamentosPorFilial){
+    // Linha de separador da filial
+    const rowFilial = document.createElement('tr');
+    rowFilial.classList.add('filial');
+    rowFilial.innerHTML = `<td colspan="7">${filial}</td>`;
+    tabela.appendChild(rowFilial);
+
+    // Linhas de equipamentos
+    equipamentosPorFilial[filial].forEach(eq => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${eq.loja}</td>
+            <td>${eq.tag}</td>
+            <td>${eq.tipo}</td>
+            <td>${eq.inventario}</td>
+            <td>${eq.fabricante}</td>
+            <td>${eq.usuario}</td>
+            <td>${eq.quantidade}</td>
+        `;
+        tabela.appendChild(row);
+    });
+}
+
+// CARDS POR FILIAL
+const cardsLojas = document.getElementById('cards-lojas');
+const totalPorFilial = {};
+equipamentos.forEach(eq=>{
+    if(!totalPorFilial[eq.loja]) totalPorFilial[eq.loja] = {monitores:0, desktops:0, notebooks:0};
+    if(eq.tipo==='Monitor') totalPorFilial[eq.loja].monitores += eq.quantidade;
+    if(eq.tipo==='Desktop') totalPorFilial[eq.loja].desktops += eq.quantidade;
+    if(eq.tipo==='Notebook') totalPorFilial[eq.loja].notebooks += eq.quantidade;
+});
+for(const filial in totalPorFilial){
+    const card = document.createElement('div');
+    card.classList.add('card');
+    card.innerHTML = `
+        <h3>${filial}</h3>
+        <p class="monitor"> Monitores: ${totalPorFilial[filial].monitores}</p>
+        <p class="desktop"> Desktops: ${totalPorFilial[filial].desktops}</p>
+        <p class="notebook"> Notebooks: ${totalPorFilial[filial].notebooks}</p>
+    `;
+
+    // Evento ao clicar no card
+    card.addEventListener('click', () => {
+        showScreen('detalhes');  // Mostra o container de detalhes
+        filtrarPorLoja(filial);   // Filtra tabela pelos equipamentos da loja
+    });
+
+    cardsLojas.appendChild(card);
+}
+
+
+
+function filtrarPorLoja(loja){
+    const tabela = document.getElementById('tabela-detalhes');
+    tabela.innerHTML = ''; // limpa tabela
+
+    const listaEquipamentos = equipamentosPorFilial[loja] || [];
+
+    // Linha de separador da filial
+    const rowFilial = document.createElement('tr');
+    rowFilial.classList.add('filial');
+    rowFilial.innerHTML = `<td colspan="7">${loja}</td>`;
+    tabela.appendChild(rowFilial);
+
+    // Linhas de equipamentos
+    listaEquipamentos.forEach(eq => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${eq.loja}</td>
+            <td>${eq.tag}</td>
+            <td>${eq.tipo}</td>
+            <td>${eq.inventario}</td>
+            <td>${eq.fabricante}</td>
+            <td>${eq.usuario}</td>
+            <td>${eq.quantidade}</td>
+        `;
+        tabela.appendChild(row);
+    });
+}
+
+function voltarTelaInicial(){
+    // Esconde detalhes
+    document.getElementById('detalhes').classList.remove('active');
+
+    // Mostra painel geral
+    document.getElementById('quadro-lojas').style.display = 'block';  // melhor usar block
+    document.querySelector('.quadro-topo').style.display = 'flex';    // cards flutuantes
+
+    // Limpa pesquisa
+    document.getElementById('pesquisa-detalhes').value = '';
+    document.getElementById('resultado-pesquisa').innerHTML = '';
+}
+
+function voltarPainel(){
+    resultadoPesquisa.innerHTML = '';
+    inputPesquisa.value = '';
+    document.getElementById('quadro-lojas').style.display = 'block';      // mostra painel geral corretamente
+    document.querySelector('.quadro-topo').style.display = 'flex';       // mostra os cards flutuantes
+}
+
+// FILTRAR E MOSTRAR RESULTADOS NO RESUMO GERAL
+// ELEMENTOS
+const inputPesquisa = document.getElementById('pesquisa-detalhes');
+const resultadoPesquisa = document.getElementById('resultado-pesquisa');
+
+
+// EVENTO DE INPUT PARA PESQUISA
+inputPesquisa.addEventListener('input', function() {
+    const termo = this.value.toLowerCase(); 
+    let html = '';
+
+    // Se o campo estiver vazio, mostra painel geral
+    if(termo === '') {
+        document.getElementById('quadro-lojas').style.display = 'flex';
+        resultadoPesquisa.innerHTML = '';
+        return;
+    }
+
+    // Esconde painel geral durante pesquisa
+    document.getElementById('quadro-lojas').style.display = 'none';
+
+    // Filtra resultados
+    const resultados = equipamentos.filter(eq => 
+        `${eq.loja} ${eq.tag} ${eq.tipo} ${eq.inventario} ${eq.fabricante} ${eq.usuario}`
+        .toLowerCase().includes(termo)
+    );
+
+    // Se não encontrar resultados
+    if(resultados.length === 0){
+        html = `
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; 
+                        margin-top:50px; padding:50px; max-width:700px; margin-left:auto; margin-right:auto;
+                        border: 3px solid #00ffe0; border-radius:25px;
+                        background: rgba(0,0,0,0.85);
+                        box-shadow: 0 0 40px #00ffe0, 0 0 80px #00ffe0 inset;
+                        text-align:center; color:#00ffe0; font-family: 'Arial Black', sans-serif;">
+                <h1 style="font-size:3em; margin-bottom:15px; text-shadow:0 0 15px #00ffe0;"> CENTRAL DE CONSULTA</h1>
+                <h2 style="font-size:2.2em; margin-bottom:25px; text-shadow:0 0 10px #00ffe0;">PESQUISA NÃO LOCALIZADA</h2>
+                <p style="font-size:1.3em; margin-bottom:15px;">Nenhum resultado encontrado para "<strong>${this.value}</strong>"</p>
+                <p style="font-size:1.1em; margin-bottom:25px;">Verifique a SIGLA da loja, TAG ou Usuário.</p>
+                <button onclick="voltarPainel()" 
+                        style="padding:10px 20px; border:none; border-radius:12px; 
+                               background:#00ffe0; color:#0a0f1c; font-weight:bold; cursor:pointer;">
+                    VOLTAR AO PAINEL
+                </button>
+            </div>
+        `;
+        resultadoPesquisa.innerHTML = html;
+        return;
+    }
+
+    // Agrupa resultados por loja
+    const resultadosPorLoja = {};
+    resultados.forEach(eq => {
+        if(!resultadosPorLoja[eq.loja]) resultadosPorLoja[eq.loja] = [];
+        resultadosPorLoja[eq.loja].push(eq);
+    });
+
+    // Monta HTML por loja
+    for(const filial in resultadosPorLoja){
+        html += `
+        <div style="margin-top:20px; padding:15px; border:2px solid #00ffe0; border-radius:15px;
+                    background: rgba(0,0,0,0.85); box-shadow: 0 0 20px #00ffe0, 0 0 40px #00ffe0 inset; overflow-x:auto;">
+            <h2 style="color:#00ffe0; font-family: 'Orbitron', sans-serif; text-shadow:0 0 10px #00ffe0;">Loja: ${filial}</h2>
+            <table style="width:100%; border-collapse:collapse; color:#00ffe0; font-family: 'Arial Black', sans-serif;">
+                <thead>
+                    <tr style="border-bottom:2px solid #00ffe0;">
+                        <th>TAG</th>
+                        <th>Tipo</th>
+                        <th>Inventario</th>
+                        <th>Fabricante</th>
+                        <th>Usuario</th>
+                        <th>Quantidade</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+        resultadosPorLoja[filial].forEach(eq => {
+            html += `
+            <tr style="border-bottom:1px solid rgba(0,255,224,0.3); transition:0.3s;" 
+                onmouseover="this.style.background='rgba(0,255,224,0.2)'" 
+                onmouseout="this.style.background='transparent'">
+                <td>${eq.tag}</td>
+                <td>${eq.tipo}</td>
+                <td>${eq.inventario}</td>
+                <td>${eq.fabricante}</td>
+                <td>${eq.usuario}</td>
+                <td>${eq.quantidade}</td>
+            </tr>
+            `;
+        });
+        html += `</tbody></table></div>`;
+    }
+
+    resultadoPesquisa.innerHTML = html;
+});
+
+
+// TOTALIZADORES FLUTUANTES
+let totalMonitores=0, totalDesktops=0, totalNotebooks=0;
+equipamentos.forEach(eq=>{
+    if(eq.tipo==='Monitor') totalMonitores += eq.quantidade;
+    if(eq.tipo==='Desktop') totalDesktops += eq.quantidade;
+    if(eq.tipo==='Notebook') totalNotebooks += eq.quantidade;
+});
+
+// Renderiza cada card separado
+const quadroTopo = document.querySelector('.quadro-topo');
+quadroTopo.innerHTML = `
+    <div class="card-pequeno">
+        <p>Monitores</p>
+        <h2>${totalMonitores}</h2>
+    </div>
+    <div class="card-pequeno">
+        <p>Desktops</p>
+        <h2>${totalDesktops}</h2>
+    </div>
+    <div class="card-pequeno">
+        <p>Notebooks</p>
+        <h2>${totalNotebooks}</h2>
+    </div>
+`;
+
+document.getElementById('total-monitores').textContent = totalMonitores;
+document.getElementById('total-desktops').textContent = totalDesktops;
+document.getElementById('total-notebooks').textContent = totalNotebooks;
+</script>
+
+</body>
+</html>

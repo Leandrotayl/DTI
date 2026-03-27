@@ -20,21 +20,21 @@ url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
 
   background-size: cover;          /* preenche a tela inteira */
   background-position: center;     /* centraliza */
-  background-repeat: no-repeat;    /* evita repetição */
+  background-repeat: no-repeat;    /* evita repetiï¿½ï¿½o */
   background-attachment: fixed;    /* efeito de paralaxe (opcional) */
 
   color: #fff;
-  animation: bgGradient 15s ease infinite; /* mantém sua animação */
+  animation: bgGradient 15s ease infinite; /* mantï¿½m sua animaï¿½ï¿½o */
 }
 
 /* Quadro para contar FortiGate e Mikrotik */
 .quadro-container {
     position: fixed;
-    top: 10px;       /* distância do topo */
+    top: 10px;       /* distï¿½ncia do topo */
     left: 10px;      /* lado esquerdo da tela */
     display: flex;
     flex-direction: column;  /* empilhar verticalmente */
-    gap: 10px;       /* espaço entre os quadros */
+    gap: 10px;       /* espaï¿½o entre os quadros */
     z-index: 999;
 }
 
@@ -105,7 +105,7 @@ url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
 
 
 .total-geral-quadro {
-  background: linear-gradient(135deg, #ff4d4d, #ff9999); /* Vermelho degradê */
+  background: linear-gradient(135deg, #ff4d4d, #ff9999); /* Vermelho degradï¿½ */
   border-radius: 12px;
   padding: 12px;
   margin-bottom: 10px;
@@ -298,7 +298,7 @@ url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
   text-shadow: 0 0 8px rgba(0,255,234,0.6);
 }
 
-/* Pseudo-element para brilho dinâmico */
+/* Pseudo-element para brilho dinï¿½mico */
 .regional-card::before {
   content: "";
   position: absolute;
@@ -544,7 +544,7 @@ url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
   align-items:center;
 }
 
-/* botões estilo original */
+/* botï¿½es estilo original */
 .action-btn {
   padding:8px 12px;
   border:none;
@@ -600,7 +600,7 @@ url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
   color:#fff;
 }
 
-/* Mantém a aparência sem alteração ao passar o mouse */
+/* Mantï¿½m a aparï¿½ncia sem alteraï¿½ï¿½o ao passar o mouse */
 #tabela-pesquisa tr:hover {
   background: #0a0a0a;  /* mesma cor do fundo da tabela */
   color: #fff;           /* mesma cor do texto */
@@ -614,11 +614,11 @@ url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
 /* Quadro para contar FortiGate e Mikrotik */
 .quadro-container {
     position: fixed;
-    top: 10px;       /* distância do topo */
+    top: 10px;       /* distï¿½ncia do topo */
     left: 10px;      /* lado esquerdo da tela */
     display: flex;
     flex-direction: column;  /* empilhar verticalmente */
-    gap: 10px;       /* espaço entre os quadros */
+    gap: 10px;       /* espaï¿½o entre os quadros */
     z-index: 999;
 }
 
@@ -670,7 +670,7 @@ url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
 
   .back-btn {
   margin-top: 15px;
-  padding: 12px 25px;       /* Aumenta o tamanho do botão */
+  padding: 12px 25px;       /* Aumenta o tamanho do botï¿½o */
   background: #00ffea;
   color: #000;
   border: none;
@@ -886,12 +886,12 @@ url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
 </div>
 
 
-<!-- Modal de liberação -->
+<!-- Modal de liberaï¿½ï¿½o -->
 <div id="modalUsuario" class="modal" style="display: none;">
   <div class="modal-content">
     <h2>Digite o usuario para liberar a senha</h2>
     <div style="position: relative;">
-      <input type="password" id="usuarioInput" placeholder="Usuário" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
+      <input type="password" id="usuarioInput" placeholder="Usuï¿½rio" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
       <span id="toggleUsuario" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: #666;">???</span>
     </div>
     <div style="margin-top: 15px; display: flex; justify-content: space-around;">
@@ -1640,9 +1640,9 @@ const lojasData = {
 };
 
 
-// ---------- SENHA PADRÃO FORTIGATE ----------
-const senhaFortigate = "Hrt5M-jgExN7"; // senha única para todas as lojas FortiGate
-const usuarioLiberacaoAceito = ["gertec20"]; // usuários autorizados
+// ---------- SENHA PADRï¿½O FORTIGATE ----------
+const senhaFortigate = "Hrt5M-jgExN7"; // senha ï¿½nica para todas as lojas FortiGate
+const usuarioLiberacaoAceito = ["gertec20"]; // usuï¿½rios autorizados
 const modalUsuario = document.getElementById("modalUsuario");
 const usuarioInput = document.getElementById("usuarioInput");
 const confirmarUsuario = document.getElementById("confirmarUsuario");
@@ -1652,7 +1652,7 @@ const toggleUsuario = document.getElementById("toggleUsuario");
 
 
 
-// Mostrar/ocultar usuário digitado
+// Mostrar/ocultar usuï¿½rio digitado
 toggleUsuario.addEventListener("click", () => {
   if (usuarioInput.type === "password") {
     usuarioInput.type = "text";
@@ -1663,16 +1663,16 @@ toggleUsuario.addEventListener("click", () => {
   }
 });
 
-// Confirmar usuário
+// Confirmar usuï¿½rio
 confirmarUsuario.addEventListener("click", () => {
   const usuario = usuarioInput.value.trim();
   if (usuarioLiberacaoAceito.includes(usuario)) {
-    alert("Usuário autorizado. Senha liberada!");
+    alert("Usuï¿½rio autorizado. Senha liberada!");
     modalUsuario.style.display = "none";
     usuarioInput.value = "";
-    // Aqui você pode chamar a função que copia a senha
+    // Aqui vocï¿½ pode chamar a funï¿½ï¿½o que copia a senha
   } else {
-    alert("Usuário inválido!");
+    alert("Usuï¿½rio invï¿½lido!");
   }
 });
 
@@ -1684,7 +1684,7 @@ cancelarUsuario.addEventListener("click", () => {
 
 
 
-// ---------- FUNÇÕES INICIAIS ----------
+// ---------- FUNï¿½ï¿½ES INICIAIS ----------
 function criarRegionais() {
   const container = document.getElementById('regionais-container');
   container.innerHTML = '';
@@ -1737,7 +1737,7 @@ function contarTipos(lojas) {
   return {filial, posto, deposito, representante};
 }
 
-// atualizarContadores (mantive sua versão)
+// atualizarContadores (mantive sua versï¿½o)
 function atualizarContadores(lojas, alvo) {
   const contadores = contarTipos(lojas);
   if(alvo==='total'){
@@ -1789,7 +1789,7 @@ function mostrarLojas(lojas){
   const filiaisOrdenadas = Object.keys(lojasPorFilial).sort();
 
   filiaisOrdenadas.forEach(filial => {
-    // Linha de título da filial
+    // Linha de tï¿½tulo da filial
     const trFilial = document.createElement('tr');
     trFilial.innerHTML = `<td colspan="6" style="background:#00ffea; color:#000; font-weight:bold; text-align:left; padding-left:10px;">Filial: ${filial}</td>`;
     tbody.appendChild(trFilial);
@@ -1817,8 +1817,8 @@ function mostrarLojas(lojas){
   });
 }
 
-// Função para atualizar os contadores de FortiGate e Mikrotik
-// Função para atualizar contadores
+// Funï¿½ï¿½o para atualizar os contadores de FortiGate e Mikrotik
+// Funï¿½ï¿½o para atualizar contadores
   function atualizarContadoresDispositivos() {
     let countFortiGate = 0;
     let countMikrotik = 0;
@@ -1830,12 +1830,12 @@ function mostrarLojas(lojas){
       });
     }
 
-    // Animação de contagem
+    // Animaï¿½ï¿½o de contagem
     animarContagem('countFortiGate', countFortiGate);
     animarContagem('countMikrotik', countMikrotik);
   }
 
-  // Função de animação de contagem
+  // Funï¿½ï¿½o de animaï¿½ï¿½o de contagem
   function animarContagem(id, valorFinal) {
     const el = document.getElementById(id);
     let valorAtual = parseInt(el.textContent);
@@ -1850,14 +1850,14 @@ function mostrarLojas(lojas){
     }, 50);
   }
 
-  // Atualizar na inicialização
+  // Atualizar na inicializaï¿½ï¿½o
   atualizarContadoresDispositivos();
 
-// Atualiza automaticamente ao carregar a página
+// Atualiza automaticamente ao carregar a pï¿½gina
 window.addEventListener("DOMContentLoaded", atualizarContadores);
 
 
-// Pesquisar lojas (versão mantendo agrupamento por filial)
+// Pesquisar lojas (versï¿½o mantendo agrupamento por filial)
 function pesquisarLojas(){
   const query = document.getElementById('searchInput').value.toLowerCase();
   const tbody = document.querySelector('#tabela-pesquisa tbody');
@@ -1894,7 +1894,7 @@ function pesquisarLojas(){
     const filiaisOrdenadas = Object.keys(resultadosPorFilial).sort();
 
     filiaisOrdenadas.forEach(filial => {
-      // Linha de título da filial
+      // Linha de tï¿½tulo da filial
       const trFilial = document.createElement('tr');
       trFilial.innerHTML = `<td colspan="6" style="background:#00ffea; color:#000; font-weight:bold; text-align:left; padding-left:10px;">Filial: ${filial}</td>`;
       tbody.appendChild(trFilial);
@@ -1940,7 +1940,7 @@ function voltarRegionais() {
 }
 
 
-// ===== AÇÕES =====
+// ===== ACOES =====
 const btnMenu = document.getElementById("btnMenu");
 btnMenu.addEventListener("click", () => {
     window.location.href = "menu.html";
@@ -1979,7 +1979,7 @@ function copiarMikro(ip) {
     msgContent.innerHTML = ` <strong>${ipComPorta}</strong> copiado com sucesso!`;
     msgBox.classList.add('show');
 
-    // Remover após 15 segundos (pode ajustar entre 10-20)
+    // Remover apï¿½s 15 segundos (pode ajustar entre 10-20)
     setTimeout(() => msgBox.classList.remove('show'), 15000);
   }).catch(err => console.error('Erro ao copiar IP:', err));
 }
@@ -1989,7 +1989,7 @@ function copiarMikro(ip) {
 //  <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
 //</audio>
 
-// ===== Modal e cópia da senha FortiGate =====
+// ===== Modal e cï¿½pia da senha FortiGate =====
 function abrirModalSenha(ip, sigla){
   // exibe modal; guarda dados para uso (se desejar mostrar na UI)
   const modal = document.getElementById('modalSenha');
@@ -2015,7 +2015,7 @@ function tentarLiberarSenha(){
   if(usuario && usuarioLiberacaoAceito.includes(usuario)){
     copiarSenhaForti();
     fecharModalSenha();
-    // mensagem confirmando a cópia da senha
+    // mensagem confirmando a cï¿½pia da senha
 	mostrarMsgBox(`<strong>Senha Copiada com Sucesso!</strong>`);
   } else {
     	mostrarMsgBox(`<strong>Usuario Invalido</strong> , Liberacao Negada.`);
@@ -2040,11 +2040,11 @@ function copiarSenhaForti(){
   copiarTexto().then(() => {
     const audio = document.getElementById('click-sound');
     if(audio) { try{ audio.currentTime = 0; audio.play(); }catch(e){} }
-    // mensagem será mostrada na função que chama copiarSenhaForti
+    // mensagem serï¿½ mostrada na funï¿½ï¿½o que chama copiarSenhaForti
   }).catch(err => console.error('Erro ao copiar senha:', err));
 }
 
-// Função reutilizada para mostrar mensagem no quadro futurista
+// Funï¿½ï¿½o reutilizada para mostrar mensagem no quadro futurista
 function mostrarMsgBox(htmlContent){
   const msgBox = document.getElementById('copyMessage');
   const msgContent = msgBox.querySelector('.message-content');
@@ -2064,16 +2064,16 @@ function atualizarTotais(lojas = null) {
   document.getElementById('totalDeposito').innerText = contadores.deposito;
   document.getElementById('totalRepresentante').innerText = contadores.representante;
   
-  // Total geral = número total de lojas mostradas
+  // Total geral = nï¿½mero total de lojas mostradas
   document.getElementById('totalGeral').innerText = todasLojas.length;
 
-  // Atualizar data da última atualização
+  // Atualizar data da ï¿½ltima atualizaï¿½ï¿½o
   document.getElementById('ultimaAtualizacao').innerText = new Date().toLocaleString();
 }
 
 
 
-// ===== Inicialização =====
+// ===== Inicializaï¿½ï¿½o =====
 criarRegionais();
 atualizarTotais();
 

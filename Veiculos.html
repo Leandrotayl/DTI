@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LocadoraPro - Sistema de Automação</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    font-family:'Poppins', sans-serif;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    color:#fff;
+}
+
+header{
+    background:#111;
+    padding:15px;
+    text-align:center;
+    font-size:22px;
+    font-weight:700;
+    letter-spacing:1px;
+}
+
+.container{
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(300px, 1fr));
+    gap:15px;
+    padding:15px;
+}
+
+.card{
+    background:#1c1c1c;
+    padding:12px;
+    border-radius:10px;
+    box-shadow:0 0 12px rgba(0,0,0,0.4);
+    font-size:13px;
+}
+
+.card h2{
+    margin-top:0;
+    border-bottom:1px solid #333;
+    padding-bottom:8px;
+}
+
+input, select, button{
+    width:100%;
+    padding:7px;
+    margin-top:6px;
+    border-radius:6px;
+    border:none;
+    font-family:'Poppins';
+    font-size:13px;
+}
+
+input, select{
+    background:#2b2b2b;
+    color:#fff;
+}
+
+button{
+    background:#00c6ff;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+button:hover{
+    background:#0099cc;
+}
+
+table{
+    width:100%;
+    margin-top:10px;
+    border-collapse:collapse;
+    font-size:12px;
+}
+
+th, td{
+    padding:6px;
+    text-align:left;
+}
+
+th{
+    background:#222;
+}
+
+tr:nth-child(even){
+    background:#2a2a2a;
+}
+
+.status-disponivel{
+    color:#22ff88;
+    font-weight:bold;
+}
+
+.status-alugado{
+    color:#ff5555;
+    font-weight:bold;
+}
+
+@media(max-width:900px){
+    .container{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+<body>
+
+<header>🚗 LocadoraPro - Sistema de Automação</header>
+
+<div class="container">
+
+<!-- Cadastro de Veículos -->
+<div class="card">
+<h2>Cadastro de Veículos</h2>
+<input type="text" id="modelo" placeholder="Modelo do veículo">
+<input type="text" id="placa" placeholder="Placa">
+<input type="number" id="valorDiaria" placeholder="Valor da diária (R$)">
+<button onclick="cadastrarVeiculo()">Cadastrar Veículo</button>
+
+<table id="tabelaVeiculos">
+<thead>
+<tr>
+<th>Modelo</th>
+<th>Placa</th>
+<th>Diária</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+
+<!-- Cadastro de Clientes -->
+<div class="card">
+<h2>Cadastro de Cliente</h2>
+<input type="text" id="nomeCliente" placeholder="Nome do cliente">
+<input type="text" id="cpfCliente" placeholder="CPF">
+<button onclick="cadastrarCliente()">Cadastrar Cliente</button>
+
+<table id="tabelaClientes">
+<thead>
+<tr>
+<th>Nome</th>
+<th>CPF</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+
+<!-- Registrar Locação -->
+<div class="card">
+<h2>Registrar Locação</h2>
+
+<label>Data de Início</label>
+<input type="date" id="dataInicio">
+
+<label>Cliente</label>
+<select id="selectCliente"></select>
+
+<label>Veículo</label>
+<select id="selectVeiculo"></select>
+
+<label>Seguro</label>
+<select id="selectSeguro">
+<option value="0">Sem Seguro</option>
+<option value="30">Seguro Básico (R$30/dia)</option>
+<option value="50">Seguro Completo (R$50/dia)</option>
+</select>
+
+<label>Quantidade de Dias</label>
+<input type="number" id="dias" placeholder="Quantidade de dias">
+
+<button onclick="registrarLocacao()">Registrar Locação</button>
+
+<h3>Total: R$ <span id="valorTotal">0.00</span></h3>
+
+<table id="tabelaLocacoes">
+<thead>
+<tr>
+<th>Cliente</th>
+<th>Veículo</th>
+<th>Data</th>
+<th>Dias</th>
+<th>Seguro</th>
+<th>Total</th>
+<th>Ações</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
+</div>
+
+</div>
+
+<script>
+// --- Dados ---
+let veiculos = JSON.parse(localStorage.getItem("veiculos")) || [];
+let clientes = JSON.parse(localStorage.getItem("clientes")) || [];
+let locacoes = JSON.parse(localStorage.getItem("locacoes")) || [];
+
+// --- Funções ---
+function salvarDados(){
+    localStorage.setItem("veiculos", JSON.stringify(veiculos));
+    localStorage.setItem("clientes", JSON.stringify(clientes));
+    localStorage.setItem("locacoes", JSON.stringify(locacoes));
+}
+
+// Cadastro de veículo
+function cadastrarVeiculo(){
+    let modelo = document.getElementById("modelo").value;
+    let placa = document.getElementById("placa").value;
+    let diaria = parseFloat(document.getElementById("valorDiaria").value);
+
+    if(!modelo || !placa || !diaria) return alert("Preencha todos os campos!");
+
+    veiculos.push({modelo, placa, diaria, status:"Disponível"});
+    salvarDados();
+    atualizarVeiculos();
+    atualizarSelects();
+}
+
+// Cadastro de cliente
+function cadastrarCliente(){
+    let nome = document.getElementById("nomeCliente").value;
+    let cpf = document.getElementById("cpfCliente").value;
+
+    if(!nome || !cpf) return alert("Preencha todos os campos!");
+
+    clientes.push({nome, cpf});
+    salvarDados();
+    atualizarClientes();
+    atualizarSelects();
+}
+
+// Registrar locação
+function registrarLocacao(){
+    let dataInicio = document.getElementById("dataInicio").value;
+    let clienteIndex = document.getElementById("selectCliente").value;
+    let veiculoIndex = document.getElementById("selectVeiculo").value;
+    let dias = parseInt(document.getElementById("dias").value);
+    let seguro = parseInt(document.getElementById("selectSeguro").value);
+
+    if(!dataInicio || clienteIndex === "" || veiculoIndex === "" || !dias)
+        return alert("Preencha todos os campos!");
+
+    if(veiculos[veiculoIndex].status === "Alugado")
+        return alert("Veículo já alugado!");
+
+    let total = (veiculos[veiculoIndex].diaria + seguro) * dias;
+
+    veiculos[veiculoIndex].status = "Alugado";
+
+    locacoes.push({
+        cliente: clientes[clienteIndex].nome,
+        veiculo: veiculos[veiculoIndex].modelo,
+        dataInicio,
+        dias,
+        seguro,
+        total
+    });
+
+    document.getElementById("valorTotal").innerText = total.toFixed(2);
+
+    salvarDados();
+    atualizarVeiculos();
+    atualizarLocacoes();
+    atualizarSelects();
+}
+
+// Finalizar locação
+function finalizarLocacao(index){
+    let veiculoNome = locacoes[index].veiculo;
+    let veiculo = veiculos.find(v => v.modelo === veiculoNome);
+    if(veiculo){
+        veiculo.status = "Disponível";
+    }
+
+    locacoes.splice(index,1);
+    salvarDados();
+    atualizarVeiculos();
+    atualizarClientes();
+    atualizarLocacoes();
+    atualizarSelects();
+}
+
+// Atualizar tabelas e selects
+function atualizarVeiculos(){
+    let tbody = document.querySelector("#tabelaVeiculos tbody");
+    tbody.innerHTML = "";
+    veiculos.forEach((v,i)=>{
+        tbody.innerHTML += `
+        <tr>
+            <td>${v.modelo}</td>
+            <td>${v.placa}</td>
+            <td>R$ ${v.diaria.toFixed(2)}</td>
+            <td class="${v.status === 'Disponível' ? 'status-disponivel' : 'status-alugado'}">${v.status}</td>
+        </tr>`;
+    });
+}
+
+function atualizarClientes(){
+    let tbody = document.querySelector("#tabelaClientes tbody");
+    tbody.innerHTML = "";
+    clientes.forEach(c=>{
+        tbody.innerHTML += `
+        <tr>
+            <td>${c.nome}</td>
+            <td>${c.cpf}</td>
+        </tr>`;
+    });
+}
+
+function atualizarLocacoes(){
+    let tbody = document.querySelector("#tabelaLocacoes tbody");
+    tbody.innerHTML = "";
+    locacoes.forEach((l,index)=>{
+        let seguroNome = l.seguro === 0 ? "Sem Seguro" : l.seguro === 30 ? "Básico" : "Completo";
+        tbody.innerHTML += `
+        <tr>
+            <td>${l.cliente}</td>
+            <td>${l.veiculo}</td>
+            <td>${l.dataInicio}</td>
+            <td>${l.dias}</td>
+            <td>${seguroNome}</td>
+            <td>R$ ${l.total.toFixed(2)}</td>
+            <td><button onclick="finalizarLocacao(${index})">Finalizar</button></td>
+        </tr>`;
+    });
+}
+
+function atualizarSelects(){
+    let selectCliente = document.getElementById("selectCliente");
+    let selectVeiculo = document.getElementById("selectVeiculo");
+
+    selectCliente.innerHTML = '<option value="">Selecione Cliente</option>';
+    selectVeiculo.innerHTML = '<option value="">Selecione Veículo</option>';
+
+    clientes.forEach((c,i)=>{
+        selectCliente.innerHTML += `<option value="${i}">${c.nome}</option>`;
+    });
+
+    veiculos.forEach((v,i)=>{
+        if(v.status === "Disponível")
+            selectVeiculo.innerHTML += `<option value="${i}">${v.modelo}</option>`;
+    });
+}
+
+// Inicialização
+atualizarVeiculos();
+atualizarClientes();
+atualizarLocacoes();
+atualizarSelects();
+</script>
+
+</body>
+</html>

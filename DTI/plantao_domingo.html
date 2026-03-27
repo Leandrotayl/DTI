@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title> Plantao de Domingo </title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background: #0f172a;
+    color: #fff;
+    margin: 0;
+    padding: 20px;
+      background: 
+  linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.55)),
+  url("SUA-IMAGEM.jpg"),
+url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
+
+}
+
+input, textarea, button{
+    width: 100%;
+    margin-top: 10px;
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 14px;
+    outline: none;
+}
+
+input, textarea{
+    background: #0f172a;
+    color: #fff;
+    border: 1px solid #38bdf8;
+    transition: 0.3s;
+}
+
+input:focus, textarea:focus{
+    border-color: #22c55e;
+    box-shadow: 0 0 10px #22c55e50;
+}
+
+input#pesquisa{
+    width: 200px;
+    border-radius: 8px;
+    border: 1px solid #38bdf8;
+    padding: 6px 10px;
+    margin-bottom: 20px;
+}
+
+.btn-add{
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 55px;
+    height: 55px;
+    border-radius: 50%;
+    border: none;
+    background: #38bdf8;
+    color: #000;
+    font-size: 32px;
+    cursor: pointer;
+    box-shadow: 0 10px 25px rgba(56,189,248,.4);
+    transition: 0.3s;
+}
+.btn-add:hover{
+    transform: scale(1.1);
+}
+
+.quadro{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(90deg, rgba(56,189,248,.12), #020617 15%, #020617 85%, rgba(56,189,248,.12));
+    border-left: 5px solid #38bdf8;
+    border-right: 5px solid #38bdf8;
+    border-radius: 16px;
+    box-shadow: inset 0 0 25px rgba(56,189,248,.15), 0 25px 50px rgba(0,0,0,.7);
+}
+
+.card{
+    width: 220px;
+    padding: 14px;
+    border-radius: 12px;
+    background: #020617;
+    border-left: 5px solid #38bdf8;
+    border-right: 5px solid #38bdf8;
+    box-shadow: 0 10px 30px rgba(0,0,0,.6), inset 0 0 0 1px rgba(56,189,248,.15);
+    transition: 0.25s;
+    font-size: 13px;
+}
+.card:hover{
+    transform: translateY(-6px);
+}
+
+.card strong{
+    color: #38bdf8;
+    font-size: 14px;
+}
+
+.acoes{
+    margin-top: 10px;
+    text-align: right;
+}
+
+.acoes button{
+    padding: 6px 10px;
+    border-radius: 8px;
+    font-size: 12px;
+    cursor: pointer;
+    margin-left: 4px;
+    border: none;
+    transition: 0.3s;
+}
+
+.acoes button.editar {
+    background: #38bdf8;
+    color: #000;
+}
+.acoes button.editar:hover {
+    background: #0ea5e9;
+    color: #fff;
+}
+
+.acoes button.excluir {
+    background: #f87171;
+    color: #000;
+}
+.acoes button.excluir:hover {
+    background: #ef4444;
+    color: #fff;
+}
+
+#contador-plantoes{
+    position: fixed;
+    top: 22px;
+    right: 95px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px 18px;
+
+    background: linear-gradient(
+        135deg,
+        rgba(15,23,42,.85),
+        rgba(2,6,23,.85)
+    );
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border-radius: 18px;
+    border: 1px solid rgba(56,189,248,.35);
+
+    box-shadow:
+        0 15px 35px rgba(0,0,0,.55),
+        inset 0 0 20px rgba(56,189,248,.08);
+
+    color: #e5e7eb;
+    font-size: 13px;
+    letter-spacing: .4px;
+
+    transition: all .25s ease;
+    z-index: 999;
+}
+
+#contador-plantoes:hover{
+    transform: translateY(-2px);
+    box-shadow:
+        0 20px 45px rgba(0,0,0,.65),
+        0 0 25px rgba(56,189,248,.35);
+}
+
+/* Texto */
+#contador-plantoes .label{
+    opacity: .85;
+    font-weight: 500;
+}
+
+/* Número */
+#contador-plantoes #totalPlantoes{
+    min-width: 32px;
+    text-align: center;
+
+    padding: 4px 10px;
+
+    background: linear-gradient(135deg,#22c55e,#4ade80);
+    color: #022c22;
+
+    font-weight: 700;
+    font-size: 14px;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 4px 12px rgba(34,197,94,.6),
+        inset 0 0 6px rgba(255,255,255,.35);
+}
+
+/* Animação quando atualizar */
+.pulse{
+    animation: pulse .4s ease;
+}
+
+@keyframes pulse{
+    0%{transform: scale(1)}
+    50%{transform: scale(1.15)}
+    100%{transform: scale(1)}
+}
+
+
+
+.modal{
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.7);
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s;
+}
+
+@keyframes fadeIn{
+    from{opacity:0;}
+    to{opacity:1;}
+}
+
+.modal-content{
+    background: linear-gradient(145deg, #0f172a, #020617);
+    padding: 25px;
+    width: 100%;
+    max-width: 450px;
+    border-radius: 16px;
+    box-shadow: 0 20px 50px rgba(0,0,0,.8);
+    transform: scale(0.8);
+    animation: modalZoom 0.3s forwards;
+}
+
+@keyframes modalZoom{
+    to{transform: scale(1);}
+}
+
+.modal-content h2{
+    margin-top: 0;
+    color: #38bdf8;
+    text-align: center;
+    font-size: 22px;
+}
+
+button.salvar, button.confirmar, button.cancelar{
+    cursor: pointer;
+    margin-top: 10px;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 10px;
+    width: 48%;
+    transition: 0.3s;
+}
+
+button.salvar{
+    background: #22c55e;
+    color: #000;
+}
+button.salvar:hover{
+    background: #16a34a;
+    color: #fff;
+}
+
+button.confirmar{
+    background: #f87171;
+    color: #000;
+}
+button.confirmar:hover{
+    background: #ef4444;
+    color: #fff;
+}
+
+button.cancelar{
+    background: #38bdf8;
+    color: #000;
+}
+button.cancelar:hover{
+    background: #0ea5e9;
+    color: #fff;
+}
+
+#modal-excluir .modal-content{
+    text-align: center;
+}
+
+#modal-excluir .senha-container{
+    display: none;
+    margin-top: 15px;
+}
+</style>
+</head>
+
+<body>
+
+<input type="text" id="pesquisa" placeholder="Pesquisar colaborador..." onkeyup="filtrar()">
+<button class="btn-add" onclick="abrirModal()">+</button>
+
+<div id="contador-plantoes">
+<span class="label" id="labelPlantoes">Plantoes</span>
+<span id="totalPlantoes">0</span>
+</div>
+
+
+
+<div class="quadro" id="lista"></div>
+
+<!-- Modal de cadastro/edição -->
+<div class="modal" id="modal">
+    <div class="modal-content">
+        <h2 id="tituloModal">Novo Plantao</h2>
+        <input type="text" id="nome" placeholder="Nome do colaborador">
+        <input type="date" id="dataPlantao">
+        <input type="text" id="folgas" placeholder="Folgas" readonly>
+        <textarea id="obs" placeholder="Observacao"></textarea>
+        <button class="salvar" onclick="salvar()">Salvar</button>
+    </div>
+</div>
+
+<!-- Modal de exclusão -->
+<div class="modal" id="modal-excluir">
+    <div class="modal-content">
+        <h2>Confirmar Exclusao</h2>
+        <p id="msg-excluir">Deseja Realmente Excluir este Plantao?</p>
+
+        <div class="senha-container" id="senha-container">
+            <input type="password" id="senhaExcluirInput" placeholder="Senha">
+        </div>
+
+        <div style="display:flex; justify-content: space-between;">
+            <button class="confirmar" id="btn-sim" onclick="mostrarSenha()">Sim</button>
+            <button class="cancelar" onclick="fecharExcluir()">Nao</button>
+            <button class="confirmar" id="btn-confirmar" style="display:none;" onclick="confirmarExcluir()">Excluir</button>
+        </div>
+    </div>
+</div>
+
+<script>
+let cardEditando = null;
+let cardExcluir = null;
+const senhaExcluir = "Dti@1111";
+
+function atualizarContador(){
+    const total = (JSON.parse(localStorage.getItem('plantoes')) || []).length;
+    totalPlantoes.innerText = total;
+
+    totalPlantoes.classList.remove('pulse');
+    void totalPlantoes.offsetWidth;
+    totalPlantoes.classList.add('pulse');
+}
+
+
+
+// Capitalizar nomes
+function capitalizarNome(nome) {
+    return nome.split(' ').map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase()).join(' ');
+}
+
+// Formatar data dd/mm/aaaa
+function formatarDataString(dataStr) {
+    const [ano, mes, dia] = dataStr.split('-');
+    return `${dia}/${mes}/${ano}`;
+}
+
+// Somar dias sem erro de fuso
+function somarDias(dataStr, dias) {
+    const [ano, mes, dia] = dataStr.split('-').map(Number);
+    const dt = new Date(ano, mes - 1, dia + dias);
+    const y = dt.getFullYear();
+    const m = String(dt.getMonth() + 1).padStart(2, '0');
+    const d = String(dt.getDate()).padStart(2, '0');
+    return `${d}/${m}/${y}`;
+}
+
+function atualizarFolgas() {
+    const data = document.getElementById('dataPlantao').value;
+    if(!data) return;
+    const sabadoAntes = somarDias(data, -1);
+    const sabadoDepois = somarDias(data, 6);
+    document.getElementById('folgas').value = `Folgas: ${sabadoAntes} e ${sabadoDepois}`;
+}
+
+// Carregar plantoes
+function carregarPlantoes(){
+    const dados = JSON.parse(localStorage.getItem('plantoes')) || [];
+    document.getElementById('lista').innerHTML = '';
+    dados.forEach((plantao, i) => criarCard(plantao, i));
+    atualizarContador();
+}
+window.onload = carregarPlantoes;
+
+// Modal cadastro/edição
+function abrirModal(){
+    document.getElementById('modal').style.display = 'flex';
+    document.getElementById('tituloModal').innerText =
+        cardEditando ? 'Editar Plantao' : 'Novo Plantao';
+}
+
+function fecharModal(){
+    document.getElementById('modal').style.display = 'none';
+    document.querySelectorAll('#modal input, #modal textarea').forEach(i => i.value = '');
+    cardEditando = null;
+}
+
+document.getElementById('modal').addEventListener('click', e=>{
+    if(e.target.id === 'modal') fecharModal();
+});
+
+document.getElementById('dataPlantao').addEventListener('change', atualizarFolgas);
+
+function salvar(){
+    let nome = document.getElementById('nome').value;
+    nome = capitalizarNome(nome);
+    const data = document.getElementById('dataPlantao').value;
+    const folgas = document.getElementById('folgas').value;
+    const obs = document.getElementById('obs').value || 'Sem observacao';
+
+    if(!nome || !data){
+        alert('Preencha o nome e a data');
+        return;
+    }
+
+    const plantao = { nome, data, folgas, obs };
+    let dados = JSON.parse(localStorage.getItem('plantoes')) || [];
+
+    if(cardEditando){
+        const index = cardEditando.dataset.index;
+        dados[index] = plantao;
+    } else {
+        dados.push(plantao);
+    }
+
+    localStorage.setItem('plantoes', JSON.stringify(dados));
+    carregarPlantoes();
+    fecharModal();
+}
+
+function criarCard(plantao, index){
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.index = index;
+    card.innerHTML = `
+        <strong>${plantao.nome}</strong><br>
+        Plantao: ${formatarDataString(plantao.data)}<br>
+        ${plantao.folgas}<br>
+        <em>${plantao.obs}</em>
+        <div class="acoes">
+            <button class="editar" onclick="editar(this)">Editar</button>
+            <button class="excluir" onclick="abrirExcluir(this)">Excluir</button>
+        </div>
+    `;
+    document.getElementById('lista').prepend(card);
+}
+
+function editar(btn){
+    cardEditando = btn.closest('.card');
+    const index = cardEditando.dataset.index;
+    const dados = JSON.parse(localStorage.getItem('plantoes')) || [];
+    const plantao = dados[index];
+
+    document.getElementById('nome').value = plantao.nome;
+    document.getElementById('dataPlantao').value = plantao.data;
+    document.getElementById('obs').value = plantao.obs !== 'Sem observacao' ? plantao.obs : '';
+    atualizarFolgas();
+    abrirModal();
+}
+
+// Exclusão
+function abrirExcluir(btn){
+    cardExcluir = btn.closest('.card');
+    document.getElementById('modal-excluir').style.display = 'flex';
+    document.getElementById('msg-excluir').style.display = 'block';
+    document.getElementById('senha-container').style.display = 'none';
+    document.getElementById('btn-sim').style.display = 'inline-block';
+    document.getElementById('btn-confirmar').style.display = 'none';
+}
+
+function mostrarSenha(){
+    document.getElementById('msg-excluir').style.display = 'none';
+    document.getElementById('senha-container').style.display = 'block';
+    document.getElementById('btn-sim').style.display = 'none';
+    document.getElementById('btn-confirmar').style.display = 'inline-block';
+}
+
+function fecharExcluir(){
+    document.getElementById('modal-excluir').style.display = 'none';
+    cardExcluir = null;
+}
+
+function confirmarExcluir(){
+    const senha = document.getElementById('senhaExcluirInput').value;
+    if(senha !== senhaExcluir){
+        alert("Senha Incorreta! Exclusao Cancelada.");
+        return;
+    }
+
+    const index = cardExcluir.dataset.index;
+    let dados = JSON.parse(localStorage.getItem('plantoes')) || [];
+    dados.splice(index, 1);
+    localStorage.setItem('plantoes', JSON.stringify(dados));
+    carregarPlantoes();
+    fecharExcluir();
+}
+
+
+function filtrar(){
+    const filtro = document.getElementById('pesquisa').value.toLowerCase();
+    const cards = document.querySelectorAll('.card');
+    const dados = JSON.parse(localStorage.getItem('plantoes')) || [];
+
+    let contadorColaborador = 0;
+
+    cards.forEach(card => {
+        const strong = card.querySelector('strong');
+        const nomeOriginal = strong.dataset.nome || strong.innerText;
+
+        if(!strong.dataset.nome){
+            strong.dataset.nome = nomeOriginal;
+        }
+
+        if(filtro === ''){
+            strong.innerHTML = strong.dataset.nome;
+            card.style.display = 'block';
+            return;
+        }
+
+        const nomeLower = strong.dataset.nome.toLowerCase();
+
+        if(nomeLower.includes(filtro)){
+            const regex = new RegExp(`(${filtro})`, 'gi');
+            strong.innerHTML = strong.dataset.nome.replace(
+                regex,
+                `<span style="background:#fde047;color:#000;padding:0 4px;border-radius:4px;">$1</span>`
+            );
+            card.style.display = 'block';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    // ?? Contar TODOS os Plantoes do colaborador no histórico
+    if(filtro){
+        contadorColaborador = dados.filter(p =>
+            p.nome.toLowerCase().includes(filtro)
+        ).length;
+
+        labelPlantoes.innerText = 'Plantoes do Colaborador';
+        totalPlantoes.innerText = contadorColaborador;
+    } else {
+        labelPlantoes.innerText = 'Plantoes';
+        atualizarContador();
+    }
+
+    // animação
+    totalPlantoes.classList.remove('pulse');
+    void totalPlantoes.offsetWidth;
+    totalPlantoes.classList.add('pulse');
+}
+
+
+</script>
+
+
+</body>
+</html>

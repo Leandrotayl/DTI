@@ -1,0 +1,1656 @@
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title> Licencas Office </title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+body, html { width:100%; height:100%; background:#0a0a0a; }
+
+canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
+.content { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; padding:40px; gap:40px; min-height:100vh; color:#fff; }
+
+.top-bar { display:flex; align-items:center; justify-content:center; gap:30px; flex-wrap:wrap; width:100%; }
+.datetime-group { display:flex; gap:20px; align-items:center; }
+
+.time-card, .date-card { background: linear-gradient(145deg,#1976d2,#0d47a1); border:2px solid #0ff; border-radius:20px; padding:15px 25px; text-align:center; color:#0ff; box-shadow:0 5px 20px rgba(0,255,255,0.5); min-width:180px; font-size:1.5rem; }
+.time-card {
+  font-family:'Orbitron',sans-serif;
+  font-size:2.2rem;
+  letter-spacing:2px;
+}
+
+.search-card {
+  background: linear-gradient(145deg,#001f3f,#003366);
+  border:3px solid #0ff;
+  border-radius:20px;
+  padding:40px 10px;
+  text-align:center;
+  width:300px;
+  box-shadow:0 10px 25px rgba(0,255,255,0.4);
+}
+.search-card input {
+  width:100%;
+  padding:10px 12px;
+  border-radius:15px;
+  border:2px solid #0ff;
+  outline:none;
+  font-size:0.95rem;
+  color:#0ff;
+  background: rgba(0,255,255,0.05);
+  box-shadow:0 0 8px #0ff inset;
+  text-align:center;
+  transition: all 0.3s ease;
+}
+.search-card input::placeholder { color: rgba(0,255,255,0.6); }
+
+.email-text {
+  display: inline-block;
+  max-width: 180px;         /* largura máxima da área de texto */
+  overflow: hidden;
+  text-overflow: ellipsis;  /* mostra "..." ao ultrapassar o limite */
+  white-space: nowrap;      /* impede quebra de linha */
+  vertical-align: middle;
+}
+.email-text:hover {
+  white-space: normal;
+  overflow: visible;
+  background: rgba(0, 255, 255, 0.15);
+  padding: 2px 6px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px #00ffff, 0 0 25px #00e6e6;
+  position: relative;
+  z-index: 5000; /* ?? sobe acima de todos os cards laterais */
+}
+
+/* === QUADRO ULTRA HD+ COM TEXTO PRETO === */
+.email-overlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  min-width: 300px;
+  max-width: 480px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(220,255,255,0.95), rgba(200,255,255,0.9));
+  color: #000; /* ?? texto preto */
+  padding: 22px 28px;
+  border-radius: 20px;
+  border: 3px solid rgba(0,255,255,1);
+  box-shadow:
+    0 0 50px rgba(0,255,255,0.9),
+    0 0 100px rgba(0,255,255,0.6),
+    0 0 180px rgba(0,180,255,0.5),
+    inset 0 0 25px rgba(255,255,255,0.6);
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-align: center;
+  text-shadow: none; /* ?? sem brilho no texto */
+  backdrop-filter: blur(15px) brightness(1.3);
+  z-index: 9999999999 !important;
+  white-space: normal;
+  opacity: 0;
+  transform: scale(0.9) translateY(10px);
+  transition: all 0.25s cubic-bezier(0.23, 1, 0.32, 1);
+  pointer-events: none;
+  animation: borderPulseBright 1.4s infinite alternate;
+}
+
+.email-overlay.show {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
+@keyframes borderPulseBright {
+  0% {
+    box-shadow:
+      0 0 40px rgba(0,255,255,0.9),
+      0 0 80px rgba(0,220,255,0.6),
+      inset 0 0 20px rgba(255,255,255,0.4);
+  }
+  100% {
+    box-shadow:
+      0 0 70px rgba(0,255,255,1),
+      0 0 150px rgba(0,240,255,0.8),
+      inset 0 0 40px rgba(255,255,255,0.8);
+  }
+}
+
+
+
+
+
+
+.highlight {
+  background: linear-gradient(90deg, #ffeb3b, #ffcc00);
+  color: #000;
+  font-weight: bold;
+  padding: 2px 4px;
+  border-radius: 4px;
+  box-shadow: 0 0 8px #ffea00, 0 0 15px #ffcc00;
+  transition: all 0.3s ease;
+}
+
+
+#btnTop {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 99;
+  background: linear-gradient(145deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 2px solid #0ff;
+  border-radius: 50px;
+  padding: 15px 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  text-shadow: 0 0 5px #0ff, 0 0 15px #0ff;
+  box-shadow: 0 0 10px #0ff, 0 0 30px #0ff inset;
+  transition: all 0.3s ease-in-out;
+  display: none;
+}
+#btnTop:hover {
+  background: linear-gradient(145deg,#ff0000,#1a1aff);
+  color: #fff;
+  box-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff4d4d inset;
+  transform: scale(1.1);
+}
+
+#btnMenu {
+  position: fixed;
+  top: 10px;
+  left: 160px;
+  width: 240px;
+  padding: 15px 0;
+  background: linear-gradient(135deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 3px solid #ff0000;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+  transition: all 0.3s ease-in-out;
+  z-index: 1001;
+}
+#btnMenu:hover {
+  background: linear-gradient(145deg,#ff0000,#1a1aff);
+  color: #fff;
+  box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
+  transform: scale(1.05);
+}
+
+/* Estilo do popup de cópia */
+.copy-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.7);
+  background: radial-gradient(circle at center, rgba(0, 255, 255, 0.2), rgba(0, 0, 0, 0.9));
+  border: 3px solid rgba(0, 255, 255, 0.7);
+  border-radius: 30px;
+  padding: 60px 80px;
+  overflow: hidden;
+  box-shadow: 
+    0 0 40px rgba(0, 255, 255, 0.8),
+    inset 0 0 30px rgba(0, 255, 255, 0.4),
+    0 0 100px rgba(0, 150, 255, 0.5);
+  opacity: 0;
+  z-index: 3000;
+  pointer-events: none;
+  transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+  backdrop-filter: blur(25px);
+}
+
+.copy-popup.show {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+.popup-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-family: 'Orbitron', sans-serif;
+  color: #00ffff;
+  letter-spacing: 1.5px;
+  text-shadow:
+    0 0 8px #00ffff,
+    0 0 25px #00ffff,
+    0 0 45px #0088ff;
+  animation: floatPopup 2s ease-in-out infinite alternate;
+}
+
+/* Ícone e texto */
+.popup-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.popup-icon {
+  font-size: 2.5rem;
+  color: #00eaff;
+  text-shadow:
+    0 0 15px #00ffff,
+    0 0 40px #00aaff;
+  animation: iconSpin 3s linear infinite;
+}
+
+/* Efeitos visuais */
+.popup-ring {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  border: 3px solid rgba(0, 255, 255, 0.4);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  animation: pulseRing 1.6s ease-out forwards;
+}
+
+.popup-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(0, 255, 255, 0.3) 0%, rgba(0, 255, 255, 0) 70%);
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+  animation: glowExpand 1.4s ease-out forwards;
+}
+
+.popup-reflex {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  background: linear-gradient(to top, rgba(0, 255, 255, 0.2), transparent);
+  filter: blur(10px);
+  animation: reflexFade 2s ease-out forwards;
+}
+
+.popup-particles {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 1;
+}
+
+/* Animações */
+@keyframes floatPopup {
+  from { transform: translateY(0); }
+  to { transform: translateY(-5px); }
+}
+
+@keyframes iconSpin {
+  from { transform: rotate(0deg) scale(1); }
+  to { transform: rotate(360deg) scale(1.05); }
+}
+
+@keyframes pulseRing {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 0.8; }
+  100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+}
+
+@keyframes glowExpand {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(2.8); opacity: 0; }
+}
+
+@keyframes reflexFade {
+  0% { opacity: 0.7; }
+  100% { opacity: 0; }
+}
+
+
+
+
+.total-card {
+  position: fixed;
+  top: 0px;
+  right: 6px;
+  background: linear-gradient(145deg,#ff8f0c,#ffb74d);
+  border: 3px solid #0ff;
+  border-radius: 25px;
+  padding: 30px 50px;
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #fff;
+  text-shadow: 0 0 8px #000;
+  box-shadow: 0 10px 30px rgba(255,255,255,0.5);
+  min-width: 200px;
+  z-index: 1000;
+}
+
+.licenca-container { display:flex; flex-direction:column; align-items:center; width:100%; }
+.loja-quadro {
+  border:3px solid #0d47a1;
+  border-radius:20px;
+  background:linear-gradient(145deg,#001f3f,#003366);
+  padding:40px;
+  margin-bottom:30px;
+  width:100%;
+  box-shadow:0 12px 30px rgba(0,255,255,0.4);
+}
+.loja-quadro h2 {
+  text-align:center;
+  margin-bottom:20px;
+  color:#0ff;
+  font-size:2rem;
+  text-shadow:0 0 10px #00ffff,0 0 20px #00ffff;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+}
+.badge { background:#f38f0c; color:white; padding:5px 15px; border-radius:15px; font-size:1rem; box-shadow:0 3px 8px rgba(0,0,0,0.5); }
+
+.box-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.licenca-box {
+  background: linear-gradient(145deg,#0d47a1,#1976d2);
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 10px 0px rgba(0,255,255,0.5),0 0 30px #00ffff inset;
+  transition: transform 0.25s ease, box-shadow 0.3s ease, background 0.3s ease;
+  cursor:pointer;
+  user-select:none;
+  position:relative;
+}
+.licenca-box p { margin:5px 0; font-size:1rem; }
+.licenca-box:hover { transform: scale(1.15); background: linear-gradient(145deg,#ff0000,#1a1aff); box-shadow:0 0 50px #ff4d4d inset; }
+
+.copy-btn {
+  margin-top:8px;
+  background:linear-gradient(145deg,#00ffff,#0077ff);
+  color:#000;
+  font-weight:bold;
+  border:none;
+  border-radius:10px;
+  padding:6px 10px;
+  cursor:pointer;
+  font-size:0.9rem;
+  width:100%;
+  transition: all 0.3s ease;
+  box-shadow:0 0 10px #00ffff;
+}
+.copy-btn:hover {
+  background:linear-gradient(145deg,#ff0000,#ff6600);
+  color:#fff;
+  box-shadow:0 0 20px #ff6600;
+  transform:scale(1.05);
+}
+
+footer { text-align:center; padding:15px; font-size:1rem; color:#ccc; margin-top:auto; }
+
+@keyframes pulseNeon {
+  from { box-shadow:0 0 20px #00ffff, inset 0 0 10px #00ffff; }
+  to { box-shadow:0 0 40px #00ffff, inset 0 0 25px #00ffff; }
+}
+
+@media (max-width:768px){
+  .time-card,.date-card{font-size:1.2rem;min-width:140px;}
+  .search-card{width:90%;}
+  .total-card{font-size:1.6rem;padding:20px 30px;}
+}
+</style>
+</head>
+<body>
+
+<div id="copyPopup" class="copy-popup">
+  <div class="popup-inner">
+    <div class="popup-particles" id="popupParticles"></div>
+    <div class="popup-ring"></div>
+    <div class="popup-reflex"></div>
+    <div class="popup-glow"></div>
+    <div class="popup-content">
+      <span class="popup-icon"> </span>
+      <span class="popup-text">E-mail copiado com sucesso!</span>
+    </div>
+  </div>
+</div>
+
+
+<span class="highlight">$1</span>
+
+
+<canvas id="networkCanvas"></canvas>
+
+<div class="content">
+  <div class="top-bar">
+    <div class="datetime-group">
+      <div class="time-card" id="time-card">--:--:--<br><small>Turno</small></div>
+    </div>
+
+    <div class="search-card">
+      <h3>Pesquisar Aqui</h3>
+      <input type="text" id="search-bar" placeholder="Digite para buscar..." autocomplete="off">
+    </div>
+
+    <button id="btnTop">IR PARA O TOPO</button>
+
+    <button id="btnMenu">MENU PRINCIPAL</button>
+
+    <div class="total-card" id="total-card">0 / 0</div>
+  </div>
+
+  <div class="licenca-container" id="licenca-container"></div>
+
+  <footer>&copy; 2025 Gerência de Suporte</footer>
+</div>
+
+<script>
+// Fundo animado
+const canvas = document.getElementById('networkCanvas');
+const ctx = canvas.getContext('2d');
+let width = canvas.width = window.innerWidth;
+let height = canvas.height = window.innerHeight;
+const nodeCount = 60;
+const nodes = [];
+for (let i = 0; i < nodeCount; i++) 
+  nodes.push({ x: Math.random()*width, y: Math.random()*height, vx:(Math.random()-0.5)*0.7, vy:(Math.random()-0.5)*0.7, radius:2+Math.random()*4, depth:Math.random() });
+function draw() {
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(0,0,width,height);
+  for (let i=0;i<nodes.length;i++){
+    for (let j=i+1;j<nodes.length;j++){
+      const dx=nodes[i].x-nodes[j].x;
+      const dy=nodes[i].y-nodes[j].y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      if(dist<180){
+        const alpha=(1-dist/180)*0.8;
+        ctx.strokeStyle=`rgba(0,255,255,${alpha})`;
+        ctx.lineWidth=1.2;
+        ctx.shadowBlur=4;
+        ctx.shadowColor='#0ff';
+        ctx.beginPath();
+        ctx.moveTo(nodes[i].x,nodes[i].y);
+        ctx.lineTo(nodes[j].x,nodes[j].y);
+        ctx.stroke();
+      }
+    }
+  }
+  nodes.forEach(node=>{
+    ctx.fillStyle='#0ff';
+    ctx.shadowBlur=10*node.depth;
+    ctx.shadowColor='#0ff';
+    ctx.beginPath();
+    ctx.arc(node.x,node.y,node.radius,0,Math.PI*2);
+    ctx.fill();
+    node.x+=node.vx*(0.5+node.depth);
+    node.y+=node.vy*(0.5+node.depth);
+    if(node.x<0||node.x>width)node.vx*=-1;
+    if(node.y<0||node.y>height)node.vy*=-1;
+  });
+  requestAnimationFrame(draw);
+}
+window.addEventListener('resize',()=>{ width=canvas.width=window.innerWidth; height=canvas.height=window.innerHeight; });
+draw();
+
+  // Codigo do Licencas Office
+  const dadosFixos = [
+
+      
+      { usuario: "Adecio", loja: "HALLEY", licencas: 01, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00"  },
+      { usuario: "Tarcisio", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00"  },
+      { usuario: "Almoxarifado", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Arielson", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Assistente", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Atemisto", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Aurea", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Bruna", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Carla", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Cesar", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "David", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Deposito", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Estevam", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Gracione", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Graziheli", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Halemb", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Indiara", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Lindomar", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Marciano", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Maria Eduarda", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Neila", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office05@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Offset", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office05@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Ph", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office05@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "lic_segtrab", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office05@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "T.I", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office05@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+      { usuario: "Valeska", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office06@grupoclaudino.email", tagEquipamento: "HALDSK00" },
+
+      { usuario: "Marlinda", loja: "TEC ", licencas: 1, modelo: "Desktop", email: "office06@grupoclaudino.email", tagEquipamento: "CSATECDSK00" },
+      { usuario: "Francisca", loja: "TEC ", licencas: 1, modelo: "Desktop", email: "office06@grupoclaudino.email", tagEquipamento: "CSATECDSK00" },
+      { usuario: "Cassio", loja: "TEC ", licencas: 1, modelo: "Desktop", email: "office06@grupoclaudino.email", tagEquipamento: "CSATECDSK00" },
+      { usuario: "Expedito", loja: "TEC ", licencas: 1, modelo: "Desktop", email: "office06@grupoclaudino.email", tagEquipamento: "CSATECDSK00" },
+
+      { usuario: "Adalberto", loja: "TEZ", licencas: 1, modelo: "Desktop", email: "office07@grupoclaudino.email", tagEquipamento: "CSATEZDSK00" },
+      { usuario: "Vieira", loja: "TEZ", licencas: 1, modelo: "Desktop", email: "office07@grupoclaudino.email", tagEquipamento: "CSATEZDSK00" },
+      { usuario: "Sabino", loja: "TEZ", licencas: 1, modelo: "Desktop", email: "office07@grupoclaudino.email", tagEquipamento: "CSATEZDSK00" },
+      { usuario: "Bianca", loja: "TEZ", licencas: 1, modelo: "Desktop", email: "office07@grupoclaudino.email", tagEquipamento: "CSATEZDSK00" },
+      { usuario: "Mariely", loja: "TEZ", licencas: 1, modelo: "Desktop", email: "office07@grupoclaudino.email", tagEquipamento: "CSATEZDSK00" },
+      { usuario: "Francisca Paz", loja: "TEZ", licencas: 1, modelo: "Desktop", email: "office08@grupoclaudino.email", tagEquipamento: "CSATEZDSK00" },
+
+      { usuario: "Keliane", loja: "TMA", licencas: 1, modelo: "Desktop", email: "office08@grupoclaudino.email", tagEquipamento: "CSATMADSK00" },
+      { usuario: "Julia", loja: "TMA", licencas: 1, modelo: "Desktop", email: "office08@grupoclaudino.email", tagEquipamento: "CSATMADSK00" },
+      { usuario: "Machado", loja: "TMA", licencas: 1, modelo: "Desktop", email: "office08@grupoclaudino.email", tagEquipamento: "CSATMADSK00" },
+      { usuario: "Lenilson", loja: "TMA", licencas: 1, modelo: "Desktop", email: "office08@grupoclaudino.email", tagEquipamento: "CSATMADSK00" },
+      { usuario: "Junielson", loja: "TMA", licencas: 1, modelo: "Desktop", email: "office09@grupoclaudino.email", tagEquipamento: "CSATMADSK00" },
+
+      { usuario: "Luan", loja: "NCP", licencas: 1, modelo: "Desktop", email: "office09@grupoclaudino.email", tagEquipamento: "CSANCPDSK00" },
+      { usuario: "Tercio", loja: "NCP", licencas: 1, modelo: "Desktop", email: "office09@grupoclaudino.email", tagEquipamento: "CSANCPDSK00" },
+      { usuario: "Gracilene", loja: "NCP", licencas: 1, modelo: "Desktop", email: "office88@grupoclaudino.email", tagEquipamento: "CSANCPDSK00" },
+      { usuario: "Ivan", loja: "NCP", licencas: 1, modelo: "Desktop", email: "office143@grupoclaudino.email", tagEquipamento: "CSANCPDSK00" },
+      { usuario: "Simone", loja: "NCP", licencas: 1, modelo: "Desktop", email: "office163@grupoclaudino.email", tagEquipamento: "CSANCPDSK00" },
+
+      { usuario: "Alicia", loja: "TOP ", licencas: 1, modelo: "Desktop", email: "office09@grupoclaudino.email", tagEquipamento: "CSATOPDSK00" },
+      { usuario: "Reis", loja: "TOP ", licencas: 1, modelo: "Desktop", email: "office09@grupoclaudino.email", tagEquipamento: "CSATOPDSK00"  },
+
+      { usuario: "Mario Soeiro", loja: "JURIDICO", licencas: 1, modelo: "Desktop", email: "office10@grupoclaudino.email", tagEquipamento: "CSAJRDDSK00"  },
+      { usuario: "Alexandre Almeida", loja: "JURIDICO", licencas: 1, modelo: "Desktop", email: "office10@grupoclaudino.email", tagEquipamento: "CSAJRDDSK00"   },
+      { usuario: "Marcus Vinicius", loja: "JURIDICO", licencas: 1, modelo: "Desktop", email: "office10@grupoclaudino.email", tagEquipamento: "CSAJRDDSK00"   },
+      { usuario: "Marcio Almeida", loja: "JURIDICO", licencas: 1, modelo: "Desktop", email: "office10@grupoclaudino.email", tagEquipamento: "CSAJRDDSK00"   },
+      { usuario: "Alexandre Duailibe", loja: "JURIDICO", licencas: 1, modelo: "Desktop", email: "office10@grupoclaudino.email", tagEquipamento: "CSAJRDDSK00"   },
+      { usuario: "Pedro Martins", loja: "JURIDICO", licencas: 1, modelo: "Desktop", email: "office10@grupoclaudino.email", tagEquipamento: "CSAJRDDSK00"   },
+      { usuario: "Edsel Makson", loja: "JURIDICO", licencas: 1, modelo: "Desktop", email: "office10@grupoclaudino.email", tagEquipamento: "CSAJRDDSK00"   },
+      { usuario: "Jordan Victor", loja: "JURIDICO", licencas: 1, modelo: "Desktop", email: "office11@grupoclaudino.email", tagEquipamento: "CSAJRDDSK00"   },
+      { usuario: "Jorge Allan", loja: "JURIDICO", licencas: 1, modelo: "Desktop", email: "office11@grupoclaudino.email", tagEquipamento: "CSAJRDDSK00"   },
+      { usuario: "Silvino Abreu", loja: "JURIDICO", licencas: 1, modelo: "Desktop", email: "office11@grupoclaudino.email", tagEquipamento: "CSAJRDDSK00"   },
+      { usuario: "Iris Caroline", loja: "JURIDICO", licencas: 1, modelo: "Desktop", email: "office76@grupoclaudino.email", tagEquipamento: "CSAJRDDSK00"   },
+      { usuario: "Marcus Vinicius", loja: "JURIDICO", licencas: 1, modelo: "Notebook", email: "office88@grupoclaudino.email", tagEquipamento: "CSAJRDNOT00"   },
+
+      { usuario: "Lucyara", loja: "TES", licencas: 1, modelo: "Desktop", email: "office12@grupoclaudino.email", tagEquipamento: "CSATESDSK00"   },
+      { usuario: "Nilton", loja: "TES", licencas: 1, modelo: "Desktop", email: "office12@grupoclaudino.email", tagEquipamento: "CSATESDSK00"   },
+      { usuario: "Angelina", loja: "TES", licencas: 1, modelo: "Desktop", email: "office12@grupoclaudino.email", tagEquipamento: "CSATESDSK00"   },
+      { usuario: "Luciana", loja: "TES", licencas: 1, modelo: "Desktop", email: "office12@grupoclaudino.email", tagEquipamento: "CSATESDSK00"   },
+      { usuario: "Nelio", loja: "TES", licencas: 1, modelo: "Desktop", email: "office12@grupoclaudino.email", tagEquipamento: "CSATESDSK00"   },
+
+      { usuario: "Ozailde", loja: "TPP", licencas: 1, modelo: "Desktop", email: "office13@grupoclaudino.email", tagEquipamento: "CSATPPDSK00"   },
+      { usuario: "Eliane", loja: "TPP", licencas: 1, modelo: "Desktop", email: "office13@grupoclaudino.email", tagEquipamento: "CSATPPDSK00"  },
+      { usuario: "Amauri", loja: "TPP", licencas: 1, modelo: "Desktop", email: "office13@grupoclaudino.email", tagEquipamento: "CSATPPDSK00"  },
+      { usuario: "Silva", loja: "TPP", licencas: 1, modelo: "Desktop", email: "office13@grupoclaudino.email", tagEquipamento: "CSATPPDSK00"  },
+      { usuario: "Ana Luiza", loja: "TPP", licencas: 1, modelo: "Desktop", email: "office13@grupoclaudino.email", tagEquipamento: "CSATPPDSK00"  },
+
+      { usuario: "Leda", loja: "TED", licencas: 1, modelo: "Desktop", email: "office14@grupoclaudino.email", tagEquipamento: "CSATEDDSK002"  },
+      { usuario: "Elisangela", loja: "TED", licencas: 1, modelo: "Desktop", email: "office14@grupoclaudino.email", tagEquipamento: "CSATEDDSK014" },
+      { usuario: "Gabriel", loja: "TED", licencas: 1, modelo: "Desktop", email: "office14@grupoclaudino.email", tagEquipamento: "CSATEDDSK017" },
+      { usuario: "Lucas", loja: "TED", licencas: 1, modelo: "Desktop", email: "office14@grupoclaudino.email", tagEquipamento: "CSATEDDSK016" },
+
+      { usuario: "Nalygia", loja: "TSJ", licencas: 1, modelo: "Desktop", email: "office14@grupoclaudino.email", tagEquipamento: "CSATSJDSK00" },
+
+      { usuario: "Marreiros", loja: "TEU", licencas: 1, modelo: "Desktop", email: "office15@grupoclaudino.email", tagEquipamento: "CSATEUDSK00" },
+      { usuario: "Viviane", loja: "TEU", licencas: 1, modelo: "Desktop", email: "office15@grupoclaudino.email", tagEquipamento: "CSATEUDSK00" },
+      { usuario: "Ana Maria", loja: "TEU", licencas: 1, modelo: "Desktop", email: "office15@grupoclaudino.email", tagEquipamento: "CSATEUDSK00" },
+      { usuario: "Franklin", loja: "TEU", licencas: 1, modelo: "Desktop", email: "office15@grupoclaudino.email", tagEquipamento: "CSATEUDSK00" },
+      { usuario: "Carvalho", loja: "TEU", licencas: 1, modelo: "Desktop", email: "office15@grupoclaudino.email", tagEquipamento: "CSATEUDSK00" },
+      { usuario: "Milene", loja: "TEU", licencas: 1, modelo: "Desktop", email: "office16@grupoclaudino.email", tagEquipamento: "CSATEUDSK00" },
+
+      { usuario: "Danielle", loja: "TIM", licencas: 1, modelo: "Desktop", email: "office16@grupoclaudino.email", tagEquipamento: "CSATIMDSK00" },
+      { usuario: "Herica", loja: "TIM", licencas: 1, modelo: "Desktop", email: "office16@grupoclaudino.email", tagEquipamento: "CSATIMDSK00"  },
+
+      { usuario: "Rosane", loja: "TPI", licencas: 1, modelo: "Desktop", email: "office16@grupoclaudino.email", tagEquipamento: "CSATPIDSK00"  },
+      { usuario: "Julia", loja: "TPI", licencas: 1, modelo: "Desktop", email: "office16@grupoclaudino.email", tagEquipamento: "CSATPIDSK00"  },
+      { usuario: "Janaelson", loja: "TPI", licencas: 1, modelo: "Desktop", email: "office17@grupoclaudino.email", tagEquipamento: "CSATPIDSK00"  },
+
+      { usuario: "Gilmara", loja: "TMO", licencas: 1, modelo: "Desktop", email: "office17@grupoclaudino.email", tagEquipamento: "CSATMODSK00"  },
+      { usuario: "Fernando", loja: "TMO", licencas: 1, modelo: "Desktop", email: "office17@grupoclaudino.email", tagEquipamento: "CSATMODSK00"  },
+      { usuario: "Marta", loja: "TMO", licencas: 1, modelo: "Desktop", email: "office17@grupoclaudino.email", tagEquipamento: "CSATMODSK00"  },
+
+      { usuario: "Sena", loja: "TCT", licencas: 1, modelo: "Desktop", email: "office17@grupoclaudino.email", tagEquipamento: "CSATCTDSK00"  },
+
+      { usuario: "Marcio", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office18@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Mylena", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office18@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Fabricio", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office18@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Alexandre", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office18@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Chaguinha", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office18@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Treinamento 1", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office18@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Treinamento 2", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office18@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Aprendiz 1", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office19@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Aprendiz 2", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office19@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Janara", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office19@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Janayana", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office19@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Almira", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office19@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Sara", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office20@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Jozi", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office20@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Nilmara", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office20@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Dias", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office20@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Morais", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office20@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Marcos", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office21@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Francisco", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office21@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Monteiro", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office21@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Elisvaldo Silva", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office21@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Enando Felix", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office21@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Enando Pereira", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office142@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Flavio Araujo", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office142@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Gilberto Borges", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office142@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Iranildo Viana", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office143@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Leonardo Lima", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office143@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Luiz Filiph", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office143@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+      { usuario: "Onofre Filho", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office143@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+
+      { usuario: "Francisco", loja: "TVE", licencas: 1, modelo: "Desktop", email: "office22@grupoclaudino.email", tagEquipamento: "CSATVEDSK00"  },
+      { usuario: "Silvia", loja: "TVE", licencas: 1, modelo: "Desktop", email: "office22@grupoclaudino.email", tagEquipamento: "CSATVEDSK00"  },
+
+      { usuario: "Chaves", loja: "FAZENDA", licencas: 1, modelo: "Desktop", email: "office22@grupoclaudino.email", tagEquipamento: "CSAFZDDSK00"  },
+      { usuario: "Luis", loja: "FAZENDA", licencas: 1, modelo: "Desktop", email: "office22@grupoclaudino.email", tagEquipamento: "CSAFZDDSK00"   },
+      { usuario: "Aprendiz", loja: "FAZENDA", licencas: 1, modelo: "Desktop", email: "office22@grupoclaudino.email", tagEquipamento: "CSAFZDDSK00"   },
+
+      { usuario: "Helena", loja: "PAR", licencas: 1, modelo: "Desktop", email: "office23@grupoclaudino.email", tagEquipamento: "CSAPARDSK00"   },
+      { usuario: "David", loja: "PAR", licencas: 1, modelo: "Desktop", email: "office23@grupoclaudino.email", tagEquipamento: "CSAPARDSK00"   },
+
+      { usuario: "Bandeira", loja: "PIR", licencas: 1, modelo: "Desktop", email: "office23@grupoclaudino.email", tagEquipamento: "CSAPIRDSK00"   },
+      { usuario: "Raimundo", loja: "PIR", licencas: 1, modelo: "Desktop", email: "office23@grupoclaudino.email", tagEquipamento: "CSAPIRDSK00"   },
+
+      { usuario: "Deuzilane", loja: "ALS", licencas: 1, modelo: "Desktop", email: "office23@grupoclaudino.email", tagEquipamento: "CSAALSDSK00"   },
+
+      { usuario: "Leal", loja: "ABR", licencas: 1, modelo: "Desktop", email: "office24@grupoclaudino.email", tagEquipamento: "CSAABRDSK00"   },
+      { usuario: "Carlos", loja: "ABR", licencas: 1, modelo: "Desktop", email: "office150@grupoclaudino.email", tagEquipamento: "CSAABRDSK00"   },
+
+      { usuario: "Fatima", loja: "CAM", licencas: 1, modelo: "Desktop", email: "office24@grupoclaudino.email", tagEquipamento: "CSACAMDSK00"   },
+      { usuario: "Luis", loja: "CAM", licencas: 1, modelo: "Desktop", email: "office24@grupoclaudino.email", tagEquipamento: "CSACAMDSK00"   },
+      { usuario: "Valdene", loja: "CAM", licencas: 1, modelo: "Desktop", email: "office24@grupoclaudino.email", tagEquipamento: "CSACAMDSK00"   },
+
+      { usuario: "Paulo", loja: "VAG", licencas: 1, modelo: "Desktop", email: "office24@grupoclaudino.email", tagEquipamento: "CSAVAGDSK00"  },
+      { usuario: "Luciano", loja: "VAG", licencas: 1, modelo: "Desktop", email: "office159@grupoclaudino.email", tagEquipamento: "CSAVAGDSK00"  },
+
+      { usuario: "Claudenice", loja: "ACA", licencas: 1, modelo: "Desktop", email: "office25@grupoclaudino.email", tagEquipamento: "CSAACADSK00"  },
+      { usuario: "Davi", loja: "ACA", licencas: 1, modelo: "Desktop", email: "office25@grupoclaudino.email", tagEquipamento: "CSAACADSK00"  },
+      { usuario: "Jaqueline", loja: "ACA", licencas: 1, modelo: "Desktop", email: "office25@grupoclaudino.email", tagEquipamento: "CSAACADSK00"  },
+      { usuario: "Iracy", loja: "ACA", licencas: 1, modelo: "Desktop", email: "office25@grupoclaudino.email", tagEquipamento: "CSAACADSK00"  },
+      { usuario: "Filipy", loja: "ACA", licencas: 1, modelo: "Desktop", email: "office25@grupoclaudino.email", tagEquipamento: "CSAACADSK00"  },
+
+      { usuario: "Fabiana", loja: "OEI", licencas: 1, modelo: "Desktop", email: "office26@grupoclaudino.email", tagEquipamento: "CSAOEIDSK00"  },
+      { usuario: "Tiquinho", loja: "OEI", licencas: 1, modelo: "Desktop", email: "office26@grupoclaudino.email", tagEquipamento: "CSAOEIDSK00"  },
+
+      { usuario: "Hosana", loja: "FLO", licencas: 1, modelo: "Desktop", email: "office26@grupoclaudino.email", tagEquipamento: "CSAFLODSK00"  },
+      { usuario: "Hetersia", loja: "FLO", licencas: 1, modelo: "Desktop", email: "office26@grupoclaudino.email", tagEquipamento: "CSAFLODSK00"  },
+      { usuario: "Ironaldo", loja: "FLO", licencas: 1, modelo: "Desktop", email: "office26@grupoclaudino.email", tagEquipamento: "CSAFLODSK00"  },
+
+      { usuario: "Ivete", loja: "URU", licencas: 1, modelo: "Desktop", email: "office27@grupoclaudino.email", tagEquipamento: "CSAURUDSK00"  },
+
+      { usuario: "Osilene", loja: "BOJ", licencas: 1, modelo: "Desktop", email: "office27@grupoclaudino.email", tagEquipamento: "CSABOJDSK00"  },
+      { usuario: "Toinha", loja: "BOJ", licencas: 1, modelo: "Desktop", email: "office27@grupoclaudino.email", tagEquipamento: "CSABOJDSK00"  },
+      { usuario: "Sem Usuario", loja: "BOJ", licencas: 1, modelo: "Desktop", email: "office27@grupoclaudino.email", tagEquipamento: "CSABOJDSK00"  },
+      { usuario: "Malba", loja: "BOJ", licencas: 1, modelo: "Desktop", email: "office27@grupoclaudino.email", tagEquipamento: "CSABOJDSK00"  },
+
+      { usuario: "Ana Claudia", loja: "COR", licencas: 1, modelo: "Desktop", email: "office28@grupoclaudino.email", tagEquipamento: "CSACORDSK00" },
+      { usuario: "Ciele", loja: "COR", licencas: 1, modelo: "Desktop", email: "office28@grupoclaudino.email", tagEquipamento: "CSACORDSK00" },
+      { usuario: "Eden", loja: "COR", licencas: 1, modelo: "Desktop", email: "office28@grupoclaudino.email", tagEquipamento: "CSACORDSK00" },
+
+      { usuario: "Clarett", loja: "BHM", licencas: 1, modelo: "Desktop", email: "office28@grupoclaudino.email", tagEquipamento: "CSABHMDSK00" },
+      { usuario: "Mirian", loja: "BHM", licencas: 1, modelo: "Desktop", email: "office28@grupoclaudino.email", tagEquipamento: "CSABHMDSK00" },
+      { usuario: "Maisa", loja: "BHM", licencas: 1, modelo: "Desktop", email: "office29@grupoclaudino.email", tagEquipamento: "CSABHMDSK00" },
+      { usuario: "Geildson", loja: "BHM", licencas: 1, modelo: "Desktop", email: "office29@grupoclaudino.email", tagEquipamento: "CSABHMDSK00" },
+
+      { usuario: "Ana", loja: "LEM", licencas: 1, modelo: "Desktop", email: "office29@grupoclaudino.email", tagEquipamento: "CSALEMDSK00" },
+      { usuario: "Aiane", loja: "LEM", licencas: 1, modelo: "Desktop", email: "office29@grupoclaudino.email", tagEquipamento: "CSALEMDSK00" },
+      { usuario: "Alan", loja: "LEM", licencas: 1, modelo: "Desktop", email: "office29@grupoclaudino.email", tagEquipamento: "CSALEMDSK00" },
+
+      { usuario: "Neta", loja: "PIC", licencas: 1, modelo: "Desktop", email: "office30@grupoclaudino.email", tagEquipamento: "CSAPICDSK00" },
+      { usuario: "Flavia", loja: "PIC", licencas: 1, modelo: "Desktop", email: "office30@grupoclaudino.email", tagEquipamento: "CSAPICDSK00" },
+      { usuario: "Avani", loja: "PIC", licencas: 1, modelo: "Desktop", email: "office30@grupoclaudino.email", tagEquipamento: "CSAPICDSK00" },
+      { usuario: "David", loja: "PIC", licencas: 1, modelo: "Desktop", email: "office30@grupoclaudino.email", tagEquipamento: "CSAPICDSK00" },
+      { usuario: "Anderson", loja: "PIC", licencas: 1, modelo: "Desktop", email: "office30@grupoclaudino.email", tagEquipamento: "CSAPICDSK00" },
+
+      { usuario: "Val", loja: "SRN", licencas: 1, modelo: "Desktop", email: "office31@grupoclaudino.email", tagEquipamento: "CSASRNDSK00" },
+      { usuario: "Cobranca", loja: "SRN", licencas: 1, modelo: "Desktop", email: "office31@grupoclaudino.email", tagEquipamento: "CSASRNDSK00" },
+
+      { usuario: "Jane Cleia", loja: "CNV", licencas: 1, modelo: "Desktop", email: "office31@grupoclaudino.email", tagEquipamento: "CSACNVDSK00" },
+      { usuario: "Matheus", loja: "CNV", licencas: 1, modelo: "Desktop", email: "office31@grupoclaudino.email", tagEquipamento: "CSACNVDSK00" },
+      { usuario: "Rivaldo", loja: "CNV", licencas: 1, modelo: "Desktop", email: "office76@grupoclaudino.email", tagEquipamento: "CSACNVDSK00" },
+
+      { usuario: "Ueliton", loja: "JUA", licencas: 1, modelo: "Desktop", email: "office31@grupoclaudino.email", tagEquipamento: "CSAJUASK00" },
+
+      { usuario: "Helena", loja: "PET", licencas: 1, modelo: "Desktop", email: "office32@grupoclaudino.email", tagEquipamento: "CSAPETDSK00" },
+      { usuario: "Nunes", loja: "PET", licencas: 1, modelo: "Desktop", email: "office32@grupoclaudino.email", tagEquipamento: "CSAPETDSK00" },
+      { usuario: "Leila", loja: "PET", licencas: 1, modelo: "Desktop", email: "office32@grupoclaudino.email", tagEquipamento: "CSAPETDSK00" },
+
+      { usuario: "Marcella", loja: "CTA", licencas: 1, modelo: "Desktop", email: "office32@grupoclaudino.email", tagEquipamento: "CSACTADSK00" },
+      { usuario: "Danielle", loja: "CTA", licencas: 1, modelo: "Desktop", email: "office32@grupoclaudino.email", tagEquipamento: "CSACTADSK00" },
+
+      { usuario: "Tamires", loja: "ROS", licencas: 1, modelo: "Desktop", email: "office33@grupoclaudino.email", tagEquipamento: "CSAROSDSK00" },
+      { usuario: "Savio", loja: "ROS", licencas: 1, modelo: "Desktop", email: "office33@grupoclaudino.email", tagEquipamento: "CSAROSDSK00" },
+      { usuario: "Tatiane", loja: "ROS", licencas: 1, modelo: "Desktop", email: "office33@grupoclaudino.email", tagEquipamento: "CSAROSDSK00" },
+      { usuario: "Samuel", loja: "ROS", licencas: 1, modelo: "Desktop", email: "office33@grupoclaudino.email", tagEquipamento: "CSAROSDSK00" },
+      { usuario: "Tom", loja: "ROS", licencas: 1, modelo: "Desktop", email: "office33@grupoclaudino.email", tagEquipamento: "CSAROSDSK00" },
+
+      { usuario: "Dicinha", loja: "COD", licencas: 1, modelo: "Desktop", email: "office34@grupoclaudino.email", tagEquipamento: "CSACODDSK00" },
+      { usuario: "Ferreira", loja: "COD", licencas: 1, modelo: "Desktop", email: "office34@grupoclaudino.email", tagEquipamento: "CSACODDSK00" },
+      { usuario: "Cristina", loja: "COD", licencas: 1, modelo: "Desktop", email: "office34@grupoclaudino.email", tagEquipamento: "CSACODDSK00" },
+      { usuario: "Rubens", loja: "COD", licencas: 1, modelo: "Desktop", email: "office34@grupoclaudino.email", tagEquipamento: "CSACODDSK00" },
+
+      { usuario: "Thalita", loja: "BHA", licencas: 1, modelo: "Desktop", email: "office34@grupoclaudino.email", tagEquipamento: "CSABHADSK00" },
+
+      { usuario: "Leila", loja: "TUT", licencas: 1, modelo: "Desktop", email: "office35@grupoclaudino.email", tagEquipamento: "CSATUTDSK00" },
+      { usuario: "Leonardo", loja: "TUT", licencas: 1, modelo: "Desktop", email: "office35@grupoclaudino.email", tagEquipamento: "CSATUTDSK00" },
+
+      { usuario: "Andressa", loja: "CHA", licencas: 1, modelo: "Desktop", email: "office35@grupoclaudino.email", tagEquipamento: "CSACHADSK00" },
+      { usuario: "Adriana", loja: "CHA", licencas: 1, modelo: "Desktop", email: "office35@grupoclaudino.email", tagEquipamento: "CSACHADSK00" },
+
+      { usuario: "Edmilson", loja: "AUG", licencas: 1, modelo: "Desktop", email: "office35@grupoclaudino.email", tagEquipamento: "CSAAUGDSK00" },
+      { usuario: "Marcela", loja: "AUG", licencas: 1, modelo: "Desktop", email: "office108@grupoclaudino.email", tagEquipamento: "CSAAUGDSK00" },
+
+      { usuario: "Renata", loja: "GRA", licencas: 1, modelo: "Desktop", email: "office36@grupoclaudino.email", tagEquipamento: "CSAGRADSK00" },
+      { usuario: "Noemi", loja: "GRA", licencas: 1, modelo: "Desktop", email: "office36@grupoclaudino.email", tagEquipamento: "CSAGRADSK00" },
+      { usuario: "Tereza", loja: "GRA", licencas: 1, modelo: "Desktop", email: "office36@grupoclaudino.email", tagEquipamento: "CSAGRADSK00" },
+      { usuario: "Railson", loja: "GRA", licencas: 1, modelo: "Desktop", email: "office36@grupoclaudino.email", tagEquipamento: "CSAGRADSK00" },
+      { usuario: "Kildery", loja: "GRA", licencas: 1, modelo: "Desktop", email: "office36@grupoclaudino.email", tagEquipamento: "CSAGRADSK00" },
+
+      { usuario: "Boris", loja: "DAG", licencas: 1, modelo: "Desktop", email: "office37@grupoclaudino.email", tagEquipamento: "CSADAGDSK00" },
+
+      { usuario: "Afonso Melo", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office38@grupoclaudino.email", tagEquipamento: "CSAIMPDSK00" },
+      { usuario: "Rafael", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office38@grupoclaudino.email" , tagEquipamento: "CSAIMPDSK00"},
+      { usuario: "Ronilson", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office38@grupoclaudino.email", tagEquipamento: "CSAIMPDSK00" },
+      { usuario: "Elinaldo", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office38@grupoclaudino.email", tagEquipamento: "CSAIMPDSK00" },
+      { usuario: "Wagner", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office38@grupoclaudino.email", tagEquipamento: "CSAIMPDSK00" },
+      { usuario: "Lara Bianca", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office39@grupoclaudino.email", tagEquipamento: "CSAIMPDSK00" },
+      { usuario: "Almeida", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office39@grupoclaudino.email", tagEquipamento: "CSAIMPDSK00" },
+      { usuario: "Giovanni", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office39@grupoclaudino.email", tagEquipamento: "CSAIMPDSK00" },
+      { usuario: "Antonio Braga", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office39@grupoclaudino.email", tagEquipamento: "CSAIMPDSK00" },
+      { usuario: "Tiago Costa", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office39@grupoclaudino.email", tagEquipamento: "CSAIMPDSK00" },
+      { usuario: "Cardoso", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office40@grupoclaudino.email", tagEquipamento: "CSAIMPDSK00" },
+      { usuario: "Magno", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office40@grupoclaudino.email", tagEquipamento: "CSAIMPDSK00" },
+      { usuario: "Roberto Almeida", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office40@grupoclaudino.email", tagEquipamento: "CSAIMPDSK016" },
+      { usuario: "Reinaldo", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office40@grupoclaudino.email", tagEquipamento: "CSAIMPDSK00" },
+      { usuario: "Eliezer", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office40@grupoclaudino.email", tagEquipamento: "CSAIMPDSK00" },
+      { usuario: "Junior", loja: "IMP", licencas: 1, modelo: "Desktop", email: "office41@grupoclaudino.email", tagEquipamento: "CSAIMPDSK00" },
+      { usuario: "Magno", loja: "IMP", licencas: 1, modelo: "Notebook", email: "office72@grupoclaudino.email", tagEquipamento: "CSAIMPNOT00" },
+      { usuario: "Giovanni", loja: "IMP", licencas: 1, modelo: "Notebook", email: "office163@grupoclaudino.email", tagEquipamento: "CSAIMPNOT00" },
+
+      { usuario: "Oliveira", loja: "IDC", licencas: 1, modelo: "Desktop", email: "office41@grupoclaudino.email", tagEquipamento: "CSAIDCDSK00"  },
+      { usuario: "Valderico", loja: "IDC", licencas: 1, modelo: "Desktop", email: "office41@grupoclaudino.email", tagEquipamento: "CSAIDCDSK00"  },
+      { usuario: "Marcos Paulo", loja: "IDC", licencas: 1, modelo: "Desktop", email: "office41@grupoclaudino.email", tagEquipamento: "CSAIDCDSK00"  },
+      { usuario: "Manuel", loja: "IDC", licencas: 1, modelo: "Desktop", email: "office41@grupoclaudino.email", tagEquipamento: "CSAIDCDSK00"  },
+      { usuario: "Marcelo", loja: "IDC", licencas: 1, modelo: "Desktop", email: "office42@grupoclaudino.email", tagEquipamento: "CSAIDCDSK00"  },
+      { usuario: "Dashboard", loja: "IDC", licencas: 1, modelo: "Desktop", email: "office42@grupoclaudino.email", tagEquipamento: "CSAIDCDSK00"  },
+      { usuario: "Seguranca", loja: "IDC", licencas: 1, modelo: "Desktop", email: "office42@grupoclaudino.email", tagEquipamento: "CSAIDCDSK017"  },
+      { usuario: "Guimaraes", loja: "IDC", licencas: 1, modelo: "Desktop", email: "office42@grupoclaudino.email", tagEquipamento: "CSAIDCDSK00"  },
+      { usuario: "Pedro Henrique", loja: "IDC", licencas: 1, modelo: "Desktop", email: "office42@grupoclaudino.email", tagEquipamento: "CSAIDCDSK00"  },
+      { usuario: "Tamyris", loja: "IDC", licencas: 1, modelo: "Desktop", email: "office43@grupoclaudino.email", tagEquipamento: "CSAIDCDSK00"  },
+      { usuario: "Italo", loja: "IDC", licencas: 1, modelo: "Desktop", email: "office43@grupoclaudino.email", tagEquipamento: "CSAIDCDSK00"  },
+      { usuario: "Marcos Silva", loja: "IDC", licencas: 1, modelo: "Desktop", email: "office43@grupoclaudino.email", tagEquipamento: "CSAIDCDSK00"  },
+      { usuario: "Lurian", loja: "IDC", licencas: 1, modelo: "Desktop", email: "office43@grupoclaudino.email", tagEquipamento: "CSAIDCDSK00"  },
+
+      { usuario: "Gessica", loja: "BAL", licencas: 1, modelo: "Desktop", email: "office43@grupoclaudino.email", tagEquipamento: "CSABALDSK00"  },
+      { usuario: "Tharly", loja: "BAL", licencas: 1, modelo: "Desktop", email: "office44@grupoclaudino.email", tagEquipamento: "CSABALDSK00"  },
+      { usuario: "Melissa", loja: "BAL", licencas: 1, modelo: "Desktop", email: "office44@grupoclaudino.email", tagEquipamento: "CSABALDSK00"  },
+      { usuario: "Ronaldo", loja: "BAL", licencas: 1, modelo: "Desktop", email: "office44@grupoclaudino.email", tagEquipamento: "CSABALDSK00"  },
+      { usuario: "Francisco", loja: "BAL", licencas: 1, modelo: "Desktop", email: "office44@grupoclaudino.email", tagEquipamento: "CSABALDSK00"  },
+      { usuario: "Ricardo", loja: "BAL", licencas: 1, modelo: "Desktop", email: "office44@grupoclaudino.email", tagEquipamento: "CSABALDSK00"  },
+
+      { usuario: "Leonardo", loja: "TAQ", licencas: 1, modelo: "Desktop", email: "office45@grupoclaudino.email", tagEquipamento: "CSATAQDSK00"  },
+      { usuario: "Thayane", loja: "TAQ", licencas: 1, modelo: "Desktop", email: "office45@grupoclaudino.email", tagEquipamento: "CSATAQDSK00"  },
+
+      { usuario: "Amadeus", loja: "PDE", licencas: 1, modelo: "Desktop", email: "office45@grupoclaudino.email", tagEquipamento: "CSAPDEDSK00"  },
+
+      { usuario: "Carlos", loja: "PAM", licencas: 1, modelo: "Desktop", email: "office45@grupoclaudino.email", tagEquipamento: "CSAPAMDSK00"  },
+
+      { usuario: "Celio", loja: "CAX", licencas: 1, modelo: "Desktop", email: "office45@grupoclaudino.email", tagEquipamento: "CSACAXDSK00"  },
+      { usuario: "Raimunda", loja: "CAX", licencas: 1, modelo: "Desktop", email: "office46@grupoclaudino.email", tagEquipamento: "CSACAXDSK00"  },
+      { usuario: "Cristina", loja: "CAX", licencas: 1, modelo: "Desktop", email: "office46@grupoclaudino.email", tagEquipamento: "CSACAXDSK00"  },
+
+      { usuario: "Rocha", loja: "PED", licencas: 1, modelo: "Desktop", email: "office46@grupoclaudino.email", tagEquipamento: "CSAPEDDSK00"  },
+      { usuario: "Barbosa", loja: "PED", licencas: 1, modelo: "Desktop", email: "office46@grupoclaudino.email", tagEquipamento: "CSAPEDDSK00"   },
+      { usuario: "Valeria", loja: "PED", licencas: 1, modelo: "Desktop", email: "office46@grupoclaudino.email", tagEquipamento: "CSAPEDDSK00"   },
+      { usuario: "Maria", loja: "PED", licencas: 1, modelo: "Desktop", email: "office47@grupoclaudino.email", tagEquipamento: "CSAPEDDSK00"   },
+      { usuario: "Jorge", loja: "PED", licencas: 1, modelo: "Desktop", email: "office47@grupoclaudino.email", tagEquipamento: "CSAPEDDSK00"   },
+      { usuario: "Jorge", loja: "PED", licencas: 1, modelo: "Notebook", email: "office47@grupoclaudino.email", tagEquipamento: "CSAPEDDSK00"   },
+      { usuario: "Vitor", loja: "PED", licencas: 1, modelo: "Desktop", email: "office47@grupoclaudino.email", tagEquipamento: "CSAPEDDSK00"   },
+      { usuario: "Roberto", loja: "PED", licencas: 1, modelo: "Desktop", email: "office88@grupoclaudino.email", tagEquipamento: "CSAPEDDSK00"   },
+
+      { usuario: "Francisca", loja: "PDU", licencas: 1, modelo: "Desktop", email: "office47@grupoclaudino.email", tagEquipamento: "CSAPDUDSK00"   },
+      { usuario: "Carneiro", loja: "PDU", licencas: 1, modelo: "Desktop", email: "office48@grupoclaudino.email", tagEquipamento: "CSAPDUDSK00"   },
+      { usuario: "Arytana", loja: "PDU", licencas: 1, modelo: "Desktop", email: "office48@grupoclaudino.email", tagEquipamento: "CSAPDUDSK00"   },
+      { usuario: "Kelly", loja: "PDU", licencas: 1, modelo: "Desktop", email: "office48@grupoclaudino.email", tagEquipamento: "CSAPDUDSK00"   },
+      { usuario: "Dioleno", loja: "PDU", licencas: 1, modelo: "Desktop", email: "office48@grupoclaudino.email", tagEquipamento: "CSAPDUDSK00"   },
+      { usuario: "Maicon", loja: "PDU", licencas: 1, modelo: "Notebook", email: "office48@grupoclaudino.email", tagEquipamento: "CSAPDUNOT002"   },
+      { usuario: "silva", loja: "PDU", licencas: 1, modelo: "Desktop", email: "office49@grupoclaudino.email", tagEquipamento: "CSAPDUDSK00"   },
+      { usuario: "Wilson", loja: "PDU", licencas: 1, modelo: "Desktop", email: "office160@grupoclaudino.email", tagEquipamento: "CSAPDUDSK00"   },
+
+      { usuario: "Robiana", loja: "COM", licencas: 1, modelo: "Desktop", email: "office49@grupoclaudino.email", tagEquipamento: "CSACOMDSK00"   },
+      { usuario: "Jayne", loja: "COM", licencas: 1, modelo: "Desktop", email: "office50@grupoclaudino.email", tagEquipamento: "CSACOMDSK00"   },
+      { usuario: "Helenilda", loja: "COM", licencas: 1, modelo: "Desktop", email: "office50@grupoclaudino.email", tagEquipamento: "CSACOMDSK00"   },
+      { usuario: "Arnaldo", loja: "COM", licencas: 1, modelo: "Desktop", email: "office50@grupoclaudino.email", tagEquipamento: "CSACOMDSK00"   },
+      { usuario: "Gabriel", loja: "COM", licencas: 1, modelo: "Desktop", email: "office50@grupoclaudino.email", tagEquipamento: "CSACOMDSK00"   },
+
+      { usuario: "Jonas", loja: "BCO", licencas: 1, modelo: "Desktop", email: "office50@grupoclaudino.email", tagEquipamento: "CSABCODSK00"   },
+      { usuario: "Jonh", loja: "BCO", licencas: 1, modelo: "Desktop", email: "office51@grupoclaudino.email", tagEquipamento: "CSABCODSK00"   },
+      { usuario: "Regina", loja: "BCO", licencas: 1, modelo: "Desktop", email: "office51@grupoclaudino.email", tagEquipamento: "CSABCODSK00"   },
+      { usuario: "Yohanna", loja: "BCO", licencas: 1, modelo: "Desktop", email: "office51@grupoclaudino.email", tagEquipamento: "CSABCODSK00"   },
+      { usuario: "Cobranca", loja: "BCO", licencas: 1, modelo: "Desktop", email: "office51@grupoclaudino.email", tagEquipamento: "CSABCODSK00"   },
+      { usuario: "Luan", loja: "BCO", licencas: 1, modelo: "Desktop", email: "office51@grupoclaudino.email", tagEquipamento: "CSABCODSK00"   },
+
+      { usuario: "Luiz", loja: "BAC", licencas: 1, modelo: "Desktop", email: "office52@grupoclaudino.email", tagEquipamento: "CSABACDSK00"   },
+      { usuario: "Anataly", loja: "BAC", licencas: 1, modelo: "Desktop", email: "office52@grupoclaudino.email", tagEquipamento: "CSABACDSK00"   },
+      { usuario: "Allyson", loja: "BAC", licencas: 1, modelo: "Desktop", email: "office52@grupoclaudino.email", tagEquipamento: "CSABACDSK00"   },
+
+      { usuario: "Cleidiane", loja: "BCU", licencas: 1, modelo: "Desktop", email: "office52@grupoclaudino.email", tagEquipamento: "CSABCUDSK00"   },
+      { usuario: "Bruna", loja: "BCU", licencas: 1, modelo: "Desktop", email: "office52@grupoclaudino.email", tagEquipamento: "CSABCUDSK00"   },
+
+      { usuario: "Marcineia", loja: "CTP", licencas: 1, modelo: "Desktop", email: "office53@grupoclaudino.email", tagEquipamento: "CSACTPDSK00"   },
+      { usuario: "Jessica", loja: "CTP", licencas: 1, modelo: "Desktop", email: "office53@grupoclaudino.email", tagEquipamento: "CSACTPDSK00"   },
+      { usuario: "Bruna", loja: "CTP", licencas: 1, modelo: "Desktop", email: "office53@grupoclaudino.email", tagEquipamento: "CSACTPDSK00"   },
+      { usuario: "Daniel", loja: "CTP", licencas: 1, modelo: "Desktop", email: "office53@grupoclaudino.email", tagEquipamento: "CSACTPDSK00"   },
+      { usuario: "Sales", loja: "CTP", licencas: 1, modelo: "Desktop", email: "office53@grupoclaudino.email", tagEquipamento: "CSACTPDSK00"   },
+
+      { usuario: "Samia", loja: "SLP", licencas: 1, modelo: "Desktop", email: "office54@grupoclaudino.email", tagEquipamento: "CSASLPDSK00"   },
+      { usuario: "Marcos", loja: "SLP", licencas: 1, modelo: "Desktop", email: "office54@grupoclaudino.email", tagEquipamento: "CSASLPDSK00"   },
+      { usuario: "Eliesio", loja: "SLP", licencas: 1, modelo: "Desktop", email: "office54@grupoclaudino.email", tagEquipamento: "CSASLPDSK00"   },
+
+      { usuario: "Talita", loja: "ZED", licencas: 1, modelo: "Desktop", email: "office54@grupoclaudino.email", tagEquipamento: "CSAZEDDSK00" },
+      { usuario: "Mayara", loja: "ZED", licencas: 1, modelo: "Desktop", email: "office54@grupoclaudino.email", tagEquipamento: "CSAZEDDSK00" },
+      { usuario: "Lucilene", loja: "ZED", licencas: 1, modelo: "Desktop", email: "office55@grupoclaudino.email", tagEquipamento: "CSAZEDDSK00" },
+      { usuario: "Valdelino", loja: "ZED", licencas: 1, modelo: "Desktop", email: "office55@grupoclaudino.email", tagEquipamento: "CSAZEDDSK00" },
+      { usuario: "Ellen", loja: "ZED", licencas: 1, modelo: "Desktop", email: "office55@grupoclaudino.email", tagEquipamento: "CSAZEDDSK00" },
+      { usuario: "Ferreira", loja: "ZED", licencas: 1, modelo: "Desktop", email: "office55@grupoclaudino.email", tagEquipamento: "CSAZEDDSK00" },
+      { usuario: "Arnildo", loja: "ZED", licencas: 1, modelo: "Desktop", email: "office55@grupoclaudino.email", tagEquipamento: "CSAZEDDSK00" },
+      { usuario: "Maylsson", loja: "ZED", licencas: 1, modelo: "Desktop", email: "office56@grupoclaudino.email", tagEquipamento: "CSAZEDDSK00" },
+
+      { usuario: "Antonio Jose", loja: "SIN", licencas: 1, modelo: "Desktop", email: "office56@grupoclaudino.email", tagEquipamento: "CSASINDSK00" },
+      { usuario: "Marcelo", loja: "SIN", licencas: 1, modelo: "Desktop", email: "office56@grupoclaudino.email", tagEquipamento: "CSASINDSK00" },
+      { usuario: "Gerllys", loja: "SIN", licencas: 1, modelo: "Desktop", email: "office56@grupoclaudino.email", tagEquipamento: "CSASINDSK00" },
+      { usuario: "Miranda", loja: "SIN", licencas: 1, modelo: "Desktop", email: "office56@grupoclaudino.email", tagEquipamento: "CSASINDSK00" },
+      { usuario: "Juliana", loja: "SIN", licencas: 1, modelo: "Desktop", email: "office150@grupoclaudino.email", tagEquipamento: "CSASINDSK00" },
+      { usuario: "Diniz", loja: "SIN", licencas: 1, modelo: "Desktop", email: "office112@grupoclaudino.email", tagEquipamento: "CSASINNOT009" },
+
+      { usuario: "Genicleide", loja: "PIN", licencas: 1, modelo: "Desktop", email: "office57@grupoclaudino.email", tagEquipamento: "CSAPINDSK00" },
+      { usuario: "Liliane", loja: "PIN", licencas: 1, modelo: "Desktop", email: "office57@grupoclaudino.email", tagEquipamento: "CSAPINDSK00" },
+      { usuario: "Mayalla", loja: "PIN", licencas: 1, modelo: "Desktop", email: "office57@grupoclaudino.email", tagEquipamento: "CSAPINDSK00" },
+      { usuario: "Fabio Rogerio", loja: "PIN", licencas: 1, modelo: "Desktop", email: "office57@grupoclaudino.email", tagEquipamento: "CSAPINDSK00" },
+      { usuario: "Fabio Rogerio", loja: "PIN", licencas: 1, modelo: "Notebook", email: "office57@grupoclaudino.email", tagEquipamento: "CSAPINNOT00" },
+
+      { usuario: "Daniele Dias", loja: "CUM", licencas: 1, modelo: "Desktop", email: "office58@grupoclaudino.email", tagEquipamento: "CSACUMDSK00" },
+      { usuario: "Gabrielle", loja: "CUM", licencas: 1, modelo: "Desktop", email: "office58@grupoclaudino.email", tagEquipamento: "CSACUMDSK00" },
+      { usuario: "Fabio Jorge", loja: "CUM", licencas: 1, modelo: "Desktop", email: "office58@grupoclaudino.email", tagEquipamento: "CSACUMDSK00" },
+
+      { usuario: "Cazuza", loja: "Regional Piaui Norte - RPN", licencas: 1, modelo: "Desktop", email: "office58@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Cleyton", loja: "Regional Piaui Norte - RPN", licencas: 1, modelo: "Desktop", email: "office58@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Assis Claudino", loja: "Regional Piaui Norte - RPN", licencas: 1, modelo: "Desktop", email: "office59@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Alberto", loja: "Regional Piaui Norte - RPN", licencas: 1, modelo: "Desktop", email: "office59@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Filho", loja: "Regional Piaui Norte - RPN", licencas: 1, modelo: "Desktop", email: "office59@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Carlos", loja: "Regional Piaui Norte - RPN", licencas: 1, modelo: "Desktop", email: "office59@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Cazuza", loja: "Regional Piaui Norte - RPN", licencas: 1, modelo: "Notebook", email: "office162@grupoclaudino.email", tagEquipamento: "CSARGNNOT00" },
+
+      { usuario: "Coutinho", loja: "Regional Maranhao 2 - RM2", licencas: 1, modelo: "Desktop", email: "office59@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Silva", loja: "Regional Maranhao 2 - RM2", licencas: 1, modelo: "Desktop", email: "office66@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Fontinelle", loja: "Regional Maranhao 2 - RM2", licencas: 1, modelo: "Desktop", email: "office66@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Marcio", loja: "Regional Maranhao 2 - RM2", licencas: 1, modelo: "Desktop", email: "office66@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Marcio", loja: "Regional Maranhao 2 - RM2", licencas: 1, modelo: "Notebook", email: "office66@grupoclaudino.email", tagEquipamento: "CSARGNNOT00" },
+      { usuario: "Godoi", loja: "Regional Maranhao 2 - RM2", licencas: 1, modelo: "Desktop", email: "office66@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Nauber", loja: "Regional Maranhao 2 - RM2", licencas: 1, modelo: "Desktop", email: "office60@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Nauber", loja: "Regional Maranhao 2 - RM2", licencas: 1, modelo: "Notebook", email: "office60@grupoclaudino.email", tagEquipamento: "CSARGNNOT00" },
+      { usuario: "Antonio", loja: "Regional Maranhao 2 - RM2", licencas: 1, modelo: "Desktop", email: "office60@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Israel", loja: "Regional Maranhao 2 - RM2", licencas: 1, modelo: "Desktop", email: "office60@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Nadino", loja: "Regional Maranhao 2 - RM2", licencas: 1, modelo: "Desktop", email: "office60@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Soares", loja: "Regional Maranhao 2 - RM2", licencas: 1, modelo: "Desktop", email: "office61@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+
+      { usuario: "Ronnie Von", loja: "Regional Maranhao 4 - RM4", licencas: 1, modelo: "Desktop", email: "office61@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Ronnie Von", loja: "Regional Maranhao 4 - RM4", licencas: 1, modelo: "Notebook", email: "office61@grupoclaudino.email", tagEquipamento: "CSARGNNOT00" },
+      { usuario: "Wallison", loja: "Regional Maranhao 4 - RM4", licencas: 1, modelo: "Desktop", email: "office61@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Wallison", loja: "Regional Maranhao 4 - RM4", licencas: 1, modelo: "Notebook", email: "office61@grupoclaudino.email", tagEquipamento: "CSARGNNOT00" },
+      { usuario: "Ronyerio", loja: "Regional Maranhao 4 - RM4", licencas: 1, modelo: "Desktop", email: "office62@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Ronyerio", loja: "Regional Maranhao 4 - RM4", licencas: 1, modelo: "Notebook", email: "office61@grupoclaudino.email", tagEquipamento: "CSARGNNOT00" },
+      { usuario: "Rodrigo", loja: "Regional Maranhao 4 - RM4", licencas: 1, modelo: "Desktop", email: "office62@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+
+      { usuario: "Wellington", loja: "Regional Maranhao Norte - RMN", licencas: 1, modelo: "Desktop", email: "office62@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Cleiton", loja: "Regional Maranhao Norte - RMN", licencas: 1, modelo: "Desktop", email: "office62@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Gilcelia", loja: "Regional Maranhao Norte - RMN", licencas: 1, modelo: "Desktop", email: "office63@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Geofran", loja: "Regional Maranhao Norte - RMN", licencas: 1, modelo: "Desktop", email: "office63@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Arnaldo", loja: "Regional Maranhao Norte - RMN", licencas: 1, modelo: "Desktop", email: "office63@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Arnaldo", loja: "Regional Maranhao Norte - RMN", licencas: 1, modelo: "Notebook", email: "office63@grupoclaudino.email", tagEquipamento: "CSARGNNOT00" },
+      { usuario: "Vamael", loja: "Regional Maranhao Norte - RMN", licencas: 1, modelo: "Desktop", email: "office63@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Nonato", loja: "Regional Maranhao Norte - RMN", licencas: 1, modelo: "Desktop", email: "office64@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Erisvaldo", loja: "Regional Maranhao Norte - RMN", licencas: 1, modelo: "Desktop", email: "office153@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Dheick", loja: "Regional Maranhao Norte - RMN", licencas: 1, modelo: "Desktop", email: "office153@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Joao vitor", loja: "Regional Maranhao Norte - RMN", licencas: 1, modelo: "Desktop", email: "office153@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+
+      { usuario: "Edivano", loja: "Regional Piaui Sul,BA e PE", licencas: 1, modelo: "Desktop", email: "office64@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Edivano", loja: "Regional Piaui Sul,BA e PE", licencas: 1, modelo: "Notebook", email: "office64@grupoclaudino.email", tagEquipamento: "CSARGNNOT00" },
+      { usuario: "Cardoso", loja: "Regional Piaui Sul,BA e PE", licencas: 1, modelo: "Desktop", email: "office64@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Cardoso", loja: "Regional Piaui Sul,BA e PE", licencas: 1, modelo: "Notebook", email: "office64@grupoclaudino.email", tagEquipamento: "CSARGNNOT00" },
+      { usuario: "Thiago", loja: "Regional Piaui Sul,BA e PE", licencas: 1, modelo: "Desktop", email: "office66@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Thiago", loja: "Regional Piaui Sul,BA e PE", licencas: 1, modelo: "Notebook", email: "office65@grupoclaudino.email", tagEquipamento: "CSARGNNOT00" },
+      { usuario: "Xaxier", loja: "Regional Piaui Sul,BA e PE", licencas: 1, modelo: "Notebook", email: "office65@grupoclaudino.email", tagEquipamento: "CSARGNNOT00" },
+      { usuario: "Assis Freire", loja: "Regional Piaui Sul,BA e PE", licencas: 1, modelo: "Desktop", email: "office65@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+      { usuario: "Eduardo", loja: "Regional Piaui Sul,BA e PE", licencas: 1, modelo: "Desktop", email: "office65@grupoclaudino.email", tagEquipamento: "CSARGNDSK00" },
+
+      { usuario: "Dr. Franklin", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office67@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Ideltonio", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office67@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Suenny", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office67@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Thamirys", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office67@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Francinaldo", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office67@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "De Deus", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office68@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Bruno", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office68@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Maria Jose", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office68@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Gelson", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office68@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Wanderson", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office68@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Compras/Alm", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office69@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Gabriel", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office69@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Nome", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office69@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Francisco Anderson", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office69@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Raimundo junior", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office69@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Exportacao", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office69@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Chagas", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office70@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Danilo", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office70@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Magno", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office70@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Cleber", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office70@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Dielson", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office71@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Dra Laylla", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office71@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Wallace", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office71@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Tatiana", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office71@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "James", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office71@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Leandro", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office71@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Cibele", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office72@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Sergio Mendes", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office72@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Yasmin", loja: "Frigotil", licencas: 1, modelo: "Notebook", email: "office72@grupoclaudino.email", tagEquipamento: "FRINOT011" },
+      { usuario: "Alan", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office163@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+      { usuario: "Gustavo", loja: "Frigotil", licencas: 1, modelo: "Desktop", email: "office164@grupoclaudino.email", tagEquipamento: "FRIDSK00" },
+
+      { usuario: "Ana Paula", loja: "Guadalajara", licencas: 1, modelo: "Desktop", email: "office73@grupoclaudino.email", tagEquipamento: "GDADSK00"  },
+      { usuario: "Camila", loja: "Guadalajara", licencas: 1, modelo: "Desktop", email: "office73@grupoclaudino.email", tagEquipamento: "GDADSK00"  },
+      { usuario: "PC Compartilhado", loja: "Guadalajara", licencas: 1, modelo: "Desktop", email: "office73@grupoclaudino.email", tagEquipamento: "GDADSK00"  },
+      { usuario: "Jessica", loja: "Guadalajara", licencas: 1, modelo: "Desktop", email: "office73@grupoclaudino.email", tagEquipamento: "GDADSK00"  },
+      { usuario: "PC do Desenho", loja: "Guadalajara", licencas: 1, modelo: "Desktop", email: "office73@grupoclaudino.email", tagEquipamento: "GDADSK00"  },
+      { usuario: "Ribamar Soares", loja: "Guadalajara", licencas: 1, modelo: "Desktop", email: "office161@grupoclaudino.email", tagEquipamento: "GDADSK00"  },
+      { usuario: "Leonicia", loja: "Guadalajara", licencas: 1, modelo: "Desktop", email: "office161@grupoclaudino.email", tagEquipamento: "GDADSK00"  },
+      { usuario: "Rafaela", loja: "Guadalajara", licencas: 1, modelo: "Desktop", email: "office161@grupoclaudino.email", tagEquipamento: "GDADSK00"  },
+      { usuario: "Eclecy", loja: "Guadalajara", licencas: 1, modelo: "Desktop", email: "office161@grupoclaudino.email", tagEquipamento: "GDADSK00"  },
+      { usuario: "Evandro", loja: "Guadalajara", licencas: 1, modelo: "Desktop", email: "office161@grupoclaudino.email", tagEquipamento: "GDADSK00"  },
+
+      { usuario: "Ceica", loja: "TEZ - Escritorio Central", licencas: 1, modelo: "Desktop", email: "office74@grupoclaudino.email", tagEquipamento: "CSATEZDSK00"  },
+      { usuario: "Jose Ivan", loja: "TEZ - Escritorio Central", licencas: 1, modelo: "Desktop", email: "office88@grupoclaudino.email", tagEquipamento: "CSATEZDSK00"  },
+
+      { usuario: "Sidney", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office74@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Abdon", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office74@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Alves", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office74@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Anderson", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office74@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Alessio", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office139@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Bruno Silva", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office139@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Edilberto", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office139@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Flavio de Paula", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office139@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Jacinto", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office139@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Jose Raimundo", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office140@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Jurandir", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office140@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "wilson", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office140@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Paulo Henrique", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office140@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Rafael Leite", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office140@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Wilson Ibiapina", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office141@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Carlos Lima", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office14@grupoclaudino.email1", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Ferdnan Fernandes", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office141@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Wilson Junior", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office141@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Rogerio", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office141@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Jesus", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office157@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Vasmael", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office157@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Nailson", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office157@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Leonardo", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office157@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Rogerio", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office157@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "thallyta", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office158@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Jucara", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office158@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Silva", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office158@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Osvaldo", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office158@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Virginia", loja: "TEZ - Anexo", licencas: 1, modelo: "Desktop", email: "office158@grupoclaudino.email", tagEquipamento: "CSAANXDSK00"  },
+      { usuario: "Corinto", loja: "TEZ - DGO", licencas: 1, modelo: "Desktop", email: "office162@grupoclaudino.email", tagEquipamento: "CSAANXDSK013"  },
+      { usuario: "Corinto / Setor DGO", loja: "TEZ - DGO", licencas: 1, modelo: "Notebook", email: "office145@grupoclaudino.email", tagEquipamento: "CSAANXNOT001"  },
+
+      { usuario: "Diego", loja: "TDC - GI - PCP", licencas: 1, modelo: "Desktop", email: "office75@grupoclaudino.email", tagEquipamento: "CSAPCPDSK00"  },
+      { usuario: "Wilson", loja: "TDC - GI - PCP", licencas: 1, modelo: "Desktop", email: "office75@grupoclaudino.email", tagEquipamento: "CSAPCPDSK00"  },
+      { usuario: "Elano", loja: "TDC - GI - PCP", licencas: 1, modelo: "Desktop", email: "office75@grupoclaudino.email", tagEquipamento: "CSAPCPDSK00"  },
+      { usuario: "Vinicius", loja: "TDC - GI - PCP", licencas: 1, modelo: "Desktop", email: "office75@grupoclaudino.email", tagEquipamento: "CSAPCPDSK00"  },
+      { usuario: "Vanderley", loja: "TDC - GI - PCP", licencas: 1, modelo: "Desktop", email: "office75@grupoclaudino.email", tagEquipamento: "CSAPCPDSK00"  },
+
+      { usuario: "Rodrigues", loja: "IGV", licencas: 1, modelo: "Desktop", email: "office76@grupoclaudino.email", tagEquipamento: "CSAIGVDSK00" },
+
+      { usuario: "Nildo", loja: "CHA", licencas: 1, modelo: "Desktop", email: "office76@grupoclaudino.email", tagEquipamento: "CSACHADSK00" },
+
+      { usuario: "Edson", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office76@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00" },
+      { usuario: "Gabriela Nunes", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office102@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Isabela Nunes", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office102@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Erlayane Ferreira", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office102@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Giseli Rocha", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office103@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Janielle Alcantra", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office103@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Jainara Rafaela", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office103@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Ariel Ferreira", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office103@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Fabiano Cardoso", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office103@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Matheus Fortes", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office104@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Francisco Cristiano", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office104@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Italo Bruno", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office104@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Jeova Ferreira", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office104@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Rodrigo Cardoso", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office104@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Felipe Anatalio", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office105@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Rodrigo Jose", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office105@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Giovanne Borges", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office105@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Leticia Gomes", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office105@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Klecio Martins", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office105@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+      { usuario: "Raiery", loja: "GPM", licencas: 1, modelo: "Desktop", email: "office106@grupoclaudino.email", tagEquipamento: "CSAGPMDSK00"  },
+
+      { usuario: "Thomas", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office77@grupoclaudino.email", tagEquipamento: "CSAG01DSK00"  },
+      { usuario: "Pimentel", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office77@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Aprendiz", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office77@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Alexandre", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office77@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Darcio", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office77@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Adriano", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office78@grupoclaudino.email" , tagEquipamento: "CSAG01DSK00"},
+      { usuario: "Aprendiz", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office78@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Hellen", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office78@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Wanderson", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office78@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Francisco", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office78@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Vieira", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office79@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Aprendiz", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office79@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Veloso", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office79@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Gomes", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office79@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Givago", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office79@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Aprendiz", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office80@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Thacio", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office80@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Das Chagas", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office80@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Willians", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office80@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Hugo", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office80@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Cassio", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office81@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Barbosa", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office81@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Ivanelson", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office81@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Juliano", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office81@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Edivaldo", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office81@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Elitonio", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office82@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Dashboard", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office82@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Sala de Reuniao", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office82@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Genilson", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office82@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Leonardo", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office83@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Paulo Roberto", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office83@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Kerlon", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office83@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Tayron", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office83@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Moreira", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office83@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Chagas", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office84@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Amanda", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office84@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+      { usuario: "Brenda", loja: "TDC - GI", licencas: 1, modelo: "Desktop", email: "office84@grupoclaudino.email", tagEquipamento: "CSAG01DSK00" },
+
+      { usuario: "Alessandro", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office106@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },  
+      { usuario: "Cesar", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office106@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },
+      { usuario: "Montagem 01", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office106@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },
+      { usuario: "Pedro", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office106@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },
+      { usuario: "Vitor", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office107@grupoclaudino.email" , tagEquipamento: "CSAG08DSK00"},
+      { usuario: "Vilar", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office107@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },
+      { usuario: "Aprendiz", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office107@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },
+      { usuario: "Joao Pedro", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office107@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },
+      { usuario: "Alan", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office107@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },
+      { usuario: "Atendimento", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office108@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },
+      { usuario: "Abastecimento", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office108@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },
+      { usuario: "Marcos Vinicio", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office108@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },
+      { usuario: "Alicia", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office108@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },
+      { usuario: "Aprendiz02", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office108@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },
+      { usuario: "Aprendiz 03", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office165@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },
+      { usuario: "Aprendiz 04", loja: "TDC - G8", licencas: 1, modelo: "Desktop", email: "office165@grupoclaudino.email", tagEquipamento: "CSAG08DSK00" },
+
+      { usuario: "Eduarda", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office84@grupoclaudino.email", tagEquipamento: "CSAG03DSK00" },
+      { usuario: "Milton", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office84@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "Flavia", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office84@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "Aldeneide", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office85@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "Willame", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office85@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "Elimar", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office85@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "Guilherme", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office85@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "Roney", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office85@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "Ismael", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office86@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "Thamires", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office86@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "Escritorio", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office86@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "TDC - GIII", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office86@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "Joao Filho", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office86@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "Ailton", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office87@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "Hemerson", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office87@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "Uso coletivo 02", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office87@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "Santos", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office87@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "De Assis", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office87@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+      { usuario: "G03", loja: "TDC - G3", licencas: 1, modelo: "Desktop", email: "office88@grupoclaudino.email", tagEquipamento: "CSAG03DSK00"  },
+
+      { usuario: "Winne", loja: "Ecommerce", licencas: 1, modelo: "Desktop", email: "office89@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Felix", loja: "Ecommerce", licencas: 1, modelo: "Desktop", email: "office89@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Richardson", loja: "Ecommerce", licencas: 1, modelo: "Desktop", email: "office89@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Larissa", loja: "Ecommerce", licencas: 1, modelo: "Desktop", email: "office89@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Guilherme", loja: "Ecommerce", licencas: 1, modelo: "Desktop", email: "office89@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Adriano", loja: "Ecommerce", licencas: 1, modelo: "Desktop", email: "office90@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Mychelle", loja: "Ecommerce", licencas: 1, modelo: "Desktop", email: "office90@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Marcio", loja: "Ecommerce", licencas: 1, modelo: "Desktop", email: "office90@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+
+      { usuario: "Antonio Marcos", loja: "Operacoes e CRE", licencas: 1, modelo: "Desktop", email: "office90@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Taciana", loja: "Operacoes e CRE", licencas: 1, modelo: "Desktop", email: "office90@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Tamyres", loja: "Operacoes e CRE", licencas: 1, modelo: "Desktop", email: "office91@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Fernanda", loja: "Operacoes e CRE", licencas: 1, modelo: "Desktop", email: "office91@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Bruno Reis", loja: "Operacoes e CRE", licencas: 1, modelo: "Desktop", email: "office91@grupoclaudino.email" , tagEquipamento: "CSAECMDSK00" },
+      { usuario: "Laezio", loja: "Operacoes e CRE", licencas: 1, modelo: "Desktop", email: "office91@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Sa Junior", loja: "Operacoes e CRE", licencas: 1, modelo: "Desktop", email: "office91@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Michely", loja: "Operacoes e CRE", licencas: 1, modelo: "Desktop", email: "office92@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Giselly", loja: "Operacoes e CRE", licencas: 1, modelo: "Desktop", email: "office92@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Eduarda", loja: "Operacoes e CRE", licencas: 1, modelo: "Desktop", email: "office92@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Ana Lais", loja: "Operacoes e CRE", licencas: 1, modelo: "Desktop", email: "office92@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Bruno Reis", loja: "Operacoes e CRE", licencas: 1, modelo: "Notebook", email: "office125@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Juliana", loja: "Operacoes e CRE", licencas: 1, modelo: "Desktop", email: "office159@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+      { usuario: "Mariana", loja: "Operacoes e CRE", licencas: 1, modelo: "Desktop", email: "office160@grupoclaudino.email", tagEquipamento: "CSAECMDSK00"  },
+
+      { usuario: "Onofre", loja: "DGC", licencas: 1, modelo: "Desktop", email: "office92@grupoclaudino.email", tagEquipamento: "CSADGCDSK00"  },
+
+      { usuario: "Cibele Felix", loja: "PUBLICIDADE", licencas: 1, modelo: "Desktop", email: "office93@grupoclaudino.email", tagEquipamento: "CSAPUBDSK00"  },
+      { usuario: "Cibele Felix", loja: "PUBLICIDADE", licencas: 1, modelo: "Noteoobk", email: "office93@grupoclaudino.email", tagEquipamento: "CSAPUBDSK00" },
+      { usuario: "Francisco de Assis", loja: "PUBLICIDADE", licencas: 1, modelo: "Desktop", email: "office93@grupoclaudino.email" , tagEquipamento: "CSAPUBDSK00"},
+      { usuario: "Paulo Dias", loja: "PUBLICIDADE", licencas: 1, modelo: "Desktop", email: "office93@grupoclaudino.email", tagEquipamento: "CSAPUBDSK00" },
+      { usuario: "Douglas Machado", loja: "PUBLICIDADE", licencas: 1, modelo: "Desktop", email: "office151@grupoclaudino.email", tagEquipamento: "CSAPUBDSK00" },
+
+      { usuario: "Carlos", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office94@grupoclaudino.email", tagEquipamento: "CSASCODSK0" },
+      { usuario: "Carlos", loja: "MODA-TECON", licencas: 1, modelo: "Notebook", email: "office94@grupoclaudino.email", tagEquipamento: "CSASCONOT033"  },
+      { usuario: "Alves", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office94@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Alves", loja: "MODA-TECON", licencas: 1, modelo: "Notebook", email: "office94@grupoclaudino.email", tagEquipamento: "CSASCONOT00"  },
+      { usuario: "Diego", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office95@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Diego", loja: "MODA-TECON", licencas: 1, modelo: "Notebook", email: "office95@grupoclaudino.email", tagEquipamento: "CSASCONOT00"  },
+      { usuario: "Geysa", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office95@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Ismael", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office9@grupoclaudino.email5", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Ismael", loja: "MODA-TECON", licencas: 1, modelo: "Notebook", email: "office95@grupoclaudino.email", tagEquipamento: "CSASCONOT00"  },
+      { usuario: "Jaise", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office95@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Jaise", loja: "MODA-TECON", licencas: 1, modelo: "Notebook", email: "office96@grupoclaudino.email", tagEquipamento: "CSASCONOT00"  },
+      { usuario: "Jesus", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office96@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Jesus", loja: "MODA-TECON", licencas: 1, modelo: "Notebook", email: "office96@grupoclaudino.email", tagEquipamento: "CSASCONOT00"  },
+      { usuario: "Laezio", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office96@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Laezio", loja: "MODA-TECON", licencas: 1, modelo: "Notebook", email: "office96@grupoclaudino.email", tagEquipamento: "CSASCONOT00"  },
+      { usuario: "Laura", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office97@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Mailza", loja: "MODA-TECON", licencas: 1, modelo: "Notebook", email: "office97@grupoclaudino.email", tagEquipamento: "CSASCONOT00"  },
+      { usuario: "Lourdes", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office97@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Maria Rosa", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office97@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Mailza", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office97@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Maria Rosa", loja: "MODA-TECON", licencas: 1, modelo: "Notebook", email: "office98@grupoclaudino.email", tagEquipamento: "CSASCONOT00"  },
+      { usuario: "Natan", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office98@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Natan", loja: "MODA-TECON", licencas: 1, modelo: "Notebook", email: "office98@grupoclaudino.email", tagEquipamento: "CSASCONOT00"  },
+      { usuario: "Neyra", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office98@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Neyra", loja: "MODA-TECON", licencas: 1, modelo: "Notebook", email: "office98@grupoclaudino.email", tagEquipamento: "CSASCONOT00"  },
+      { usuario: "Rafaela", loja: "MODA-TECON", licencas: 1, modelo: "Notebook", email: "office99@grupoclaudino.email", tagEquipamento: "CSASCONOT00"  },
+      { usuario: "Rafaela", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office99@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Renata", loja: "MODA-TECON", licencas: 1, modelo: "Notebook", email: "office99@grupoclaudino.email", tagEquipamento: "CSASCONOT00"  },
+      { usuario: "Renata", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office99@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Pdl", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office99@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Sao Paulo", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office100@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Sao Paulo", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office100@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Izabel", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office100@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Jade", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office100@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Estagiario", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office100@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Carlene", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office101@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Ednilson", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office101@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Fernando", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office101@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Gomes", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office101@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Rubismar", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office102@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Wendeu", loja: "MODA-TECON", licencas: 1, modelo: "Desktop", email: "office102@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+
+      { usuario: "Rostand", loja: "IMOVEIS", licencas: 1, modelo: "Desktop", email: "office109@grupoclaudino.email", tagEquipamento: "CSAIMVDSK00"  },
+      { usuario: "Tereza Leao", loja: "IMOVEIS", licencas: 1, modelo: "Desktop", email: "office109@grupoclaudino.email", tagEquipamento: "CSAIMVDSK00"  },
+      { usuario: "Setor de Imoveis", loja: "IMOVEIS", licencas: 1, modelo: "Desktop", email: "office109@grupoclaudino.email", tagEquipamento: "CSAIMVDSK00"  },
+      { usuario: "Brenda Mendes", loja: "IMOVEIS", licencas: 1, modelo: "Desktop", email: "office164@grupoclaudino.email", tagEquipamento: "CSAIMVDSK00"  },
+      { usuario: "Luiza Souza", loja: "IMOVEIS", licencas: 1, modelo: "Desktop", email: "office164@grupoclaudino.email", tagEquipamento: "CSAIMVDSK00"  },
+      { usuario: "Mayara", loja: "IMOVEIS", licencas: 1, modelo: "Desktop", email: "office164@grupoclaudino.email", tagEquipamento: "CSAIMVDSK00"  },
+
+      { usuario: "Rogerio Oliveira", loja: "Sintegra", licencas: 1, modelo: "Desktop", email: "office109@grupoclaudino.email", tagEquipamento: "CSATEZDSK00"  },
+      { usuario: "Cecilia Silva", loja: "Sintegra", licencas: 1, modelo: "Desktop", email: "office109@grupoclaudino.email", tagEquipamento: "CSATEZDSK00" },
+      { usuario: "Safira Soares", loja: "Sintegra", licencas: 1, modelo: "Desktop", email: "office110@grupoclaudino.email", tagEquipamento: "CSATEZDSK00" },
+      { usuario: "Jean Maia", loja: "Sintegra", licencas: 1, modelo: "Desktop", email: "office110@grupoclaudino.email", tagEquipamento: "CSATEZDSK00" },
+      { usuario: "Rogerio", loja: "Sintegra", licencas: 1, modelo: "Desktop", email: "office93@grupoclaudino.email", tagEquipamento: "CSATEZDSK00" },
+
+      { usuario: "Toinho", loja: "Contabilidade", licencas: 1, modelo: "Desktop", email: "office144@grupoclaudino.email", tagEquipamento: "CSACTBDSK017" },
+      { usuario: "Nildes", loja: "Contabilidade", licencas: 1, modelo: "Desktop", email: "office144@grupoclaudino.email", tagEquipamento: "CSACTBDSK005" },
+      { usuario: "Xavier", loja: "Contabilidade", licencas: 1, modelo: "Desktop", email: "office144@grupoclaudino.email", tagEquipamento: "CSACTBDSK019" },
+      { usuario: "Denise", loja: "Contabilidade", licencas: 1, modelo: "Desktop", email: "office144@grupoclaudino.email", tagEquipamento: "CSACTBDSK009" },
+
+
+      { usuario: "Hellen", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office110@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Fhabiana", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office110@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "PC Backup 3", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office110@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Lorrayne", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office111@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Heloani", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office111@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Dalvanira", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office111@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Jessyca", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office111@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Beatriz", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office111@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Josias", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office112@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Thales", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office112@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Kelyane", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office113@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Carlos", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office113@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "PC backup 4", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office113@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Caitano", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office114@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Simiao", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office114@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Jairo", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office114@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Henrique", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office114@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Janaina", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office114@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Francisca", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office115@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Igor", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office115@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Luana", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office115@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Eva Clarisse", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office115@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "PC Backup 2", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office115@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Claudio", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office116@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Santana", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office116@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "PC backup 1", loja: "DRH", licencas: 1, modelo: "Desktop", email: "office116@grupoclaudino.email", tagEquipamento: "CSADRHDSK00" },
+      { usuario: "Thales", loja: "DRH", licencas: 1, modelo: "Notebook", email: "office116@grupoclaudino.email", tagEquipamento: "CSADRHNOT00" },
+      { usuario: "Gomes", loja: "DRH", licencas: 1, modelo: "Notebook", email: "office116@grupoclaudino.email", tagEquipamento: "CSADRHNOT00" },
+
+      { usuario: "Fernandes", loja: "SST", licencas: 1, modelo: "Desktop", email: "office146@grupoclaudino.email", tagEquipamento: "CSASSTDSK00" },
+      { usuario: "Yara", loja: "SST", licencas: 1, modelo: "Desktop", email: "office146@grupoclaudino.email", tagEquipamento: "CSASSTDSK00" },
+      { usuario: "Gomes", loja: "SST", licencas: 1, modelo: "Desktop", email: "office146@grupoclaudino.email", tagEquipamento: "CSASSTDSK00" },
+      { usuario: "Miguel", loja: "SST", licencas: 1, modelo: "Desktop", email: "office146@grupoclaudino.email", tagEquipamento: "CSASSTDSK00" },
+      { usuario: "Elton/Aprendiz", loja: "SST", licencas: 1, modelo: "Desktop", email: "office146@grupoclaudino.email", tagEquipamento: "CSASSTDSK00" },
+
+    
+
+      { usuario: "Mendes", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office117@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Celso", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office117@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Marilene", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office117@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Janaina", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office117@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Raquel", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office117@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Laise", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office118@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Michel", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office118@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Carol", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office118@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Any", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office118@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Nagyla", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office118@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Daiane", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office119@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Laecio", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office119@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Kelly", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office119@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Jennifer", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office119@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Ianclara", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office119@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Poliana", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office120@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Leonardo", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office120@grupoclaudino.email" , tagEquipamento: "CSATATDSK00"},
+      { usuario: "Tyrone", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office120@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Sales", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office120@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Edivan", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office120@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Gilvan", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office121@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Silva", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office121@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+      { usuario: "Aprendiz", loja: "TAT - Assitencia", licencas: 1, modelo: "Desktop", email: "office164@grupoclaudino.email", tagEquipamento: "CSATATDSK00" },
+
+      { usuario: "Antonio Monoel", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office121@grupoclaudino.email", tagEquipamento: "COLDSK00" },
+      { usuario: "Antonio Franciso", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office121@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Franciso Mendeiros", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office121@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Normando", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office122@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Paulo Jose", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office122@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Fabio Ferreira", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office122@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Junior Jose", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office122@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Janedison Jose", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office122@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Antoiniel Mendes", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office123@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Ana Beatriz", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office123@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Iane Kely", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office123@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Paulo Lopes", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office123@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Paulo Lopes", loja: "COLON", licencas: 1, modelo: "Notebook", email: "office123@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Janielle Santos", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office124@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Eduardo Ribeiro", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office124@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Edislon Rodrigues", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office124@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Antonio Jose", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office124@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Antonio Jose", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office124@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Francisco Denis", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office125@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Ana Caroline", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office125@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Paulo Henrique", loja: "COLON", licencas: 1, modelo: "Desktop", email: "office125@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+      { usuario: "Paulo Henrique", loja: "COLON", licencas: 1, modelo: "Notebook", email: "office125@grupoclaudino.email", tagEquipamento: "COLDSK00"  },
+
+      { usuario: "Dr. Ricardo", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office126@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Moises", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office126@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Francisco Jose", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office126@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Ana Paula", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office126@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Lucivaldo", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office126@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Socorro", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office127@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Cintia", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office127@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Lidiana", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office127@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Vanessa", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office127@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Jose Santos", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office127@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Francinaldo", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office128@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Vandemon", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office128@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Juliana", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office128@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Gleidiane", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office128@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Lenilson", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office128@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Ludyelle", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office129@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Nadson", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office129@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Brenda", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office129@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Onofre", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office129@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Luciene", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office129@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Araujo", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office130@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "jessica", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office130@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Ianca", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office130@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Nicole", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office130@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Marina", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office130@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Karina", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office131@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Sabrina", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office131@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Paulo Guedes", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office131@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Viana", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office131@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Reis", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office131@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Nunes", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office132@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Andre", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office132@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Vitoriano", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office132@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Aprendiz", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office132@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Francielle", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office132@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Elisangela", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office133@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Larice", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office133@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "nascimento", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office133@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Lucas Mota", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office133@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Jose Lima", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office133@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Renan", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office134@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Eduarda", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office134@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Sala 04", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office134@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Sala 05", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office134@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Leticia", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office134@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Lucio", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office135@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Darlan", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office135@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Joao Soares", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office135@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Anderson", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office135@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Valeria", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office135@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Valdirene", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office136@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Eduarda", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office136@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Dione", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office136@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Fabio Gomes", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office136@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Jaynara", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office136@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Clara", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office137@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Roseana", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office137@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Ludmyla", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office137@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Rayane", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office137@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Adriano", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office137@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Rafael", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office138@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Diego", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office138@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Rodrigo", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office138@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Auricelia", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office138@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Gleidson", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office138@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Tarciana", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office159@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Wilson", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office160@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Tarcia", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office160@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Osvaldo", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office160@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Mayra", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office162@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Dandara", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office162@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "kaio", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office162@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+      { usuario: "Eros Amorin", loja: "COMERCIAL - SCO", licencas: 1, modelo: "Desktop", email: "office163@grupoclaudino.email", tagEquipamento: "CSASCODSK00"  },
+
+      { usuario: "Carolina Veras", loja: "Construtora Sucesso", licencas: 1, modelo: "Desktop", email: "office151@grupoclaudino.email", tagEquipamento: "SUCDSK00"  },
+      { usuario: "Deusa Araujo", loja: "Construtora Sucesso", licencas: 1, modelo: "Desktop", email: "office151@grupoclaudino.email", tagEquipamento: "SUCDSK00" },
+      { usuario: "Dinalva Cardoso", loja: "Construtora Sucesso", licencas: 1, modelo: "Desktop", email: "office151@grupoclaudino.email", tagEquipamento: "SUCDSK00" },
+      { usuario: "Douglas Roque", loja: "Construtora Sucesso", licencas: 1, modelo: "Desktop", email: "office151@grupoclaudino.email", tagEquipamento: "SUCDSK00" },
+      { usuario: "Gilka Bezerra", loja: "Construtora Sucesso", licencas: 1, modelo: "Desktop", email: "office152@grupoclaudino.email", tagEquipamento: "SUCDSK00" },
+      { usuario: "Jessica Brandim", loja: "Construtora Sucesso", licencas: 1, modelo: "Desktop", email: "office152@grupoclaudino.email", tagEquipamento: "SUCDSK00" },
+      { usuario: "Jose Luiz Farias", loja: "Construtora Sucesso", licencas: 1, modelo: "Desktop", email: "office152@grupoclaudino.email", tagEquipamento: "SUCDSK00" },
+      { usuario: "Lilian Ribeiro", loja: "Construtora Sucesso", licencas: 1, modelo: "Desktop", email: "office152@grupoclaudino.email", tagEquipamento: "SUCDSK00" },
+      { usuario: "Lucyara Moura", loja: "Construtora Sucesso", licencas: 1, modelo: "Desktop", email: "office152@grupoclaudino.email", tagEquipamento: "SUCDSK00" },
+      { usuario: "Maria Eduarda", loja: "Construtora Sucesso", licencas: 1, modelo: "Desktop", email: "office153@grupoclaudino.email", tagEquipamento: "SUCDSK00" },
+      { usuario: "Thiago Basilio", loja: "Construtora Sucesso", licencas: 1, modelo: "Desktop", email: "office153@grupoclaudino.email", tagEquipamento: "SUCDSK00" },
+      { usuario: "Thiago Basilio", loja: "Construtora Sucesso", licencas: 1, modelo: "Notebook", email: "office153@grupoclaudino.email", tagEquipamento: "SUCNOT00" },
+      { usuario: "Ernane Melo", loja: "Construtora Sucesso", licencas: 1, modelo: "Desktop", email: "office159@grupoclaudino.email", tagEquipamento: "SUCDSK00" },
+
+
+
+      { usuario: "Vandui", loja: "Fundacao - FUNFFEC", licencas: 1, modelo: "Desktop", email: "office154@grupoclaudino.email", tagEquipamento: "FCCDSK00" },
+      { usuario: "Mercia", loja: "Fundacao - FUNFFEC", licencas: 1, modelo: "Desktop", email: "office154@grupoclaudino.email", tagEquipamento: "FCCDSK00" },
+      { usuario: "Luana", loja: "Fundacao - FUNFFEC", licencas: 1, modelo: "Desktop", email: "office154@grupoclaudino.email", tagEquipamento: "FCCDSK00" },
+      { usuario: "Planejamento", loja: "Fundacao - FUNFFEC", licencas: 1, modelo: "Desktop", email: "office154@grupoclaudino.email", tagEquipamento: "FCCDSK00" },
+      { usuario: "Recepcao", loja: "Fundacao - FUNFFEC", licencas: 1, modelo: "Desktop", email: "office154@grupoclaudino.email", tagEquipamento: "FCCDSK00" },
+      { usuario: "Mercia", loja: "Fundacao - FUNFFEC", licencas: 1, modelo: "Desktop", email: "office155@grupoclaudino.email", tagEquipamento: "FCCDSK00" },
+      
+      { usuario: "Vandui", loja: "Fundacao - FELC", licencas: 1, modelo: "Desktop", email: "office155@grupoclaudino.email", tagEquipamento: "FLCDSK00" },
+      { usuario: "Analia", loja: "Fundacao - FELC", licencas: 1, modelo: "Desktop", email: "office155@grupoclaudino.email", tagEquipamento: "FLCDSK00" },
+      { usuario: "Ozenay", loja: "Fundacao - FELC", licencas: 1, modelo: "Desktop", email: "office155@grupoclaudino.email", tagEquipamento: "FLCDSK00" },
+      { usuario: "Romario", loja: "Fundacao - FELC", licencas: 1, modelo: "Desktop", email: "office155@grupoclaudino.email", tagEquipamento: "FLCDSK00" },
+      { usuario: "Financeiro", loja: "Fundacao - FELC", licencas: 1, modelo: "Desktop", email: "office155@grupoclaudino.email", tagEquipamento: "FLCDSK00" },
+      { usuario: "Diretoria", loja: "Fundacao - FELC", licencas: 1, modelo: "Desktop", email: "office156@grupoclaudino.email", tagEquipamento: "FLCDSK00" },
+      { usuario: "Patricia", loja: "Fundacao - FELC", licencas: 1, modelo: "Desktop", email: "office156@grupoclaudino.email", tagEquipamento: "FLCDSK00" },
+      { usuario: "Diretoria", loja: "Fundacao - FELC", licencas: 1, modelo: "Desktop", email: "office156@grupoclaudino.email", tagEquipamento: "FLCDSK00" },
+      { usuario: "Natanel", loja: "Fundacao - FELC", licencas: 1, modelo: "Desktop", email: "office163@grupoclaudino.email", tagEquipamento: "FLCDSK00" },
+  
+  
+    ];
+
+
+
+function destacar(texto,filtro){ if(!filtro) return texto; const regex=new RegExp(`(${filtro})`,'gi'); return texto.replace(regex,'<span class="highlight">$1</span>'); }
+const searchInput=document.getElementById('search-bar');
+searchInput.addEventListener('input',()=>{ atualizarDashboard(dadosFixos); });
+
+function atualizarDashboard(licencas){
+  const container=document.getElementById('licenca-container'); 
+  container.innerHTML='';
+  const filtro=searchInput.value.toLowerCase();
+  let filtradas=licencas;
+
+  if(filtro) {
+    filtradas=licencas.filter(item=> 
+      item.usuario.toLowerCase().includes(filtro) || 
+      item.loja.toLowerCase().includes(filtro) || 
+      (item.email && item.email.toLowerCase().includes(filtro)) || 
+      item.modelo.toLowerCase().includes(filtro) || 
+      (item.tagEquipamento && item.tagEquipamento.toLowerCase().includes(filtro))
+    );
+  }
+
+  document.getElementById('total-card').textContent = `${filtradas.length} / ${licencas.length}`;
+
+  if(filtradas.length === 0){
+    container.innerHTML = `
+      <div style="display:flex;align-items:center;justify-content:center;width:100%;margin-top:60px;">
+        <div style="background:linear-gradient(145deg,#001f3f,#003366);border:3px solid #0ff;border-radius:25px;
+        padding:40px 60px;text-align:center;font-size:2rem;font-weight:bold;color:#0ff;text-shadow:0 0 10px #0ff,0 0 20px #00e6e6,0 0 40px #00ffff;
+        box-shadow:0 0 25px rgba(0,255,255,0.7), inset 0 0 30px rgba(0,255,255,0.3);animation:pulseNeon 2s infinite alternate;max-width:700px;">
+         Nao Existe Licenca para a Pesquisa Realizada 
+        </div>
+      </div>`;
+    return;
+  }
+
+  const grupos={};
+  filtradas.forEach(item=>{ if(!grupos[item.loja]) grupos[item.loja]=[]; grupos[item.loja].push(item); });
+
+  Object.keys(grupos).sort().forEach(loja=>{
+    const quadro=document.createElement('div'); 
+    quadro.classList.add('loja-quadro');
+    const titulo=document.createElement('h2'); 
+    titulo.innerHTML=`${loja} <span class="badge">${grupos[loja].length}</span>`;
+    quadro.appendChild(titulo);
+
+    const boxContainer=document.createElement('div'); 
+    boxContainer.classList.add('box-container');
+
+    grupos[loja].forEach(item=>{
+      const box=document.createElement('div'); 
+      box.classList.add('licenca-box');
+      box.innerHTML=`
+        <p>Usuario: ${destacar(item.usuario,filtro)}</p>
+        <p>Quantidade: ${item.licencas}</p>
+        <p>Tipo: ${destacar(item.modelo,filtro)}</p>
+        <p>Email: <span class="email-text">${destacar(item.email||'N/A',filtro)}</span></p>
+        <p>Tag_Equipamento: ${destacar(item.tagEquipamento||'N/A',filtro)}</p>
+        <button class="copy-btn" data-email="${item.email}">Copiar E-mail</button>
+      `;
+      boxContainer.appendChild(box);
+    });
+
+    quadro.appendChild(boxContainer);
+    container.appendChild(quadro);
+  });
+
+  document.querySelectorAll('.copy-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const email = btn.getAttribute('data-email');
+
+    // --- Método híbrido: HTTPS e HTTP ---
+    if (navigator.clipboard && window.isSecureContext) {
+      // HTTPS ? usa API moderna
+      navigator.clipboard.writeText(email).then(() => {
+        mostrarPopup();
+        btn.textContent = 'Copiado!';
+        setTimeout(() => btn.textContent = 'Copiar E-mail', 2000);
+      }).catch(() => {
+        copiarAntigo(email, btn);
+      });
+    } else {
+      // HTTP ? usa método antigo compatível
+      copiarAntigo(email, btn);
+    }
+  });
+});
+}
+
+
+
+// Função de cópia compatível com servidores HTTP
+function copiarAntigo(texto, btn) {
+  const tempInput = document.createElement('textarea');
+  tempInput.value = texto;
+  tempInput.style.position = 'fixed';
+  tempInput.style.left = '-9999px';
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  try {
+    const sucesso = document.execCommand('copy');
+    if (sucesso) {
+      mostrarPopup();
+      btn.textContent = 'Copiado!';
+      setTimeout(() => btn.textContent = 'Copiar E-mail', 2000);
+    } else {
+      alert('Não foi possível copiar. Copie manualmente.');
+    }
+  } catch (err) {
+    alert('Erro ao copiar. Copie manualmente.');
+  }
+  document.body.removeChild(tempInput);
+}
+atualizarDashboard(dadosFixos);
+
+
+function mostrarPopup() {
+  const popup = document.getElementById('copyPopup');
+  const particlesContainer = document.getElementById('popupParticles');
+
+  // Remove partículas antigas
+  particlesContainer.innerHTML = '';
+
+  // Cria partículas dinâmicas
+  for (let i = 0; i < 25; i++) {
+    const particle = document.createElement('div');
+    particle.style.position = 'absolute';
+    particle.style.width = `${2 + Math.random() * 4}px`;
+    particle.style.height = particle.style.width;
+    particle.style.background = `rgba(0, 255, 255, ${0.4 + Math.random() * 0.6})`;
+    particle.style.borderRadius = '50%';
+    particle.style.top = '50%';
+    particle.style.left = '50%';
+    particle.style.transform = `translate(-50%, -50%)`;
+    particlesContainer.appendChild(particle);
+
+    // Anima cada partícula com expansão aleatória
+    const x = (Math.random() - 0.5) * 400;
+    const y = (Math.random() - 0.5) * 400;
+    particle.animate([
+      { transform: `translate(-50%, -50%) scale(1)`, opacity: 1 },
+      { transform: `translate(${x}px, ${y}px) scale(0)`, opacity: 0 }
+    ], {
+      duration: 1200 + Math.random() * 600,
+      easing: 'ease-out',
+      fill: 'forwards'
+    });
+  }
+
+  // Mostra popup com animações
+  popup.classList.add('show');
+  setTimeout(() => popup.classList.remove('show'), 2200);
+}
+
+
+function atualizarDataHora() {
+  const agora = new Date();
+
+  // Hora formatada
+  const horas = String(agora.getHours()).padStart(2, '0');
+  const minutos = String(agora.getMinutes()).padStart(2, '0');
+  const segundos = String(agora.getSeconds()).padStart(2, '0');
+
+  // Data formatada
+  const diasSemana = [
+    "Domingo", "Segunda-feira", "Terca-feira",
+    "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sabado"
+  ];
+  const meses = [
+    "Janeiro", "Fevereiro", "Marco", "Abril", "Maio", "Junho",
+    "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"
+  ];
+  const diaSemana = diasSemana[agora.getDay()];
+  const dia = agora.getDate();
+  const mes = meses[agora.getMonth()];
+  const ano = agora.getFullYear();
+
+  // Turno
+  const turno =
+    horas >= 6 && horas < 12
+      ? " Manha"
+      : horas >= 12 && horas < 18
+      ? " Tarde"
+      : " Noite";
+
+  // Atualiza o conteúdo no mesmo card
+  const timeCard = document.getElementById('time-card');
+  timeCard.innerHTML = `
+    <div style="font-size:1.8rem; font-weight:bold;">${horas}:${minutos}:${segundos}</div>
+    <div style="font-size:1.1rem; margin-top:5px;">${diaSemana}, ${dia} de ${mes} de ${ano}</div>
+    <div style="font-size:1rem; margin-top:8px; opacity:0.9;">${turno}</div>
+  `;
+}
+
+// Atualiza continuamente
+setInterval(atualizarDataHora, 1000);
+atualizarDataHora();
+
+
+const btnMenu = document.getElementById("btnMenu");
+btnMenu.addEventListener("click", () => {
+    window.location.href = "menu.html";
+});
+
+
+(function(){
+  const overlay = document.createElement('div');
+  overlay.className = 'email-overlay';
+  document.body.appendChild(overlay);
+
+  document.addEventListener('mouseover', e => {
+    const el = e.target.closest('.email-text');
+    if (!el) return;
+
+    overlay.textContent = el.textContent.trim();
+
+    const rect = el.getBoundingClientRect();
+    const padding = 15;
+
+    let left = rect.left + (rect.width / 2) - 200;
+    let top = rect.top - 100;
+
+    if (top < 20) top = rect.bottom + padding;
+    if (left < 20) left = 20;
+    if (left + 450 > window.innerWidth) left = window.innerWidth - 470;
+
+    overlay.style.left = `${left}px`;
+    overlay.style.top = `${top}px`;
+
+    requestAnimationFrame(() => overlay.classList.add('show'));
+  });
+
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest('.email-text')) overlay.classList.remove('show');
+  });
+})();
+
+
+
+
+
+
+
+setInterval(atualizarHora,1000);
+atualizarHora();
+atualizarData();
+</script>
+</body>
+</html>

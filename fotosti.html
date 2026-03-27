@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equipe T.I</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+
+<style>
+* {
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins', sans-serif;
+}
+
+body {
+    background: radial-gradient(circle at top, #0f2027, #0a0f1c);
+    color:#fff;
+    padding:20px;
+}
+
+/* HEADER */
+.topo {
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+    padding:15px 20px;
+    background: rgba(255,255,255,0.05);
+    border-radius:15px;
+    backdrop-filter: blur(10px);
+    box-shadow:0 0 20px rgba(0,255,255,0.1);
+}
+
+h2 {
+    font-weight:700;
+    letter-spacing:1px;
+}
+
+.badge {
+    padding:5px 12px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+    margin-right:10px;
+}
+
+.admin {
+    background:#00ffea;
+    color:#000;
+}
+
+.usuario {
+    background:#ffc107;
+    color:#000;
+}
+
+.logout {
+    background:linear-gradient(45deg,#ff4b2b,#ff0000);
+    color:#fff;
+}
+
+/* GRID */
+.container {
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(260px,1fr));
+    gap:25px;
+}
+
+/* CARD */
+.card {
+    background: rgba(255,255,255,0.05);
+    padding:15px;
+    border-radius:20px;
+    text-align:center;
+    transition:0.4s;
+    position:relative;
+    overflow:hidden;
+    box-shadow:0 0 20px rgba(0,0,0,0.4);
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow:0 0 30px rgba(0,255,255,0.3);
+}
+
+.card img {
+    width:100%;
+    height:250px;
+    object-fit:cover;
+    border-radius:15px;
+}
+
+.card h3 {
+    margin-top:10px;
+    font-weight:600;
+}
+
+.card p {
+    font-size:14px;
+    color:#aaa;
+}
+
+/* BOTÃO */
+button {
+    margin-top:10px;
+    padding:10px;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
+}
+
+.baixar {
+    background:linear-gradient(45deg,#00c6ff,#00ffea);
+    color:#000;
+}
+
+.baixar:hover {
+    transform:scale(1.05);
+    box-shadow:0 0 15px #00ffea;
+}
+
+/* MODAL */
+.modal {
+    display:none;
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:rgba(0,0,0,0.85);
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content {
+    background:#111;
+    padding:25px;
+    border-radius:15px;
+    width:300px;
+    text-align:center;
+    box-shadow:0 0 25px rgba(0,255,255,0.3);
+    animation:fade 0.3s ease;
+}
+
+@keyframes fade {
+    from {opacity:0; transform:scale(0.8);}
+    to {opacity:1; transform:scale(1);}
+}
+
+input {
+    width:90%;
+    padding:10px;
+    margin:8px;
+    border-radius:8px;
+    border:none;
+    outline:none;
+}
+
+.erro {
+    color:#ff4b2b;
+    font-size:13px;
+}
+
+/* TÍTULOS MODAL */
+.modal h3 {
+    margin-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="topo">
+    <h2>👨‍💻 Painel T.I</h2>
+    <div>
+        <span id="nivel"></span>
+        <button class="logout" onclick="logout()">Sair</button>
+    </div>
+</div>
+
+<div class="container" id="conteudo"></div>
+
+<!-- LOGIN -->
+<div class="modal" id="loginModal">
+    <div class="modal-content">
+        <h3>🔐 Login</h3>
+        <input type="text" id="loginUser" placeholder="Usuário">
+        <input type="password" id="loginPass" placeholder="Senha">
+        <div class="erro" id="loginErro"></div>
+        <button class="baixar" onclick="fazerLogin()">Entrar</button>
+    </div>
+</div>
+
+<!-- LIBERAÇÃO -->
+<div class="modal" id="libModal">
+    <div class="modal-content">
+        <h3>🔑 Liberação</h3>
+        <input type="password" id="senhaLib" placeholder="Senha Admin">
+        <div class="erro" id="libErro"></div>
+        <button class="baixar" onclick="validarLiberacao()">Liberar</button>
+    </div>
+</div>
+
+<script>
+let usuarioLogado = null;
+let nivelAcesso = null;
+let imagemAtual = null;
+
+// usuários
+const usuarios = [
+    {user: "admin", pass: "1234", nivel: "admin"},
+    {user: "user", pass: "1234", nivel: "usuario"}
+];
+
+// colaboradores
+const colaboradores = [
+    {nome:"João Silva", cargo:"Suporte T.I", img:"https://via.placeholder.com/300x250"},
+    {nome:"Maria Souza", cargo:"Analista", img:"https://via.placeholder.com/300x250"}
+];
+
+function iniciar() {
+    document.getElementById("loginModal").style.display="flex";
+}
+iniciar();
+
+function fazerLogin() {
+    let u = document.getElementById("loginUser").value;
+    let p = document.getElementById("loginPass").value;
+
+    let achou = usuarios.find(x => x.user===u && x.pass===p);
+
+    if(achou){
+        usuarioLogado = achou.user;
+        nivelAcesso = achou.nivel;
+
+        let badge = nivelAcesso === "admin"
+            ? '<span class="badge admin">ADMIN</span>'
+            : '<span class="badge usuario">USUÁRIO</span>';
+
+        document.getElementById("nivel").innerHTML = badge;
+
+        document.getElementById("loginModal").style.display="none";
+        carregar();
+    } else {
+        document.getElementById("loginErro").innerText="Login inválido";
+    }
+}
+
+function carregar(){
+    let div = document.getElementById("conteudo");
+    div.innerHTML = "";
+
+    colaboradores.forEach((c,i)=>{
+        div.innerHTML += `
+        <div class="card">
+            <img src="${c.img}" id="img${i}">
+            <h3>${c.nome}</h3>
+            <p>${c.cargo}</p>
+            <button class="baixar" onclick="baixar(${i})">⬇ Baixar Foto</button>
+        </div>
+        `;
+    });
+}
+
+function baixar(i){
+    imagemAtual = i;
+
+    if(nivelAcesso === "admin"){
+        download();
+    } else {
+        document.getElementById("libModal").style.display="flex";
+    }
+}
+
+function validarLiberacao(){
+    let senha = document.getElementById("senhaLib").value;
+
+    if(senha === "1234"){
+        download();
+        document.getElementById("libModal").style.display="none";
+    } else {
+        document.getElementById("libErro").innerText="Senha incorreta";
+    }
+}
+
+// LOGIN com ENTER
+document.getElementById("loginUser").addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        fazerLogin();
+    }
+});
+
+document.getElementById("loginPass").addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        fazerLogin();
+    }
+});
+
+// LIBERAÇÃO com ENTER
+document.getElementById("senhaLib").addEventListener("keypress", function(e){
+    if(e.key === "Enter"){
+        validarLiberacao();
+    }
+});
+
+function download(){
+    let img = document.getElementById("img"+imagemAtual).src;
+    let link = document.createElement('a');
+    link.href = img;
+    link.download = "foto_colaborador.jpg";
+    link.click();
+}
+
+function logout(){
+    location.reload();
+}
+</script>
+
+</body>
+</html>

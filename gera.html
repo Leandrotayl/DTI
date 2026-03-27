@@ -1,357 +1,121 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Geradores com Sorteio Animado</title>
-<style>
-body {
-    font-family: Poppins, sans-serif;
-    margin: 0;
-    padding: 15px;
-    color: #fff;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    overflow: hidden;
-    background: url('http://172.16.2.7/DTI/img/1.png') no-repeat center center fixed;
-    background-size: cover;
-}
-
-.wrapper {
-    display: flex;
-    gap: 25px;
-    flex-wrap: nowrap;
-}
-
-/* QUADROS */
-.container {
-    min-width: 360px;
-    background: rgba(255,255,255,0.12);
-    backdrop-filter: blur(14px);
-    padding: 25px;
-    border-radius: 20px;
-    box-shadow: 0 0 25px rgba(0,0,0,0.28);
-}
-
-h2 { text-align: center; margin-bottom: 18px; }
-
-.password-box, .result-box {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: rgba(255,255,255,0.18);
-    padding: 14px;
-    border-radius: 12px;
-    margin-bottom: 15px;
-}
-
-.password, .result {
-    flex: 1;
-    margin-right: 8px;
-    font-family: monospace;
-}
-
-textarea {
-    width: 100%;
-    height: 140px;
-    background: rgba(255,255,255,0.18);
-    border-radius: 12px;
-    border: none;
-    padding: 12px;
-    color: #fff;
-    resize: none;
-    outline: none;
-}
-
-button {
-    width: 100%;
-    padding: 14px;
-    background: #22c55e;
-    border: none;
-    border-radius: 12px;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 10px;
-}
-
-.btn-copy {
-    width: auto;
-    background: linear-gradient(45deg, #3b82f6, #06b6d4);
-    padding: 10px 16px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    color: #fff;
-    font-weight: bold;
-    transition: transform 0.2s, box-shadow 0.2s;
-    position: relative;
-}
-
-.btn-copy:hover {
-    transform: scale(1.1);
-    box-shadow: 0 0 15px rgba(0,0,0,0.4);
-}
-
-/* Mensagem de cópia */
-#copyMsg {
-    position: absolute;
-    top: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #22c55e;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: bold;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-}
-
-
-/* --- MODAL SORTEIO --- */
-#modal {
-    position: fixed;
-    top:0; left:0; right:0; bottom:0;
-    background: rgba(0,0,0,0.95);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 999;
-    flex-direction: column;
-    display: none;
-    overflow: hidden;
-}
-
-.nome-animado {
-    position: absolute;
-    font-size: 20px;
-    opacity: 0;
-    color: #ffdd00;
-    animation: girar 3s linear infinite;
-}
-
-@keyframes girar {
-    0% { transform: rotate(0deg) translateX(0px) rotate(0deg); opacity:0; }
-    50% { opacity:1; }
-    100% { transform: rotate(360deg) translateX(100px) rotate(-360deg); opacity:0; }
-}
-
-#finalNome {
-    font-size: 50px;
-    animation: zoom 1s ease forwards;
-    color: #ffea00;
-    text-shadow: 0 0 20px #ffea00, 0 0 40px #ffea00;
-}
-
-@keyframes zoom {
-    0% { transform: scale(0.3); opacity:0; }
-    50% { transform: scale(1.2); opacity:1; }
-    100% { transform: scale(1); opacity:1; }
-}
-
-.bola {
-    position: absolute;
-    border-radius: 50%;
-    width: 10px;
-    height: 10px;
-    opacity: 0.8;
-    animation: cair linear forwards;
-}
-
-@keyframes cair {
-    0% { transform: translateY(-20px) rotate(0deg); opacity:1; }
-    100% { transform: translateY(100vh) rotate(360deg); opacity:0; }
-}
-
-/* LISTA DE SORTEADOS */
-#sorteados {
-    margin-top: 15px;
-    max-height: 200px;
-    overflow-y: auto;
-    border-top: 1px solid rgba(255,255,255,0.3);
-    padding-top: 10px;
-    font-size: 16px;
-}
-
-#sorteados ul {
-    padding-left: 20px;
-    margin: 0;
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador de Senhas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #1e1e2f;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .container {
+      background: #2c2c44;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      text-align: center;
+      width: 350px;
+    }
+    h1 {
+      margin-bottom: 20px;
+      color: #00ffcc;
+    }
+    label {
+      display: block;
+      margin: 10px 0 5px;
+    }
+    input[type="number"] {
+      width: 60px;
+      padding: 5px;
+      border-radius: 5px;
+      border: none;
+      text-align: center;
+    }
+    input[type="checkbox"] {
+      margin-right: 5px;
+    }
+    button {
+      margin-top: 15px;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      background: #00ffcc;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #00d1a6;
+    }
+    #senha {
+      margin-top: 20px;
+      padding: 10px;
+      background: #1e1e2f;
+      border: 2px solid #00ffcc;
+      border-radius: 8px;
+      font-weight: bold;
+      word-break: break-all;
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1>Gerador de Senhas</h1>
 
-<div class="wrapper">
+    <label for="tamanho">Tamanho da senha:</label>
+    <input type="number" id="tamanho" value="12" min="4" max="64">
 
-    <!-- GERADOR SENHA -->
-    <div class="container">
-        <h2>Gerador de Senhas</h2>
-     <div class="password-box">
-    <span id="password" class="password">Clique em gerar</span>
-    <button class="btn-copy" onclick="copyPassword()">
-         Copiar
-    </button>
-    <span id="copyMsg">Senha copiada!</span>
-</div>
+    <label>
+      <input type="checkbox" id="maiusculas" checked> Letras MaiÃºsculas
+    </label>
+    <label>
+      <input type="checkbox" id="minusculas" checked> Letras MinÃºsculas
+    </label>
+    <label>
+      <input type="checkbox" id="numeros" checked> NÃºmeros
+    </label>
+    <label>
+      <input type="checkbox" id="simbolos" checked> SÃ­mbolos
+    </label>
 
-        <div>Tamanho: <strong id="lenValue">16</strong></div>
-        <input type="range" min="4" max="40" value="16" id="lenRange" oninput="updateLength()">
-        <label><input type="checkbox" id="chkUpper" checked> Letras Maiusculas (A-Z)</label><br>
-        <label><input type="checkbox" id="chkLower" checked> Letras Minusculas (a-z)</label><br>
-        <label><input type="checkbox" id="chkNumbers" checked> Numeros (0-9)</label><br>
-        <label><input type="checkbox" id="chkSymbols" checked> Simbolos (!@#$%)</label>
-        <button onclick="generatePassword()">Gerar Senha</button>
-    </div>
+    <button onclick="gerarSenha()">Gerar Senha</button>
 
-    <!-- SORTEADOR NOMES -->
-    <div class="container">
-        <h2>Sorteador de Nomes</h2>
-        <textarea id="nameList" placeholder="Digite um nome por linha..."></textarea>
-        <div class="result-box">
-            <span id="result" class="result">Aguardando...</span>
-        </div>
-        <button onclick="sortearNome()">Sortear Nome</button>
+    <div id="senha"></div>
+  </div>
 
-        <!-- Lista de sorteados -->
-        <div id="sorteados">
-            <strong>Sorteados:</strong>
-            <ul id="listaSorteados"></ul>
-        </div>
-    </div>
+  <script>
+    function gerarSenha() {
+      const tamanho = parseInt(document.getElementById("tamanho").value);
+      const usarMaiusculas = document.getElementById("maiusculas").checked;
+      const usarMinusculas = document.getElementById("minusculas").checked;
+      const usarNumeros = document.getElementById("numeros").checked;
+      const usarSimbolos = document.getElementById("simbolos").checked;
 
-</div>
+      let caracteres = "";
+      if (usarMaiusculas) caracteres += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      if (usarMinusculas) caracteres += "abcdefghijklmnopqrstuvwxyz";
+      if (usarNumeros) caracteres += "0123456789";
+      if (usarSimbolos) caracteres += "!@#$%^&*()_+-=[]{}|;:,.<>?";
 
-<!-- MODAL -->
-<div id="modal"></div>
-
-<script>
-/* Senha */
-function updateLength() { document.getElementById("lenValue").innerText = document.getElementById("lenRange").value; }
-
-function generatePassword() {
-    const upper="ABCDEFGHIJKLMNOPQRSTUVWXYZ", lower="abcdefghijklmnopqrstuvwxyz", numbers="0123456789", symbols="!@#$%&*?";
-    let chars="";
-    if(chkUpper.checked) chars+=upper;
-    if(chkLower.checked) chars+=lower;
-    if(chkNumbers.checked) chars+=numbers;
-    if(chkSymbols.checked) chars+=symbols;
-    if(chars===""){ document.getElementById("password").innerText="Selecione ao menos 1 opção!"; return; }
-    let length=document.getElementById("lenRange").value;
-    let senha="";
-    for(let i=0;i<length;i++){ senha+=chars[Math.floor(Math.random()*chars.length)]; }
-    document.getElementById("password").innerText=senha;
-}
-
-function copyPassword() {
-    const passwordText = document.getElementById("password").innerText;
-    if(passwordText === "Clique em gerar" || passwordText === "") return;
-
-    navigator.clipboard.writeText(passwordText).then(() => {
-        const msg = document.getElementById("copyMsg");
-        msg.style.opacity = 1; // mostra mensagem
-        setTimeout(() => { msg.style.opacity = 0; }, 1500); // desaparece depois de 1,5s
-    }).catch(err => {
-        console.error("Erro ao copiar: ", err);
-    });
-}
-
-
-/* Sorteio de nomes */
-let historicoSorteados = [];
-
-function sortearNome() {
-    const textarea = document.getElementById("nameList");
-    let linhas = textarea.value.split("\n").map(n => n.trim()).filter(n => n !== "" && !n.startsWith("(Sorteado)"));
-
-    if (linhas.length === 0) {
-        document.getElementById("result").innerText = "Nenhum nome disponível!";
+      if (caracteres === "") {
+        alert("Selecione pelo menos um tipo de caractere!");
         return;
+      }
+
+      let senha = "";
+      for (let i = 0; i < tamanho; i++) {
+        senha += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+      }
+
+      document.getElementById("senha").textContent = senha;
     }
-
-    const modal = document.getElementById("modal");
-    modal.style.display = "flex";
-    modal.innerHTML = "";
-
-    // Cria div central para o efeito HD
-    let slotDiv = document.createElement("div");
-    slotDiv.style.fontSize = "40px";
-    slotDiv.style.color = "#ffea00";
-    slotDiv.style.textShadow = "0 0 20px #ffea00, 0 0 40px #ffea00, 0 0 60px #ffea00";
-    slotDiv.style.fontWeight = "bold";
-    slotDiv.style.marginBottom = "20px";
-    modal.appendChild(slotDiv);
-
-    let totalFrames = 40; // Quantos nomes vão passar na animação
-    let frame = 0;
-
-    const sorteioInterval = setInterval(() => {
-        let nomeAleatorio = linhas[Math.floor(Math.random() * linhas.length)];
-        slotDiv.innerText = nomeAleatorio;
-
-        // Piscar de brilho
-        slotDiv.style.textShadow = `
-            0 0 ${Math.random()*20 + 10}px #ffea00, 
-            0 0 ${Math.random()*40 + 20}px #ffd700,
-            0 0 ${Math.random()*60 + 30}px #ffdd00
-        `;
-
-        frame++;
-        if(frame >= totalFrames) {
-            clearInterval(sorteioInterval);
-            
-            const finalIndex = Math.floor(Math.random() * linhas.length);
-            const final = linhas[finalIndex];
-            historicoSorteados.unshift(final);
-
-            // Nome final com zoom e glow
-            slotDiv.innerText = final;
-            slotDiv.style.fontSize = "60px";
-            slotDiv.style.color = "#ffea00";
-            slotDiv.style.textShadow = "0 0 20px #ffea00, 0 0 50px #ffea00, 0 0 100px #ffea00";
-            
-            // Chuva de partículas HD
-            for(let i=0;i<150;i++){
-                let bola = document.createElement("div");
-                bola.className = "bola";
-                bola.style.background = `hsl(${Math.random()*360},100%,50%)`;
-                bola.style.left = Math.random()*100 + "vw";
-                bola.style.width = bola.style.height = 5 + Math.random()*15 + "px";
-                bola.style.animationDuration = (2 + Math.random()*3) + "s";
-                modal.appendChild(bola);
-            }
-
-            // Atualiza lista de sorteados
-            const ul = document.getElementById("listaSorteados");
-            ul.innerHTML = "";
-            historicoSorteados.forEach((n,i)=>{
-                let li = document.createElement("li");
-                li.innerText = `${i+1}. ${n}`;
-                ul.appendChild(li);
-            });
-
-            // Atualiza textarea
-            let todasLinhas = textarea.value.split("\n");
-            for(let i=0;i<todasLinhas.length;i++){
-                if(todasLinhas[i].trim() === final){
-                    todasLinhas[i] = "(Sorteado) " + todasLinhas[i];
-                    break;
-                }
-            }
-            textarea.value = todasLinhas.join("\n");
-
-            setTimeout(()=>{
-                modal.style.display="none";
-                document.getElementById("result").innerText = final;
-            }, 4000);
-        }
-    }, 50); // velocidade da rolagem
-}
-
-</script>
-
+  </script>
 </body>
 </html>

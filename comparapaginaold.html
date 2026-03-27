@@ -291,6 +291,111 @@ body {
 }
 #modalAuth #btnAuthConfirmar { background:#00ffcc; color:#000; }
 #modalAuth #btnAuthCancelar { background:#ff5050; color:#fff; }
+
+#cardTopDiferencas {
+  position: fixed;
+  top: 10px;
+  right: 20px;
+  width: 220px;
+  padding: 15px;
+  border-radius: 15px;
+  background: linear-gradient(135deg,#ff004c,#ff9900);
+  color: #fff;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(255,80,0,0.6);
+  z-index: 1002;
+  transition: 0.3s;
+}
+
+#cardTopDiferencas:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 30px rgba(255,120,0,0.9);
+}
+
+#cardTopDiferencas strong {
+  display: block;
+  font-size: 28px;
+  margin-top: 8px;
+}
+
+#listaTop {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 10px;
+}
+
+.cardTop {
+  background: linear-gradient(145deg,#041024,#020c18);
+  border-radius: 15px;
+  padding: 15px;
+  box-shadow: 
+    0 0 10px rgba(0,255,200,0.2),
+    0 0 25px rgba(0,255,200,0.1) inset;
+  border: 1px solid rgba(0,255,200,0.2);
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+
+#modalTop {
+  z-index: 9999 !important;
+}
+
+.cardTop::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(120deg,transparent,rgba(0,255,200,0.2),transparent);
+  transition: 0.5s;
+}
+
+.cardTop:hover::before {
+  left: 100%;
+}
+
+.cardTop:hover {
+  transform: translateY(-5px) scale(1.03);
+  box-shadow: 
+    0 0 20px rgba(0,255,200,0.4),
+    0 0 40px rgba(0,255,200,0.2);
+}
+
+.cardTop .loja {
+  font-size: 14px;
+  color: #00ffcc;
+  margin-bottom: 5px;
+}
+
+.cardTop .serial {
+  font-size: 13px;
+  color: #ccc;
+  margin-bottom: 5px;
+}
+
+.cardTop .modelo {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.cardTop .diff {
+  font-size: 22px;
+  font-weight: bold;
+  color: #00ff99;
+  text-shadow: 0 0 10px #00ff99;
+}
+
+.cardTop.negativo .diff {
+  color: #ff5050;
+  text-shadow: 0 0 10px #ff0000;
+}
+
 </style>
 </head>
 <body>
@@ -320,7 +425,12 @@ body {
 <!-- Partículas de fundo -->
 <div id="particles-js" style="position:fixed; top:0; left:0; width:100%; height:100%; z-index:0;"></div>
 
+<div id="cardTopDiferencas" onclick="abrirTopDiferencas()">
+  🔥 Maiores Diferenças
+  <strong id="qtdTop">0</strong>
+</div>
 
+<button id="btnFecharTop">Fechar</button>
 
   <!-- Cards de totais -->
   <div id="totais">
@@ -383,6 +493,7 @@ particlesJS("particles-js", {
 let listaComparativa = [];
 let sortDirections = {};
 let authCallback = null;
+let topDiferencas = [];
 
 // =====================
 // Funções utilitárias
@@ -437,7 +548,12 @@ async function lerPlanilha(file, incluirLoja=false){
   });
 }
 
-
+function fecharTop(){
+  const modal = document.getElementById('modalTop');
+  if(modal){
+    modal.style.display = 'none';
+  }
+}
 
 // =====================
 // Eventos upload Mês Atual
@@ -515,6 +631,17 @@ async function compararPlanilhas(){
   ordenarLista('diff');
   mostrarResultados(listaComparativa);
   salvarComparacao();
+  calcularTopDiferencas();
+}
+
+function calcularTopDiferencas(){
+  // pegar apenas diferenças relevantes
+  topDiferencas = listaComparativa
+    .filter(l => l.diff > 0)
+    .sort((a,b) => b.diff - a.diff)
+    .slice(0, 10); // TOP 10
+
+  document.getElementById('qtdTop').innerText = topDiferencas.length;
 }
 
 // =====================
@@ -562,6 +689,19 @@ function mostrarResultados(lista){
   atualizarSetas();
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+  const btn = document.getElementById('btnFecharTop');
+  if(btn){
+    btn.addEventListener('click', fecharTop);
+  }
+});
+
+window.addEventListener('click', (e)=>{
+  const modal = document.getElementById('modalTop');
+  if(e.target === modal){
+    fecharTop();
+  }
+});
 
 // =====================
 // Ordenação
@@ -760,7 +900,43 @@ function verDetalhesHistorico(idx){
     alert(`Comparacao restaurada de ${reg.dataHora}`);
   });
 }
+
+function abrirTopDiferencas(){
+  const container = document.getElementById('listaTop');
+  container.innerHTML = '';
+
+  if(topDiferencas.length === 0){
+    container.innerHTML = '<p style="text-align:center;">Nenhuma diferença relevante</p>';
+  }
+
+  topDiferencas.forEach(l=>{
+    const card = document.createElement('div');
+    card.className = 'cardTop ' + (l.diff < 0 ? 'negativo' : '');
+
+    card.innerHTML = `
+      <div class="loja">🏪 ${l.loja}</div>
+      <div class="serial">🔢 ${l.serial}</div>
+      <div class="modelo">🖨️ ${l.modelo}</div>
+      <div class="diff">${l.diff}</div>
+    `;
+
+    container.appendChild(card);
+  });
+
+  document.getElementById('modalTop').style.display = 'block';
+}
+
 </script>
+
+<div id="modalTop" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:4000; overflow:auto;">
+  <div style="padding:20px;">
+    <h2 style="text-align:center; color:#ff9900;">🔥 Maiores Diferenças</h2>
+    <div id="listaTop"></div>
+    <div style="text-align:center; margin-top:20px;">
+      <button onclick="fecharTop()" style="padding:10px 20px; background:#ff5050; border:none; border-radius:8px; color:#fff;">Fechar</button>
+    </div>
+  </div>
+</div>
 
 </body>
 </html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Gestão de Termos de Comodato</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    margin:0;
+    padding:0;
+    color:#fff;
+}
+header {
+    background:#1f2937;
+    padding:20px;
+    text-align:center;
+    font-size:1.8em;
+    font-weight:700;
+    box-shadow:0 4px 6px rgba(0,0,0,0.3);
+}
+nav {
+    display:flex;
+    justify-content:center;
+    margin-top:15px;
+}
+nav button {
+    background:#00f0ff;
+    color:#000;
+    border:none;
+    margin:0 10px;
+    padding:10px 20px;
+    font-weight:700;
+    border-radius:10px;
+    cursor:pointer;
+    transition:0.3s;
+}
+nav button.active, nav button:hover { background:#00c8d6; }
+main {
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+form, table {
+    width:95%;
+    max-width:600px;
+    margin-top:20px;
+}
+form {
+    background: rgba(255,255,255,0.05);
+    padding:20px;
+    border-radius:15px;
+    box-shadow:0 8px 20px rgba(0,0,0,0.4);
+    backdrop-filter: blur(5px);
+}
+form h2 { text-align:center; margin-bottom:15px; color:#00f0ff; }
+form label { display:block; margin-top:10px; font-weight:600; }
+form input, form select {
+    width:100%; padding:8px 10px; margin-top:5px;
+    border-radius:8px; border:none; outline:none; font-size:1em;
+}
+form button { margin-top:20px; width:100%; padding:10px; background:#00f0ff; border:none; border-radius:10px; font-weight:700; cursor:pointer; color:#000; transition:0.3s; }
+form button:hover { background:#00c8d6; }
+
+table { border-collapse: collapse; margin-top:20px; }
+table th, table td { padding:12px; border-bottom:1px solid #00f0ff33; text-align:left; }
+table th { background:#111b26; }
+table tr:nth-child(even){ background: rgba(255,255,255,0.05);}
+.action-btn { margin-right:5px; padding:5px 10px; border:none; border-radius:5px; cursor:pointer; font-weight:600;}
+.edit-btn { background:#f0c000; color:#000; }
+.delete-btn { background:#f02c2c; color:#fff; }
+.hidden { display:none; }
+</style>
+</head>
+<body>
+
+<header>Gestão de Termos de Comodato - TI</header>
+
+<nav>
+    <button id="tabCadastro" class="active">Cadastro</button>
+    <button id="tabVisualizacao">Termos Cadastrados</button>
+</nav>
+
+<main>
+    <!-- Tela Cadastro -->
+    <div id="cadastroTela">
+        <form id="termoForm">
+            <h2>Registrar Termo</h2>
+            <label>Nome do Colaborador</label>
+            <input type="text" id="nome" required>
+
+            <label>Loja/Regional</label>
+            <input type="text" id="loja" required>
+
+            <label>Sigla da Loja</label>
+            <input type="text" id="sigla" required>
+
+            <label>ID do Chamado</label>
+            <input type="text" id="id_chamado" required>
+
+            <label>Tipo de Equipamento</label>
+            <select id="tipo" required>
+                <option value="">Selecione</option>
+                <option value="Notebook">Notebook</option>
+                <option value="Computador">Computador</option>
+                <option value="Monitor">Monitor</option>
+            </select>
+
+            <label>Data do Comodato</label>
+            <input type="date" id="data" required>
+
+            <button type="submit">Salvar Termo</button>
+        </form>
+    </div>
+
+    <!-- Tela Visualização -->
+    <div id="visualizacaoTela" class="hidden">
+        <table>
+            <thead>
+                <tr>
+                    <th>Nome</th>
+                    <th>Loja/Regional</th>
+                    <th>Sigla</th>
+                    <th>ID Chamado</th>
+                    <th>Equipamento</th>
+                    <th>Data</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="termosTable"></tbody>
+        </table>
+    </div>
+</main>
+
+<script>
+// Controle das abas
+const cadastroBtn = document.getElementById('tabCadastro');
+const visualizacaoBtn = document.getElementById('tabVisualizacao');
+const cadastroTela = document.getElementById('cadastroTela');
+const visualizacaoTela = document.getElementById('visualizacaoTela');
+
+cadastroBtn.addEventListener('click', () => {
+    cadastroTela.classList.remove('hidden');
+    visualizacaoTela.classList.add('hidden');
+    cadastroBtn.classList.add('active');
+    visualizacaoBtn.classList.remove('active');
+});
+
+visualizacaoBtn.addEventListener('click', () => {
+    cadastroTela.classList.add('hidden');
+    visualizacaoTela.classList.remove('hidden');
+    visualizacaoBtn.classList.add('active');
+    cadastroBtn.classList.remove('active');
+    renderTable();
+});
+
+// Dados armazenados
+let termos = JSON.parse(localStorage.getItem('termos')) || [];
+
+// Cadastro
+document.getElementById('termoForm').addEventListener('submit', function(event){
+    event.preventDefault();
+    const nome = document.getElementById('nome').value;
+    const loja = document.getElementById('loja').value;
+    const sigla = document.getElementById('sigla').value;
+    const id_chamado = document.getElementById('id_chamado').value;
+    const tipo = document.getElementById('tipo').value;
+    const data = document.getElementById('data').value;
+
+    termos.push({nome, loja, sigla, id_chamado, tipo, data});
+    localStorage.setItem('termos', JSON.stringify(termos));
+    this.reset();
+    alert('Termo cadastrado com sucesso!');
+});
+
+// Visualização
+function renderTable(){
+    const tbody = document.getElementById('termosTable');
+    tbody.innerHTML = '';
+    termos.forEach((termo, index)=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${termo.nome}</td>
+            <td>${termo.loja}</td>
+            <td>${termo.sigla}</td>
+            <td>${termo.id_chamado}</td>
+            <td>${termo.tipo}</td>
+            <td>${termo.data}</td>
+            <td>
+                <button class="action-btn delete-btn" onclick="deleteTermo(${index})">Excluir</button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function deleteTermo(index){
+    if(confirm('Deseja realmente excluir este termo?')){
+        termos.splice(index,1);
+        localStorage.setItem('termos', JSON.stringify(termos));
+        renderTable();
+    }
+}
+</script>
+
+</body>
+</html>

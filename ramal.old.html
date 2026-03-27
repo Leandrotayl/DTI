@@ -120,6 +120,7 @@ main{ padding:20px; }
 }
 
 
+
 /* CARD */
 .card{
   background:var(--glass);
@@ -165,7 +166,7 @@ main{ padding:20px; }
 }
 
 .ramal-box.copiado::after{
-  content:"? COPIADO!";
+  content:" COPIADO!";
   background:var(--warn);
   color:#000;
   font-weight:600;
@@ -196,7 +197,7 @@ main{ padding:20px; }
 
   transition:opacity .3s ease, transform .3s ease;
 
-  z-index:2147483647; /* for�a ficar acima de tudo */
+  z-index:2147483647; /* força ficar acima de tudo */
   pointer-events:none;
 }
 
@@ -317,8 +318,92 @@ header{
 }
 #btnMenu:hover { transform: scale(1.05); background: linear-gradient(145deg,#ff0000,#1a1aff); color:#fff; box-shadow:0 0 25px #ff4d4d,0 0 50px #ff4d4d inset; }
 
+.foto-box{
+  position:relative;
+  width:56px;
+  height:56px;
+}
 
-/* TOAST DIN�MICO */
+.foto-box img{
+  width:56px;
+  height:56px;
+  border-radius:50%;
+  border:2px solid var(--neon);
+}
+
+.badge-ferias{
+  position:absolute;
+  bottom:-4px;
+  right:-10px;
+
+  background:linear-gradient(135deg,#ffcc00,#ff8800);
+  color:#000;
+
+  font-size:.55rem;
+  font-weight:700;
+
+  padding:2px 6px;
+  border-radius:6px;
+
+  box-shadow:0 0 10px rgba(255,204,0,.8);
+
+  font-family:'Orbitron';
+  letter-spacing:1px;
+}
+
+.modalFerias{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+
+  background:rgba(0,0,0,.8);
+
+  display:none;
+  align-items:center;
+  justify-content:center;
+
+  z-index:2000;
+}
+
+.conteudoFerias{
+  background:#0b1220;
+  padding:30px;
+  border-radius:15px;
+  width:320px;
+
+  border:1px solid #00ffff;
+  box-shadow:0 0 20px #00ffff;
+}
+
+.conteudoFerias h2{
+  margin-top:0;
+  color:#00ffff;
+  text-align:center;
+}
+
+.conteudoFerias button{
+  margin-top:20px;
+  width:100%;
+  padding:10px;
+
+  border:none;
+  border-radius:8px;
+
+  background:#00ffff;
+  color:#000;
+
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.nomeFerias{
+  padding:8px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+/* TOAST DINÂMICO */
 .toast{
   position:fixed;
   min-width:260px;
@@ -419,6 +504,55 @@ header{
   to{ transform:translateX(100%); }
 }
 
+#painelFerias .painel-ferias-texto {
+  text-align: center;      /* centraliza horizontalmente */
+  display: flex;
+  flex-direction: column;  /* coloca texto em coluna */
+  align-items: center;     /* centraliza o conteúdo */
+  gap: 2px;                /* espaçamento entre texto e número */
+}
+
+#painelFerias strong {
+  font-size: 1.2rem;       /* aumenta um pouco a quantidade */
+}
+
+#painelFerias{
+  position:fixed;
+  top:80px;
+  right:20px;
+
+  display:flex;
+  align-items:center;
+  gap:10px;
+
+  background:linear-gradient(135deg,#ffcc00,#ff8800);
+  color:#000;
+
+  padding:12px 16px;
+  border-radius:14px;
+
+  font-family:'Orbitron';
+
+  box-shadow:
+    0 0 20px rgba(255,204,0,.8),
+    0 0 40px rgba(255,136,0,.4);
+
+  z-index:999;
+}
+
+#painelFerias span{
+  font-size:1.4rem;
+}
+
+#painelFerias strong{
+  font-size:1.1rem;
+  display:block;
+}
+
+#painelFerias p{
+  font-size:.6rem;
+  margin:0;
+}
 
 /* BADGE */
 .badge{
@@ -474,6 +608,22 @@ footer{
 
 <button id="btnMenu">MENU PRINCIPAL</button>
 
+<div id="painelFerias" onclick="mostrarFerias()">
+  <div class="painel-ferias-texto">
+    <p>De Ferias</p>
+    <strong id="totalFerias">0</strong>
+  </div>
+</div>
+
+<div id="listaFerias" class="modalFerias">
+  <div class="conteudoFerias">
+    <h2>Colaboradores de Ferias </h2>
+
+    <div id="nomesFerias"></div>
+
+    <button onclick="fecharFerias()">Fechar</button>
+  </div>
+</div>
 
 <main>
   <div class="grid" id="lista"></div>
@@ -481,10 +631,9 @@ footer{
 
 <script>
 const avatarPadrao = "https://i.ibb.co/7pBv4yF/user.png";
-
 const colaboradores=[
  { nome:"Leandro",	 	ramal:"868642", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/leandro.png" },
- { nome:"Lemos", 	 	ramal:"868679", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/lemos.png" },
+ { nome:"Lemos", 	 	ramal:"868679", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/lemos.png",ferias:true },
  { nome:"Anna Braz",	  	ramal:"868636",	 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/anna.png" },
  { nome:"Didi", 	 	ramal:"868678", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/didi.png" },
  { nome:"Rodrigo", 	 	ramal:"868684", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/rodrigo.png" },
@@ -493,6 +642,7 @@ const colaboradores=[
  { nome:"Joao Vitor", 		ramal:"868687", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/joao-vitor.png" },
  { nome:"Marcos Victor",	ramal:"868612", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/marcos.png" },
  { nome:"Adriel", 		ramal:"868651", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/adriel.png" },
+ { nome:"Heitor Gusmam",	ramal:"868633", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/heitor.png" },
  { nome:"Altemir", 		ramal:"868635", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/altemir.png" },
  { nome:"Polenilson", 		ramal:"868671", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
  { nome:"Francisco", 		ramal:"868658", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
@@ -501,7 +651,7 @@ const colaboradores=[
  { nome:"Miriam", 		ramal:"868637", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
  { nome:"Natur", 		ramal:"868657", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
  { nome:"Anderson", 		ramal:"868664", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
- { nome:"Cassiano", 		ramal:"868648", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/cassiano.png" },
+ { nome:"Cassiano", 		ramal:"868648", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/cassiano.png",ferias:true },
  { nome:"Danielon", 		ramal:"868693", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/danielson.png" },
  { nome:"Everaldo", 		ramal:"868645", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/everaldo.png" },
  { nome:"Gilvan", 		ramal:"868683", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/gilvan.png" },
@@ -510,23 +660,40 @@ const colaboradores=[
  { nome:"Jonatas", 		ramal:"868631", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/jonatas.png" },
  { nome:"Joseph", 		ramal:"868625", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/joseph.png" },
  { nome:"Kassio", 		ramal:"868627", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/kassio.png" },
+ { nome:"Sousa", 		ramal:"868634", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/Sousa.png" },
  { nome:"Lucas Helliab", 	ramal:"868685", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/lucas.png" },
- { nome:"Matheus", 		ramal:"868632", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/matheus.png" },
+ { nome:"Matheus", 		ramal:"868632", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/matheus.png",ferias:true },
  { nome:"Reinaldo", 		ramal:"868639", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/reinaldo.png" },
  { nome:"Thiago", 		ramal:"868649", 	setor:"Equipe de Infra", 	foto:"http://172.16.2.7/DTI/Fotos/thiago.png" },
- { nome:"Erivan Veras", 	ramal:"868672 ", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/erivan.png" },
+ { nome:"Erivan Veras", 	ramal:"868672 ", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/erivan.png",ferias:true },
  { nome:"Janaelson", 		ramal:"868648 ", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/janaelson.png" },
- { nome:"David", 		ramal:"868688 ", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/david.png" },
+ { nome:"David", 		ramal:"868688 ", 	setor:"Equipe de Suporte", 	foto:"http://172.16.2.7/DTI/Fotos/David.png" },
 
- { nome:"Fabio Muniz", 		ramal:"868618", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
- { nome:"Erisvaldo", 		ramal:"868696", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Hilbert", 		ramal:"868695", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Robert", 		ramal:"868617", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Cleidimar", 		ramal:"868614", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Sthoteles", 		ramal:"868604", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
  { nome:"Genesio", 		ramal:"868624", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
- { nome:"Ivan", 		ramal:"868626", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
- { nome:"Ivan", 		ramal:"868626", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
- { nome:"Ivan", 		ramal:"868626", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Vicente", 		ramal:"868622", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Ludgerio", 		ramal:"868605", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Luizao", 		ramal:"868611", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
  { nome:"Victoria", 		ramal:"868615", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
- { nome:"Sergio Mendeiros", 	ramal:"868653", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Jeremias", 		ramal:"Sem Ramal", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Fabio Muniz", 		ramal:"868618", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Fabio Gomes", 		ramal:"868619", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
  { nome:"Thiago Borges", 	ramal:"868606", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Orlando", 		ramal:"868609", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Douglas", 		ramal:"868623", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Sergio Mendeiros", 	ramal:"868653", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Gilmar", 		ramal:"868613", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Paulo", 		ramal:"868621", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"De Lis", 		ramal:"868616", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Daniel", 		ramal:"868654", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Erisvaldo", 		ramal:"868696", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Wellignton", 		ramal:"868662", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+
+ { nome:"Ivan", 		ramal:"868626", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
+ { nome:"Heber", 		ramal:"868677", 	setor:"Equipe de Desenvolvimento", 	foto:"http://172.16.2.7/DTI/Fotos/dev.png" },
 
 
 
@@ -548,6 +715,8 @@ function render(filtro=""){
   let total=0;
   const setores={};
 
+  let totalFerias = colaboradores.filter(c => c.ferias).length;
+  document.getElementById("totalFerias").textContent = totalFerias;
   colaboradores
     .filter(c=>isNumero
       ? c.ramal.includes(busca)
@@ -572,7 +741,10 @@ function render(filtro=""){
       const card=document.createElement("div");
       card.className="card"+(match?" match":"");
       card.innerHTML=`
-        <img src="${c.foto}" onerror="this.src='${avatarPadrao}'">
+        <div class="foto-box">
+  <img src="${c.foto}" onerror="this.src='${avatarPadrao}'">
+  ${c.ferias ? '<span class="badge-ferias">FERIAS</span>' : ''}
+</div>
         <div>
           <h3>${destacar(c.nome,busca)}</h3>
           <div class="ramal-box" data-setor="${c.setor}" onclick="copiarRamal(this,'${c.ramal}')">
@@ -598,7 +770,7 @@ function copiarRamal(el, ramal){
   document.execCommand("copy");
   document.body.removeChild(temp);
 
-  /* --- flash 1x no n�mero --- */
+  /* --- flash 1x no número --- */
   const numero = el.querySelector(".ramal-numero");
   numero.classList.remove("flash");
   void numero.offsetWidth;
@@ -608,7 +780,7 @@ function copiarRamal(el, ramal){
   el.classList.add("copiado");
   setTimeout(()=>el.classList.remove("copiado"),800);
 
-  /* --- toast pr�ximo ao card --- */
+  /* --- toast próximo ao card --- */
   const toast = document.getElementById("toast");
   const setor = el.dataset.setor.toLowerCase();
 
@@ -620,7 +792,7 @@ function copiarRamal(el, ramal){
   toast.style.top  = (rect.top - 50) + "px";
   toast.style.left = (rect.left + rect.width/2 - toast.offsetWidth/2) + "px";
 
-  toast.textContent = `RAMAL ${ramal} COPIADO`;
+  toast.textContent = `RAMAL COPIADO COM SUCESSO`;
 
   setTimeout(()=>toast.classList.remove("show"),4500);
 }
@@ -658,7 +830,38 @@ document.getElementById("search").addEventListener("blur",()=>{
   document.body.style.backdropFilter="";
 });
 
+function mostrarFerias() {
+  const lista = document.getElementById("nomesFerias");
+  lista.innerHTML = "";
 
+  const ferias = colaboradores.filter(c => c.ferias);
+
+  if (ferias.length === 0) {
+    lista.innerHTML = "<p>Ninguém está de férias</p>";
+  }
+
+  ferias.forEach(c => {
+    lista.innerHTML += `
+      <div class="nomeFerias" style="display:flex; align-items:center; gap:10px; padding:6px 0;">
+         <img src="${c.foto}" onerror="this.src='${avatarPadrao}'" style="width:40px; height:40px; border-radius:50%; border:1px solid #00ffff;">
+         <span>${c.nome}</span>
+      </div>
+    `;
+  });
+
+  document.getElementById("listaFerias").style.display = "flex";
+}
+
+function fecharFerias() {
+  document.getElementById("listaFerias").style.display = "none";
+  // Fecha o modal ao clicar fora do conteúdo
+const listaFerias = document.getElementById("listaFerias");
+listaFerias.addEventListener("click", (e) => {
+  if (e.target === listaFerias) {
+    fecharFerias();
+  }
+});
+}
 
 document.getElementById("search").addEventListener("input",e=>render(e.target.value));
 document.addEventListener("keydown",e=>{

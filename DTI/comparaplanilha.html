@@ -1,0 +1,909 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Comparador Serial</title>
+
+<!-- SheetJS para gerar XLSX -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<!-- Fonte e estilo -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#040d18;
+  --glass:rgba(255,255,255,0.04);
+  --muted:rgba(255,255,255,0.15);
+  --accent:#00ffd6;
+  --neon1:#00ffd6;
+  --neon2:#00a6ff;
+  --danger:#ff004c;
+}
+*{box-sizing:border-box}
+body{
+  font-family:'Inter',system-ui,Arial;
+  background:radial-gradient(circle at 20% 20%,#02101a,#040d18 70%);
+  color:#e6fff9;
+  margin:0;padding:28px;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* Header */
+header{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:12px;
+  margin-bottom:22px;
+  text-align:center;
+}
+h1{
+  font-size:22px;margin:0;color:var(--accent);
+  letter-spacing:1px;
+  text-shadow:0 0 8px var(--neon1),0 0 16px var(--neon2);
+}
+header .subtitle{
+  font-size:12px;color:#9fe;padding-top:6px;
+}
+
+/* Inputs e botões */
+input[type=file], .search, .select{
+  padding:10px 14px;border-radius:12px;
+  background:var(--glass);
+  border:1px solid var(--muted);
+  color:#e6fff9;
+  transition:all .25s;
+}
+.search:focus,.select:focus,input[type=file]:focus{
+  outline:none;
+  border-color:var(--accent);
+  box-shadow:0 0 12px var(--accent);
+}
+.btn{
+  display:inline-flex;gap:8px;align-items:center;
+  padding:10px 16px;border-radius:12px;
+  border:0;background:linear-gradient(90deg,var(--neon1),var(--neon2));
+  color:#001;font-weight:700;cursor:pointer;
+  box-shadow:0 0 15px var(--neon1),0 0 30px var(--neon2);
+  transition:transform .2s,box-shadow .2s;
+}
+.btn:hover{
+  transform:translateY(-2px) scale(1.05);
+}
+.btn.secondary{
+  background:linear-gradient(90deg,#ffd66b,#ff6b9a);color:#000;
+}
+
+/* Botão de pesquisa robusto neon */
+.searchBtn{
+  font-size:16px;
+  font-weight:900;
+  border-radius:18px;
+  padding:14px 28px;
+  background: linear-gradient(90deg,#00ffd6,#00a6ff);
+  color:#001;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  box-shadow:0 0 15px #00ffd6,0 0 30px #00a6ff,0 0 60px #00a6ff inset;
+  border:2px solid #00ffd6;
+  cursor:pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.searchBtn:hover{
+  transform: scale(1.1) translateY(-2px);
+  box-shadow:0 0 30px #00ffd6,0 0 60px #00a6ff,0 0 90px #00a6ff inset;
+}
+.searchBtn:active{
+  transform: scale(0.98);
+  box-shadow:0 0 15px #00ffd6,0 0 30px #00a6ff inset;
+}
+
+
+
+/* Cards */
+#cards{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(60px,1fr));
+  gap:8px;
+  margin:20px 0;
+}
+.card{
+  padding:6px;
+  border-radius:10px;
+  background:linear-gradient(135deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02));
+  border:1px solid rgba(255,255,255,0.08);
+  backdrop-filter:blur(6px);
+  box-shadow:0 3px 8px rgba(0,0,0,0.5);
+  transition:transform .25s,box-shadow .25s;
+  cursor:pointer;
+}
+.card .count{font-size:28px;font-weight:900;color:var(--accent);text-shadow:0 0 8px var(--accent);}
+.card .title{font-weight:700;color:#fff;font-size:15px;text-shadow:0 0 6px var(--neon2);}
+.card:hover{transform:translateY(-4px) scale(1.05) rotateX(6deg) rotateY(-6deg);box-shadow:0 0 25px var(--neon1),0 0 50px var(--neon2);}
+
+/* Summary */
+.summary{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.summary .stat{background:var(--glass);padding:12px 16px;border-radius:12px;border:1px solid var(--muted);font-weight:700;color:#bff;box-shadow:0 0 10px rgba(0,255,255,0.15);}
+
+/* Tabela */
+.table-wrap{width:100%;overflow:auto;border-radius:14px;padding:14px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.08);}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+th,td{padding:12px;border-bottom:1px solid rgba(255,255,255,0.05);text-align:center;white-space:nowrap;}
+th{
+  position:sticky;top:0;
+  background:linear-gradient(90deg,rgba(0,255,255,0.1),rgba(0,150,255,0.15));
+  color:#fff;font-weight:800;
+  border-bottom:2px solid var(--accent);
+  text-shadow:0 0 6px var(--neon1);
+}
+tr:nth-child(even) td{background:rgba(255,255,255,0.02);}
+td.serial{font-weight:800;color:#fff;text-align:left;text-shadow:0 0 6px var(--neon2);}
+td.lojas{font-size:13px;color:#9ef;text-align:left;max-width:300px;}
+td.present{background:linear-gradient(135deg,#0fff9d44,#00ffb844);color:#002;font-weight:700;}
+td.absent{background:linear-gradient(135deg,#ff5b7b44,#ffb46b44);color:#fff;font-weight:700;}
+
+/* Adicione ao seu <style> */
+#summaryBox{
+  position:fixed;
+  top:28px;
+  right:28px;
+  background:rgba(0,0,0,0.7);
+  padding:20px;
+  border-radius:18px;
+  border:1px solid var(--accent);
+  box-shadow:0 0 20px var(--neon1),0 0 40px var(--neon2);
+  color:#fff;
+  font-weight:700;
+  min-width:220px;
+  z-index:999;
+}
+#summaryBox h3{
+  margin-top:0;
+  font-size:16px;
+  color:var(--accent);
+  text-shadow:0 0 8px var(--neon1);
+  text-align:center;
+}
+#summaryBox div{
+  margin:6px 0;
+  font-size:14px;
+}
+#summaryBox span{
+  color:#00ffd6;
+  font-weight:800;
+}
+
+
+
+#summaryModelBox{
+  position: fixed;
+  top: 28px;          /* coloca ao lado do resumo geral */
+  right: 280px;       /* ajuste para ficar ao lado */
+  background: rgba(0,0,0,0.7);
+  padding: 20px;
+  border-radius: 18px;
+  border: 1px solid var(--accent);
+  box-shadow: 0 0 20px var(--neon1), 0 0 40px var(--neon2);
+  color: #fff;
+  font-weight: 700;
+  min-width: 150px;
+  z-index: 999;
+}
+#summaryModelBox h3{
+  margin-top:0;
+  font-size:16px;
+  color:var(--accent);
+  text-shadow:0 0 8px var(--neon1);
+  text-align:center;
+}
+#summaryModelBox div{
+  margin:6px 0;
+  font-size:14px;
+}
+#summaryModelBox span{
+  color:#00ffd6;
+  font-weight:800;
+}
+
+
+
+
+
+/* Modal */
+#serialModal{
+  display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+  background:rgba(0,0,0,0.85);
+  justify-content:center;align-items:center;
+  z-index:9999;
+}
+#serialModalContent{
+  background:rgba(10,20,40,0.8);
+  padding:26px;
+  border-radius:18px;
+  max-width:460px;width:90%;
+  color:#fff;position:relative;
+  backdrop-filter:blur(12px);
+  border:1px solid var(--accent);
+  box-shadow:0 0 25px var(--neon1),0 0 50px var(--neon2);
+  animation:popIn .35s ease;
+}
+
+#serialList .serial-item {
+  display: block;
+  padding: 8px 12px;
+  margin-bottom: 6px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.07);
+  color: #fff;
+  cursor: pointer;
+  user-select: text; /* ?? permite selecionar e copiar */
+  transition: background .25s, transform .2s;
+}
+#serialList .serial-item:hover {
+  background: rgba(0,255,255,0.25);
+  transform: translateX(6px);
+}
+
+
+#serialModalContent h3{margin-bottom:12px;font-size:18px;color:var(--accent);text-shadow:0 0 8px var(--neon1);}
+#serialList button{
+  display:block;width:100%;text-align:left;padding:8px 12px;margin-bottom:6px;
+  border:none;border-radius:8px;background:rgba(255,255,255,0.07);color:#fff;cursor:pointer;
+  transition:background .25s,transform .2s;
+}
+#serialList button:hover{background:rgba(0,255,255,0.25);transform:translateX(6px);}
+#copyAllBtn{padding:10px 14px;border-radius:10px;border:none;background:linear-gradient(90deg,var(--neon1),var(--neon2));color:#001;font-weight:700;cursor:pointer;margin-bottom:12px;box-shadow:0 0 15px var(--neon1);}
+#closeModal{position:absolute;top:8px;right:10px;background:none;border:none;color:#fff;font-size:20px;cursor:pointer;text-shadow:0 0 6px var(--danger);}
+
+#highlightResult {
+  display: flex;
+  flex-direction: column; /* permite multiplas linhas */
+  gap: 8px;
+  margin: 12px auto;
+  max-width: 100%;
+}
+
+/* BOTÃO PARA VOLTAR MENU PRINCIPAL */
+/* Botão MENU PRINCIPAL reposicionado no topo da lateral */
+#btnMenu {
+  position: fixed;
+  top: 4px;       /* distancia do topo */
+  left: 160px;      /* fixa na lateral esquerda */
+  width: 240px;    /* largura consistente com o painel lateral */
+  padding: 15px 0;
+  background: linear-gradient(135deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 3px solid #ff0000;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+  transition: all 0.3s ease-in-out;
+  z-index: 1001;   /* acima do painel lateral */
+}
+
+#btnMenu:hover {
+  background: linear-gradient(145deg,#ff0000,#1a1aff);
+  color: #fff;
+  box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
+  transform: scale(1.05);
+}
+
+
+/* Painel de ações */
+#actionPanel{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:12px;
+  padding:20px;
+  margin:20px auto;
+  max-width:700px;
+  border-radius:18px;
+  border:2px solid var(--accent);
+  background:rgba(0,0,0,0.7);
+  box-shadow:0 0 20px var(--neon1),0 0 40px var(--neon2);
+  backdrop-filter:blur(12px);
+}
+
+/* Ajuste nos botões dentro do painel para ficarem uniformes */
+#actionPanel .btn, #actionPanel input[type=file]{
+  flex:1 1 120px;
+  min-width:120px;
+  text-align:center;
+}
+
+
+/* Botão customizado para upload de arquivos */
+.fileBtn{
+  background: linear-gradient(90deg,#00ffd6,#00a6ff);
+  color:#001;
+  font-weight:700;
+  padding:12px 24px;
+  border-radius:16px;
+  cursor:pointer;
+  box-shadow:0 0 15px #00ffd6,0 0 30px #00a6ff;
+  transition: transform .2s, box-shadow .2s;
+  text-align:center;
+  display:inline-block;
+}
+.fileBtn:hover{
+  transform:scale(1.05) translateY(-2px);
+  box-shadow:0 0 25px #00ffd6,0 0 50px #00a6ff,0 0 75px #00a6ff;
+}
+.fileBtn:active{
+  transform:scale(0.97);
+}
+
+
+/* BOTÃO PARA LIMPAR A PAGINA */
+#btnReset {
+  background: linear-gradient(145deg,#ff0055,#ff00aa);
+  color: #fff;
+  border: 2px solid #ff00aa;
+  border-radius: 50px;
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  text-shadow: 0 0 8px #ff00aa, 0 0 20px #ff00aa;
+  box-shadow: 0 0 15px #ff00aa, 0 0 40px #ff00aa inset;
+  transition: all 0.3s ease-in-out;
+}
+#btnReset:hover {
+  background: linear-gradient(145deg,#ff00ff,#ff3399);
+  box-shadow: 0 0 25px #ff33aa, 0 0 50px #ff33aa inset;
+  transform: scale(1.05);
+}
+
+
+
+
+.result-line {
+  display: flex;
+  flex-wrap: nowrap; /* cards sempre em linha */
+  gap: 8px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding-bottom: 6px;
+}
+
+#highlightResult .result-card {
+  flex: 0 0 140px; /* largura fixa */
+  background: rgba(0, 255, 214, 0.1);
+  border: 1px solid var(--accent);
+  border-radius: 12px;
+  padding: 10px 8px;
+  text-align: center;
+  color: #00ffd6;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(0, 255, 214, 0.3);
+  cursor: pointer;
+}
+
+#highlightResult .result-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(0, 255, 214, 0.5);
+}
+
+#highlightResult .result-card small {
+  display: block;
+  font-size: 11px;
+  margin-top: 4px;
+  color: #bff;
+}
+
+
+@keyframes popIn{from{transform:scale(0.7);opacity:0;}to{transform:scale(1);opacity:1;}}
+
+/* Small screens */
+@media (max-width:900px){
+  .card .count{font-size:18px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1> Comparador Seriais (A:Loja / G:Serial)</h1>
+  <div class="subtitle">Carregue varias planilhas; o comparador usa Coluna A (Loja) e Coluna G (Serial)</div>
+
+
+
+
+ <!-- Container de resumos -->
+<div id="summaryContainer" style="display:flex;gap:20px;flex-wrap:wrap;justify-content:flex-end;margin-bottom:20px;">
+  <div id="summaryBox">
+    <h3>Resumo Geral</h3>
+    <div id="summaryStats">
+      <div>Total Lojas: <span id="totalLoja">0</span></div>
+      <div>Total Impressoras: <span id="totalImpressora">0</span></div>
+      <div>Seriais Repetidos: <span id="serialRepetido">0</span></div>
+      <div>Impressoras Repetidas: <span id="impRepetida">0</span></div>
+    </div>
+  </div>
+
+  <div id="summaryModelBox">
+  <h3>Resumo por Modelo</h3>
+  <div id="summaryModelStats">
+    <div>Epson (XB): <span id="totalEpson">0</span></div>
+    <div>Canon (KN/Z): <span id="totalCanon">0</span></div>
+    <div>Xerox 3330 (9BR): <span id="totalXerox3330">0</span></div>
+    <div>Xerox 3335 (5BT): <span id="totalXerox3335">0</span></div>
+    <div>Outros: <span id="totalOutros">0</span></div>
+  </div>
+</div>
+
+
+<div style="text-align:center; margin-bottom:16px;">
+  <button id="btnReset">ATUALIZAR / LIMPAR TUDO</button>
+</div>
+
+
+
+<!-- Quadro de Pesquisa -->
+<div id="searchPanel" style="
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    gap:10px;
+    padding:20px;
+    border-radius:20px;
+    background: rgba(0,0,0,0.6);
+    border:2px solid #00ffd6;
+    box-shadow: 0 0 20px #00ffd6, 0 0 40px #00a6ff;
+    max-width:520px;
+    margin:20px auto;
+    flex-wrap:wrap;
+">
+  <input id="search" class="search" placeholder="  Buscar Numero Serie " 
+         style="flex:1;min-width:200px;padding:14px 20px;font-size:16px;border-radius:16px;text-align:left;
+                border:1px solid rgba(255,255,255,0.2);background:rgba(255,255,255,0.05);color:#00ffd6;">
+  <button id="searchBtn" class="btn searchBtn" onclick="renderTable()">Pesquisar</button>
+</div>
+
+<button id="btnMenu">MENU PRINCIPAL</button>
+
+
+
+  <!-- Nova area de resultado -->
+  <div id="highlightResult"></div>
+
+  <div id="actionPanel">
+  <label for="files" class="btn fileBtn"> Escolher Arquivos</label>
+  <input id="files" type="file" multiple accept=".xlsx,.xls" style="display:none;" />
+
+  <div id="selectedFiles" style="width:100%;text-align:center;color:#00ffd6;font-weight:700;margin-top:10px;"></div>
+
+  <button class="btn" onclick="processFiles()">Comparar</button>
+  <button class="btn secondary" onclick="downloadXlsx()">Baixar XLSX</button>
+  <button class="btn" onclick="exportCSV()">CSV</button>
+  <button class="btn" onclick="copyResults()">Copiar</button>
+</div>
+
+
+
+</header>
+
+<!-- Cards com contagem por loja -->
+<section id="cards" aria-live="polite"></section>
+
+<!-- Resumo -->
+<div class="summary" id="summaryRow"></div>
+
+<!-- Tabela -->
+<div class="table-wrap">
+  <table id="resultTable" role="table">
+    <thead id="thead"></thead>
+    <tbody id="tbody"></tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div id="serialModal">
+  <div id="serialModalContent">
+    <h3 id="modalTitle"></h3>
+    <button id="copyAllBtn"> Copiar todos</button>
+    <div id="serialList" style="max-height:200px;overflow:auto;border-top:1px solid rgba(255,255,255,0.1);padding-top:10px;"></div>
+    <button id="closeModal">Fechar</button>
+  </div>
+</div>
+
+
+
+<script>
+let stored = {};
+let allEntries = [];
+let uniqueSerials = [];
+let fileList = [];
+
+
+// Fun  o para atualizar o quadro de resumo
+function updateSummaryBox(filteredSerial = null) {
+  const serialsToConsider = filteredSerial ? filteredSerial : allEntries;
+
+  let totalEpson = 0, totalCanon = 0, totalXerox3330 = 0, totalXerox3335 = 0, totalOutros = 0;
+
+  serialsToConsider.forEach(e => {
+    const s = e.serial.toUpperCase();
+    if (s.startsWith('XB')) totalEpson++;
+    else if (s.startsWith('KN') || s.startsWith('Z')) totalCanon++;
+    else if (s.startsWith('9BR')) totalXerox3330++;
+    else if (s.startsWith('5BT')) totalXerox3335++;
+    else totalOutros++;
+  });
+
+  document.getElementById('totalEpson').textContent = totalEpson;
+  document.getElementById('totalCanon').textContent = totalCanon;
+  document.getElementById('totalXerox3330').textContent = totalXerox3330;
+  document.getElementById('totalXerox3335').textContent = totalXerox3335;
+  document.getElementById('totalOutros').textContent = totalOutros;
+
+  // Resumo geral
+  const lojasSet = new Set(serialsToConsider.map(e => e.loja).filter(l => l));
+  document.getElementById('totalLoja').textContent = lojasSet.size;
+  document.getElementById('totalImpressora').textContent = serialsToConsider.length;
+
+  const serialCount = {};
+  serialsToConsider.forEach(e => { serialCount[e.serial] = (serialCount[e.serial] || 0) + 1; });
+  document.getElementById('serialRepetido').textContent = Object.values(serialCount).filter(v => v>1).length;
+
+  const impMap = {};
+  serialsToConsider.forEach(e => { const key = e.loja + '|' + e.serial; impMap[key] = (impMap[key] || 0) + 1; });
+  document.getElementById('impRepetida').textContent = Object.values(impMap).filter(v => v>1).length;
+}
+
+
+
+const safe = v => (v===undefined || v===null) ? '' : String(v).trim();
+
+async function processFiles(){
+  const input = document.getElementById('files');
+  if(!input.files.length){ alert('Selecione arquivos .xlsx/.xls'); return; }
+
+  stored = {}; allEntries = []; uniqueSerials = []; fileList = [];
+  document.getElementById('cards').innerHTML = '';
+  document.getElementById('summaryRow').innerHTML = '';
+  document.getElementById('thead').innerHTML = '';
+  document.getElementById('tbody').innerHTML = '';
+  document.getElementById('highlightResult').innerHTML='';
+
+  const files = Array.from(input.files);
+  for(const f of files){
+    const data = await f.arrayBuffer();
+    const wb = XLSX.read(new Uint8Array(data), {type:'array'});
+    const sheet = wb.Sheets[wb.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, {header:1, defval: ''});
+    const arr = [];
+    for(let r=1; r<rows.length; r++){
+      const row = rows[r] || [];
+      const loja = safe(row[0]);
+      const serial = safe(row[6]);
+      if(serial !== '') {
+        arr.push({serial, loja});
+        allEntries.push({serial, loja, file: f.name});
+      }
+    }
+    stored[f.name] = arr;
+    fileList.push(f.name);
+  }
+
+  uniqueSerials = [...new Set(allEntries.map(x => x.serial))];
+  buildUI();
+  renderTable();
+updateSummaryBox(
+  allEntries.filter(e => {
+    const search = document.getElementById('search').value.trim().toLowerCase();
+    const filter = document.getElementById('filter').value;
+    const loja = e.loja ? e.loja.toLowerCase() : '';
+    const serial = e.serial.toLowerCase();
+
+    if (search && !serial.includes(search) && !loja.includes(search)) return false;
+
+    const countInFiles = allEntries.filter(a => a.serial === e.serial).length;
+
+    if (filter === 'different' && countInFiles === fileList.length) return false;
+    if (filter === 'all' && countInFiles < fileList.length) return false;
+    if (filter === 'single' && countInFiles !== 1) return false;
+
+    return true;
+  })
+);
+}
+
+const btnReset = document.getElementById('btnReset');
+btnReset.addEventListener('click', () => {
+    if(!confirm("Deseja realmente limpar tudo?")) return;
+
+    // Resetar arquivos
+    fileInput.value = '';
+    selectedFilesDiv.textContent = 'Nenhum arquivo escolhido';
+
+    // Limpar variáveis
+    stored = {};
+    allEntries = [];
+    uniqueSerials = [];
+    fileList = [];
+
+    // Limpar UI
+    document.getElementById('cards').innerHTML = '';
+    document.getElementById('summaryRow').innerHTML = '';
+    document.getElementById('thead').innerHTML = '';
+    document.getElementById('tbody').innerHTML = '';
+    document.getElementById('highlightResult').innerHTML='';
+    
+    // Resetar resumos fixos
+    document.getElementById('totalLoja').textContent = '0';
+    document.getElementById('totalImpressora').textContent = '0';
+    document.getElementById('serialRepetido').textContent = '0';
+    document.getElementById('impRepetida').textContent = '0';
+    document.getElementById('totalEpson').textContent = '0';
+    document.getElementById('totalCanon').textContent = '0';
+    document.getElementById('totalXerox3330').textContent = '0';
+    document.getElementById('totalXerox3335').textContent = '0';
+    document.getElementById('totalOutros').textContent = '0';
+
+    // Resetar busca
+    document.getElementById('search').value = '';
+});
+
+
+
+// Exibir arquivos selecionados
+const fileInput = document.getElementById('files');
+const selectedFilesDiv = document.getElementById('selectedFiles');
+
+fileInput.addEventListener('change', () => {
+  if(fileInput.files.length === 0){
+    selectedFilesDiv.textContent = 'Nenhum arquivo escolhido';
+  } else {
+    const names = Array.from(fileInput.files).map(f => f.name);
+    selectedFilesDiv.textContent = 'Arquivos selecionados: ' + names.join(', ');
+  }
+});
+
+
+function buildUI(){
+  const perFile = fileList.map(fn => {
+    const arr = stored[fn] || [];
+    const total = arr.length;
+    const unique = [...new Set(arr.map(x=>x.serial))].length;
+    return {file:fn, total, unique};
+  });
+
+  const lojaMap = {};
+  allEntries.forEach(e => {
+    if(!lojaMap[e.loja]) lojaMap[e.loja] = new Set();
+    lojaMap[e.loja].add(e.serial);
+  });
+
+  const cards = document.getElementById('cards');
+  cards.innerHTML = '';
+  const lojasSorted = Object.entries(lojaMap).sort((a,b)=> b[1].size - a[1].size);
+  const colors = [
+    'linear-gradient(135deg,#00d4ff,#0066ff)',
+    'linear-gradient(135deg,#ff9a00,#ff3d81)',
+    'linear-gradient(135deg,#7bff6b,#00b894)',
+    'linear-gradient(135deg,#c792ff,#6b5bff)',
+    'linear-gradient(135deg,#ffc66b,#ff6b6b)'
+  ];
+  let colorIdx=0;
+
+  const repeatedSerials = uniqueSerials.filter(s=>{
+    const lojasWithS = allEntries.filter(e=>e.serial===s).map(e=>e.loja);
+    return new Set(lojasWithS).size > 1;
+  });
+  if(repeatedSerials.length){
+  repeatedSerials.forEach(s => {
+    const lojasS = allEntries.filter(e => e.serial === s).map(e => e.loja || 'Sem Loja');
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.style.background = 'linear-gradient(135deg,#ff4d4d,#ff0000)';
+    card.style.boxShadow = '0 0 20px #ff4d4d,0 0 40px #ff0000';
+    card.style.fontSize = '18px';
+    card.style.padding = '20px';
+    card.style.textAlign = 'center';
+    card.style.gridColumn = 'span 2';
+    card.style.gridRow = 'span 2';
+    card.style.cursor = 'pointer';
+
+    card.innerHTML = `<div class="title">Numero Repetidos ${s}</div>
+                      <div class="count">${lojasS.length}</div>
+                      <div style="font-size:12px;opacity:.9">em ${lojasS.length} lojas</div>`;
+
+    // Ao clicar, abre modal com lojas desse serial
+    card.addEventListener('click', () => openModal(s, lojasS));
+    cards.appendChild(card);
+  });
+}
+
+
+
+
+lojasSorted.forEach(([loja,set])=>{
+  const card = document.createElement('div');
+  card.className='card';
+
+  const serialsArr = Array.from(set).sort();
+  card.title = serialsArr.join('\n');
+
+  // ?? Se for a loja "XXX", aplica destaque igual ao dos repetidos
+  if (loja === "XXX") {
+    card.style.background = 'linear-gradient(135deg,#ff4d4d,#ff0000)';
+    card.style.boxShadow = '0 0 20px #ff4d4d,0 0 40px #ff0000';
+    card.style.fontSize = '18px';
+    card.style.padding = '20px';
+    card.style.textAlign = 'center';
+    card.style.gridColumn = 'span 2';
+    card.style.gridRow = 'span 2';
+  } else {
+    card.style.background = colors[colorIdx % colors.length];
+    colorIdx++;
+  }
+
+  card.innerHTML = `<div class="title">${loja||'Sem Sigla'}</div>
+                    <div class="count">${set.size}</div>
+                    <div style="font-size:12px;opacity:.9">seriais unicos</div>`;
+
+  card.addEventListener('click', ()=> openModal(loja, serialsArr));
+  cards.appendChild(card);
+});
+
+
+
+  const summary = document.getElementById('summaryRow');
+  const totalAll = uniqueSerials.length;
+  const perFileHtml = perFile.map(p => `<div style="min-width:160px" class="stat"><strong>${p.file}</strong><br><small>${p.total} linhas - ${p.unique} unicos</small></div>`).join('');
+  summary.innerHTML = `<div class="stat"> Seriais unicos totais: <strong>${totalAll}</strong></div>${perFileHtml}`;
+}
+
+
+function renderTable(){
+  const tbody = document.getElementById('tbody');
+  const thead = document.getElementById('thead');
+  const search = document.getElementById('search').value.trim();
+  const filter = document.getElementById('filter').value;
+
+  const serialMap = {};
+  uniqueSerials.forEach(s => serialMap[s] = {lojas:new Set(), perFile:{}} );
+  allEntries.forEach(e=>{
+    serialMap[e.serial].lojas.add(e.loja);
+    serialMap[e.serial].perFile[e.file] = true;
+  });
+
+  let headerHtml = `<tr><th>Número Serial</th><th>Lojas</th>`;
+  fileList.forEach(f=> headerHtml += `<th>${f}</th>`);
+  headerHtml += `</tr>`;
+  thead.innerHTML = headerHtml;
+
+  let bodyHtml = '';
+  uniqueSerials.forEach(s=>{
+   const lojasStr = Array.from(serialMap[s].lojas).join(', ').toLowerCase();
+    if (search && !s.toLowerCase().includes(search.toLowerCase()) && !lojasStr.includes(search.toLowerCase())) return;
+    const lojas = Array.from(serialMap[s].lojas).join(', ');
+    if(filter==='different' && serialMap[s].lojas.size===fileList.length) return;
+    if(filter==='all' && serialMap[s].lojas.size<fileList.length) return;
+    if(filter==='single' && serialMap[s].lojas.size!==1) return;
+
+    bodyHtml += `<tr>
+      <td class="serial">${s}</td>
+      <td class="lojas">${lojas}</td>`;
+    fileList.forEach(f=>{
+      bodyHtml += `<td class="${serialMap[s].perFile[f] ? 'present' : 'absent'}">${serialMap[s].perFile[f] ? ' ' : ''}</td>`;
+    });
+    bodyHtml += `</tr>`;
+  });
+  tbody.innerHTML = bodyHtml;
+
+  // Atualiza área de resultado
+  showHighlightResult(search);
+}
+
+function showHighlightResult(serial){
+  const resultDiv = document.getElementById('highlightResult');
+  resultDiv.innerHTML = '';
+  if(!serial) return;
+
+  const query = serial.toLowerCase();
+   const lojasEncontradas = allEntries.filter(e => 
+  e.serial.toLowerCase().includes(query) || 
+  (e.loja && e.loja.toLowerCase().includes(query))
+   );
+  if(!lojasEncontradas.length){
+    resultDiv.innerHTML = ` Numero "<strong>${serial}</strong>" nao encontrado em nenhuma loja`;
+    return;
+  }
+
+  const serialMap = {};
+  lojasEncontradas.forEach(e=>{
+    if(!serialMap[e.serial]) serialMap[e.serial] = new Set();
+    serialMap[e.serial].add(e.loja || 'Sem Loja');
+  });
+
+  const serialEntries = Object.entries(serialMap);
+  const chunkSize = 12
+  for(let i=0; i<serialEntries.length; i+=chunkSize){
+    const lineDiv = document.createElement('div');
+    lineDiv.className = 'result-line';
+    serialEntries.slice(i, i+chunkSize).forEach(([s,set])=>{
+      const card = document.createElement('div');
+      card.className = 'result-card';
+      card.innerHTML = `<strong>${s}</strong><small>${[...set].join(', ')}</small>`;
+      lineDiv.appendChild(card);
+    });
+    resultDiv.appendChild(lineDiv);
+  }
+}
+
+const btnMenu = document.getElementById("btnMenu");
+btnMenu.addEventListener("click", () => {
+    window.location.href = "menu.html";
+});
+
+
+
+document.getElementById('search').addEventListener('input',()=>{
+  const serialDigitado = document.getElementById('search').value.trim();
+  showHighlightResult(serialDigitado);
+});
+
+
+
+
+// Modal
+function openModal(title, arr){
+  document.getElementById('modalTitle').textContent = title;
+  const list = document.getElementById('serialList');
+  list.innerHTML='';
+
+  arr.forEach(a => {
+  const div = document.createElement('div');
+  div.className = 'serial-item';
+  div.textContent = a;
+
+  // Clique r pido = copiar
+  div.addEventListener('click', () => {
+    navigator.clipboard.writeText(a);
+    div.style.background = "rgba(0,255,150,0.4)";
+    div.textContent = a + " ? Copiado";
+    setTimeout(() => {
+      div.style.background = "rgba(255,255,255,0.07)";
+      div.textContent = a;
+    }, 1200);
+  });
+
+  list.appendChild(div);
+});
+
+
+
+  document.getElementById('serialModal').style.display='flex';
+}
+document.getElementById('closeModal').addEventListener('click',()=>{document.getElementById('serialModal').style.display='none';});
+document.getElementById('copyAllBtn').addEventListener('click',()=>{
+  const text = Array.from(document.querySelectorAll('#serialList button')).map(b=>b.textContent).join('\n');
+  navigator.clipboard.writeText(text);
+  alert('Copiado!');
+});
+
+// Export/Download
+function downloadXlsx() {
+  const wsData = [['Serial', 'Lojas', ...fileList]]; // Cabecalho
+  const tbodyRows = document.querySelectorAll('#resultTable tbody tr');
+  tbodyRows.forEach(tr => {
+    wsData.push(Array.from(tr.cells).map(td => td.innerText));
+  });
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(wsData);
+  XLSX.utils.book_append_sheet(wb, ws, 'Comparacao');
+  XLSX.writeFile(wb, 'comparacao_seriais.xlsx');
+}
+
+</script>
+</body>
+</html>

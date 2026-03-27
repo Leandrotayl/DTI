@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Auditoria de Séries de Impressão</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+
+body{
+font-family:Arial;
+background:#0f172a;
+color:white;
+padding:20px;
+}
+
+/* TOPO */
+
+.topo{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+}
+
+.acoes{
+display:flex;
+gap:20px;
+align-items:center;
+}
+
+.btnExportar{
+background:linear-gradient(135deg,#22c55e,#166534);
+border:none;
+padding:10px 18px;
+color:white;
+border-radius:10px;
+font-weight:bold;
+cursor:pointer;
+box-shadow:0 6px 15px rgba(0,0,0,0.4);
+transition:0.2s;
+}
+
+.btnExportar:hover{
+transform:translateY(-2px);
+}
+
+/* BUSCA */
+
+.buscaContainer{
+display:flex;
+align-items:center;
+background:linear-gradient(145deg,#1e293b,#020617);
+border:1px solid #334155;
+border-radius:14px;
+padding:6px 12px;
+width:320px;
+height:42px;
+box-shadow:0 6px 15px rgba(0,0,0,0.6);
+}
+
+#busca{
+flex:1;
+background:transparent;
+border:none;
+outline:none;
+color:white;
+font-size:14px;
+}
+
+.iconeBusca{
+margin-right:10px;
+}
+
+/* LAYOUT */
+
+.container{
+display:grid;
+grid-template-columns:1fr 1fr 320px;
+gap:20px;
+}
+
+/* CAIXAS */
+
+.box{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+box-shadow:0 6px 15px rgba(0,0,0,0.5);
+}
+
+select{
+width:100%;
+padding:6px;
+margin-top:5px;
+margin-bottom:10px;
+}
+
+/* RANKING */
+
+.rankingBox{
+background:#1e293b;
+padding:20px;
+border-radius:10px;
+box-shadow:0 6px 15px rgba(0,0,0,0.5);
+}
+
+/* CARDS */
+
+.cards{
+display:flex;
+gap:15px;
+margin-top:25px;
+margin-bottom:20px;
+}
+
+.card{
+width:120px;
+height:70px;
+border-radius:10px;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+font-size:12px;
+font-weight:bold;
+box-shadow:0 6px 12px rgba(0,0,0,0.4);
+}
+
+.card span{
+font-size:22px;
+margin-top:4px;
+}
+
+.igual{background:linear-gradient(135deg,#2563eb,#1e3a8a);}
+.diferente{background:linear-gradient(135deg,#f59e0b,#78350f);}
+.atual{background:linear-gradient(135deg,#10b981,#064e3b);}
+.anterior{background:linear-gradient(135deg,#ef4444,#7f1d1d);}
+
+/* TABELA */
+
+table{
+width:100%;
+margin-top:20px;
+border-collapse:collapse;
+}
+
+th,td{
+border:1px solid #334155;
+padding:6px;
+text-align:center;
+}
+
+th{
+background:#1e40af;
+}
+
+.highlight{
+background:#facc15;
+color:black;
+padding:2px 4px;
+border-radius:4px;
+font-weight:bold;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="topo">
+
+<h1>Auditoria de Séries de Impressão</h1>
+
+<div class="acoes">
+
+<button class="btnExportar" onclick="exportarExcel()">📁 Exportar Excel</button>
+
+<div class="buscaContainer">
+<span class="iconeBusca">🔎</span>
+<input type="text" id="busca" placeholder="Pesquisar número de série...">
+</div>
+
+</div>
+
+</div>
+
+<div class="container">
+
+<div class="box">
+
+<h3>Mês Atual</h3>
+
+<input type="file" id="mesAtual">
+
+<label>Série</label>
+<select id="serieAtual"></select>
+
+<label>Página</label>
+<select id="paginaAtual"></select>
+
+</div>
+
+<div class="box">
+
+<h3>Mês Anterior</h3>
+
+<input type="file" id="mesAnterior">
+
+<label>Série</label>
+<select id="serieAnterior"></select>
+
+<label>Página</label>
+<select id="paginaAnterior"></select>
+
+</div>
+
+<div class="rankingBox">
+
+<h3>🏆 Top 10 Impressoras</h3>
+<div id="ranking"></div>
+
+</div>
+
+</div>
+
+<div class="cards">
+
+<div class="card igual">
+Iguais
+<span id="totalIguais">0</span>
+</div>
+
+<div class="card diferente">
+Página Diferente
+<span id="totalDif">0</span>
+</div>
+
+<div class="card atual">
+Somente Atual
+<span id="totalAtual">0</span>
+</div>
+
+<div class="card anterior">
+Somente Anterior
+<span id="totalAnterior">0</span>
+</div>
+
+</div>
+
+<div id="tabela"></div>
+
+<script>
+
+const letras="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
+
+function preencher(id){
+let s=document.getElementById(id)
+letras.forEach((l,i)=>{
+let op=document.createElement("option")
+op.value=i
+op.text=l
+s.appendChild(op)
+})
+}
+
+["serieAtual","paginaAtual","serieAnterior","paginaAnterior"].forEach(preencher)
+
+let atual=[]
+let anterior=[]
+
+function ler(input,callback){
+
+let file=input.files[0]
+if(!file) return
+
+let reader=new FileReader()
+
+reader.onload=function(e){
+
+let data=new Uint8Array(e.target.result)
+let wb=XLSX.read(data,{type:"array"})
+let sheet=wb.Sheets[wb.SheetNames[0]]
+let json=XLSX.utils.sheet_to_json(sheet,{header:1})
+
+callback(json)
+
+}
+
+reader.readAsArrayBuffer(file)
+
+}
+
+mesAtual.addEventListener("change",()=>{
+ler(mesAtual,data=>{
+atual=data
+comparar()
+})
+})
+
+mesAnterior.addEventListener("change",()=>{
+ler(mesAnterior,data=>{
+anterior=data
+comparar()
+})
+})
+
+document.querySelectorAll("select").forEach(s=>{
+s.addEventListener("change",comparar)
+})
+
+function comparar(){
+
+if(atual.length==0 || anterior.length==0) return
+
+let sa=serieAtual.value
+let pa=paginaAtual.value
+let sb=serieAnterior.value
+let pb=paginaAnterior.value
+
+let map=new Map()
+
+anterior.slice(1).forEach(l=>{
+let s=l[sb]
+let p=l[pb]
+if(s) map.set(s,p)
+})
+
+let iguais=[]
+let dif=[]
+let soAtual=[]
+let soAnterior=[]
+
+atual.slice(1).forEach(l=>{
+
+let s=l[sa]
+let p=l[pa]
+
+if(map.has(s)){
+
+let ant=map.get(s)
+let diferenca=p-ant
+
+if(diferenca!==0){
+
+dif.push({
+serie:s,
+atual:p,
+ant:ant,
+dif:diferenca
+})
+
+}else{
+
+iguais.push({serie:s,atual:p,ant:ant})
+
+}
+
+map.delete(s)
+
+}else{
+
+soAtual.push({serie:s,pagina:p})
+
+}
+
+})
+
+map.forEach((p,s)=>{
+soAnterior.push({serie:s,pagina:p})
+})
+
+mostrar(iguais,dif,soAtual,soAnterior)
+ranking(dif)
+
+}
+
+function ranking(dif){
+
+let lista=dif.filter(r=>r.dif>0)
+lista.sort((a,b)=>b.dif-a.dif)
+
+let top=lista.slice(0,10)
+
+let html="<table><tr><th>#</th><th>Série</th><th>Páginas</th></tr>"
+
+top.forEach((r,i)=>{
+html+=`<tr><td>${i+1}</td><td>${r.serie}</td><td>${r.dif}</td></tr>`
+})
+
+html+="</table>"
+
+ranking.innerHTML=html
+
+}
+
+function mostrar(iguais,dif,atual,ant){
+totalIguais.innerText=iguais.length
+totalDif.innerText=dif.length
+totalAtual.innerText=atual.length
+totalAnterior.innerText=ant.length
+
+let html="<table>"
+html+="<tr><th>Série</th><th>Página Atual</th><th>Página Anterior</th><th>Diferença</th><th>Status</th></tr>"
+
+iguais.forEach(r=>{
+html+=`<tr style="background:#1e40af">
+<td>${r.serie}</td>
+<td>${r.atual}</td>
+<td>${r.ant}</td>
+<td>0</td>
+<td>Igual</td>
+</tr>`
+})
+
+dif.forEach(r=>{
+html+=`<tr style="background:#065f46">
+<td>${r.serie}</td>
+<td>${r.atual}</td>
+<td>${r.ant}</td>
+<td>${r.dif}</td>
+<td>Diferente</td>
+</tr>`
+})
+
+atual.forEach(r=>{
+html+=`<tr style="background:#065f46">
+<td>${r.serie}</td>
+<td>${r.pagina}</td>
+<td>-</td>
+<td>-</td>
+<td>Somente Atual</td>
+</tr>`
+})
+
+ant.forEach(r=>{
+html+=`<tr style="background:#7f1d1d">
+<td>${r.serie}</td>
+<td>-</td>
+<td>${r.pagina}</td>
+<td>-</td>
+<td>Somente Anterior</td>
+</tr>`
+})
+
+html+="</table>"
+
+tabela.innerHTML=html
+
+}
+
+function exportarExcel(){
+
+let tabela=document.querySelector("#tabela table")
+
+if(!tabela){
+alert("Nenhum resultado")
+return
+}
+
+let wb=XLSX.utils.table_to_book(tabela,{sheet:"Auditoria"})
+XLSX.writeFile(wb,"Auditoria_Impressoras.xlsx")
+
+}
+
+busca.addEventListener("keyup",function(){
+
+let termo=this.value.toLowerCase()
+
+document.querySelectorAll("#tabela table tr").forEach((tr,i)=>{
+
+if(i===0)return
+
+let texto=tr.innerText.toLowerCase()
+
+if(texto.includes(termo)||termo===""){
+
+tr.style.display=""
+
+let td=tr.children[0]
+let serieOriginal=td.innerText
+
+if(termo!==""){
+
+let regex=new RegExp(`(${termo})`,"gi")
+td.innerHTML=serieOriginal.replace(regex,'<span class="highlight">$1</span>')
+
+}else{
+
+td.innerHTML=serieOriginal
+
+}
+
+}else{
+
+tr.style.display="none"
+
+}
+
+})
+
+})
+
+</script>
+
+</body>
+</html>
