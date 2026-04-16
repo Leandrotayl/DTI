@@ -8,10 +8,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 body {
-  background: url('http://172.16.2.7/DTI/img/1.png') no-repeat center center fixed;
+  background: url('http://172.16.2.2/DTI/img/Fundo1.png') no-repeat center center fixed;
   background-size: cover;
   min-height: 100vh;
 }
+
 
 /* Container ocupa toda a largura */
 .container { 
@@ -146,8 +147,8 @@ tbody td { padding: 10px; }
 
   /* NOVO: posicionamento fixo no topo direito */
   position: fixed;
-  top: 2px;      /* distância do topo */
-  right: 6px;    /* distância da lateral direita */
+  top: 2px;      /* dist ncia do topo */
+  right: 6px;    /* dist ncia da lateral direita */
   z-index: 1000;  /* para ficar acima do resto */
 }
 
@@ -369,7 +370,7 @@ tbody td { padding: 10px; }
 }
 
 #telaLojas .card {
-  margin-top: 68px; /* aumenta o espaço do topo */
+  margin-top: 68px; /* aumenta o espa o do topo */
   animation: slideDown 0.4s ease;
 }
 
@@ -513,7 +514,7 @@ table {
   animation:fecharQuadro 0.8s ease forwards;
 }
 
-/* Animação fechando o quadro */
+/* Anima  o fechando o quadro */
 @keyframes fecharQuadro{
   0%{
     background-size:
@@ -685,6 +686,25 @@ table {
   transform: scale(1.08);
 }
 
+/* Fortigate - Azul marinho */
+.fortigate-tag {
+  background: linear-gradient(135deg, #001f3f, #003366);
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 0 8px rgba(0, 51, 102, 0.7);
+}
+
+/* Mikrotik - Verde claro */
+.mikrotik-tag {
+  background: linear-gradient(135deg, #00ffcc, #66ff99);
+  color: #003333;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 0 8px rgba(0, 255, 204, 0.7);
+}
 
 /* Mensagem copiado */
 .copy-msg {
@@ -712,6 +732,13 @@ table {
     opacity 0.4s ease;
 }
 
+/* ?? ATIVA  O */
+.copy-msg.show {
+  right: 30px;
+  opacity: 1;
+  transform: scale(1);
+}
+
 /* SUCESSO (dourado premium) */
 .copy-msg.success {
   background: linear-gradient(145deg, #ffd700, #ffcc00);
@@ -722,57 +749,402 @@ table {
     0 0 30px rgba(255,215,0,0.9);
 }
 
-.search-container {
+.destaque-busca {
+  background: linear-gradient(135deg, #ffcc00, #ffd700);
+  color: #000;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: 700;
+  box-shadow: 0 0 8px rgba(255,204,0,0.8);
+}
+
+/* ===================================== */
+/* BOT O 3D REAL COM COR DIN MICA */
+/* ===================================== */
+
+#btnTop {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  min-width: 210px;
+  height: 60px;
+  padding: 0 32px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.4s ease;
+  z-index: 9999;
+  overflow: hidden;
+
+  /* COR PADR O (VERMELHO) */
+  background: linear-gradient(145deg, #1a0000, #3a0000);
+
+  box-shadow:
+    0 18px 35px rgba(0,0,0,0.7), /* sombra externa profunda */
+    inset 0 4px 8px rgba(255,255,255,0.08), /* luz superior */
+    inset 0 -6px 12px rgba(0,0,0,0.6), /* sombra interna */
+    0 0 25px rgba(255,0,0,0.3);
+}
+
+/* Quando aparece */
+#btnTop.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* TEXTO */
+#btnTop .btn-core {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(255,0,0,0.7);
+  transition: 0.4s;
+}
+
+/* HOVER 3D */
+#btnTop:hover {
+  transform: scale(1.05) translateY(-3px);
+  box-shadow:
+    0 25px 45px rgba(0,0,0,0.8),
+    0 0 35px rgba(255,0,0,0.6),
+    0 0 70px rgba(255,0,0,0.4);
+}
+
+/* FILIAL - Azul forte */
+.filial-tag {
+  background: linear-gradient(135deg, #131414, #007bff);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 0 8px rgba(0,123,255,0.6);
+}
+
+/* POSTO - Laranja */
+.posto-tag {
+  background: linear-gradient(135deg, #746455, #df8c19);
+  color: #1a1a1a;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 0 8px rgba(255,122,0,0.6);
+}
+
+/* DEPOSITO - Roxo */
+.deposito-tag {
+  background: linear-gradient(135deg, #a78dc0, #a64dff);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 0 8px rgba(166,77,255,0.6);
+}
+
+/* REPRESENTANTE - Verde */
+.representante-tag {
+  background: linear-gradient(135deg, #00b894, #55efc4);
+  color: #003333;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 0 8px rgba(0,184,148,0.6);
+}
+
+.legenda-topo {
   display: flex;
   justify-content: center;
-  margin: 20px 0;
-  position: relative; /* 🔥 ESSENCIAL */
+  flex-wrap: wrap;
+  gap: 25px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
-.autocomplete-items {
-  left: 50%;
-  transform: translateX(-50%);
+.legenda-grupo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0,0,0,0.5);
+  padding: 8px 14px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(255,204,0,0.3);
 }
 
-/* ERRO (vermelho suave elegante) */
-.copy-msg.error {
-  background: linear-gradient(145deg, #ff6b6b, #d90429);
-  color: #fff;
+.legenda-titulo {
+  font-size: 0.8em;
+  color: #ffcc00;
+  font-weight: 700;
+  margin-right: 5px;
+}
+
+/* Usa os mesmos estilos dos badges */
+.legenda-item {
+  font-size: 0.75em;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: default;
+  transition: 0.2s;
+}
+
+.legenda-item:hover {
+  transform: scale(1.08);
+}
+
+.legenda-item.ativo {
+  outline: 2px solid #fff;
+  box-shadow: 0 0 15px #fff;
+  transform: scale(1.1);
+}
+
+/* ===================================== */
+/* ESTADO TOPO (VERDE APROVADO) */
+/* ===================================== */
+
+#btnTop.top-active {
+  background: linear-gradient(145deg, #002b15, #004d26);
+
   box-shadow:
-    0 0 0 4px rgba(255,0,0,0.3),
-    0 10px 35px rgba(0,0,0,0.7),
-    0 0 25px rgba(255,0,0,0.6);
+    0 18px 35px rgba(0,0,0,0.7),
+    inset 0 4px 8px rgba(255,255,255,0.08),
+    inset 0 -6px 12px rgba(0,0,0,0.6),
+    0 0 25px rgba(0,255,100,0.4);
 }
 
-/* Mostrar */
-.copy-msg.show {
-  right: 30px;
-  transform: scale(1);
+#btnTop.top-active .btn-core {
+  text-shadow: 0 0 8px rgba(0,255,100,0.8);
+}
+
+.containerErro {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin-top: 15px;
+  flex-wrap: wrap;
+}
+
+.boxErro {
+  position: relative;
+  padding: 12px 22px;
+  border-radius: 10px;
+
+  font-size: 0.75em;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  color: #ffcc00;
+
+  background: rgba(255, 204, 0, 0.08);
+
+  border: 1px solid rgba(255, 204, 0, 0.4);
+
+  box-shadow:
+    0 0 10px rgba(255, 204, 0, 0.3),
+    0 0 25px rgba(255, 204, 0, 0.1);
+
+  transition: all 0.3s ease;
+  cursor: default;
+}
+
+/* Efeito brilho animado */
+.boxErro::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  padding: 2px;
+
+  background: linear-gradient(120deg, transparent, #ffcc00, transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.boxErro:hover::before {
   opacity: 1;
 }
 
-.destaque-busca {
-  background: linear-gradient(135deg, #ffcc00, #ffd700);
-  color: #000 !important;
-  font-weight: 800;
-  padding: 2px 6px;
-  border-radius: 6px;
-
+/* Hover elegante */
+.boxErro:hover {
+  transform: translateY(-3px) scale(1.05);
   box-shadow:
-    0 0 8px rgba(255,204,0,0.8),
-    0 0 15px rgba(255,204,0,0.5);
-
-  animation: pulseDestaque 1s ease infinite alternate;
+    0 0 20px rgba(255, 204, 0, 0.6),
+    0 0 40px rgba(255, 204, 0, 0.3);
+  color: #fff;
 }
 
-@keyframes pulseDestaque {
-  from { transform: scale(1); }
-  to { transform: scale(1.08); }
+.consulta-wrapper {
+  position: fixed; /* ?? chave da solução */
+  top: 80px;       /* controla altura (ajuste fino aqui) */
+  left: 0;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+
+  z-index: 999;
+}
+
+@keyframes slideErro {
+  from {
+    transform: translateY(-40px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.consulta-wrapper {
+  animation: slideErro 0.4s ease;
+}
+
+.login-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.login-box {
+  background: #1a1a1a;
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 0 25px #ffcc00;
+}
+
+.login-box h2 {
+  color: #ffcc00;
+  margin-bottom: 20px;
+}
+
+.login-box input {
+  display: block;
+  width: 250px;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  text-align: center;
+}
+
+.login-box button {
+  padding: 10px 25px;
+  margin-top: 15px;
+  background: #ffcc00;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#loginErro {
+  color: red;
+  margin-top: 10px;
+}
+
+#btnLogout {
+  position: fixed;
+  top: 10px;
+  right: 20px; /* canto superior direito */
+  z-index: 10001;
+
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+
+  font-weight: 700;
+  font-size: 0.85em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  color: #fff;
+  background: linear-gradient(135deg, #ff0000, #990000);
+
+  box-shadow:
+    0 0 10px rgba(255,0,0,0.6),
+    0 0 20px rgba(255,0,0,0.3),
+    inset 0 0 10px rgba(0,0,0,0.6);
+
+  transition: all 0.3s ease;
+}
+
+#btnLogout:hover {
+  transform: scale(1.08);
+  background: linear-gradient(135deg, #ff3333, #cc0000);
+  box-shadow:
+    0 0 20px rgba(255,0,0,0.9),
+    0 0 40px rgba(255,0,0,0.5);
+}
+
+#btnLogout {
+  display: none;
+}
+
+#btnAlterarSenha {
+  position: fixed;
+  top: 55px;
+  right: 20px;
+  z-index: 10001;
+
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+
+  font-weight: 700;
+  font-size: 0.85em;
+
+  cursor: pointer;
+
+  color: #000;
+  background: linear-gradient(135deg, #00ffcc, #00cc99);
+
+  box-shadow: 0 0 10px rgba(0,255,204,0.6);
 }
 
 </style>
 </head>
 <body>
+  
+  <div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <h2>🔐 Acesso ao Sistema</h2>
+
+    <input type="text" id="loginUser" placeholder="Usuário">
+    <input type="password" id="loginPass" placeholder="Senha">
+
+    <button onclick="fazerLogin()">Entrar</button>
+
+    <p id="loginErro"></p>
+  </div>
+</div>
+
+<div style="margin-top:10px;">
+  <a href="#" onclick="abrirRecuperacao()" style="
+    color:#00ffcc;
+    font-size:0.85em;
+    text-decoration:none;
+    font-weight:600;
+  ">
+    Esqueceu a senha?
+  </a>
+</div>
+
 
 <div class="top-bar">
 
@@ -804,14 +1176,11 @@ table {
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 
-<button id="btnTop" title="Ir para o topo">
-  <span class="btn-core">Ir para o início</span>
-</button>
-
-
-
 <button id="btnMenu">MENU PRINCIPAL</button>
 
+<button id="btnTop" title="Ir para o topo">
+  <span class="btn-core">Ir para o inIcio</span>
+</button>
 
 <!-- Resumo neon no canto superior direito -->
  
@@ -824,6 +1193,10 @@ table {
 </div>
 </div>
 
+<button id="btnLogout">Sair</button>
+<button id="btnAlterarSenha">Alterar Senha</button>
+
+<div id="userInfo"></div>
 
   <div class="cards-resumo">
       <!-- NOVO TOTAL GERAL -->
@@ -832,6 +1205,18 @@ table {
     <h2 id="totalGeral">0</h2>
   </div>
 
+  <div class="modal" id="modalSenha">
+  <div class="modal-content">
+    <h3>Alterar Senha</h3>
+
+    <input type="password" id="senhaAtual" placeholder="Senha Atual">
+    <input type="password" id="novaSenha" placeholder="Nova Senha">
+
+    <div id="erroSenha" style="color:red; margin-bottom:10px;"></div>
+
+    <button onclick="alterarSenha()">Salvar</button>
+  </div>
+</div>
     
     <div class="card-mini">
       <span>Filial</span>
@@ -869,13 +1254,30 @@ table {
 
 <div class="container">
 
-<div class="search-container">
-  <input type="text" id="searchInput" placeholder="Pesquisar por SIGLA ou PDV..." oninput="filtrar()">
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Pesquisar por SIGLA / PDV ou ENDERECO DE IP " oninput="filtrar()">
+  </div>
 
-  <div id="autocomplete-list" class="autocomplete-items"></div>
+   <div class="legenda-topo">
+  <div class="legenda-grupo">
+    <span class="legenda-titulo">TIPOS:</span>
+
+    <div class="legenda-item filial-tag" onclick="filtrarLegenda('tipo','Filial', this)">Filial</div>
+    <div class="legenda-item posto-tag" onclick="filtrarLegenda('tipo','Posto', this)">Posto</div>
+    <div class="legenda-item deposito-tag" onclick="filtrarLegenda('tipo','Deposito', this)">Deposito</div>
+    <div class="legenda-item representante-tag" onclick="filtrarLegenda('tipo','Representante', this)">Representante</div>
+  </div>
+
+  <div class="legenda-grupo">
+    <span class="legenda-titulo">DISPOSITIVOS:</span>
+
+    <div class="legenda-item fortigate-tag" onclick="filtrarLegenda('disp','Fortigate', this)">Fortigate</div>
+    <div class="legenda-item mikrotik-tag" onclick="filtrarLegenda('disp','Mikrotik', this)">Mikrotik</div>
+  </div>
 </div>
 
 
+</div>
   <button class="back-btn" id="backBtn" onclick="voltar()"> Voltar </button>
 
   <div id="telaRegionais" class="cards"></div>
@@ -895,8 +1297,15 @@ table {
 <div class="copy-msg" id="copyMsg"></div>
 
 <script>
+
+
+
 const LIBERACAO_SENHA="Gertec20";
 let textoParaCopiar="",btnParaMensagem=null;
+
+/* ?? FILTROS DA LEGENDA */
+let filtroTipoAtivo = null;
+let filtroDispositivoAtivo = null;
 
 
 const lojas=[
@@ -905,18 +1314,175 @@ const lojas=[
 
 {sigla:"ACA",   	filial:"ACA",   	cidade:"Acailandia",              	tipo:"Filial",      	ip:"172.16.88.251",      	dispositivo:"Fortigate",      	regional:"Regional Afonso",     pdvs:["pdvaca01","pdvaca02","pdvaca03","pdvaca04","pdvaca05","pdvaca06","pdvaca07","pdvaca08","pdvaca09","pdvaca10","pdvaca12",]},
 {sigla:"BJS",   	filial:"ACA",   	cidade:"Bom Jesus Da Selva",      	tipo:"Posto",      	ip:"172.19.56.251",         	dispositivo:"Fortigate",      	regional:"Regional Afonso",     pdvs:["pdvbjs01","pdvbjs02"]},
-{sigla:"VLD/ACA",   	filial:"ACA",   	cidade:"Bom Jesus Da Selva",      	tipo:"Posto",      	ip:"172.19.56.251",         	dispositivo:"Fortigate",      	regional:"Regional Afonso",     pdvs:["pdvbjs01","pdvbjs02"]},
+{sigla:"CID",   	filial:"ACA",  		cidade:"Cidelandia",               	tipo:"Posto",      	ip:"172.19.82.251",         	dispositivo:"Fortigate",      	regional:"Regional Afonso",     pdvs:["pdvcid01","pdvcid02"]},
+
 
 
 ];
 
+function abrirRecuperacao(){
+  document.getElementById("modalRecuperar").style.display = "flex";
+}
+
+function fecharRecuperacao(){
+  document.getElementById("modalRecuperar").style.display = "none";
+  document.getElementById("msgRecuperacao").textContent = "";
+}
+
+function recuperarSenha(){
+
+  const usuario = document.getElementById("recUsuario").value.toLowerCase();
+  const msg = document.getElementById("msgRecuperacao");
+
+  // 👇 EXEMPLO (pode adaptar)
+  if(usuario === "ti"){
+    msg.textContent = "Usuário encontrado! Procure o setor de TI.";
+    msg.style.color = "#00ffcc";
+  } else {
+    msg.textContent = "Usuário não encontrado.";
+    msg.style.color = "#ff4444";
+  }
+}
+
+function alterarSenha(){
+
+  const senhaAtual = document.getElementById("senhaAtual").value;
+  const novaSenha = document.getElementById("novaSenha").value;
+  const erro = document.getElementById("erroSenha");
+
+  if(!usuarioLogado){
+    erro.textContent = "Nenhum usuário logado";
+    return;
+  }
+
+  // busca usuário no array
+  const usuario = usuarios.find(u => u.user === usuarioLogado.user);
+
+  if(usuario.senha !== senhaAtual){
+    erro.textContent = "Senha atual incorreta";
+    return;
+  }
+
+  // atualiza senha
+  usuario.senha = novaSenha;
+
+  // atualiza localStorage
+  localStorage.setItem("usuarioLogado", JSON.stringify(usuarioLogado));
+
+  erro.style.color = "#00ffcc";
+  erro.textContent = "Senha alterada com sucesso!";
+
+  setTimeout(() => {
+    document.getElementById("modalSenha").style.display = "none";
+    erro.textContent = "";
+    document.getElementById("senhaAtual").value = "";
+    document.getElementById("novaSenha").value = "";
+  }, 1500);
+}
+
+const usuarios = [
+  { user: "leandro", senha: "1111" },
+  { user: "consulta", senha: "123" }
+];
 
 
+let usuarioLogado = null;
+
+function fazerLogin(){
+
+  const usuario = document.getElementById("loginUser").value;
+  const senha = document.getElementById("loginPass").value;
+
+  const userEncontrado = usuarios.find(u => 
+    u.user === usuario && u.senha === senha
+  );
+
+  if(userEncontrado){
+
+    localStorage.setItem("usuarioLogado", JSON.stringify(userEncontrado));
+    usuarioLogado = userEncontrado;
+
+    document.getElementById("loginScreen").style.display = "none";
+
+    // 🔥 MOSTRA BOTÃO SAIR
+    document.getElementById("btnLogout").style.display = "block";
+
+    atualizarBotaoUsuario();
+
+  } else {
+    document.getElementById("loginErro").textContent = "Usuário ou senha inválidos";
+  }
+}
+
+document.addEventListener("keydown", function(e){
+  if(e.key === "Enter"){
+    fazerLogin();
+  }
+});
+
+window.onload = function(){
+
+  const salvo = localStorage.getItem("usuarioLogado");
+
+  if(salvo){
+    usuarioLogado = JSON.parse(salvo);
+    document.getElementById("loginScreen").style.display = "none";
+    document.getElementById("btnLogout").style.display = "block";
+  }
+
+  atualizarBotaoUsuario();
+
+  // 🔥 AQUI GARANTE QUE FUNCIONE
+  document.getElementById("btnAlterarSenha").onclick = () => {
+    document.getElementById("modalSenha").style.display = "flex";
+  };
+
+};
 
 
+function atualizarBotaoUsuario(){
 
+  const btn = document.getElementById("btnLogout");
 
+  if(usuarioLogado){
+    btn.textContent = ` user: ${usuarioLogado.user}`;
+  } else {
+    btn.textContent = "Sair";
+  }
+}
 
+function mostrarUsuario(){
+  if(usuarioLogado){
+    document.getElementById("userInfo").innerHTML = 
+      `👤 ${usuarioLogado.user} (${usuarioLogado.nivel})`;
+  }
+}
+
+mostrarUsuario();
+
+document.getElementById("btnLogout").onclick = () => {
+
+  // remove login salvo
+  localStorage.removeItem("usuarioLogado");
+
+  document.getElementById("btnAlterarSenha").onclick = () => {
+  document.getElementById("modalSenha").style.display = "flex";
+};
+  // limpa variável
+  usuarioLogado = null;
+
+  // limpa campos
+  document.getElementById("loginUser").value = "";
+  document.getElementById("loginPass").value = "";
+  document.getElementById("loginErro").textContent = "";
+
+  // mostra tela de login novamente
+  document.getElementById("loginScreen").style.display = "flex";
+
+  // atualiza botão
+  atualizarBotaoUsuario();
+  document.getElementById("loginUser").focus();
+};
 
 
 const regionais = [...new Set(lojas.map(l => l.regional))].sort();
@@ -976,6 +1542,36 @@ function destacarTexto(texto, termo){
   return texto.replace(regex, `<span class="destaque-busca">$1</span>`);
 }
 
+// BOT O IR PARA O TOPO
+const btnTop = document.getElementById("btnTop");
+
+// Mostrar/ocultar bot o ao rolar
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 200) {
+    btnTop.classList.add("show");
+  } else {
+    btnTop.classList.remove("show");
+  }
+
+  // Muda cor quando estiver no topo
+  if (window.scrollY === 0) {
+    btnTop.classList.add("top-active");
+  } else {
+    btnTop.classList.remove("top-active");
+  }
+});
+
+// Fun  o de subir suave
+function irTopo() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
+
+// Evento de clique
+btnTop.addEventListener("click", irTopo);
+
 function mostrarTabela(lista){
   telaLojas.innerHTML=''; 
   if(lista.length===0) return;
@@ -1014,10 +1610,10 @@ function mostrarTabela(lista){
   const pdvs1 = l.pdvs.slice(0, Math.ceil(l.pdvs.length / 2));
   const pdvs2 = l.pdvs.slice(Math.ceil(l.pdvs.length / 2));
 
-  return `<tr>
+   return `<tr>
     <td>${destacarTexto(l.sigla, termo)}</td>
-    <td>${l.tipo}</td>
-    <td>${destacarTexto(l.ip, termo)}</td>
+                <td>${l.tipo}</td>
+                <td>${destacarTexto(l.ip, termo)}</td>
                 <td>${l.cidade}</td>
                 <td>${l.dispositivo}</td>
                 <td>
@@ -1033,7 +1629,6 @@ function mostrarTabela(lista){
         </table>
       </div>
     `;
-
     telaLojas.appendChild(cardFilial);
 
     // Bot es de a  o
@@ -1116,6 +1711,52 @@ const btnMenu = document.getElementById("btnMenu");
 btnMenu.addEventListener("click", () => {
     window.location.href = "menu.html";
 });
+
+function filtrarLegenda(tipo, valor, elemento){
+
+  // Alternar sele  o
+  if(tipo === 'tipo'){
+    filtroTipoAtivo = (filtroTipoAtivo === valor) ? null : valor;
+  } else {
+    filtroDispositivoAtivo = (filtroDispositivoAtivo === valor) ? null : valor;
+  }
+
+  // Remove sele  o visual
+  document.querySelectorAll('.legenda-item').forEach(el => {
+    el.classList.remove('ativo');
+  });
+
+  // Marca os ativos
+  document.querySelectorAll('.legenda-item').forEach(el => {
+    if(el.textContent === filtroTipoAtivo || el.textContent === filtroDispositivoAtivo){
+      el.classList.add('ativo');
+    }
+  });
+
+  aplicarFiltroLegenda();
+}
+
+function aplicarFiltroLegenda(){
+
+  let listaFiltrada = lojas.filter(l => {
+
+    const tipoOk = !filtroTipoAtivo || l.tipo === filtroTipoAtivo;
+    const dispOk = !filtroDispositivoAtivo || l.dispositivo === filtroDispositivoAtivo;
+
+    return tipoOk && dispOk;
+  });
+
+  if(listaFiltrada.length === 0){
+    telaLojas.innerHTML = "<p style='margin-top:30px;'>Nenhum resultado encontrado.</p>";
+  } else {
+    mostrarTabela(listaFiltrada);
+  }
+
+  telaRegionais.style.display = 'none';
+  backBtn.style.display = 'inline-block';
+
+  atualizarResumo(listaFiltrada);
+}
 
 
 function baixarResultado() {
@@ -1268,24 +1909,61 @@ function filtrar(){
 
   // Se pesquisa estiver vazia, mostra tudo
   if(!termo){
-    document.getElementById("siglaResumo").textContent = "---";
-    document.querySelector(".card-loja-pesquisada").classList.remove("encontrado"); 
-    telaLojas.innerHTML='';
-    mostrarRegionais();
-    telaRegionais.style.display='flex';
-    backBtn.style.display='none';
-    atualizarResumo();
-    return;
-  }
-  
+
+  // ?? RESETA FILTROS
+  filtroTipoAtivo = null;
+  filtroDispositivoAtivo = null;
+
+  // ?? REMOVE VISUAL ATIVO
+  document.querySelectorAll('.legenda-item').forEach(el => {
+    el.classList.remove('ativo');
+  });
+
+  // RESET VISUAL
+  document.getElementById("siglaResumo").textContent = "---";
+  document.getElementById("cidadeResumo").textContent = "---";
+  document.querySelector(".card-loja-pesquisada").classList.remove("encontrado"); 
+
+  telaLojas.innerHTML='';
+  mostrarRegionais();
+  telaRegionais.style.display='flex';
+  backBtn.style.display='none';
+
+  atualizarResumo();
+
+  return;
+}  
   // Filtra as lojas
-  const resultado = lojas.filter(l=>l.sigla.toLowerCase().includes(termo) 
-    || l.pdvs.some(p=>p.toLowerCase().includes(termo)));
+const resultado = lojas.filter(l =>
+  l.sigla.toLowerCase().includes(termo) ||
+  l.ip.toLowerCase().includes(termo) ||
+  l.pdvs.some(p => p.toLowerCase().includes(termo))
+);
+
 const campoSigla = document.getElementById("siglaResumo");
 const campoCidade = document.getElementById("cidadeResumo");
 const cardLoja = document.querySelector(".card-loja-pesquisada");
 
 if(resultado.length > 0){
+
+  resultado.sort((a, b) => {
+
+  const aSigla = a.sigla.toLowerCase().startsWith(termo);
+  const bSigla = b.sigla.toLowerCase().startsWith(termo);
+
+  // PRIORIDADE 1: começa com a sigla
+  if (aSigla && !bSigla) return -1;
+  if (!aSigla && bSigla) return 1;
+
+  // PRIORIDADE 2: contém na sigla
+  const aContemSigla = a.sigla.toLowerCase().includes(termo);
+  const bContemSigla = b.sigla.toLowerCase().includes(termo);
+
+  if (aContemSigla && !bContemSigla) return -1;
+  if (!aContemSigla && bContemSigla) return 1;
+
+  return 0;
+});
 
   // sempre pega a primeira da lista
   const primeiraLoja = resultado[0];
@@ -1331,8 +2009,28 @@ if(resultado.length > 0){
       </div>
 
       <div class="consulta-alert">
-         Verifique se a <strong>SIGLA DA LOJA</strong> ou o <strong>PDV</strong> estao corretos.
-      </div>
+<div style="
+    margin-top:15px;
+    font-size:14px;
+    color:#ccc;
+    text-align:center;
+">
+    Verifique se os Dados Informados Estao Corretos:
+</div>
+
+<div style="
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin-top:15px;
+">
+
+ <div class="containerErro">
+  <div class="boxErro">SIGLA DA LOJA</div>
+  <div class="boxErro">PDV</div>
+  <div class="boxErro">ENDERECO IP</div>
+
+</div>      </div>
 
       <button onclick="voltar()" class="consulta-btn">
         VOLTAR AO PAINEL

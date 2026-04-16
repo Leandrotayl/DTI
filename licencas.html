@@ -48,7 +48,7 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
 
 .email-text {
   display: inline-block;
-  max-width: 180px;         /* largura máxima da área de texto */
+  max-width: 180px;         /* largura mï¿½xima da ï¿½rea de texto */
   overflow: hidden;
   text-overflow: ellipsis;  /* mostra "..." ao ultrapassar o limite */
   white-space: nowrap;      /* impede quebra de linha */
@@ -184,7 +184,7 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
   transform: scale(1.05);
 }
 
-/* Estilo do popup de cópia */
+/* Estilo do popup de cï¿½pia */
 .copy-popup {
   position: fixed;
   top: 50%;
@@ -227,7 +227,7 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
   animation: floatPopup 2s ease-in-out infinite alternate;
 }
 
-/* Ícone e texto */
+/* ï¿½cone e texto */
 .popup-content {
   position: relative;
   z-index: 2;
@@ -291,7 +291,7 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
   z-index: 1;
 }
 
-/* Animações */
+/* Animaï¿½ï¿½es */
 @keyframes floatPopup {
   from { transform: translateY(0); }
   to { transform: translateY(-5px); }
@@ -457,7 +457,7 @@ footer { text-align:center; padding:15px; font-size:1rem; color:#ccc; margin-top
 
   <div class="licenca-container" id="licenca-container"></div>
 
-  <footer>&copy; 2025 Gerência de Suporte</footer>
+  <footer>&copy; 2025 Gerencia de Suporte</footer>
 </div>
 
 <script>
@@ -1476,7 +1476,7 @@ function atualizarDashboard(licencas){
   btn.addEventListener('click', () => {
     const email = btn.getAttribute('data-email');
 
-    // --- Método híbrido: HTTPS e HTTP ---
+    // --- Mï¿½todo hï¿½brido: HTTPS e HTTP ---
     if (navigator.clipboard && window.isSecureContext) {
       // HTTPS ? usa API moderna
       navigator.clipboard.writeText(email).then(() => {
@@ -1487,7 +1487,7 @@ function atualizarDashboard(licencas){
         copiarAntigo(email, btn);
       });
     } else {
-      // HTTP ? usa método antigo compatível
+      // HTTP ? usa mï¿½todo antigo compatï¿½vel
       copiarAntigo(email, btn);
     }
   });
@@ -1496,7 +1496,7 @@ function atualizarDashboard(licencas){
 
 
 
-// Função de cópia compatível com servidores HTTP
+// Funï¿½ï¿½o de cï¿½pia compatï¿½vel com servidores HTTP
 function copiarAntigo(texto, btn) {
   const tempInput = document.createElement('textarea');
   tempInput.value = texto;
@@ -1511,7 +1511,7 @@ function copiarAntigo(texto, btn) {
       btn.textContent = 'Copiado!';
       setTimeout(() => btn.textContent = 'Copiar E-mail', 2000);
     } else {
-      alert('Não foi possível copiar. Copie manualmente.');
+      alert('Nï¿½o foi possï¿½vel copiar. Copie manualmente.');
     }
   } catch (err) {
     alert('Erro ao copiar. Copie manualmente.');
@@ -1525,10 +1525,10 @@ function mostrarPopup() {
   const popup = document.getElementById('copyPopup');
   const particlesContainer = document.getElementById('popupParticles');
 
-  // Remove partículas antigas
+  // Remove partï¿½culas antigas
   particlesContainer.innerHTML = '';
 
-  // Cria partículas dinâmicas
+  // Cria partï¿½culas dinï¿½micas
   for (let i = 0; i < 25; i++) {
     const particle = document.createElement('div');
     particle.style.position = 'absolute';
@@ -1541,7 +1541,7 @@ function mostrarPopup() {
     particle.style.transform = `translate(-50%, -50%)`;
     particlesContainer.appendChild(particle);
 
-    // Anima cada partícula com expansão aleatória
+    // Anima cada partï¿½cula com expansï¿½o aleatï¿½ria
     const x = (Math.random() - 0.5) * 400;
     const y = (Math.random() - 0.5) * 400;
     particle.animate([
@@ -1554,7 +1554,7 @@ function mostrarPopup() {
     });
   }
 
-  // Mostra popup com animações
+  // Mostra popup com animaï¿½ï¿½es
   popup.classList.add('show');
   setTimeout(() => popup.classList.remove('show'), 2200);
 }
@@ -1590,7 +1590,7 @@ function atualizarDataHora() {
       ? " Tarde"
       : " Noite";
 
-  // Atualiza o conteúdo no mesmo card
+  // Atualiza o conteï¿½do no mesmo card
   const timeCard = document.getElementById('time-card');
   timeCard.innerHTML = `
     <div style="font-size:1.8rem; font-weight:bold;">${horas}:${minutos}:${segundos}</div>

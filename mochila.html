@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mochila TI - Viagem</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+
+body{
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    color:#fff;
+}
+
+/* LOGIN */
+.login{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.login-box{
+    background:#1e293b;
+    padding:30px;
+    border-radius:15px;
+    width:300px;
+}
+
+.login-box input, .login-box button{
+    width:100%;
+    padding:10px;
+    margin-top:10px;
+    border:none;
+    border-radius:8px;
+}
+
+.login-box button{
+    background:#38bdf8;
+    font-weight:bold;
+}
+
+/* SISTEMA */
+.sistema{display:none;padding:20px;}
+
+.topo{
+    display:flex;
+    justify-content:space-between;
+    background:#1e293b;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:20px;
+}
+
+.sair{
+    background:#ef4444;
+    border:none;
+    padding:8px 12px;
+    border-radius:8px;
+    color:#fff;
+    cursor:pointer;
+}
+
+.form{
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(160px,1fr));
+    gap:8px;
+    margin-bottom:15px;
+}
+
+.form input{
+    padding:6px 8px;
+    border-radius:6px;
+    border:none;
+    font-size:13px;
+    height:32px;
+}
+
+.itens{
+    display:grid;
+    grid-template-columns: repeat(auto-fit,minmax(250px,1fr));
+    gap:10px;
+}
+
+.card{
+    background:#1e293b;
+    padding:10px;
+    border-radius:10px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.card input[type="number"]{
+    width:60px;
+}
+
+/* BOTÕES */
+.acoes{
+    display:flex;
+    gap:10px;
+    margin-top:20px;
+}
+
+.btn{
+    padding:8px 12px;
+    border:none;
+    border-radius:8px;
+    font-size:13px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+/* efeito hover */
+.btn:hover{
+    transform:scale(1.05);
+    opacity:0.9;
+}
+
+/* alinhar melhor */
+.acoes{
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+    margin-top:20px;
+}
+
+.verde{background:#22c55e;}
+.azul{background:#3b82f6;}
+
+/* MODAL CHECKLIST */
+.modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.7);
+    display:none;
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-box{
+    background:#1e293b;
+    padding:20px;
+    border-radius:12px;
+    width:90%;
+    max-width:500px;
+    max-height:80%;
+    overflow:auto;
+}
+
+.modal-box h3{
+    margin-bottom:10px;
+}
+
+.check-item{
+    display:flex;
+    justify-content:space-between;
+    margin:5px 0;
+    background:#0f172a;
+    padding:8px;
+    border-radius:6px;
+}
+
+.barra-topo{
+    display:flex;
+    gap:10px;
+    background:rgba(255,255,255,0.05);
+    padding:10px;
+    border-radius:12px;
+    backdrop-filter:blur(10px);
+    margin-bottom:15px;
+}
+
+/* cada campo */
+.campo{
+    display:flex;
+    align-items:center;
+    gap:6px;
+    background:#0f172a;
+    padding:6px 10px;
+    border-radius:8px;
+    flex:1;
+}
+
+/* ícone */
+.campo span{
+    font-size:14px;
+    opacity:0.8;
+}
+
+/* input */
+.campo input{
+    background:transparent;
+    border:none;
+    outline:none;
+    color:#fff;
+    width:100%;
+    font-size:13px;
+}
+
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div class="login" id="login">
+    <div class="login-box">
+        <h2>Login TI</h2>
+        <input type="text" id="user" placeholder="Usuário">
+        <input type="password" id="pass" placeholder="Senha">
+        <button onclick="logar()">Entrar</button>
+    </div>
+</div>
+
+<!-- SISTEMA -->
+<div class="sistema" id="sistema">
+
+    <div class="topo">
+        <div id="nomeUsuario"></div>
+        <button class="sair" onclick="sair()">Sair</button>
+    </div>
+
+   <div class="barra-topo">
+    
+    <div class="campo">
+        <span>📅</span>
+        <input type="date" id="data">
+    </div>
+
+    <div class="campo">
+        <span>🏪</span>
+        <input type="text" id="loja" placeholder="Destino">
+    </div>
+
+    <div class="campo">
+        <span>👤</span>
+        <input type="text" id="responsavel" placeholder="Responsável">
+    </div>
+
+</div>
+
+    <div class="itens" id="listaItens"></div>
+
+    <div class="acoes">
+        <button class="btn azul" onclick="levarTudo()">🎯 Levar tudo</button>
+        <button class="btn verde" onclick="abrirChecklist()">🧾 Conferir</button>
+    </div>
+
+</div>
+
+<!-- MODAL CHECKLIST -->
+<div class="modal" id="modal">
+    <div class="modal-box">
+        <h3>Checklist de Conferência</h3>
+        <div id="checklist"></div>
+        <button class="btn verde" onclick="finalizar()">Finalizar</button>
+    </div>
+</div>
+
+<script>
+
+// LOGIN
+const usuarios = [
+    {user:"admin", pass:"123"},
+    {user:"ti", pass:"123"}
+];
+
+function logar(){
+    let u = user.value;
+    let p = pass.value;
+
+    let ok = usuarios.find(x => x.user===u && x.pass===p);
+
+    if(ok){
+        login.style.display="none";
+        sistema.style.display="block";
+        nomeUsuario.innerText = "Usuário: " + u;
+        data.valueAsDate = new Date();
+    }else{
+        alert("Login inválido");
+    }
+}
+
+function sair(){location.reload();}
+
+// ITENS
+const itens = [
+"Alicate Crimpador RJ45/RJ50",
+"Testador de cabos & POE 2Flex",
+"Localizador de Cabos",
+"Multímetro",
+"Switch",
+"Access Point",
+"Mikrotik",
+"Fortigate",
+"Notebook",
+"Mouse",
+"Teclado"
+];
+
+itens.forEach(item=>{
+    listaItens.innerHTML += `
+        <div class="card">
+            <label><input type="checkbox" class="check"> ${item}</label>
+            <input type="number" value="1" min="1">
+        </div>
+    `;
+});
+
+// 🎯 LEVAR TUDO
+function levarTudo(){
+    document.querySelectorAll(".check").forEach(c=>{
+        c.checked = true;
+    });
+}
+
+// 🧾 CHECKLIST
+function abrirChecklist(){
+    let lista = document.getElementById("checklist");
+    lista.innerHTML = "";
+
+    document.querySelectorAll(".card").forEach(c=>{
+        let check = c.querySelector(".check").checked;
+        let nome = c.innerText.trim();
+        let qtd = c.querySelector("input[type='number']").value;
+
+        if(check){
+            lista.innerHTML += `
+                <div class="check-item">
+                    <span>${nome} (x${qtd})</span>
+                    <input type="checkbox">
+                </div>
+            `;
+        }
+    });
+
+    modal.style.display="flex";
+}
+
+// FINALIZAR
+function finalizar(){
+    alert("Viagem confirmada com checklist!");
+    modal.style.display="none";
+}
+
+</script>
+
+</body>
+</html>

@@ -1,636 +1,582 @@
 
+
+<!--
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site em Manutenção</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        /* Fundo animado com partículas simples */
+        body::before {
+            content: "";
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: moveBackground 20s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes moveBackground {
+            0% { transform: translate(0,0); }
+            100% { transform: translate(-50px, -50px); }
+        }
+
+        .container {
+            position: relative;
+            z-index: 1;
+            background: rgba(0,0,0,0.6);
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 0 40px rgba(0,0,0,0.5);
+            max-width: 500px;
+            width: 90%;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            font-size: 48px;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        p {
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.8; }
+        }
+
+        a.button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: #00bfff;
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 30px;
+            box-shadow: 0 0 20px rgba(0,191,255,0.5);
+            transition: all 0.3s ease;
+        }
+
+        a.button:hover {
+            background: #00e5ff;
+            box-shadow: 0 0 30px rgba(0,229,255,0.7);
+            transform: translateY(-3px);
+        }
+
+        /* Ícone de manutenção */
+        .icon {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #00bfff;
+            animation: rotate 4s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 36px; }
+            p { font-size: 16px; }
+            .icon { font-size: 50px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="icon"></div>
+        <h1>Site em Manutenção</h1>
+        <p>Estamos trabalhando para melhorar sua experiência. Por favor, volte mais tarde.</p>
+
+    </div>
+</body>
+</html>-->
+
+
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel de Regionais</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 body {
+  font-family:'Orbitron',sans-serif;
   background: url('http://172.16.2.7/DTI/img/1.png') no-repeat center center fixed;
-  background-size: cover;
-  min-height: 100vh;
-}
-
-/* Container ocupa toda a largura */
-.container { 
-  max-width: 100%;
-  margin: 20px auto; 
-  padding: 0 20px; 
-}
-
-/* Pesquisa */
-.search-container {
+  background-size: cover; /* Faz a imagem cobrir toda a tela */
+  color: var(--accent);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
   display: flex;
-  justify-content: center;
-  margin: 20px 0;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding-top: 50px;
 }
 
-.search-container input {
-  width: 50%;
-  max-width: 400px;
-  min-width: 250px;
-  padding: 12px 20px;
-  font-size: 0.95em;
-  border-radius: 25px;
-  background: rgba(255, 204, 0, 0.2); /* fundo mais claro */
-  color: #1a1a1a; /* letras escuras para contraste */
-  font-weight: 600;
-  box-shadow: 0 0 12px rgba(255, 204, 0, 0.6), inset 0 0 6px rgba(255, 204, 0, 0.4);
-  transition: all 0.3s;
+/* PARTICULAS DE FUNDO */
+#particles-js {
+  position:fixed; top:0; left:0;
+  width:100%; height:100%;
+  z-index:-1;
 }
 
-.search-container input::placeholder {
-  color: #1a1a1a; /* placeholder mais vis vel */
-  font-weight: 500;
-  opacity: 0.8;
+/* TITULO PRINCIPAL */
+h1 {
+  margin-bottom:40px;
+  color:#00ffff;
+  font-size:3rem;
+  font-weight:900;
+  text-align:center;
+  text-shadow:0 0 10px #00ffff,0 0 20px #00ffff,0 0 40px #00ffff;
+  animation: glowPulse 2s infinite alternate;
+}
+@keyframes glowPulse {
+  0% { text-shadow:0 0 10px #00ffff,0 0 20px #00ffff,0 0 40px #00ffff; }
+  50% { text-shadow:0 0 20px #00ffff,0 0 40px #00ffff,0 0 60px #00ffff; }
+  100% { text-shadow:0 0 30px #00ffff,0 0 60px #00ffff,0 0 80px #00ffff; }
 }
 
-.search-container input:focus {
-  background: #fffbcc; /* amarelo claro ao focar */
-  box-shadow: 0 0 18px rgba(255, 204, 0, 0.8), inset 0 0 8px rgba(255, 204, 0, 0.5);
-  outline: none;
+/* INPUT DE PESQUISA */
+#searchBox {
+  width:100%;
+  max-width:800px;  /* aumenta a largura máxima */
+  padding:20px;     /* aumenta o tamanho interno */
+  font-size:20px;   /* aumenta a fonte */
+  margin-bottom:15px;
+  width:100%;
+  border-radius:15px;
+  border:none;
+  outline:none;
+  text-align:center;
+  background:rgba(255,255,255,0.05);
+  backdrop-filter:blur(12px);
+  color:#fff;
+  box-shadow: inset 0 0 15px rgba(0,255,255,0.4),0 0 20px rgba(0,255,255,0.2);
+  transition:0.3s;
+}
+#searchBox:focus { 
+  transform:scale(1.03); 
+  box-shadow: inset 0 0 25px rgba(0,255,255,0.6),0 0 35px rgba(0,255,255,0.4);
 }
 
-
-/* Tabela de resultados elegante */
-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0 8px;
-  margin-top: 20px;
-  font-size: 0.95em;
-}
-thead th {
-  background: #ffcc00;
-  color: #1a1a1a;
-  font-weight: 700;
-  padding: 12px 10px;
-  text-align: center; /* CENTRALIZADO */
-  border-radius: 8px 8px 0 0;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+/* BADGE GLOBAL ULTRA HD */
+#badgeGlobal {
+  position: fixed;
+  top: 3px;
+  right: 10px;
+  background: linear-gradient(135deg,#090a0a,#00bcd4);
+  padding:4px 40px;
+  border-radius:20px;
+  color:#f1e9e9;
+  font-weight:bold;
+  text-align:center;
+  z-index:1000;
+  box-shadow:0 0 25px #00ffff,0 0 50px #00ffff;
 }
 
-tbody tr {
-  background: #2a2a2a;
-  color: #f0f0f0;
-  border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.4);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-tbody tr:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 12px rgba(0,0,0,0.6);
-}
+#badgeGlobal h3 { font-size:14px; margin-bottom:5px; }
+#badgeGlobal span { font-size:24px; font-weight:bold; }
+#badgeGlobal div { font-size:12px; margin-top:5px; text-align:left; color:#fff; }
+#badgeGlobal small { font-size:10px; color:#ccc; display:block; margin-top:3px; }
 
-tbody td {
+
+
+
+.regionais .regional-card {
+  background: linear-gradient(145deg, #0f0c29, #302b63, #24243e);
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 255, 255, 0.25), 0 0 10px rgba(0, 255, 255, 0.15) inset;
+  color: #00ffff;
   padding: 10px;
-  text-align: center; /* CENTRALIZA OS DADOS */
-  vertical-align: middle;
+  width: 100%;
+  min-height: 90px; /* altura mais compacta */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
 }
 
-tbody td { padding: 10px; }
-.action-btn {
-  padding: 6px 12px;
-  margin: 2px;
-  border-radius: 8px;
-  border: none;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s;
+.regionais .regional-card:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 10px 20px rgba(0, 255, 255, 0.4), 0 0 15px rgba(0, 255, 255, 0.2) inset;
+}
+
+.regionais .regional-card h3 {
+  font-size: 1rem; /* título menor */
+  margin-bottom: 5px;
+}
+
+.regionais .regional-card p {
+  font-size: 0.8rem; /* texto menor */
+  margin: 0;
+}
+
+
+
+
+
+/* CORES DIFERENTES PARA CADA REGIONAL */
+.regional:nth-child(1) { background: linear-gradient(135deg,#1a2a6c,#b21f1f,#fdbb2d); }
+.regional:nth-child(2) { background: linear-gradient(135deg,#283c86,#45a247); }
+.regional:nth-child(3) { background: linear-gradient(135deg,#42275a,#734b6d); }
+.regional:nth-child(4) { background: linear-gradient(135deg,#134e5e,#71b280); }
+.regional:nth-child(5) { background: linear-gradient(135deg,#000428,#004e92,#fdbb2d); }
+.regional:nth-child(6) { background: linear-gradient(135deg,#000428,#06b371); }
+.regional:nth-child(7) { background: linear-gradient(135deg,#000428,#475581,#bd9131); }
+.regional:nth-child(8) { background: linear-gradient(135deg,#000428,#06b371); }
+
+/* RESULTADOS DA PESQUISA */
+#resultadosPesquisa {
+  width:100%;
+  max-width:1100px;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:center;
+  margin-bottom:20px;
+}
+
+.result-card {
+  background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(0,0,0,0.2));
+  border-radius: 20px;
+  padding: 20px;
+  width: 300px;
+  box-shadow: 0 0 20px #00ffff, 0 0 40px #00ffff inset;
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.result-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px #00ffff, 0 0 80px #00ffff inset;
+}
+.result-card h3 {
+  font-size: 22px;
+  color: #00ffff;
+  font-weight: 900;
+  text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+  margin-bottom: 10px;
+  border-bottom: 1px solid rgba(0,255,255,0.5);
+  padding-bottom: 6px;
+}
+.result-card p {
+  margin: 4px 0;
+  font-size: 14px;
   color: #fff;
 }
-.action-btn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-}
-
-/* ================= BOTÃO VOLTAR ESTILIZADO ================= */
-.back-btn {
-  margin-bottom: 20px;
-  padding: 12px 26px;          /* maior padding */
-  background: #ffcc00;         /* mantém cor amarela */
-  color: #1a1a1a;              /* letras escuras */
-  border: none;
-  border-radius: 18px;         /* cantos mais arredondados */
-  font-weight: 700;
-  font-size: 1em;              /* texto um pouco maior */
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.4), 0 0 10px #ffcc00 inset; /* sombra moderna */
-}
-
-/* Efeito hover */
-.back-btn:hover {
-  background: linear-gradient(135deg, #ffd633, #ffb700); /* degradê suave */
-  transform: translateY(-3px) scale(1.05);               /* animação sutil */
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5), 0 0 15px #ffcc00 inset; /* mais destaque */
-}
-
-/* Efeito clique rápido */
-.back-btn:active {
-  transform: translateY(-1px) scale(0.98); /* leve feedback ao clicar */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4), 0 0 8px #ffcc00 inset;
-}
-.top-left, .top-right {
-  position: fixed;
-  top: 4px;
-  z-index: 1000;
-  font-family: 'Poppins', sans-serif;
-}
-.top-left { left: 20px; }
-.top-right { right: 20px; }
-
-.card-dispositivo, 
-
-/* Quadro de resumo mais forte */
-.cards-resumo {
-  display: grid;
-  grid-template-columns: repeat(2, 70px);
-  gap: 6px;
-  padding: 6px;
-  border: 2px solid #ffcc00;
-  border-radius: 12px;
-  background: rgba(255,204,0,0.05);
-  box-shadow: 0 0 10px #ffcc00, 0 0 20px rgba(255,204,0,0.3);
-
-  /* NOVO: posicionamento fixo no topo direito */
-  position: fixed;
-  top: 2px;      /* distância do topo */
-  right: 6px;    /* distância da lateral direita */
-  z-index: 1000;  /* para ficar acima do resto */
-}
-
-
-.card .badge {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  background: #ffcc00;
-  color: #1a1a1a;
-  font-size: 0.85em;
-  font-weight: 700;
-  width: 32px;       /* tamanho maior e quadrado */
-  height: 32px;      /* igual   largura para ficar quadrado */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 8px; /* cantos arredondados */
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 10px #ffcc00 inset;
-}
-
-
-
-/* Cards internos menores */
-.card-mini {
-  background:#2a2a2a;
-  border-radius:10px;
-  padding:8px 6px;
-  text-align:center;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.4), 0 0 4px #ffcc00 inset;
-  cursor: default;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card-mini:hover {
-  transform:translateY(-1px);
-  box-shadow:0 6px 12px rgba(0,0,0,0.6),0 0 6px #ffcc00 inset;
-}
-
-.card-mini span {
-  display:block;
-  font-size:0.7em; /* menor para caber no card */
-  color:#ffd966;
-  margin-bottom:2px;
-  text-transform: uppercase;
-  letter-spacing:0.5px;
-  font-weight:600;
-}
-
-.card-mini h2 {
-  font-size:1.1em; /* proporcional ao card menor */
-  font-weight:700;
-  color:#ffcc00;
-  margin:0;
-  text-shadow:1px 1px 3px #000;
-}
-
-/* Atualizado em */
-#atualizado {
-  font-size:0.6em;
-  color:#ffd966;
-  text-align:center;
-  letter-spacing:0.5px;
-  margin-top:2px;
-}
-
-.cards-dispositivo-resumo {
-  display: grid;
-  grid-template-columns: repeat(2, 70px); /* mesmo tamanho do resumo */
-  gap: 6px;
-  padding: 6px;
-  border: 2px solid #ffcc00;
-  border-radius: 12px;
-  background: rgba(255,204,0,0.05);
-  box-shadow: 0 0 10px #ffcc00, 0 0 20px rgba(255,204,0,0.3);
-}
-
-/* Cards internos */
-.card-mini-dispositivo {
-  background:#2a2a2a;
-  border-radius:10px;
-  padding:8px 6px;
-  text-align:center;
-  box-shadow: 0 3px 8px rgba(0,0,0,0.4), 0 0 4px #ffcc00 inset;
-  cursor: default;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card-mini-dispositivo:hover {
-  transform:translateY(-1px);
-  box-shadow:0 6px 12px rgba(0,0,0,0.6),0 0 6px #ffcc00 inset;
-}
-
-.card-mini-dispositivo span {
-  display:block;
-  font-size:0.7em; 
-  color:#ffd966;
-  margin-bottom:2px;
-  text-transform: uppercase;
-  letter-spacing:0.5px;
-  font-weight:600;
-}
-
-.card-mini-dispositivo h2 {
-  font-size:1.1em; 
-  font-weight:700;
-  color:#ffcc00;
-  margin:0;
-  text-shadow:1px 1px 3px #000;
-}
-
-/* Cards regionais */
-/* ================= CARDS REGIONAIS MENOR ================= */
-.cards {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px; /* menor espaçamento entre cards */
-  justify-content: flex-start;
-  align-items: flex-start;
-  margin-top: 50px; /* distância do topo */
-}
-
-.card {
-  background:#2a2a2a;
-  border-radius: 10px; /* menor arredondamento */
-  padding: 12px 16px; /* menos padding */
-  text-align:center;
-  cursor:pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-  box-shadow:0 4px 10px rgba(0,0,0,0.5);
-  border:2px solid #ffcc00;
-  overflow:hidden;
-}
-
-.card:hover {
-  transform:translateY(-5px);
-  box-shadow:0 8px 20px rgba(0,0,0,0.7),0 0 15px #ffcc00 inset;
-}
-
-.card h2 {
-  color:#ffdd57;
-  font-size:1em; /* menor título */
-  margin-bottom: 8px;
-  text-shadow:1px 1px 5px #000;
-}
-
-.card .contagem-tipos {
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap: 6px; /* menor espaçamento interno */
-  margin-top: 10px;
-}
-
-.card .contagem-tipos .tipo {
-  background:#3a3a3a;
-  padding: 6px; /* menor padding nos mini-cards */
-  border-radius:6px; /* menor arredondamento */
-  text-align:center;
-  box-shadow:0 4px 10px rgba(0,0,0,0.5);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card .contagem-tipos .tipo span {
-  display:block;
-  font-size:0.7em; /* texto menor */
-  color:#aaa;
-}
-
-.card .contagem-tipos .tipo p {
-  font-weight:700;
-  font-size:0.9em; /* menor valor */
-  color:#ffcc00;
-  margin-top:2px;
-}
-
-.card .contagem-tipos .tipo:hover {
-  transform:translateY(-3px);
-  box-shadow:0 8px 15px rgba(0,0,0,0.7);
-}
-
-.card .badge {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  background: #ffcc00;
-  color: #1a1a1a;
-  font-size: 0.7em; /* menor badge */
-  font-weight: 700;
-  width: 24px; /* menor */
-  height: 24px; /* menor */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 10px #ffcc00 inset;
-}
-
-/* Modal autentica  o */
-.modal { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); backdrop-filter:blur(4px); justify-content:center; align-items:center; z-index:9999; transition: opacity 0.3s; }
-.modal-content {
-  background: linear-gradient(145deg,#2a2a2a,#1a1a1a);
-  padding:35px 50px; border-radius:25px; max-width:400px; width:90%; text-align:center;
-  box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 25px #ffcc00; transform:rotateX(-10deg); transition: transform 0.3s ease;
-}
-.modal-content h3 { color:#ffcc00; margin-bottom:20px; text-shadow:1px 1px 3px #000; }
-.modal-content input { width:80%; padding:12px; margin-bottom:20px; border-radius:12px; border:none; outline:none; font-size:1em; text-align:center; box-shadow:inset 0 0 6px rgba(255,204,0,0.4); }
-.modal-content button { padding:10px 22px; border:none; border-radius:12px; background:#ffcc00; color:#1a1a1a; font-weight:700; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.5); transition: all 0.2s; }
-.modal-content button:hover { background:#e6b800; transform:translateY(-2px); }
-.error-msg { color:#ff4444; margin-bottom:12px; font-weight:700; font-size:0.95em; }
-
-.filtro-select {
-  position: fixed;
-  top: 15px;
-  left: 15px;
-  padding: 8px 12px;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #00ffcc, #0099ff);
-  color: #000;
+.result-card span {
   font-weight: bold;
-  border: none;
-  box-shadow: 0 0 10px #00ffcc;
-  cursor: pointer;
-  z-index: 9999;
+  color: #00ffff;
+}
+
+/* CORES SUAVES ALTERNADAS POR LINHA */
+.result-card:nth-child(4n+1) { background-color: rgba(255,182,193,0.2); }
+.result-card:nth-child(4n+2) { background-color: rgba(173,216,230,0.2); }
+.result-card:nth-child(4n+3) { background-color: rgba(216,191,216,0.2); }
+.result-card:nth-child(4n+4) { background-color: rgba(255,255,224,0.2); }
+.result-card:nth-child(4n+5) { background-color: rgba(255,255,224,0.2); }
+
+.result-card:hover { transform: scale(1.05); box-shadow:0 0 15px #00ffff,0 0 30px #00ffff; }
+
+/* TELA DE LOJAS */
+#telaLojas {
+  display:none;
+  width:100%;
+  max-width:100%; /* remove limitação */
+  margin-top:20px;
+  padding: 20px;
 }
 
 
-#meuBotao {
+/* BOT O VOLTAR FLUTUANTE */
+.btnVoltar {
   position: fixed;
   top: 20px;
-  left: 20px;
-  z-index: 9999;
-}
-
-.top-bar {
-  display: flex;
-  justify-content: flex-start;
-  margin-bottom: 20px;
-}
-
-.filtro-select {
-  position: fixed;
-  top: 15px;
-  left: 366px;
-  background: linear-gradient(135deg, #00ffcc, #0099ff);
-  color: #000;
-  font-weight: bold;
-  border: none;
-  box-shadow: 0 0 10px #00ffcc;
-  cursor: pointer;
-}
-
-#btnDownload {
-  position: fixed;
-  top: 14px; /* abaixo do filtro */
-  left: 520px; /* move mais para direita */
-  padding: 8px 12px;
-  background: #1ce701;
-  color: #000;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  z-index: 9999;
-}
-
-
-#btnDownload:hover {
-  background: #00ccaa;
-}
-
-#telaLojas .card {
-  margin-top: 68px; /* aumenta o espaço do topo */
-  animation: slideDown 0.4s ease;
-}
-
-@keyframes slideDown {
-  from { transform: translateY(-20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
-}
-
-/* ===== LINHA AMARELA ENTRE COLUNAS ===== */
-
-/* Cabe alho */
-/* ===== LINHA TRACEJADA GROSSA ENTRE COLUNAS ===== */
-
-thead th {
-  border-right: 4px dashed #ffcc00;  /* MAIS GROSSA */
-}
-
-tbody td {
-  border-right: 6px dashed rgba(255, 204, 0, 0.8); /* MAIS GROSSA */
-}
-
-/* Remove da  ltima coluna */
-thead th:last-child,
-tbody td:last-child {
-  border-right: none;
-}
-
-thead th,
-tbody td {
-  border-right: 1px solid #ffcc00;
-}
-
-/* Glow leve na tabela */
-table {
-  box-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
-}
-
-thead th:last-child,
-tbody td:last-child {
-  border-right: none;
-}
-
-/* Linha neon entre colunas */
-thead th,
-tbody td {
-  border-right: 1px solid #ffcc00;
-}
-
-thead th:last-child,
-tbody td:last-child {
-  border-right: none;
-}
-
-/* Glow suave */
-table {
-  box-shadow: 0 0 15px rgba(255,204,0,0.3);
-}
-
-.regional-card .badge {
-  background: #00ffcc;
-  color: #000;
-  box-shadow: 0 0 15px #00ffcc;
-}
-
-.consulta-alert{
-  position:relative;
-  margin:25px 0 35px;
-  padding:20px 28px;
-  border-radius:14px;
-
-  font-size:16px;
-  font-weight:700;
-  color:#ffffff;
-
-  background:rgba(20,20,20,0.8);
-}
-
-/* Vertical */
-.consulta-alert::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border-radius:14px;
-  padding:2px;
-  background:
-    linear-gradient(#00ffc8,#00ffc8) left,
-    linear-gradient(#00ffc8,#00ffc8) right,
-    linear-gradient(#ffcc00,#ffcc00) top,
-    linear-gradient(#ffcc00,#ffcc00) bottom;
-
-  background-size:
-    2px 100%,
-    2px 100%,
-    100% 2px,
-    100% 2px;
-
-  background-repeat:no-repeat;
-  pointer-events:none;
-}
-
-.cidadeResumo{
-  position:relative;
-  display:inline-block;
-  margin-top:8px;
+  left: 270px;
   padding:10px 20px;
-
-  font-size:0.80em;
-  font-weight:700;
-  letter-spacing:1px;
-  text-transform:uppercase;
-
-  color:#7CFFB2;
-
-  text-shadow:
-    0 0 6px rgba(124,255,178,0.6),
-    0 0 18px rgba(124,255,178,0.3);
-
-  animation:fadeCidade 0.5s ease forwards;
+  border:none;
+  border-radius:20px;
+  background: linear-gradient(135deg,#ff4757,#ff6b81);
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
+  z-index: 1001;
+  box-shadow:0 0 15px #ff4757,0 0 30px #ff6b81;
+  transition:0.3s, transform 0.2s;
+}
+.btnVoltar:hover { 
+  background: linear-gradient(135deg,#ff6b81,#ff4757);
+  transform: scale(1.05);
+  box-shadow:0 0 25px #ff6b81,0 0 50px #ff4757;
 }
 
-/* Moldura animada */
-.cidadeResumo::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  border:2px solid transparent;
-  border-radius:6px;
+.filial-card {
+  background: rgba(0,255,255,0.05);
+  border-radius:15px;
+  padding:15px;
+  margin-bottom:15px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  box-shadow:0 0 10px #00ffff, inset 0 0 20px rgba(0,255,255,0.2);
+}
+.filial-card h3 { margin:0; color:#00ffff; font-size:18px; }
+.filial-card .count-list { font-size:14px; font-weight:bold; line-height:1.4; }
+.filial-card table { width:100%; border-collapse:collapse; margin-top:8px; }
+.filial-card table td { padding:6px; border-bottom:1px solid rgba(255,255,255,0.2); font-size:13px; }
+.filial-card table td.tipo-filial { color:#0b6fe0; font-weight:bold; }
+.filial-card table td.tipo-posto { color:#feca57; font-weight:bold; }
+.filial-card table td.tipo-representante { color:#f0e007; font-weight:bold; }
+.filial-card table td.tipo-deposito { color:#48dbfb; font-weight:bold; }
+</style>
+</head>
+<body>
 
-  background:
-    linear-gradient(#00ff88,#00ff88) top left,
-    linear-gradient(#00ff88,#00ff88) top right,
-    linear-gradient(#00ff88,#00ff88) bottom right,
-    linear-gradient(#00ff88,#00ff88) bottom left;
 
-  background-size:0% 2px, 2px 0%, 0% 2px, 2px 0%;
-  background-repeat:no-repeat;
 
-  animation:fecharQuadro 0.8s ease forwards;
+  
+<!-- PARTICULAS 
+<!--<div id="particles-js"></div>
+
+
+<!--<img id="logo" src="http://172.16.2.7/DTI/painel.png" alt="IMAGEM">-->
+
+
+
+
+<!-- PARTICULAS JS -->
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+<script>
+particlesJS("particles-js", {
+  "particles": {
+    "number": {"value":80,"density":{"enable":true,"value_area":800}},
+    "color":{"value":"#00ffff"},
+    "shape":{"type":"circle"},
+    "opacity":{"value":0.5,"random":true,"anim":{"enable":true,"speed":1,"opacity_min":0.1,"sync":false}},
+    "size":{"value":3,"random":true,"anim":{"enable":true,"speed":3,"size_min":0.1,"sync":false}},
+    "line_linked":{"enable":true,"distance":150,"color":"#00ffff","opacity":0.4,"width":1},
+    "move":{"enable":true,"speed":2,"direction":"none","random":true,"straight":false,"out_mode":"out"}
+  },
+  "interactivity":{"detect_on":"canvas","events":{"onhover":{"enable":true,"mode":"grab"},"onclick":{"enable":true,"mode":"push"}},"modes":{"grab":{"distance":150,"line_linked":{"opacity":0.5}},"push":{"particles_nb":4}}},
+  "retina_detect":true
+});
+</script>
+
+
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lojas Claudino </title>
+
+<!-- Estilos principais -->
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;}
+body{background:#0d0d0d;color:#fff;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:30px;overflow-x:hidden;}
+
+/* PARTICULAS DE FUNDO */
+#particles-js{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;}
+
+/* TITULO PRINCIPAL */
+h1{margin-bottom:40px;color:#00ffff;font-size:3rem;font-weight:900;text-align:center;text-shadow:0 0 10px #00ffff,0 0 20px #00ffff,0 0 40px #00ffff;animation:glowPulse 2s infinite alternate;}
+@keyframes glowPulse{0%{text-shadow:0 0 10px #00ffff,0 0 20px #00ffff,0 0 40px #00ffff;}50%{text-shadow:0 0 20px #00ffff,0 0 40px #00ffff,0 0 60px #00ffff;}100%{text-shadow:0 0 30px #00ffff,0 0 60px #00ffff,0 0 80px #00ffff;}}
+
+/* INPUT DE PESQUISA */
+#searchBox{margin-bottom:15px;width:100%;max-width:550px;padding:15px;border-radius:15px;border:none;outline:none;font-size:18px;text-align:center;background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);color:#fff;box-shadow:inset 0 0 15px rgba(0,255,255,0.4),0 0 20px rgba(0,255,255,0.2);transition:0.3s;}
+#searchBox:focus{transform:scale(1.03);box-shadow:inset 0 0 25px rgba(0,255,255,0.6),0 0 35px rgba(0,255,255,0.4);}
+
+/* BADGE GLOBAL */
+#badgeGlobal{position:fixed;top:3px;right:10px;background:linear-gradient(135deg,#111111,#00bcd4);padding:15px 20px;border-radius:20px;color:#f1e9e9;font-weight:bold;text-align:center;z-index:1000;box-shadow:0 0 25px #00ffff,0 0 50px #00ffff;}
+#badgeGlobal h3{font-size:14px;margin-bottom:5px;} #badgeGlobal span{font-size:24px;font-weight:bold;} #badgeGlobal small{font-size:10px;color:#ccc;display:block;margin-top:3px;}
+
+/* Tipos */
+.tipo-filial{color:#0b6fe0;font-weight:bold;}
+.tipo-posto{color:#feca57;font-weight:bold;}
+.tipo-representante{color:#f0e007;font-weight:bold;}
+.tipo-deposito{color:#48dbfb;font-weight:bold;}
+
+/* Regionais */
+.regionais{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:25px;width:100%;max-width:1300px;margin-top:20px;}
+.regional{padding:25px;border-radius:20px;text-align:center;cursor:pointer;position:relative;color:#fff;transition:transform 0.5s ease,box-shadow 0.5s ease;box-shadow:0 10px 25px rgba(0,255,255,0.5), inset 0 0 20px rgba(0,255,255,0.2);}
+.regional:hover{transform: scale(1.08) perspective(500px) rotateX(3deg) rotateY(3deg);box-shadow:0 15px 35px rgba(0,255,255,0.7), inset 0 0 30px rgba(0,255,255,0.4);}
+.regional h2{font-size:24px;font-weight:900;color:#00ffff;text-shadow:0 0 10px #00ffff,0 0 20px #00ffff;}
+.badge-total{position:absolute;top:70px;right:15px;background:#f5f2f2;color:#000;padding:10px 16px;font-weight:bold;font-size:20px;border-radius:8px;box-shadow:0 0 15px #00ffff,0 0 30px #00ffff;}
+
+/* Tela de Lojas */
+#telaLojas{
+  display:none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;
+  padding: 80px 30px 30px 260px; /* espaço pro painel lateral */
+  overflow-y: auto;
+  background: rgba(0,0,0,0.95);
+  backdrop-filter: blur(10px);
+  z-index: 999;
 }
 
-/* Animação fechando o quadro */
-@keyframes fecharQuadro{
-  0%{
-    background-size:
-      0% 2px,
-      2px 0%,
-      0% 2px,
-      2px 0%;
-  }
-  25%{
-    background-size:
-      100% 2px,
-      2px 0%,
-      0% 2px,
-      2px 0%;
-  }
-  50%{
-    background-size:
-      100% 2px,
-      2px 100%,
-      0% 2px,
-      2px 0%;
-  }
-  75%{
-    background-size:
-      100% 2px,
-      2px 100%,
-      100% 2px,
-      2px 0%;
-  }
-  100%{
-    background-size:
-      100% 2px,
-      2px 100%,
-      100% 2px,
-      2px 100%;
-  }
+
+.btnVoltar{
+  position: fixed;
+  top: 4px;
+  left: 150px;
+  z-index: 1001;
+
+  padding: 16px 26px;
+  border-radius: 30px;
+  border: 2px solid transparent;
+
+  background: linear-gradient(135deg, #252121, #222021);
+  color: #fff;
+  font-weight: bold;
+  font-size: 14px;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 0 10px #ff4757,
+    0 0 20px #ff6b81,
+    inset 0 0 10px rgba(255,255,255,0.2);
+
+  transition: all 0.3s ease;
 }
 
-@keyframes fadeCidade{
-  from{
-    opacity:0;
-    transform:translateY(5px);
-  }
-  to{
-    opacity:1;
-    transform:translateY(0);
-  }
+/* Ícone opcional */
+.btnVoltar::before{
+  content: " ";
+  font-size: 16px;
 }
 
-.card-loja-pesquisada.encontrado .cidadeResumo{
-  color:#ffcc00;
-  text-shadow:0 0 8px rgba(255,215,0,0.6);
+/* Hover animado */
+.btnVoltar:hover{
+  background: linear-gradient(135deg, #ff6b81, #ff4757);
+  transform: scale(1.08);
+
+  box-shadow:
+    0 0 20px #ff6b81,
+    0 0 40px #ff4757,
+    inset 0 0 15px rgba(255,255,255,0.3);
 }
 
-/* Bot o MENU PRINCIPAL reposicionado no topo da lateral */
+/* Clique (efeito pressão) */
+.btnVoltar:active{
+  transform: scale(0.95);
+  box-shadow:
+    0 0 10px #ff4757 inset,
+    0 0 20px #ff6b81 inset;
+}
+
+/* Glow animado contínuo */
+@keyframes glowBtn {
+  0% { box-shadow: 0 0 10px #ff4757, 0 0 20px #ff6b81; }
+  50% { box-shadow: 0 0 20px #ff6b81, 0 0 40px #ff4757; }
+  100% { box-shadow: 0 0 10px #ff4757, 0 0 20px #ff6b81; }
+}
+
+.btnVoltar{
+  animation: glowBtn 2s infinite alternate;
+}
+
+.filial-card{
+  background: rgba(0,255,255,0.05);
+  border-radius:15px;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  box-shadow:0 0 15px #00ffff, inset 0 0 25px rgba(0,255,255,0.2);
+  transition: 0.3s;
+}
+
+.filial-card:hover{
+  transform: scale(1.02);
+  box-shadow:0 0 25px #00ffff, inset 0 0 35px rgba(0,255,255,0.4);
+}
+.filial-card h3{margin:0;color:#00ffff;font-size:18px;}
+.filial-card table{width:100%;border-collapse:collapse;margin-top:8px;}
+.filial-card table td{padding:6px;border-bottom:1px solid rgba(255,255,255,0.2);font-size:13px;}
+.filial-card table td.tipo-filial{color:#0b6fe0;font-weight:bold;}
+.filial-card table td.tipo-posto{color:#feca57;font-weight:bold;}
+.filial-card table td.tipo-representante{color:#f0e007;font-weight:bold;}
+.filial-card table td.tipo-deposito{color:#48dbfb;font-weight:bold;}
+
+/* Resultado filtro lateral */
+
+#resultadoFiltro {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* centraliza os cards */
+  gap: 10px;
+  padding: 10px;
+}
+
+.result-card {
+  flex: 0 0 250px;   /* largura fixa */
+  max-width: 250px;  /* não deixa esticar */
+}
+
+
+/* BOTÃO PARA VOLTAR MENU PRINCIPAL */
+/* Botão MENU PRINCIPAL reposicionado no topo da lateral */
 #btnMenu {
   position: fixed;
   top: 10px;       /* distancia do topo */
-  left: 182px;      /* fixa na lateral esquerda */
+  left: 290px;      /* fixa na lateral esquerda */
   width: 240px;    /* largura consistente com o painel lateral */
   padding: 15px 0;
   background: linear-gradient(135deg,#0d47a1,#1976d2);
@@ -654,697 +600,1757 @@ table {
   transform: scale(1.05);
 }
 
-/* Quadro Loja Pesquisada ao lado do resumo */
-.top-loja {
-  position: fixed;
-  top: 4px;
-  right: 190px; /* Ajuste fino ao lado do resumo */
-  z-index: 1000;
-  font-family: 'Poppins', sans-serif;
+.copy-icon {
+  pointer-events: none; /* deixa o clique passar */
 }
 
-.card-loja-pesquisada {
-  position: relative;
-  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-  border-radius: 14px;
-  padding: 12px 22px;
-  text-align: center;
-  border: 2px solid #00ffcc;
-  box-shadow:
-    0 0 12px rgba(0,255,204,0.5),
-    0 6px 15px rgba(0,0,0,0.6);
-  min-width: 150px;
-  transition: all 0.3s ease;
-}
-
-/* 🔥 Oculta coluna PDVs quando estiver pesquisando */
-.ocultar-pdv th:nth-child(6),
-.ocultar-pdv td:nth-child(6) {
-  display: none !important;
-}
-
-/* brilho interno sutil */
-.card-loja-pesquisada::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 14px;
-  background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%);
-  transform: translateX(-100%);
-  transition: transform 0.6s ease;
-}
-
-/* efeito passando brilho */
-.card-loja-pesquisada:hover::after {
-  transform: translateX(100%);
-}
-
-.card-loja-pesquisada span {
-  display:block;
-  font-size:0.65em;
-  color:#00ffcc;
-  margin-bottom:4px;
-  text-transform:uppercase;
-  font-weight:600;
-  letter-spacing:1px;
-}
-
-.card-loja-pesquisada h2 {
-  margin:0;
-  font-size:1.3em;
-  font-weight:800;
-  letter-spacing:1.5px;
-  color:#ffffff;
-  text-shadow: 0 0 8px rgba(0,255,204,0.6);
-  transition: all 0.3s ease;
-}
-
-.filial-quadro {
-  display: inline-block;
-  padding: 8px 16px;
-  margin-bottom: 12px;
-  border: 2px solid #ffcc00;       /* borda amarela */
-  border-radius: 10px;             /* cantos arredondados */
-  background: rgba(255, 204, 0, 0.1);  /* fundo leve amarelo */
-  color: #ffcc00;                  /* texto amarelo */
-  font-weight: 700;
-  font-size: 1.1em;
-  text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
-}
-
-/* Quando encontrar loja (mantendo sua l gica atual) */
-.card-loja-pesquisada.encontrado {
-  border-color:#ffcc00;
-  box-shadow:
-    0 0 18px #ffcc00,
-    0 0 35px rgba(255,204,0,0.4),
-    0 6px 15px rgba(0,0,0,0.6);
-}
-
-.card-loja-pesquisada.encontrado h2 {
-  color:#ffcc00;
-  text-shadow:
-    0 0 12px #ffd700,
-    0 0 25px rgba(255,215,0,0.8);
-  transform: scale(1.08);
-}
-
-.top-loja-container {
-  position: fixed;
-  top: 4px;
-  right: 190px;
-  display: flex;
-  gap: 10px;
-  z-index: 1000;
-}
-
-/* NOVO CARD PDV */
-.card-pdv-pesquisado {
-  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-  border-radius: 14px;
-  padding: 12px 16px;
-  border: 2px solid #00ffcc;
-  box-shadow:
-    0 0 12px rgba(0,255,204,0.5),
-    0 6px 15px rgba(0,0,0,0.6);
-  min-width: 160px;
-  max-width: 220px;
-}
-
-
-
-/* Título */
-.card-pdv-pesquisado span {
-  display: block;
-  text-align: center;   /* 🔥 CENTRALIZA O TÍTULO */
-  font-size: 0.75em;
-  color: #f3c808;
-  margin-bottom: 8px;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-.header-pdv {
-  display: flex;
-  justify-content: center;
+.cnpj-box {
+  display: inline-flex;
   align-items: center;
+  gap: 6px;
   position: relative;
 }
 
-/* Título centralizado */
-.header-pdv span {
-  text-align: center;
-  width: 100%;
-  font-size: 0.75em;
-  color: #00ffcc;
-  text-transform: uppercase;
-  font-weight: 600;
-}
-
-/* 🔥 CONTADOR NO CANTO */
-.qtd-pdv {
-  position: absolute;
-  right: 0;
-  top: -1px;
-
-  background: #ffcc00;
-  color: #002b27;
-
-  font-size: 0.9em;
+/* CNPJ */
+.cnpj-text {
   font-weight: bold;
+  color: #fff;
+  background: linear-gradient(135deg,#000,#1a1a1a);
+  padding: 4px 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 8px #fff;
+}
 
-  padding: 4px 8px;
+/* BOTÃO ESCONDIDO */
+.btn-copy {
+  opacity: 0;
+  transform: translateX(-10px);
+  pointer-events: none;
+
+  border: none;
+  background: #00ffff;
+  color: #000;
+  font-size: 12px;
   border-radius: 6px;
+  padding: 2px 6px;
+  cursor: pointer;
 
-  box-shadow: 0 0 6px rgba(0,255,204,0.6);
+  transition: 0.2s;
 }
 
-.sem-pdv {
-  width: 100%;
-  text-align: center;
+/* APARECE NO HOVER */
+.cnpj-box:hover .btn-copy {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
 
-  padding: 12px;
-  margin-top: 5px;
-  
+/* HOVER */
+.btn-copy:hover {
+  background: #00e5ff;
+  box-shadow: 0 0 10px #00ffff;
+}
 
-  border: 1px dashed rgba(255,255,255,0.15);
-  border-radius: 8px;
+.copy-icon {
+  pointer-events: none; /* deixa o clique passar */
+}
 
-  background: rgba(255,255,255,0.03);
+.cnpj {
+  cursor: pointer;
+  font-weight: bold;
+  color: #fff;
+  background: linear-gradient(135deg,#000,#1a1a1a);
+  padding: 4px 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 8px #ffffff;
+  display: inline-block;
+  transition: 0.2s;
+}
 
-  color: #b0b0b0;
-  font-size: 0.85em;
-  font-style: italic;
-  letter-spacing: 0.5px;
+.cnpj:hover {
+  color: #00ffff;
+  box-shadow: 0 0 12px #00ffff;
+  transform: scale(1.05);
+}
 
-  display: flex;
-  justify-content: center;
+.cnpj-box {
+  display: inline-flex;
   align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 10px;
 
-  min-height: 40px;
+  background: linear-gradient(135deg,#000,#1a1a1a);
+  box-shadow: 0 0 8px #fff;
+
+  cursor: pointer;
+  position: relative;
+  transition: 0.2s;
 }
 
-/* Lista PDVs */
-#pdvResumo {
+/* Texto */
+.cnpj-text {
+  color: #fff;
+  font-weight: bold;
+}
+
+/* Ícone escondido */
+.copy-icon {
+  opacity: 0;
+  transform: translateX(-5px);
+  font-size: 12px;
+
+  transition: 0.2s;
+}
+
+/* Quando passar o mouse */
+.cnpj-box:hover {
+  box-shadow: 0 0 15px #00ffff;
+}
+
+.cnpj-box:hover .copy-icon {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* Hover geral */
+.cnpj-box:hover .cnpj-text {
+  color: #00ffff;
+}
+
+/* Mini cards */
+.result-card {
+  background: rgba(0,0,0,0.8);
+  border: 2px solid #00ffff;
+  border-radius: 10px;
+  padding: 8px;
+  font-family: 'Segoe UI', sans-serif;
+  color: #fff;
+  font-size: 11px;
+  box-shadow: 0 0 8px #00ffff, 0 0 15px #00ffff inset;
+  transition: transform 0.2s, box-shadow 0.2s;
+  text-align: left;
+}
+
+.result-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #00ffff, 0 0 20px #00ffff inset;
+}
+
+.result-card h4 {
+  color: #0ff;
+  font-weight: 900;
+  font-size: 13px;
+  margin-bottom: 3px;
+  border-bottom: 1px solid rgba(0,255,255,0.5);
+  padding-bottom: 2px;
+}
+
+.result-card p {
+  margin: 1px 0;
+}
+.result-card span {
+  font-weight: bold;
+  color: #0ff;
+}
+
+
+.siglaFilial {
+  color: #ff1a1a;             /* vermelho neon */
+  font-weight: 900;
+  font-size: 14px;
+  text-shadow: 0 0 5px #161515, 0 0 10px #ff1a1a;
+  background: rgba(255,0,0,0.1);
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-right: 6px;
+}
+
+
+.siglaBadge {
+  display: inline-block;
+  background-color: #ff4d4d;  /* cor de destaque */
+  color: white;
+  font-weight: bold;
+  font-size: 15px;           /* bem pequeno */
+  padding: 3px 8px;          /* tamanho do quadrado */
+  border-radius: 8px;        /* cantos arredondados */
+  text-align: center;
+  margin-left: 5px;
+}
+
+.cnpj{
+  color: #fff;
+  font-weight: 900;
+  background: linear-gradient(135deg,#000,#1a1a1a);
+  padding: 4px 10px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px #ffffff;
+  display: inline-block;
+  letter-spacing: 1px;
+}
+
+.grid-badges {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 4px; /* quase colado */
+  margin-top: 5px;
+}
+
+/* TOTAL ocupa toda linha */
+.grid-badges .destaque {
+  grid-column: 1 / -1;
+}
+
+.box {
+  background: rgba(0,0,0,0.7);
+  border-radius: 6px;
+  padding: 4px 2px;
+  
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* centraliza vertical */
+  align-items: center;      /* centraliza horizontal */
+
+  text-align: center;
+  box-shadow: 0 0 4px #00ffff;
+  line-height: 1.1;
+}
+
+/* número */
+.box span {
+  display: block;
+  font-size: 12px; /* bem pequeno */
+  font-weight: bold;
+}
+
+/* texto */
+.box small {
+  font-size: 9px;
+  color: #aaa;
+}
+
+/* cores bem sutis */
+.box.total { border: 1px solid #00ffff; }
+.box.filial { border: 1px solid #0b6fe0; }
+.box.posto { border: 1px solid #feca57; }
+.box.deposito { border: 1px solid #48dbfb; }
+.box.representante { border: 1px solid #f0e007; }
+
+/* hover quase imperceptível */
+.box:hover {
+  transform: scale(1.02);
+}
+
+/* PAINEL LATERAL FILTRO */
+
+.alerta-vazio {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid #ff4757;
+  border-radius: 15px;
+  padding: 15px 10px;
+  text-align: center;
+  box-shadow:
+    0 0 10px #ff4757,
+    0 0 25px rgba(255,71,87,0.5),
+    inset 0 0 10px rgba(255,71,87,0.3);
+  animation: fadeIn 0.3s ease;
+}
+
+.alerta-icon {
+  font-size: 20px;
+  margin-bottom: 5px;
+  animation: pulseIcon 1.5s infinite;
+}
+
+.alerta-vazio h3 {
+  color: #ff6b81;
+  font-size: 14px;
+  margin-bottom: 6px;
+  text-shadow: 0 0 6px #ff4757;
+}
+
+.alerta-vazio p {
+  font-size: 11px;
+  color: #ccc;
+  margin-bottom: 6px;
+}
+
+/* DICAS */
+.dicas {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 6px; /* 🔥 um pouco maior */
+  gap: 4px;
 }
 
-#pdvResumo div {
-  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
-  border: 1px solid #ebd304;
-  color: #00ffcc;
-
-  font-size: 0.60em;        /* 🔥 maior */
-  padding: 6px 12px;        /* 🔥 mais espaço */
-  border-radius: 14px;
-
-  font-weight: 800;
-  letter-spacing: 0.5px;
-
-  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
-}
-
-#pdvResumo div:hover {
-  background: #00ffcc;
-  color: #002b27;
-  transform: translateY(-1px);
-}
-
-/* Mensagem copiado */
-.copy-msg {
-  position: fixed;
-  top: 30px;
-  right: -600px;
-  z-index: 10000;
-
-  padding: 22px 45px;
-  border-radius: 18px;
-
-  font-size: 1.15em;
-  font-weight: 800;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-
-  border: 3px solid #ffffff;
-
-  transform: scale(0.9);
-  opacity: 0;
-
-  transition:
-    right 0.6s cubic-bezier(.68,-0.55,.27,1.55),
-    transform 0.5s ease,
-    opacity 0.4s ease;
-}
-
-/* SUCESSO (dourado premium) */
-.copy-msg.success {
-  background: linear-gradient(145deg, #ffd700, #ffcc00);
-  color: #111;
-  box-shadow:
-    0 0 0 4px rgba(255,204,0,0.4),
-    0 10px 35px rgba(0,0,0,0.7),
-    0 0 30px rgba(255,215,0,0.9);
-}
-
-/* ERRO (vermelho suave elegante) */
-.copy-msg.error {
-  background: linear-gradient(145deg, #ff6b6b, #d90429);
+.dicas span {
+  font-size: 9px;
+  padding: 3px 6px;
+  border-radius: 6px;
+  background: rgba(255,71,87,0.1);
+  border: 1px solid #ff4757;
   color: #fff;
+  box-shadow: 0 0 5px #ff4757;
+}
+
+/* animações */
+@keyframes pulseIcon {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+#filtroLateral {
+  position: fixed;
+  top: 16%;           /* centraliza verticalmente */
+  left: 0;
+  height: 35vh;       /* altura menor */
+  width: 220px;       /* largura menor */
+  transform: translateY(-50%);
+  background: rgba(0, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  border-radius: 0 10px 10px 0;
+  padding: 10px;      /* padding menor */
+  box-shadow: 2px 0 12px #00ffff, 2px 0 20px #00ffff;
+  color: #fff;
+  font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;           /* menor espaço entre os elementos */
+  z-index: 999;
+}
+
+#filtroLateral select,
+#btnExportFiltro,
+#btnLimparFiltro {
+  padding: 4px 6px;   /* reduz o padding interno dos inputs e botões */
+  font-size: 12px;    /* fonte menor */
+}
+
+.badgeFiltro {
+  padding:8px 14px;
+  border-radius:10px;
+  font-size:13px;
+  font-weight:bold;
+  color:#ffd700;
+  background:rgba(255,215,0,0.08);
+  border:1px solid rgba(255,215,0,0.6);
+  box-shadow:0 0 8px rgba(255,215,0,0.4);
+  transition:0.3s;
+  cursor:default;
+}
+
+/* efeito hover top */
+.badgeFiltro:hover {
+  transform:scale(1.1);
+  box-shadow:0 0 15px #ffd700,0 0 30px rgba(255,215,0,0.6);
+  background:rgba(255,215,0,0.15);
+}
+
+/* texto "você buscou" */
+.busca-texto {
+  font-size: 10px;
+  color: #aaa;
+  margin-bottom: 3px;
+}
+
+/* termo pesquisado (destaque forte) */
+.busca-termo {
+  font-size: 16px;
+  font-weight: bold;
+  color: #ffd700;
+  margin-bottom: 8px;
+  padding: 4px 10px;
+  border-radius: 10px;
+
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid #ffd700;
+
   box-shadow:
-    0 0 0 4px rgba(255,0,0,0.3),
-    0 10px 35px rgba(0,0,0,0.7),
-    0 0 25px rgba(255,0,0,0.6);
+    0 0 8px #ffd700,
+    0 0 15px rgba(255,215,0,0.5),
+    inset 0 0 8px rgba(255,215,0,0.3);
+
+  letter-spacing: 1px;
 }
 
-/* Mostrar */
-.copy-msg.show {
-  right: 30px;
-  transform: scale(1);
+.busca-termo {
+  animation: pulseBusca 1.5s infinite alternate;
+}
+
+@keyframes pulseBusca {
+  from { transform: scale(1); }
+  to { transform: scale(1.05); }
+}
+
+.alerta-vazio {
+  position: relative;
+  background: rgba(0, 0, 0, 0.85);
+  border-radius: 16px;
+  padding: 18px 12px;
+  text-align: center;
+  box-shadow:
+    0 0 15px #ff4757,
+    0 0 40px rgba(255,71,87,0.4),
+    inset 0 0 15px rgba(255,71,87,0.2);
+  animation: fadeIn 0.4s ease;
+  overflow: hidden;
+}
+
+/* linha topo animada */
+.alerta-topo {
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #ff4757, transparent);
+  animation: slideTop 2s infinite;
+}
+
+/* ícone */
+.alerta-icon {
+  font-size: 22px;
+  margin-bottom: 6px;
+  animation: pulseIcon 1.5s infinite;
+}
+
+/* título */
+.alerta-vazio h3 {
+  color: #ff6b81;
+  font-size: 15px;
+  margin-bottom: 5px;
+  text-shadow: 0 0 8px #ff4757;
+}
+
+/* descrição */
+.alerta-vazio p {
+  font-size: 11px;
+  color: #ccc;
+  margin-bottom: 8px;
+}
+
+/* dicas */
+.dicas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+.dicas span {
+  font-size: 9px;
+  padding: 3px 7px;
+  border-radius: 8px;
+  background: rgba(255,71,87,0.1);
+  border: 1px solid #ff4757;
+  color: #fff;
+  box-shadow: 0 0 6px #ff4757;
+}
+
+/* BOTÃO */
+.btn-limpar {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  background: linear-gradient(135deg, #ff4757, #ff6b81);
+  color: #fff;
+  box-shadow: 0 0 10px #ff4757, 0 0 20px rgba(255,71,87,0.5);
+  transition: all 0.3s ease;
+}
+
+/* hover */
+.btn-limpar:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 20px #ff6b81, 0 0 40px rgba(255,71,87,0.8);
+}
+
+/* clique */
+.btn-limpar:active {
+  transform: scale(0.95);
+}
+
+/* animações */
+@keyframes pulseIcon {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+@keyframes slideTop {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* BOTÃO COPIAR */
+.btn-copiar {
+  margin-left: 6px;
+  padding: 2px 6px;
+  font-size: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+
+  background: linear-gradient(135deg, #00ffff, #007bff);
+  color: #000;
+
+  box-shadow: 0 0 6px #00ffff;
+  transition: 0.2s;
+}
+
+.btn-copiar:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 12px #00ffff;
+}
+
+/* CNPJ clicável */
+.cnpj {
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.cnpj:hover {
+  color: #00ffff;
+  text-shadow: 0 0 6px #00ffff;
+}
+
+/* TOAST */
+.toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: #00ffff;
+  color: #000;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 0 15px #00ffff;
+
+  opacity: 0;
+  transform: translateY(20px);
+  transition: 0.3s;
+}
+
+.toast.show {
   opacity: 1;
+  transform: translateY(0);
 }
 
+
+#filtroLateral h3{text-align: center;margin-bottom: 12px;color: #00ffff;text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;}
+#filtroLateral select{width:100%;padding:8px 10px;border-radius:10px;border:none;outline:none;background:rgba(255,255,255,0.1);color:#000;font-weight:bold;font-size:14px;box-shadow: inset 0 0 10px rgba(0,255,255,0.2);transition:0.3s;}
+#filtroLateral select:hover,#filtroLateral select:focus{transform:scale(1.03);box-shadow: inset 0 0 20px rgba(0,255,255,0.4),0 0 25px rgba(0,255,255,0.2);}
+#filtroLateral select option{color:#000;}
+#btnExportFiltro,#btnLimparFiltro{width:100%;padding:10px;border:none;border-radius:10px;font-weight:bold;cursor:pointer;transition:0.3s;}
+#btnExportFiltro{margin-top:auto;background:linear-gradient(135deg,#00ffff,#0066ff);color:#fff;box-shadow:0 0 15px #00ffff,0 0 30px #00ffff;}
+#btnExportFiltro:hover{transform:scale(1.05);box-shadow:0 0 25px #00ffff,0 0 45px #00ffff;}
+#btnLimparFiltro{background:linear-gradient(135deg,#ff6b81,#ff4757);color:#fff;box-shadow:0 0 20px #ff6b81,0 0 40px #ff4757;}
+#btnLimparFiltro:hover{transform:scale(1.08);box-shadow:0 0 35px #ff6b81,0 0 60px #ff4757;background:linear-gradient(135deg,#ff4757,#ff6b81);}
 </style>
+
+<!-- SheetJS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
 </head>
 <body>
 
-<div class="top-bar">
+<!-- PARTICULAS -->
+<div id="particles-js"></div>
 
-  <!-- Filtro por Tipo -->
-  <!--<select id="filtroTipo" onchange="aplicarFiltros()" class="filtro-select">
-    <option value="todos">Todos os Tipos</option>
+<h1> Regionais - Lojas </h1>
+<input type="text" id="searchBox" placeholder="Pesquisar Regional, Filial, Cidade, Sigla ou Tipo..." onkeyup="pesquisar()" />
+<div id="badgeGlobal"></div>
+
+<!-- Painel lateral -->
+<div id="filtroLateral">
+  <h3>Filtrar por Tipo</h3>
+  <select id="filtroTipo" onchange="aplicarFiltroLateral()">
+    <option value="todos">Todos</option>
     <option value="Filial">Filial</option>
     <option value="Posto">Posto</option>
-    <option value="Deposito">Deposito</option>
     <option value="Representante">Representante</option>
+    <option value="Deposito">Deposito</option>
   </select>
 
-  <!-- Filtro por Dispositivo -->
-   <!-- <select id="filtroDispositivo" onchange="aplicarFiltros()" class="filtro-select" style="left:190px;">
-    <option value="todos">Todos Dispositivos</option>
-    <option value="FortiGate">FortiGate</option>
-    <option value="Mikrotik">Mikrotik</option>
+  
+
+  
+  
+  <h3>Filtrar Regional</h3>
+  <select id="filtroRegional" onchange="aplicarFiltroLateral()">
+    <option value="todas">Todas</option>
+    <option value="Regional Afonso">Regional Afonso</option>
+    <option value="Regional Cazuza">Regional Cazuza</option>
+    <option value="Regional Coutinho">Regional Coutinho</option>
+    <option value="Regional Wellington">Regional Wellington</option>
+    <option value="Regional Edivano">Regional Edivano</option>
+    <option value="Regional Erisvaldo">Regional Erisvaldo</option>
+    <option value="Regional Ronnie Von">Regional Ronnie Von</option>
+    <option value="Regional Diretoria">Regional Diretoria</option>
   </select>
--->
+
+  <button id="btnExportFiltro" onclick="exportarFiltroExcel()">Exportar Filtro</button>
+  <button id="btnLimparFiltro" onclick="limparFiltro()">Limpar Filtro</button>
 </div>
 
-
+<!-- Regionais e Resultados -->
+<div id="resultadoFiltro"></div>
+<div id="telaRegionais" class="regionais"></div>
+<div id="telaLojas">
+  <button class="btnVoltar" onclick="voltar()"> Voltar</button>
+  <h2 id="tituloRegional">Lojas</h2>
+  <select id="selectTipo" onchange="filtrarPorTipo()">
+    <option value="todos">Todos</option>
+    <option value="Filial">Filial</option>
+    <option value="Posto">Posto</option>
+    <option value="Representante">Representante</option>
+    <option value="Deposito">Deposito</option>
+  </select>
+  <div id="badgeFiltro" style="margin:8px 0;font-weight:700;color:#0004ff;"></div>
+  <div id="tabelaLojas"></div>
 </div>
-
-  <!--<button id="btnDownload" onclick="baixarExcel()">
-   Baixar Excel
-</button>-->
-
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-
 
 <button id="btnMenu">MENU PRINCIPAL</button>
 
 
 
-<!-- Resumo neon no canto superior direito -->
- 
-<div class="top-loja-container">
-
-  <!-- QUADRO LOJA -->
-  <div class="card-loja-pesquisada">
-    <span>Loja Pesquisada</span>
-    <h2 id="siglaResumo">---</h2>
-    <div class="cidadeResumo" id="cidadeResumo">---</div>
-  </div>
-
-  <div class="card-pdv-pesquisado">
-  
-  <div class="header-pdv">
-    <span>PDVs</span>
-    <div id="qtdPDV" class="qtd-pdv">0</div>
-  </div>
-
-  <div id="pdvResumo"></div>
-
-</div>
-
-
-
-
-  <div class="cards-resumo">
-      <!-- NOVO TOTAL GERAL -->
-  <div class="card-mini" style="grid-column: span 2;">
-    <span>Total Geral</span>
-    <h2 id="totalGeral">0</h2>
-  </div>
-
-    
-    <div class="card-mini">
-      <span>Filial</span>
-      <h2 id="totalFilial">0</h2>
-    </div>
-    <div class="card-mini">
-      <span>Postos</span>
-      <h2 id="totalPostos">0</h2>
-    </div>
-    <div class="card-mini">
-      <span>Depositos</span>
-      <h2 id="totalDeposito">0</h2>
-    </div>
-    <div class="card-mini">
-      <span>Reps</span>
-      <h2 id="totalRep">0</h2>
-    </div>
-    
-  </div>
-</div>
-
-<!-- Dispositivos no canto superior esquerdo -->
-<div class="top-left">
-  <div class="cards-dispositivo-resumo">
-    <div class="card-mini-dispositivo">
-      <span>FortiGate</span>
-      <h2 id="totalForti">0</h2>
-    </div>
-    <div class="card-mini-dispositivo">
-      <span>Mikrotik</span>
-      <h2 id="totalMikrotik">0</h2>
-    </div>
-  </div>
-</div>
-
-<div class="container">
-
-  <div class="search-container">
-    <input type="text" id="searchInput" placeholder="Pesquisar por SIGLA ou PDV..." oninput="filtrar()">
-  </div>
-
-  <button class="back-btn" id="backBtn" onclick="voltar()"> Voltar </button>
-
-  <div id="telaRegionais" class="cards"></div>
-  <div id="telaLojas"></div>
-</div>
-
-<div class="modal" id="modalAuth">
-  <div class="modal-content">
-    <h3>Autenticacao - Liberar Senha</h3>
-    <div class="error-msg" id="errorMsg"></div>
-    <input type="password" id="authPassword" placeholder=" Digite o Usuario ">
-    <br>
-    <button onclick="validarSenha()">Confirmar</button>
-  </div>
-</div>
-
-<div class="copy-msg" id="copyMsg"></div>
+<script>
+particlesJS("particles-js",{particles:{number:{value:80,density:{enable:true,value_area:800}},color:{value:"#00ffff"},shape:{type:"circle"},opacity:{value:0.5,random:true,anim:{enable:true,speed:1,opacity_min:0.1,sync:false}},size:{value:3,random:true,anim:{enable:true,speed:3,size_min:0.1,sync:false}},line_linked:{enable:true,distance:150,color:"#00ffff",opacity:0.4,width:1},move:{enable:true,speed:2,direction:"none",random:true,straight:false,out_mode:"out"}},interactivity:{detect_on:"canvas",events:{onhover:{enable:true,mode:"grab"},onclick:{enable:true,mode:"push"}},modes:{grab:{distance:150,line_linked:{opacity:0.5}},push:{particles_nb:4}}},retina_detect:true});
+</script>
 
 <script>
-const LIBERACAO_SENHA="Gertec20";
-let textoParaCopiar="",btnParaMensagem=null;
+// --- Seus dados regionais ---
+const regionais = {
+		
+      
+      "Regional Afonso":[
+    	{sigla:"ACA",cidade:"Acailandia",filial:"ACA",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0031-53"},
+    	{sigla:"BJS",cidade:"Bom Jesus da Selva",filial:"ACA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0349-70"},
+    	{sigla:"CID",cidade:"Cidelandia",filial:"ACA",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0330-60"},
+    	{sigla:"ITG",cidade:"Itinga",filial:"ACA",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0187-70"},
+    	{sigla:"RNP",cidade:"Rodon Do Para",filial:"ACA",uf:"PA",tipo:"Posto",cnpj:"06.862.627/0404-31"},
+    	{sigla:"SFB",cidade:"Sao Francisco do Brejao",filial:"ACA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0404-31"},
+    	{sigla:"SPB",cidade:"Sao Pedro Da Agua Branca",filial:"ACA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0210-54"},
+    	{sigla:"VNM",cidade:"Vila Nova dos Martirios",filial:"ACA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0098-60"},
+    	{sigla:"BJT",cidade:"Bom Jesus do Tocantins",filial:"ACA",uf:"PA",tipo:"Posto",cnpj:"06.862.627/0442-67"},
+    	{sigla:"VLD",cidade:"Vilda Idelmar",filial:"ACA",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0031-53"},
 
 
-const lojas=[
-
- // Regional Afonso
-
-{sigla:"ACA",   	filial:"ACA",   	cidade:"Acailandia",              	tipo:"Filial",      	ip:"172.16.88.251",      	dispositivo:"Fortigate",      	regional:"Regional Afonso",     pdvs:["pdvaca01","pdvaca02","pdvaca03","pdvaca04","pdvaca05","pdvaca06","pdvaca07","pdvaca08","pdvaca09","pdvaca10","pdvaca12",]},
-{sigla:"BJS",   	filial:"ACA",   	cidade:"Bom Jesus Da Selva",      	tipo:"Posto",      	ip:"172.19.56.251",         	dispositivo:"Fortigate",      	regional:"Regional Afonso",     pdvs:["pdvbjs01","pdvbjs02"]},
-
-{sigla:"AUG",   	filial:"AUG ",  	cidade:"Augustinopolis",        	tipo:"Filial",      	ip:"172.16.153.251",    	dispositivo:"Fortigate",       regional:"Regional Afonso",     pdvs:["pdvaug01","pdvaug02","pdvaug03"]},
-{sigla:"AXI",   	filial:"AUG ",  	cidade:"Axixa Do Tocantins",        	tipo:"Posto",      	ip:"172.19.2.251",         	dispositivo:"Fortigate",       regional:"Regional Afonso",     pdvs:["pdvaxi01","pdvaxi02"]},
-
-  // Regional Coutinho
-
-   
-  {sigla:"BAC",   	filial:"BAC", 		cidade:"Bacabal",      			tipo:"Filial",        	ip:"172.16.82.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvbac01","pdvbac02","pdvbac03","pdvbac04","pdvbac05","pdvbac06","pdvbac07","pdvbac08","pdvbac09","pdvbac10","pdvbac11","pdvbac12","pdvbac19","pdvbac20",]},
-  {sigla:"ANJ",   	filial:"BAC", 		cidade:"Anajatuba",      		tipo:"Posto",        	ip:"172.19.26.251",        	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvanj01","pdvanj02"]},
+    	{sigla:"ARG",cidade:"Araguaina",filial:"ARG",uf:"TO",tipo:"Filial",cnpj:"06.862.627/0356-08"},
+    	{sigla:"ANN",cidade:"Ananas",filial:"ARG",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0364-00"},
+    	{sigla:"TOC",cidade:"Tocantinopolis",filial:"ARG",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0359-42"},
+    	{sigla:"WAD",cidade:"Wanderlandia",filial:"ARG",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0365-90"},
+    	{sigla:"XAB",cidade:"Xambioa",filial:"ARG",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0365-90"},
+    	{sigla:"CLT",cidade:"Colinas Do Tocantins",filial:"ARG",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0366-71"},
+    	{sigla:"SFG",cidade:"Santa Fe Do Araguaia",filial:"ARG",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0356-08"},
+    	{sigla:"DAG",cidade:"Deposito de Araguaina",filial:"ARG",uf:"TO",tipo:"Deposito",cnpj:"06.862.627/0370-58"},
 
 
-  // Regional Cazuza
-  {sigla:"ABR",   	filial:"ABR", 		cidade:"Agua Branca",       		tipo:"Filial",        	ip:"172.16.186.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvabr01","pdvabr02","pdvabr07"]},
-  {sigla:"AMA",   	filial:"ABR", 		cidade:"Amarante Do Piaui",       	tipo:"Posto",        	ip:"172.16.188.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvama01","pdvama02"]},
+    	{sigla:"AUG",cidade:"Augustinopolis",filial:"AUG",uf:"TO",tipo:"Filial",cnpj:"06.862.627/0013-71"},
+    	{sigla:"ART",cidade:"Araguatins",filial:"AUG",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0072-21"},
+    	{sigla:"AXI",cidade:"Axixa Do Tocantins",filial:"AUG",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0292-09"},
+    	{sigla:"BUT",cidade:"Buriti do Tocntins",filial:"AUG",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0196-61"},
+    	{sigla:"EPT",cidade:"Esperantina do Tocantins",filial:"AUG",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0341-13"},
+    	{sigla:"STN",cidade:"Sitio Novo Do Tocantins",filial:"AUG",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0195-80"},
+    	{sigla:"ITS",cidade:"Itaguatins",filial:"AUG",uf:"TO",tipo:"Representante",cnpj:"06.862.627/0195-80"},
+    	{sigla:"PNE",cidade:"Praia Norte",filial:"AUG",uf:"TO",tipo:"Representante",cnpj:"06.862.627/0013-71"},
+    	{sigla:"SPT",cidade:"Sampaio",filial:"AUG",uf:"TO",tipo:"Representante",cnpj:"06.862.627/0013-71"},
+    	{sigla:"SBO",cidade:"Sao Bento do Tocantis",filial:"AUG",uf:"TO",tipo:"Representante",cnpj:"06.862.627/0013-71"},
 
 
 
-  // Regional Edivano
-  {sigla:"BHM",   	filial:"BHM", 		cidade:"Berreiras",       		tipo:"Filial",        	ip:"172.16.70.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvbhm01","pdvbhm02","pdvbhm03","pdvbhm04","pdvbhm05","pdvbhm06","pdvbhm07"]},
-  {sigla:"BHI",   	filial:"BHM", 		cidade:"barreiras Usados",       	tipo:"Filial",        	ip:"172.26.70.65",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvbhi01","pdvbhi02","pdvbhi03","pdvbhi04"]},
+    	{sigla:"BAL",cidade:"Balsas",filial:"BAL",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0032-34"},
+    	{sigla:"ATP",cidade:"Alto Parnaiba",filial:"BAL",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0197-42"},
+    	{sigla:"RIA",cidade:"Riachao",filial:"BAL",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0198-23"},
+    	{sigla:"FNG",cidade:"Fortaleza dos Nogueiras",filial:"BAL",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0245-84"},
+    	{sigla:"SRM",cidade:"Sao Raimundo das Mangabeiras",filial:"BAL",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0194-08"},
+    	{sigla:"TFG",cidade:"Tasso Fragoso",filial:"BAL",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0376-43"},
+     	{sigla:"BDE",cidade:"Balsas Deposito",filial:"BAL",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0376-43"},
+    	{sigla:"FEN",cidade:"Feira Nova",filial:"BAL",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0376-43"},
+    	{sigla:"LOT",cidade:"Loreto",filial:"BAL",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0376-43"},
+
+
+
+    	{sigla:"COA",cidade:"Conceicao do Araguaia",filial:"COA",uf:"PA",tipo:"Filial",cnpj:"06.862.627/0397-78"},
+
+    	{sigla:"IMP",cidade:"Imperatriz ",filial:"IMP",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0012-90"},
+    	{sigla:"IGV",cidade:"Imperatriz Getulio Vargas",filial:"IMP",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0212-16"},
+    	{sigla:"AMM",cidade:"Amarante do Maranhao",filial:"IMP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0246-65"},
+    	{sigla:"BBS",cidade:"Imperatriz Bairro bom Sucesso",filial:"IMP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0329-27"},
+    	{sigla:"BRT",cidade:"Buritirana",filial:"IMP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0347-09"},
+    	{sigla:"CAR",cidade:"Carolina",filial:"IMP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0033-15"},
+    	{sigla:"EDL",cidade:"Imperatriz Edson Lobao",filial:"IMP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0321-70"},
+    	{sigla:"EST",cidade:"Estreito",filial:"IMP",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0023-43"},
+    	{sigla:"IVN",cidade:"Imperatriz Vila Nova",filial:"IMP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0189-32"},
+    	{sigla:"JLB",cidade:"Joao Lisboa",filial:"IMP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0211-35"},
+    	{sigla:"MOA",cidade:"Montes Altos",filial:"IMP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0390-00"},
+    	{sigla:"PFO",cidade:"Porto Franco",filial:"IMP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0188-51"},
+    	{sigla:"IDC",cidade:"Imperatriz Deposito Central",filial:"IMP",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0120-63"},
+    	{sigla:"RFI",cidade:"Ribamar Fiquene",filial:"IMP",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0120-63"},
+    	{sigla:"SJI",cidade:"Sao Joao Do Paraiso",filial:"IMP",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0188-51"},
+    	{sigla:"SLR",cidade:"Senador la Roque",filial:"IMP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0445-00"},
+    	{sigla:"VLB",cidade:"Vila Lobao",filial:"IMP",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0120-63"},
+    	{sigla:"CPE",cidade:"Campestre",filial:"IMP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0464-72"},
+    	{sigla:"DPO",cidade:"Davino olis",filial:"IMP",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0120-63"},
+    	{sigla:"ICF",cidade:"Imperatriz Cafeteira",filial:"IMP",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0120-63"},
+
+
+    	
+    	{sigla:"PAM",cidade:"Palmas",filial:"PAM",uf:"TO",tipo:"Filial",cnpj:"06.862.627/0358-61"},
+    	{sigla:"NAC",cidade:"Novo Acordo",filial:"PAM",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0443-48"},
+
+    	{sigla:"PGO",cidade:"Paragominas",filial:"PGO",uf:"PA",tipo:"Filial",cnpj:"06.862.627/0421-32"},
+    	{sigla:"ULN",cidade:" Ulianopolis ",filial:"PGO",uf:"PA",tipo:"Posto",cnpj:"06.862.627/0468-04"},
+    	{sigla:"DPG",cidade:"Deposito de Paragominas",filial:"PGO",uf:"PA",tipo:"Deposito",cnpj:"06.862.627/0447-71"},
+
+    	{sigla:"RDP",cidade:"Redencao Do Para",filial:"RDP",uf:"PA",tipo:"Filial",cnpj:"06.862.627/0411-60"},
+
+    	{sigla:"TAQ",cidade:"Taquaralto",filial:"TAQ",uf:"TO",tipo:"Filial",cnpj:"06.862.627/0360-86"},
+    	{sigla:"MIT",cidade:"Miracema Do Tocantins",filial:"TAQ",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0352-76"},
+    	{sigla:"PAF",cidade:"Pedro Afonso",filial:"TAQ",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0361-67"},
+    	{sigla:"PNA",cidade:"Porto Nacional",filial:"TAQ",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0363-29"},
+    	{sigla:"PTO",cidade:"Paraiso Do Tocantins",filial:"TAQ",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0353-57"},
+    	{sigla:"PDE",cidade:"Palmas Deposito ",filial:"TAQ",uf:"TO",tipo:"Deposito",cnpj:"06.862.627/0362-48"},
+
+
+    	{sigla:"XIN",cidade:"Xinguara",filial:"XIN",uf:"PA",tipo:"Filial",cnpj:"06.862.627/0398-59"},
+
+  ],
+  "Regional Cazuza":[
+	{sigla:"ABR",cidade:"Agua Branca",filial:"ABR",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0040-44"},
+   	{sigla:"AMA",cidade:"Amarante",filial:"ABR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0074-93"},
+   	{sigla:"ANG",cidade:"Angical PI",filial:"ABR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0270-95"},
+   	{sigla:"BDR",cidade:"Barro Duro",filial:"ABR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0268-70"},
+   	{sigla:"DLB",cidade:"Demerval Lobao",filial:"ABR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0204-06"},
+   	{sigla:"MGL",cidade:"Monsenhor Gil",filial:"ABR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0234-21"},
+   	{sigla:"PAL",cidade:"Palmeirais",filial:"ABR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0272-57"},
+   	{sigla:"PRP",cidade:"Prata do Piaui",filial:"ABR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0271-76"},
+   	{sigla:"REG",cidade:"Regenerecao",filial:"ABR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0252-03"},
+   	{sigla:"SAG",cidade:"Sao Goncalo",filial:"ABR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0428-09"},
+   	{sigla:"SFR",cidade:"Sao Francisco do Maranhao",filial:"ABR",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0414-03"},
+   	{sigla:"SPE",cidade:"Sao Pedro do Piaui",filial:"ABR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0440-03"},
+   	{sigla:"DAB",cidade:"Deposito de Agua Branca",filial:"ABR",uf:"PI",tipo:"Deposito",cnpj:"06.862.627/0429-90"},
+   	{sigla:"HUN",cidade:"HUgo Napoleao",filial:"ABR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0040-44"},
+   	{sigla:"SFL",cidade:"Sao Felix Do Piaui",filial:"ABR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0271-76"},
+   	{sigla:"PFP",cidade:"Passagem Franca do Piaui",filial:"ABR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0271-76"},
+   	{sigla:"AGR",cidade:"Agricolandia",filial:"ABR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0040-44"},
+
+   	
+   	{sigla:"ARP",cidade:"Araripina",filial:"ARP",uf:"PE",tipo:"Filial",cnpj:"06.862.627/0214-88"},
+	  {sigla:"OUR",cidade:"Ouricuri",filial:"ARP",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0389-68"},
+    {sigla:"SRO",cidade:"Serrolandia",filial:"ARP",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0427-28"},
+  	{sigla:"TRI",cidade:"Trindade",filial:"ARP",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0392-63"},
+  	{sigla:"SRT",cidade:"Serrita",filial:"ARP",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0444-29"},
+   	{sigla:"EXU",cidade:"Exu",filial:"ARP",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0459-05"},
+   	{sigla:"BDC",cidade:"Bodoco",filial:"ARP",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0450-77"},
+   	{sigla:"ARD",cidade:"Deposito de Araripina",filial:"ARP",uf:"PE",tipo:"Deposito",cnpj:"06.862.627/0410-80"},
+   	{sigla:"IPB",cidade:"Ipubi",filial:"ARP",uf:"PE",tipo:"Representante",cnpj:"06.862.627/0214-88"},
+   	{sigla:"NAS",cidade:"Nascente",filial:"ARP",uf:"PE",tipo:"Representante",cnpj:"06.862.627/0214-88"},
+   	{sigla:"MRL",cidade:"Moreilandia",filial:"ARP",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0469-87"},
+
+
+
+  	{sigla:"CNV",cidade:"Casa Nova",filial:"CNV",uf:"BA",tipo:"Filial",cnpj:"06.862.627/0020-09"},
+	  {sigla:"SNA",cidade:"Santana Do Sobrado",filial:"CNV",uf:"BA",tipo:"Representante",cnpj:"06.862.627/0020-09"},
+
+	  {sigla:"JUA",cidade:"Juazeiro",filial:"JUA",uf:"BA",tipo:"Filial",cnpj:"06.862.627/0020-09"},
+  	{sigla:"JJP",cidade:"Juazeiro Joao Paulo ",filial:"JUA",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0374-81"},
+
+   	{sigla:"OEI",cidade:"Oeiras",filial:"OEI",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0043-97"},
+   	{sigla:"EVL",cidade:"Elesbao Veloso",filial:"OEI",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0251-22"},
+   	{sigla:"FRL",cidade:"Francinopolis",filial:"OEI",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0273-38"},
+   	{sigla:"SCP",cidade:"Santa Cruz Do Piaui",filial:"OEI",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0314-40"},
+   	{sigla:"SJP",cidade:"Sao Joao do Piaui",filial:"OEI",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0044-78"},
+   	{sigla:"BVP",cidade:"Bela Vista do Piaui",filial:"OEI",uf:"PI",tipo:"Representante",cnpj:"Aguardando Liberacao"},
+   	{sigla:"SMP",cidade:"Simplicio Mendes",filial:"OEI",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0286-52"},
+   	{sigla:"DSJ",cidade:"Deposito Sao Joao Do Paiui",filial:"OEI",uf:"PI",tipo:"Deposito",cnpj:"06.862.627/0232-60"},
+   	{sigla:"COP",cidade:"Colonia do Paiui",filial:"OEI",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0043-97"},
+   	{sigla:"CPG",cidade:"Capitao Gervasio",filial:"OEI",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0043-97"},
+   	{sigla:"SCR",cidade:"Socorro do Paiui",filial:"OEI",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0286-52"},
+   	{sigla:"PLD",cidade:"Paes Landim",filial:"OEI",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0286-52"},
+   	{sigla:"SAI",cidade:"Santo Incacio do Piaui",filial:"OEI",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0043-97"},
+   	{sigla:"SJV",cidade:"Sao Joao da Varjota",filial:"OEI",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0043-97"},
+   	{sigla:"VGD",cidade:"Vargem Grande",filial:"OEI",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0273-38"},
+   	{sigla:"WAF",cidade:"Wall Ferraz",filial:"OEI",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0461-20"},
+   	{sigla:"CPP",cidade:"Campinas do Piaui",filial:"OEI",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0043-97"},
+
+   	
+	{sigla:"PET",cidade:"Petrolina",filial:"PET",uf:"PE",tipo:"Filial",cnpj:"06.862.627/0136-20"},
+	{sigla:"CRC",cidade:"Curaca",filial:"PET",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0319-55"},
+	{sigla:"JAG",cidade:"Jaguarari",filial:"PET",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0297-05"},
+	{sigla:"LGP",cidade:"Lagoa Grande Pernambuco",filial:"PET",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0243-12"},
+	{sigla:"ORO",cidade:"oroco",filial:"PET",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0320-99"},
+	{sigla:"PJM",cidade:"Petrolina Joao e Maria",filial:"PET",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0293-81"},
+	{sigla:"PLA",cidade:"Pilao Arcado",filial:"PET",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0264-47"},
+	{sigla:"PMZ",cidade:"Petrolina Jardim Amazonas ",filial:"PET",uf:"PE",tipo:"Representante",cnpj:"06.862.627/0136-20"},
+	{sigla:"PSG",cidade:"Petrolina Sao Goncalo",filial:"PET",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0311-06"},
+	{sigla:"REM",cidade:"Remanso",filial:"PET",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0295-43"},
+	{sigla:"SCV",cidade:"Santa Cruz da Venerada",filial:"PET",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0438-80"},
+	{sigla:"SFI",cidade:"Santa Filomena",filial:"PET",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0446-90"},
+	{sigla:"SMB",cidade:"Santa Maria da Boa Vista",filial:"PET",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0294-62"},
+	{sigla:"CBB",cidade:"Cabrobro",filial:"PET",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0462-00"},
+	{sigla:"SOB",cidade:"Sobradinho",filial:"PET",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0247-46"},
+	{sigla:"BSF",cidade:"Belem do Sao Francisco",filial:"PET",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0460-49"},
+	{sigla:"STS",cidade:"Sento Se",filial:"PET",uf:"PE",tipo:"Posto",cnpj:"06.862.627/0265-28"},
+	{sigla:"PDC",cidade:"Deposito de Petrolina",filial:"PET",uf:"PE",tipo:"Deposito",cnpj:"06.862.627/0190-76"},
+	{sigla:"VRM",cidade:"Vermelhos",filial:"PET",uf:"PE",tipo:"Representante",cnpj:"06.862.627/0243-12"},
+	{sigla:"AFR",cidade:"Afranio",filial:"PET",uf:"PE",tipo:"Representante",cnpj:"06.862.627/0136-20"},
+	{sigla:"DRM",cidade:"Dormentes",filial:"PET",uf:"PE",tipo:"Representante",cnpj:"06.862.627/0136-20"},
+	{sigla:"PIL",cidade:"Pilar",filial:"PET",uf:"BA",tipo:"Representante",cnpj:"06.862.627/0297-05"},
+
+	{sigla:"PJD",cidade:"Petrolina Joao de Deus",filial:"PET",uf:"PE",tipo:"Representante",cnpj:"06.862.627/0136-20"},
+
+
+
+	
+	{sigla:"VAL",cidade:"Valencia",filial:"VAL",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0048-00"},
+	{sigla:"ARO",cidade:"Aroazes",filial:"VAL",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0267-90"},
+	{sigla:"PMT",cidade:"Pimenteiras",filial:"VAL",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0288-14"},
+	{sigla:"INH",cidade:"Inhuma",filial:"VAL",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0287-33"},
+	{sigla:"IPI",cidade:"Ipiranga",filial:"VAL",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0244-01"},
+
+
+	{sigla:"PIC",cidade:"Picos",filial:"PIC",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0051-05"},
+	{sigla:"PIM",cidade:"Picos Moveis",filial:"PIC",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0115-04"},
+	{sigla:"FRO",cidade:"Fronteiras",filial:"PIC",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0303-98"},
+	{sigla:"FSA",cidade:"Francisco Santos",filial:"PIC",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0315-21"},
+	{sigla:"ITI",cidade:"Itainopolis",filial:"PIC",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0228-83"},
+	{sigla:"JAI",cidade:"Jaicos",filial:"PIC",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0192-38"},
+	{sigla:"SIM",cidade:"Simoes",filial:"PIC",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0299-77"},
+	{sigla:"MCO",cidade:"Marcolandia",filial:"PIC",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0179-60"},
+	{sigla:"PAU",cidade:"Paulistana",filial:"PIC",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0179-60"},
+	{sigla:"PIX",cidade:"Pio IX",filial:"PIC",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0302-07"},
+	{sigla:"CRN",cidade:"Curral Novo Do Paiui",filial:"PIC",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0452-39"},
+	{sigla:"PMA",cidade:"Padre Marcos",filial:"PIC",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0153-21"},
+	{sigla:"DPC",cidade:"Deposito de Picos",filial:"PIC",uf:"PI",tipo:"Deposito",cnpj:"06.862.627/0383-72"},
+	{sigla:"QNV",cidade:"Queimada Nova",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0179-60"},
+	{sigla:"SAB",cidade:"Santo Antonio de Lisboa",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0051-05"},
+	{sigla:"SCB",cidade:"Santa Cruz da Venerada",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0051-05"},
+	{sigla:"SJO",cidade:"Sao Jose do Piaui",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0051-05"},
+	{sigla:"SJU",cidade:"Sao Juliao",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0043-97"},
+	{sigla:"SNT",cidade:"Santana do Paiui",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0051-05"},
+	{sigla:"VEM",cidade:"Vera Mendes",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0228-83"},
+	{sigla:"LAB",cidade:"Lagoa do Barro",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0051-05"},
+	{sigla:"MHI",cidade:"Monsenhor Hipolito",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0051-05"},
+	{sigla:"JAB",cidade:"Jacobina do Piaui",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0179-60"},
+	{sigla:"AGT",cidade:"Alegrete",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0262-85"},
+	{sigla:"ALH",cidade:"Alagoinha Do Paiui",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0051-05"},
+	{sigla:"BEN",cidade:"Betania do Piaui",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0179-60"},
+	{sigla:"BNA",cidade:"Bocaina",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0051-05"},
+	{sigla:"CCN",cidade:"Conceicao do Canide",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0051-05"},
+	{sigla:"CGP",cidade:"Campo Grande do Piaui",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0051-05"},
+	{sigla:"CRD",cidade:"Curral Novo do Paiui",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0299-77"},
+	{sigla:"DEX",cidade:"Dom Expedido lopes",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0051-05"},
+	{sigla:"ISC",cidade:"Isaias Coelho",filial:"PIC",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0228-83"},
+
+
+
+  ],
+  "Regional Coutinho":[
+	{sigla:"ZED",cidade:"Ze Doca",filial:"ZED",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0007-23"},
+	{sigla:"AGN",cidade:"Araguana",filial:"ZED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0396-97"},
+	{sigla:"CDG",cidade:"Centro do Guilherme",filial:"ZED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0396-97"},
+	{sigla:"CNM",cidade:"Centro Novo do Maranhao",filial:"ZED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0394-25"},
+	{sigla:"ENC",cidade:"Encruzo ( Governador Nunes Freire )",filial:"ZED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0224-50"},
+	{sigla:"GUM",cidade:"Boa Vista do Gurupi",filial:"ZED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0227-00"},
+	{sigla:"MAS",cidade:"Maracacume",filial:"ZED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0223-79"},
+	{sigla:"MAZ",cidade:"Maranhaozinho",filial:"ZED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0001-08"},
+	{sigla:"NOL",cidade:"Nova Olinda Do Maranhao",filial:"ZED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0301-26"},
+	{sigla:"PDM",cidade:"Presidente Medice",filial:"ZED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0407-84"},
+	{sigla:"PRO",cidade:"Pedro do Rosario",filial:"ZED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0395-06"},
+	{sigla:"SLP",cidade:"Santa Luzia Do Parua",filial:"ZED",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0132-05"},
+	{sigla:"DZE",cidade:"Deposito de Ze Doca",filial:"ZED",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0430-23"},
+	{sigla:"ZMU",cidade:"Ze Doca Moveis Usados",filial:"ZED",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0007-23"},
+	{sigla:"JUN",cidade:"Junco do Maranhao",filial:"ZED",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0007-23"},
+	{sigla:"GNB",cidade:"Governador Newton Belo",filial:"ZED",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0007-23"},
+	{sigla:"CGT",cidade:"Chega Tudo",filial:"ZED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0457-43"},
+
+
+
+
+	{sigla:"SIN",cidade:"Santa Ines",filial:"SIN",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0003-08"},
+	{sigla:"BCU",cidade:"Buricupu",filial:"SIN",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0003-08"},
+	{sigla:"BJA",cidade:"Bom Jardim",filial:"SIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0207-59"},
+	{sigla:"BVI",cidade:"Bela Vista do Marnahao",filial:"SIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0431-04"},
+	{sigla:"IPM",cidade:"Igarape do Meio",filial:"SIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0424-85"},
+	{sigla:"MAT",cidade:"Matinha",filial:"SIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0413-22"},
+	{sigla:"MON",cidade:"Moncao",filial:"SIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0399-30"},
+	{sigla:"PEN",cidade:"Penalva",filial:"SIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0426-47"},
+	{sigla:"PMI",cidade:"Pindare Mirim",filial:"SIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0304-79"},
+	{sigla:"SJC",cidade:"Sao Joao do Caru",filial:"SIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0377-24"},
+	{sigla:"SLZ",cidade:"Santa Luzia do Tide",filial:"SIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0089-70"},
+	{sigla:"VIA",cidade:"Viana",filial:"SIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0208-30"},
+	{sigla:"VME",cidade:"Vitoria do Mearim",filial:"SIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0169-99"},
+	{sigla:"ARI",cidade:"Arari",filial:"SIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0170-22"},
+	{sigla:"DSI",cidade:"Deposito de Santa Ines",filial:"SIN",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0310-17"},
+	{sigla:"AAP",cidade:"Alto Alegre do Pindare",filial:"SIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0003-08"},
+	{sigla:"ACO",cidade:"Acoque",filial:"SIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0003-08"},
+	{sigla:"AUZ",cidade:"Auzilandia",filial:"SIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0003-08"},
+	{sigla:"CAJ",cidade:"Cajari",filial:"SIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0003-08"},
+	{sigla:"JRE",cidade:"Jacare",filial:"SIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0003-08"},
+	{sigla:"TUF",cidade:"Tufilandia",filial:"SIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0003-08"},
+	{sigla:"OLN",cidade:"Olinda Nova do Maranhao",filial:"SIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0434-57"},
+	
+
+
+
+
+
+	{sigla:"PIN",cidade:"Pinheiro",filial:"PIN",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0069-26"},
+	{sigla:"CUM",cidade:"Cururupu",filial:"PIN",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0173-75"},
+	{sigla:"APA",cidade:"Apicum-acu",filial:"PIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0420-51"},
+	{sigla:"ALC",cidade:"Alcantara",filial:"PIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0343-85"},
+	{sigla:"BCR",cidade:"Bacuri",filial:"PIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0419-18"},
+	{sigla:"MIZ",cidade:"Mirinzal",filial:"PIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0222-98"},
+	{sigla:"PNU",cidade:"Pinheiro Moveis Usados",filial:"PIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0317-93"},
+	{sigla:"PSA",cidade:"Presidente Sarney",filial:"PIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0373-09"},
+	{sigla:"SBE",cidade:"Sao Bento ",filial:"PIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0172-94"},
+	{sigla:"SHE",cidade:"Santa Helena",filial:"PIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0172-94"},
+	{sigla:"SVF",cidade:"Sao Vicente Ferrer",filial:"PIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0248-27"},
+	{sigla:"SJB",cidade:"Sao Joao Batista",filial:"PIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0249-08"},
+	{sigla:"TUR",cidade:"Turiacu",filial:"PIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0249-08"},
+	{sigla:"DPI",cidade:"Deposito de Pinheiro",filial:"PIN",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0305-50"},
+	{sigla:"BEQ",cidade:"Bequimao",filial:"PIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0466-34"},
+	{sigla:"CED",cidade:"Cedral",filial:"PIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0069-26"},
+	{sigla:"CEN",cidade:"Central",filial:"PIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0069-26"},
+	{sigla:"CJA",cidade:"Cajapio",filial:"PIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0069-26"},
+	{sigla:"BCB",cidade:"Bacurituba",filial:"PIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0069-26"},
+	{sigla:"PAS",cidade:"Paraiso",filial:"PIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0069-26"},
+	{sigla:"PEM",cidade:"Peri Mirim",filial:"PIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0467-15"},
+	{sigla:"PME",cidade:"Palmeirandia",filial:"PIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0069-26"},
+	{sigla:"SER",cidade:"Serrano do Maranhao",filial:"PIN",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0465-53"},
+	{sigla:"POM",cidade:"Porto Rico do Maranhao",filial:"PIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0069-26"},
+	{sigla:"GUI",cidade:"Guimaraes",filial:"PIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0069-26"},
+	{sigla:"TRF",cidade:"Tres Furros",filial:"PIN",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0373-09"},
+
+
+	{sigla:"CTP",cidade:"Carutapera",filial:"CTP",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0325-01"},
+	{sigla:"DCT / CTP",cidade:"Carutapera",filial:"CTP",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0449-33"},
+	{sigla:"AMP",cidade:"Amapa do Maranhao",filial:"CTP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0381-00"},
+	{sigla:"CME",cidade:"Candido do Mendes",filial:"CTP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0307-11"},
+	{sigla:"GDV",cidade:"Godofredo Viana",filial:"CTP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0307-11"},
+	{sigla:"LDO",cidade:"Luis Domingues",filial:"CTP",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0402-70"},
+
+
+	{sigla:"CAX",cidade:"Caxias",filial:"CAX",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0006-42"},
+	{sigla:"ALA",cidade:"Aldeias Altas",filial:"CAX",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0318-74"},
+	{sigla:"CXE",cidade:"Caxias Eletro",filial:"CAX",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0316-02"},
+	{sigla:"MTS",cidade:"Matoes",filial:"CAX",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0216-40"},
+	{sigla:"PRN",cidade:"Parnarama",filial:"CAX",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0217-20"},
+	{sigla:"CDP",cidade:"Deposito de Caxias",filial:"CAX",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0112-53"},
+	{sigla:"BRJ",cidade:"Brejinho",filial:"CAX",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0006-42"},
+	{sigla:"CVR",cidade:"Caxias Volta Redonda",filial:"CAX",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0006-42"},
+	{sigla:"SJE",cidade:"Sao Joao do Soter",filial:"CAX",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0436-19"},
+
+
+
+	{sigla:"BAC",cidade:"Bacabal",filial:"BAC",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0004-80"},
+	{sigla:"ANJ",cidade:"Anajatuba",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0266-09"},
+	{sigla:"BBV",cidade:"Bacabal Bela Vista",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0371-39"},
+	{sigla:"CAT",cidade:"Cantanhede",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0168-08"},
+	{sigla:"LCU",cidade:"Lago Acu",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0339-07"},
+	{sigla:"LGD",cidade:"Lagoa Grande do Maranhao",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0403-50"},
+	{sigla:"LVE",cidade:"Lago Verde",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0337-37"},
+	{sigla:"MIR",cidade:"Miranda",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0080-31"},
+	{sigla:"ALE",cidade:"Alto Alegre",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0177-07"},
+	{sigla:"MTN",cidade:"Matoes do Norte",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0338-18"},
+	{sigla:"ODC",cidade:"Olho Dagua das Cunhas",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0340-32"},
+	{sigla:"PIO",cidade:"Pio XII",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0090-03"},
+	{sigla:"PIP",cidade:"Pirapemas",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0335-75"},
+	{sigla:"SAM",cidade:"Sao Mateus",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0079-06"},
+	{sigla:"SLG",cidade:"Sao Luis Gonzaga",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0336-56"},
+	{sigla:"VIF",cidade:"Vitorno Freire",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0029-39"},
+	{sigla:"STB",cidade:"Saturbinha",filial:"BAC",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0004-80"},
+	{sigla:"PRM",cidade:"Paulo ramos",filial:"BAC",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0455-81"},
+	{sigla:"BDA",cidade:"Brejo de Arreia",filial:"BAC",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0455-81"},
+	{sigla:"BLU",cidade:"Bom Lugar",filial:"BAC",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0455-81"},
+	{sigla:"AMI",cidade:"Altamira",filial:"BAC",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0456-62"},
+
+
+  ],
+  "Regional Wellington":[
+	{sigla:"ALS",cidade:"Altos",filial:"ALS",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0203-25"},
+    	{sigla:"ALG",cidade:"Alto Longa",filial:"ALS",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0269-51"},
+    	{sigla:"BNT",cidade:"beneditinos",filial:"ALS",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0250-41"},
+    	{sigla:"SJS",cidade:"Sao Joao da Serra",filial:"ALS",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0203-25"},
+    	{sigla:"NSA",cidade:"Novo Santo Antonio",filial:"ALS",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0203-25"},
+
+
+    	{sigla:"CAM",cidade:"Campo Maior",filial:"CAM",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0203-25"},
+    	{sigla:"CST",cidade:"Casetlo Do Piaui",filial:"CAM",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0259-80"},
+    	{sigla:"JFT",cidade:"Jose de Freitas",filial:"CAM",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0206-78"},
+    	{sigla:"MIA",cidade:"Miguel Alves",filial:"CAM",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0205-97"},
+    	{sigla:"SMT",cidade:"Sao Miguel do Tapuio",filial:"CAM",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0282-29"},
+    	{sigla:"UNI",cidade:"Uniao",filial:"CAM",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0047-10"},
+    	{sigla:"CAD",cidade:"Deposito de Campo Maior",filial:"CAM",uf:"PI",tipo:"Deposito",cnpj:"06.862.627/0199-04"},
+    	{sigla:"BHO",cidade:"Boa Hora",filial:"CAM",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0094-37"},
+    	{sigla:"BOP",cidade:"Boqueirao do Piaui",filial:"CAM",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0094-37"},
+    	{sigla:"JUP",cidade:"Juazeiro do Piaui",filial:"CAM",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0094-37"},
+    	{sigla:"LAL",cidade:"Lagoa Alegre",filial:"CAM",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0047-10"},
+    	{sigla:"SGP",cidade:"Sigefredo Pacheco",filial:"CAM",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0094-37"},
+
+
+
+    	{sigla:"PIR",cidade:"Piripiri",filial:"PIR",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0045-59"},
+    	{sigla:"BAR",cidade:"Barras",filial:"PIR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0039-00"},
+    	{sigla:"BAT",cidade:"Batalha",filial:"PIR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0283-00"},
+    	{sigla:"BRS",cidade:"Brasileira",filial:"PIR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0312-89"},
+    	{sigla:"CCA",cidade:"Capitao de Campos",filial:"PIR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0422-13"},
+    	{sigla:"ESP",cidade:"Espetantina",filial:"PIR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0042-06"},
+    	{sigla:"LUZ",cidade:"Luzilandia",filial:"PIR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0046-30"},
+    	{sigla:"MIO",cidade:"Matios Olimpio",filial:"PIR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0284-90"},
+    	{sigla:"NSR",cidade:"Nossa Senhora dos Remedios",filial:"PIR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0417-56"},
+    	{sigla:"PII",cidade:"Pedro II",filial:"PIR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0114-15"},
+    	{sigla:"PRA",cidade:"Piracuruca",filial:"PIR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0077-36"},
+    	{sigla:"PRT",cidade:"Porto",filial:"PIR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0253-94"},
+    	{sigla:"PID",cidade:"Deposito ",filial:"PIR",uf:"PI",tipo:"Deposito",cnpj:"06.862.627/0226-11"},
+    	{sigla:"SBT",cidade:"Sao Benedito ",filial:"PIR",uf:"CE",tipo:"Posto",cnpj:"06.862.627/0218-01"},
+    	{sigla:"TIA",cidade:"Tiangua",filial:"PIR",uf:"CE",tipo:"Posto",cnpj:"06.862.627/0091-94"},
+    	{sigla:"VIC",cidade:"Vicosa",filial:"PIR",uf:"CE",tipo:"Posto",cnpj:"06.862.627/0255-56"},
+    	{sigla:"DGM",cidade:"Domingos Mourao",filial:"PIR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0045-59"},
+    	{sigla:"MAD",cidade:"Madeiro",filial:"PIR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0046-30"},
+    	{sigla:"CLG",cidade:"Campo Largo",filial:"PIR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0045-59"},
+    	{sigla:"SJA",cidade:"Sao Joao do Arraial",filial:"PIR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0042-06"},
+
+
+    	{sigla:"PAR",cidade:"Parnaiba",filial:"PAR",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0042-06"},
+    	{sigla:"BLO",cidade:"Buriti dos Lopes",filial:"PAR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0185-09"},
+    	{sigla:"CJP",cidade:"Cajueiro da Praia",filial:"PAR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0387-04"},
+    	{sigla:"COC",cidade:"Cocal",filial:"PAR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0236-93"},
+    	{sigla:"JPR",cidade:"Joaquim Pires",filial:"PAR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0285-71"},
+    	{sigla:"LCO",cidade:"Luis Correia",filial:"PAR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0186-90"},
+    	{sigla:"PCA",cidade:"Parnaiba Caramuru",filial:"PAR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0308-00"},
+    	{sigla:"PJS",cidade:"Parnaiba Joao Sousa",filial:"PAR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0344-66"},
+    	{sigla:"PPM",cidade:"Parnaiba Pinheiro Machado",filial:"PAR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0147-83"},
+    	{sigla:"ARA",cidade:"Araioses",filial:"PAR",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0147-83"},
+    	{sigla:"CHV",cidade:"Chaval",filial:"PAR",uf:"CE",tipo:"Posto",cnpj:"06.862.627/0332-22"},
+    	{sigla:"GRJ",cidade:"Granja",filial:"PAR",uf:"CE",tipo:"Posto",cnpj:"06.862.627/0333-03"},
+    	{sigla:"CIM",cidade:"Comocim",filial:"PAR",uf:"CE",tipo:"Posto",cnpj:"06.862.627/0141-98"},
+    	{sigla:"BPR",cidade:"Bom Principio",filial:"PAR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0141-98"},
+    	{sigla:"CBP",cidade:"Caraubas",filial:"PAR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0141-98"},
+    	{sigla:"CRB",cidade:"Carnaubeiras",filial:"PAR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0145-11"},
+    	{sigla:"IGP",cidade:"Ilha Grande do Piaui",filial:"PAR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0092-75"},
+    	{sigla:"MPO",cidade:"Murici do Portelas",filial:"PAR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0092-75"},
+    	{sigla:"CAV",cidade:"Cocal dos Alve",filial:"PAR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0092-75"},
+    	
+
+  ],
+  "Regional Edivano":[
+	    {sigla:"BHM",cidade:"Barreiras",filial:"BHM",uf:"BA",tipo:"Filial",cnpj:"06.862.627/0193-19"},
+	    {sigla:"BHI",cidade:"Barreiras Usados",filial:"BHM",uf:"BA",tipo:"Filial",cnpj:"06.862.627/0124-97"},
+    	{sigla:"ANB",cidade:"Angical Bahia",filial:"BHM",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0235-02"},
+    	{sigla:"BRA",cidade:"Barra Bahia",filial:"BHM",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0235-02"},
+    	{sigla:"COT",cidade:"Cotegipe",filial:"BHM",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0258-07"},
+    	{sigla:"CRI",cidade:"Cristopolis",filial:"BHM",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0257-18"},
+    	{sigla:"FRP",cidade:"Formosa do Rio Preto",filial:"BHM",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0202-44"},
+    	{sigla:"IBO",cidade:"Ibotitama",filial:"BHM",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0143-50"},
+    	{sigla:"RNE",cidade:"Riachao das Neves",filial:"BHM",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0238-55"},
+    	{sigla:"SAN",cidade:"Santana Bahia",filial:"BHM",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0385-34"},
+    	{sigla:"SDE",cidade:"Sao Desiderio",filial:"BHM",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0375-62"},
+    	{sigla:"SMV",cidade:"Santa Maria da Vioria",filial:"BHM",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0183-47"},
+    	{sigla:"SRC",cidade:"Sanat Rita de Cassia",filial:"BHM",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0144-30"},
+    	{sigla:"TBV",cidade:"Tabocas do Brejo Velho",filial:"BHM",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0256-37"},
+      {sigla:"BDF",cidade:"Barreiras Deposito",filial:"BHM",uf:"PI",tipo:"Deposito",cnpj:"06.862.627/0127-30"},
+      {sigla:"WAN",cidade:"Wanderlei",filial:"BHM",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0193-19"},
+      {sigla:"BAI",cidade:"Baianopolis",filial:"BHM",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0193-19"},
+      {sigla:"BBH",cidade:"Barreiras Barreirinhas",filial:"BHM",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0193-19"},
+      {sigla:"MAC",cidade:"Missao do Aricobe",filial:"BHM",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0193-19"},
+    	{sigla:"SDO",cidade:"Serra Dourada",filial:"BHM",uf:"BA",tipo:"Representante",cnpj:"06.862.627/0193-19"},
+      {sigla:"CBA",cidade:"Corretina",filial:"BHM",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0193-19"},
+      
+
+    	{sigla:"BOJ",cidade:"Bom Jesus",filial:"BOJ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0075-74"},
+    	{sigla:"RGR",cidade:"Redencao do Gurgueia",filial:"BOJ",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0274-19"},
+    	{sigla:"CCT",cidade:"Cristino Castro",filial:"BOJ",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0254-75"},
+    	{sigla:"DBJ",cidade:"Deposito de Bom Jesus",filial:"BOJ",uf:"PI",tipo:"Deposito",cnpj:"06.862.627/0254-75"},
+    	{sigla:"PDP",cidade:"Palmeira do Paiui",filial:"BOJ",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0254-75"},
+    	{sigla:"SZP",cidade:"Santa Luz",filial:"BOJ",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0254-75"},
+
+
+    	{sigla:"COR",cidade:"Corrente",filial:"COR",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0073-02"},
+    	{sigla:"GLB",cidade:"Gilbues",filial:"COR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0276-80"},
+    	{sigla:"PRG",cidade:"Parnagua",filial:"COR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0275-08"},
+    	{sigla:"CUR",cidade:"Curimata",filial:"COR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0277-61"},
+    	{sigla:"CDE",cidade:"Deposito de Corrente",filial:"COR",uf:"PI",tipo:"Deposito",cnpj:"06.862.627/0277-61"},
+    	{sigla:"JUB",cidade:"Julios Borges",filial:"COR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0277-61"},
+    	{sigla:"RIF",cidade:"Riacho Frio",filial:"COR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0073-02"},
+    	{sigla:"SEB",cidade:"Sebastiao Barros",filial:"COR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0073-02"},
+    	{sigla:"MAL",cidade:"Monte Alegre do Piaui",filial:"COR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0439-61"},
+    	{sigla:"SFO",cidade:"Santa Filomena",filial:"COR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0073-02"},
+    	{sigla:"ALP",cidade:"Avelino Lopes",filial:"COR",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0451-58"},
+    	{sigla:"CTL",cidade:"Cristalandia",filial:"COR",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0073-02"},
+
+    	
+
+    	{sigla:"FLO",cidade:"Floriano",filial:"FLO",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0099-41"},
+    	{sigla:"AAL",cidade:"Arraial",filial:"FLO",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0237-74"},
+    	{sigla:"BAG",cidade:"Barao de Grajau",filial:"FLO",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0180-02"},
+    	{sigla:"BER",cidade:"Bertolinia",filial:"FLO",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0230-06"},
+    	{sigla:"CAB",cidade:"Canto do Buriti",filial:"FLO",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0041-25"},
+    	{sigla:"COG",cidade:"Colonia do Gurgueia",filial:"FLO",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0278-42"},
+    	{sigla:"EMR",cidade:"Elizeu Martins",filial:"FLO",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0279-23"},
+    	{sigla:"GPE",cidade:"Guadalupe",filial:"FLO",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0279-23"},
+    	{sigla:"ITE",cidade:"Itaueira",filial:"FLO",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0178-80"},
+    	{sigla:"MEM",cidade:"Monoel Emidio",filial:"FLO",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0433-76"},
+    	{sigla:"MPA",cidade:"Marcos Parente",filial:"FLO",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0158-36"},
+    	{sigla:"SJX",cidade:"Sao Jose dos Peixe",filial:"FLO",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0229-64"},
+    	{sigla:"FLD",cidade:"Deposito de Floriano",filial:"FLO",uf:"PI",tipo:"Deposito",cnpj:"06.862.627/0239-36"},
+    	{sigla:"DCB",cidade:"Deposito do Canto do Buriti",filial:"FLO",uf:"PI",tipo:"Deposito",cnpj:"06.862.627/0323-31"},
+    	{sigla:"ATM",cidade:"Antonio Almeida",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0099-41"},
+    	{sigla:"AVG",cidade:"Alvorada do Gurgueia",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0099-41"},
+    	{sigla:"BJP",cidade:"Brejo do Paiui",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0041-25"},
+    	{sigla:"CAN",cidade:"Canavieira",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0230-06"},
+    	{sigla:"CJZ",cidade:"Cajazeiras do Piaui",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0003-08"},
+    	{sigla:"FAY",cidade:"Francisco Ayres",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0237-74"},
+    	{sigla:"JER",cidade:"Jerumenha",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0064-11"},
+    	{sigla:"FLR",cidade:"Flores Do Piaui",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0178-80"},
+    	{sigla:"LSA",cidade:"Landri Sales",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0099-41"},
+    	{sigla:"NAZ",cidade:"Nazare do Piaui",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0099-41"},
+    	{sigla:"PAV",cidade:"Pavussu",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0099-41"},
+    	{sigla:"PJU",cidade:"Pajeu do Piaui",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0041-25"},
+    	{sigla:"POA",cidade:"Porto Alegre do Piaui",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0099-41"},
+    	{sigla:"RGD",cidade:"Rio Grande do Piaui",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0178-80"},
+    	{sigla:"RIB",cidade:"Ribeira do Piaui",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0229-64"},
+    	{sigla:"SBL",cidade:"Sebastiao Leal",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0230-06"},
+    	{sigla:"SFC",cidade:"Sao Francisco do Piaui",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0099-41"},
+    	{sigla:"SMI",cidade:"Sao Miguel do Fidalgo",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0229-64"},
+    	{sigla:"STR",cidade:"Santa Rosa do Piaui",filial:"FLO",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0237-74"},
+
+
+    	{sigla:"LEM",cidade:"Luis Eduardo Mahalhaes",filial:"LEM",uf:"BA",tipo:"Filial",cnpj:"06.862.627/0152-40"},
+   	  {sigla:"TAG",cidade:"Taguatinga",filial:"LEM",uf:"TO",tipo:"Posto",cnpj:"06.862.627/0209-10"},
+    	{sigla:"LDU",cidade:"Luis Eduardo Usados",filial:"LEM",uf:"BA",tipo:"Posto",cnpj:"06.862.627/0260-13"},
+    	{sigla:"LED",cidade:"Luis Eduardo Deposito",filial:"LEM",uf:"BA",tipo:"Deposito",cnpj:"06.862.627/0201-63"},
+     	{sigla:"COB",cidade:"Combinado",filial:"LEM",uf:"TO",tipo:"Representante",cnpj:"06.862.627/0209-10"},
+    
+
+    	{sigla:"SRN",cidade:"Sao Rainundo Nonato",filial:"SRN",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0209-10"},
+    	{sigla:"CAC",cidade:"Caracol",filial:"SRN",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0281-48"},
+    	{sigla:"ABU",cidade:"Anisio de Abreu",filial:"SRN",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0280-67"},
+    	{sigla:"DAV",cidade:"Driceu Arcoverde",filial:"SRN",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0233-40"},
+    	{sigla:"DIN",cidade:"Dom Inocencio",filial:"SRN",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0049-82"},
+    	{sigla:"FAR",cidade:"Fartura do Piaui",filial:"SRN",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0049-82"},
+    	{sigla:"SBZ",cidade:"Sao Braz Do Piaui",filial:"SRN",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0049-82"},
+    	{sigla:"BFP",cidade:"Bom Fim do Piaui",filial:"SRN",uf:"PI",tipo:"Representante",cnpj:"06.862.627/0049-82"},
+    	{sigla:"SRD",cidade:"Deposito de Sao Raimundo Nonato",filial:"SRN",uf:"PI",tipo:"Deposito",cnpj:"06.862.627/0331-41"},
  
+	    {sigla:"URU",cidade:"Urucui",filial:"URU",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0050-16"},
+    	{sigla:"BGR",cidade:"baixa Grande do Piaui",filial:"URU",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0290-39"},
+    	{sigla:"RGO",cidade:"Ribeiro Goncalves",filial:"URU",uf:"PI",tipo:"Posto",cnpj:"06.862.627/0289-03"},
 
 
-  // Regional Erisvaldo
-  {sigla:"BHA",   	filial:"BHA", 		cidade:"barreirinhas",       	 	tipo:"Filial", 		ip:"172.16.218.251",         	dispositivo:"Fortigate",             	regional:"Regional Erisvaldo",      pdvs:["pdvbha01","pdvbha02","pdvbha03","pdvbha04","pdvbha05","pdvbha06","pdvbha07"]},
-  {sigla:"HBC",   	filial:"BHA", 		cidade:"Humberto De Campos",        	tipo:"Posto", 		ip:"172.16.232.251",         	dispositivo:"Fortigate",             	regional:"Regional Erisvaldo",      pdvs:["pdvhbc01","pdvhbc02"]},
+  ],
+  "Regional Erisvaldo":[
+       	{sigla:"BHA",cidade:"Barreirinhas",filial:"BHA",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0166-46"},
+       	{sigla:"HBC",cidade:"Humberto de Campos",filial:"BHA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0166-46"},
+       	{sigla:"SMR",cidade:"Santo Amaro",filial:"BHA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0391-82"},
+       	{sigla:"DBH",cidade:"Desposito de Barreirinhas",filial:"BHA",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0386-15"},
+       	{sigla:"PCZ",cidade:"Primeira Cruz",filial:"BHA",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0164-84"},
 
 
-  // Regional Ronnie Von
-
-  {sigla:"BCO",         filial:"BCO",     cidade:"Barra Do Corda",                    tipo:"Filial",            	ip:"172.16.166.251",         	dispositivo:"Fortigate",            regional:"Regional Ronnie Von",     pdvs:["pdvbco01","pdvbco02","pdvbco03","pdvbco04","pdvbco05","pdvbco08","pdvbco09"]},
-  {sigla:"BCO / BDC",   filial:"BCO",     cidade:"Deposito De Barra Do Corda",        tipo:"Deposito",            	ip:"172.26.166.1",         	dispositivo:"Mikrotik",             regional:"Regional Ronnie Von",     pdvs:["pdvdbc01"]},
-
-
-  // Regional Wellington
-  {sigla:"ALS",   	filial:"ALS", cidade:"Altos",        		tipo:"Filial", 		ip:"172.16.196.251",         	dispositivo:"Fortigate",             regional:"Regional Wellington",         pdvs:["pdvals01","pdvals02","pdvals03"]},
-  {sigla:"ALG",   	filial:"ALS", cidade:"Alto Longa",        	tipo:"Posto", 		ip:"172.16.227.251",         	dispositivo:"Fortigate",             regional:"Regional Wellington",         pdvs:["pdvalg01","pdvalg02"]},
-
-
-  // Regional Diretoria
-  {sigla:"TEZ",   	filial:"TEZ ",  	cidade:"Teresina Matriz",                 tipo:"Filial",    ip:"172.16.11.249",          dispositivo:"Mikrotik",              regional:"Regional Diretoria",          pdvs:["pdvtez01","pdvtez02","pdvtez03","pdvtez04","pdvtez05","pdvtez06","pdvtez07","pdvtez08","pdvtez09","pdvtez10","pdvtez11","pdvtez12","pdvtez13","pdvtez14"]},
-  {sigla:"TED",   	filial:"TEZ ",  	cidade:"Teresina Dirceu",                 tipo:"Filial",    ip:"172.16.23.251",          dispositivo:"Fortigate",             regional:"Regional Diretoria",          pdvs:["pdvted01","pdvted02","pdvted03","pdvted04","pdvted05","pdvted06","pdvted07","pdvted08","pdvted09","pdvted10","pdvted11"]},
-
-
-  // Lojas Coligadas
-
-{sigla:"FRI-INDUSTRIA",   		filial:"FRIGOTIL ",  		cidade:"FRI-INDUSTRIA",              		tipo:"Filial",    ip:"172.16.19.251",           dispositivo:"Fortigate",             regional:"Regional Coligada",          pdvs:["Nao Possui PDVs"]},
-{sigla:"FRI-FML-MATADOURO",   		filial:"FRIGOTIL ",  		cidade:"FRI-FML-MATADOURO",              	tipo:"Filial",    ip:"172.16.213.251",          dispositivo:"Mikrotik",              regional:"Regional Coligada",          pdvs:["Nao Possui PDVs"]},
+    	{sigla:"CHA",cidade:"Chapadinha",filial:"CHA",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0030-72"},
+    	{sigla:"BRE",cidade:"Brejo",filial:"CHA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0030-72"},
+    	{sigla:"SBD",cidade:"Sao Bernardo",filial:"CHA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0167-27"},
+    	{sigla:"SBR",cidade:"Sao Benedito do Rio Preto",filial:"CHA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0418-37"},
+    	{sigla:"UBS",cidade:"Urbano Santos",filial:"CHA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0163-01"},
+    	{sigla:"STQ",cidade:"Santa Quiteria do Maranhao",filial:"CHA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0423-02"},
+    	{sigla:"CHD",cidade:"Deposito de Chapadinha",filial:"CHA",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0342-02"},
+    	{sigla:"MAG",cidade:"Magalhaes de Almeida",filial:"CHA",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0030-72"},
+    	{sigla:"MLG",cidade:"Milagres",filial:"CHA",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0024-24"},
+    	{sigla:"ANP",cidade:"Anapurus",filial:"CHA",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0030-72"},
+    	{sigla:"PLT",cidade:"Palestina",filial:"BRE",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0024-24"},
+    	{sigla:"MRA",cidade:"Mata Roma",filial:"CHA",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0030-72"},
+    	{sigla:"SMA",cidade:"Santana do Maranhao",filial:"CHA",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0167-27"},
 
 
-{sigla:"CENTRO MEDICO",   	filial:"CENTRO MEDICO" , 		cidade:"Complexo-TDC",              		tipo:"Filial",    ip:"172.21.254.1",          	dispositivo:"Mikrotik",              regional:"Regional Coligada",          pdvs:["Nao Possui PDVs"]},
-{sigla:"SETOR COMERCIAL",   	filial:"Complexo-TDC",  		cidade:"Complexo-TDC",              		tipo:"Filial",    ip:"172.21.254.1",          	dispositivo:"Mikrotik",              regional:"Regional Coligada",          pdvs:["Nao Possui PDVs"]},
+    	{sigla:"CNE",cidade:"Coleho Neto",filial:"CNE",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0066-83"},
+    	{sigla:"DUB",cidade:"Duque Bacelar",filial:"CNE",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0066-83"},
+    	{sigla:"AFC",cidade:"Afonso Cunha",filial:"CNE",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0435-38"},
+    	{sigla:"BIV",cidade:"Buriti da Inacia Vazia",filial:"CNE",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0415-94"},
 
 
-];
+    	{sigla:"COD",cidade:"Codo",filial:"COD",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0005-61"},
+    	{sigla:"CDF",cidade:"Deposito de Codo",filial:"COD",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0113-34"},
+    	{sigla:"CSB",cidade:"Codo Sao Sebastiao",filial:"COD",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0005-61"},
+    	{sigla:"TIN",cidade:"Timbiras",filial:"COD",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0441-86"},
+
+
+    	{sigla:"CTA",cidade:"Coroata",filial:"CTA",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0076-55"},
+    	{sigla:"CTZ",cidade:"Coroata Trizidela",filial:"CTA",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0076-55"},
+
+
+    	{sigla:"SRI",cidade:"Santa Rita",filial:"SRI",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0368-33"},
+
+
+    	{sigla:"ITA",cidade:"Itapecuru",filial:"ITA",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0369-14"},
+
+
+    	{sigla:"ROS",cidade:"Rosario",filial:"ROS",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0367-52"},
+    	{sigla:"MRO",cidade:"Morros",filial:"ROS",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0372-10"},
+    	{sigla:"PRJ",cidade:"Presidente Juscelino",filial:"ROS",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0350-04"},
+    	{sigla:"ICT",cidade:"Icatu",filial:"ROS",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0309-83"},
+    	{sigla:"AXA",cidade:"Axixa do Maranhao",filial:"ROS",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0425-66"},
+    	{sigla:"BCA",cidade:"Bacabeira",filial:"ROS",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0367-52"},
+
+
+    	{sigla:"TUT",cidade:"Tutoia",filial:"TUT",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0165-65"},
+    	{sigla:"AGD",cidade:"Agua Doce do Maranhao",filial:"TUT",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0165-65"},
+    	{sigla:"CNB",cidade:"Cana Brava",filial:"TUT",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0165-65"},
+    	{sigla:"PLN",cidade:"Paulino Neves",filial:"TUT",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0165-65"},
 
 
 
+    	{sigla:"VAG",cidade:"Vargem Grande",filial:"VAG",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0165-65"},
+    	{sigla:"DVG",cidade:"Deposito Vargem Grande",filial:"VAG",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0400-08"},
+    	{sigla:"NIR",cidade:"Nina Rodrigues",filial:"VAG",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0025-05"},
+    	{sigla:"PVG",cidade:"Presidente Vargas",filial:"VAG",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0025-05"},
+
+      
+  ],
+  "Regional Ronnie Von":[
+    	{sigla:"BCO",cidade:"Barra do Corda",filial:"BCO",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0035-87"},
+    	{sigla:"DBC",cidade:"Deposito Barra do Corda",filial:"BCO",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0296-24"},
+    	{sigla:"JEV",cidade:"Jenipapo do Vieiras",filial:"BCO",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0035-87"},
+    	{sigla:"FFC",cidade:"Fernando Falcao",filial:"BCO",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0035-87"},
+	
+
+    	{sigla:"COM",cidade:"Colinas",filial:"COM",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0068-45"},
+    	{sigla:"BUB",cidade:"Buriti Bravo",filial:"COM",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0097-80"},
+    	{sigla:"MID",cidade:"Mirador",filial:"COM",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0382-91"},
+    	{sigla:"PBO",cidade:"Pastos Bons",filial:"COM",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0300-45"},
+    	{sigla:"PFR",cidade:"Passagem Franca",filial:"COM",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0384-53"},
+    	{sigla:"PNO",cidade:"Paraibano",filial:"COM",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0084-65"},
+    	{sigla:"SPA",cidade:"Sao Joao dos Patos",filial:"COM",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0067-64"},
+    	{sigla:"DCO",cidade:"Deposito de Barra do Corda",filial:"COM",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0110-91"},
+    	{sigla:"JTB",cidade:"Jatoba",filial:"COM",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0068-45"},
+    	{sigla:"LGM",cidade:"Lagoa do Mato",filial:"COM",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0068-45"},
+    	{sigla:"NIQ",cidade:"Nova Iorque",filial:"COM",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0068-45"},
+    	{sigla:"SAZ",cidade:"Santo Antonio do Azeitao",filial:"COM",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0068-45"},
+    	{sigla:"SUR",cidade:"Sucupira do Riachao",filial:"COM",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0068-45"},
+    	{sigla:"SUN",cidade:"Sucupira do Norte",filial:"COM",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0068-45"},
 
 
+    	{sigla:"GRA",cidade:"Grajau",filial:"GRA",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0034-04"},
+    	{sigla:"ARM",cidade:"Arame",filial:"GRA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0176-18"},
+    	{sigla:"SNM",cidade:"Sitio Novo do Maranhao",filial:"GRA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0049-82"},
+    	{sigla:"FSN",cidade:"Formosa da Serra Negra",filial:"GRA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0306-30"},
+    	{sigla:"GCN",cidade:"Grajau Canoeiro",filial:"GRA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0334-94"},
+    	{sigla:"IGR",cidade:"Itaipava do Grajau",filial:"GRA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0388-87"},
+    	{sigla:"GAB",cidade:"Grajau Alto Brasil",filial:"GRA",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0388-87"},
+    	{sigla:"LJN",cidade:"Lajeado Novo",filial:"GRA",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0458-24"},
 
 
-const regionais = [...new Set(lojas.map(l => l.regional))].sort();
-const telaRegionais=document.getElementById('telaRegionais'),telaLojas=document.getElementById('telaLojas'),backBtn=document.getElementById('backBtn'),searchInput=document.getElementById('searchInput');
-const modal=document.getElementById('modalAuth'),authInput=document.getElementById('authPassword'),errorMsg=document.getElementById('errorMsg');
-const copyMsg=document.getElementById('copyMsg');
+    	{sigla:"PDU",cidade:"Presidente Dutra",filial:"PDU",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0037-49"},
+    	{sigla:"DPE",cidade:"Dom Pedro",filial:"PDU",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0036-68"},
+    	{sigla:"ESA",cidade:"Senador Alexandre Costa",filial:"PDU",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0405-12"},
+    	{sigla:"FOR",cidade:"Fortuna",filial:"PDU",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0401-99"},
+    	{sigla:"GDI",cidade:"Goncalves Dias",filial:"PDU",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0082-01"},
+    	{sigla:"GEB",cidade:"Governador Eugenio Barros",filial:"PDU",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0416-75"},
+    	{sigla:"SAD",cidade:"Sao Domingos",filial:"PDU",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0085-46"},
+    	{sigla:"SAL",cidade:"Santo Antonio dos Lopes",filial:"PDU",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0174-56"},
+    	{sigla:"TUN",cidade:"Tuntun",filial:"PDU",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0174-56"},
+    	{sigla:"DPU",cidade:"Deposito de Presidente Dutra",filial:"PDU",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0328-46"},
+    	{sigla:"CAZ",cidade:"Capinzal do Norte",filial:"PDU",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0037-49"},
+    	{sigla:"GAC",cidade:"Governador Archer",filial:"PDU",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0037-49"},
+    	{sigla:"GCA",cidade:"Graca Arranha",filial:"PDU",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0037-49"},
+    	{sigla:"GLR",cidade:"Governador Luiz Rocha",filial:"PDU",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0037-49"},
+    	{sigla:"SFM",cidade:"Snata Filomena Do Maranhao",filial:"PDU",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0037-49"},
 
-function mostrarRegionais(){
-  telaRegionais.innerHTML="";
-  regionais.forEach(reg=>{
-    const lojasDaRegional=lojas.filter(l=>l.regional===reg);
-    const contagem={
-      Filial:lojasDaRegional.filter(l=>l.tipo.toLowerCase()==="filial").length,
-      Postos:lojasDaRegional.filter(l=>l.tipo.toLowerCase()==="posto").length,
-      Depositos:lojasDaRegional.filter(l=>l.tipo.toLowerCase()==="deposito").length,
-      Representantes:lojasDaRegional.filter(l=>l.tipo.toLowerCase()==="representante").length
-    };
-    const totalLojas = lojasDaRegional.length; // total geral da regional
-const card=document.createElement('div'); 
-card.className='card regional-card';
-card.style.position='relative'; // necess rio para o badge
-card.innerHTML=`
-  <h2>${reg}</h2>
-  <div class="badge">${totalLojas}</div>
-  <div class="contagem-tipos">
-    <div class="tipo"><span>Filial</span><p>${contagem.Filial}</p></div>
-    <div class="tipo"><span>Postos</span><p>${contagem.Postos}</p></div>
-    <div class="tipo"><span>Depositos</span><p>${contagem.Depositos}</p></div>
-    <div class="tipo"><span>Representantes</span><p>${contagem.Representantes}</p></div>
-  </div>`;
 
-    card.onclick=()=>mostrarLojasPorRegional(reg);
-    telaRegionais.appendChild(card);
-  });
+    	{sigla:"PED",cidade:"Pedreiras",filial:"PED",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0002-19"},
+    	{sigla:"ENO",cidade:"Esperantinopolis",filial:"PED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0081-12"},
+    	{sigla:"IGE",cidade:"Igarape  Grande",filial:"PED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0171-03"},
+    	{sigla:"JOZ",cidade:"Jozelandia",filial:"PED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0412-41"},
+    	{sigla:"LAP",cidade:"Lago da Pedra",filial:"PED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0028-58"},
+    	{sigla:"PPE",cidade:"Porcao de Pedras",filial:"PED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0038-20"},
+    	{sigla:"PER",cidade:"Peritoro",filial:"PED",uf:"MA",tipo:"Posto",cnpj:"06.862.627/0175-37"},
+    	{sigla:"PDF",cidade:"Deposito de Pedreiras",filial:"PED",uf:"MA",tipo:"Deposito",cnpj:"06.862.627/0109-58"},
+    	{sigla:"BRM",cidade:"Bernardo Mearim",filial:"PED",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0002-19"},
+    	{sigla:"LAJ",cidade:"lago do Junco",filial:"PED",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0002-19"},
+    	{sigla:"LAR",cidade:"lago dos Rodrigues",filial:"PED",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0002-19"},
+    	{sigla:"LIC",cidade:"Lima Campos",filial:"PED",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0002-19"},
+    	{sigla:"SBA",cidade:"S o Jose dos Basilios",filial:"PED",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0002-19"},
+    	{sigla:"SRB",cidade:"Sao Roberto",filial:"PED",uf:"MA",tipo:"Representante",cnpj:"06.862.627/0002-19"},
+
+
+  ],
+  "Regional Diretoria":[
+    	{sigla:"TEZ",cidade:"Teresina Matriz",filial:"TEZ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0001-38"},
+    	{sigla:"TED",cidade:"Teresina Driceu  ",filial:"TEZ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0103-62"},
+    	{sigla:"TMA",cidade:"Teresina Magazine  ",filial:"TEZ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0105-24"},
+    	{sigla:"TMO",cidade:"Teresina Mocambinho ",filial:"TEZ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0313-60"},
+    	{sigla:"TEU",cidade:"Teresina Utilidades  ",filial:"TEZ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0011-00"},
+    	{sigla:"TPP",cidade:"Teresina Parque Piaui ",filial:"TEZ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0291-10"},
+    	{sigla:"TPI",cidade:"Teresina Picarreira  ",filial:"TEZ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0291-10"},
+    	{sigla:"TSJ",cidade:"Teresina Sao Joaquim ",filial:"TEZ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0291-10"},
+    	{sigla:"TES",cidade:"Teresina Shopping  ",filial:"TEZ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0291-10"},
+    	{sigla:"TEC",cidade:"Teresina Timom ",filial:"TEZ",uf:"MA",tipo:"Filial",cnpj:"06.862.627/0215-69"},
+    	{sigla:"TDC",cidade:"Teresina Deposito Central",filial:"TEZ",uf:"PI",tipo:"Deposito",cnpj:"06.862.627/0100-10"},
+    	{sigla:"TAT",cidade:"Teresina Assistencia ",filial:"TEZ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0001-38"},
+    	{sigla:"TCT",cidade:"Teresina Confeccao e Tecidos ",filial:"TEZ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0001-38"},
+    	{sigla:"TVE",cidade:"Teresina Venda Externa ",filial:"TEZ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0001-38"},
+    	{sigla:"TLP",cidade:"Teresina LOjao Paraiba ",filial:"TEZ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0001-38"},
+    	{sigla:"TOP",cidade:"Teresina Operacao ",filial:"TEZ",uf:"PI",tipo:"Filial",cnpj:"06.862.627/0240-70"},
+
+  ]
+};
+
+
+let filtroLateralDados=[],regionalAtual=null,listaAtualFiltrada=[];
+const telaRegionais=document.getElementById("telaRegionais");
+
+// --- Monta cards regionais ---
+for(let reg in regionais){
+  const lojas = regionais[reg];
+  let contagem={Filial:0,Posto:0,Deposito:0,Representante:0};
+  lojas.forEach(l=>{if(contagem[l.tipo]!==undefined) contagem[l.tipo]++;});
+  const div=document.createElement("div");
+  div.className="regional";
+  div.innerHTML=`<div class="badge-total">${lojas.length}</div><h2>${reg}</h2>
+    <p>Filiais: <span class="tipo-filial">${contagem.Filial}</span></p>
+    <p>Postos: <span class="tipo-posto">${contagem.Posto}</span></p>
+    <p>Depositos: <span class="tipo-deposito">${contagem.Deposito}</span></p>
+    <p>Representantes: <span class="tipo-representante">${contagem.Representante}</span></p>`;
+  div.onclick=()=>abrirRegional(reg);
+  telaRegionais.appendChild(div);
 }
 
-mostrarRegionais();
+function atualizarBadgeGlobal(){
+  let contagem={Filial:0,Posto:0,Deposito:0,Representante:0};
+  for(let reg in regionais) regionais[reg].forEach(l=>{if(contagem[l.tipo]!==undefined) contagem[l.tipo]++;});
+  const totalGlobal=contagem.Filial+contagem.Posto+contagem.Deposito+contagem.Representante;
+  const agora=new Date().toLocaleString("pt-BR");
+ document.getElementById("badgeGlobal").innerHTML = `
+<h3>Total de Lojas</h3>
 
-function mostrarLojasPorRegional(regional){
-  backBtn.style.display='inline-block';
-  telaRegionais.style.display='none';
-  mostrarTabela(lojas.filter(l=>l.regional===regional));
+<div class="grid-badges">
+
+  <div class="box total destaque">
+    <span>${totalGlobal}</span>
+    <small>Total</small>
+  </div>
+
+  <div class="box filial">
+    <span>${contagem.Filial}</span>
+    <small>Filiais</small>
+  </div>
+
+  <div class="box posto">
+    <span>${contagem.Posto}</span>
+    <small>Postos</small>
+  </div>
+
+  <div class="box deposito">
+    <span>${contagem.Deposito}</span>
+    <small>Depósitos</small>
+  </div>
+
+  <div class="box representante">
+    <span>${contagem.Representante}</span>
+    <small>Representantes</small>
+  </div>
+
+</div>
+
+<small>Atualizado: ${agora}</small>`;
 }
+atualizarBadgeGlobal();
+
+// --- Fun  es de navega  o ---
+function abrirRegional(reg){
+  regionalAtual = reg;
+
+  document.getElementById("telaRegionais").style.display = "none";
+  document.getElementById("telaLojas").style.display = "block";
+
+  document.getElementById("tituloRegional").textContent = `Lojas da ${reg}`;
+  document.getElementById("selectTipo").value = "todos";
+
+  renderFilialCards(regionais[reg]);
+
+  // ?? ESCONDE o filtro lateral
+  document.getElementById("filtroLateral").style.display = "none";
+}
+
+
+
 
 function voltar(){
-  searchInput.value='';
-  telaLojas.innerHTML='';
-  mostrarRegionais();
-  telaRegionais.style.display='flex';
-  backBtn.style.display='none';
+  document.getElementById("telaLojas").style.display = "none";
+  telaRegionais.style.display = "grid";
+
+  // Mostrar filtro lateral novamente
+  document.getElementById("filtroLateral").style.display = "flex";
 }
+function voltar(){
+  // Esconde a tela de lojas
+  document.getElementById("telaLojas").style.display = "none";
 
-function mostrarTabela(lista, ocultarPDV = false){
-  telaLojas.innerHTML=''; 
-  if(lista.length===0) return;
+  // Mostra novamente os cards de regionais
+  telaRegionais.style.display = "grid";
 
-  // Agrupa lojas por filial
-  const agrupadas = {};
-  lista.forEach(l => {
-    if(!agrupadas[l.filial]) agrupadas[l.filial] = [];
-    agrupadas[l.filial].push(l);
-  });
+  // Mostra o painel lateral de filtro
+  document.getElementById("filtroLateral").style.display = "flex";
 
-  for(const filial in agrupadas){
-    const lojasFilial = agrupadas[filial];
+  // Limpa a pesquisa
+  document.getElementById("searchBox").value = "";
 
-    const cardFilial = document.createElement('div');
-    cardFilial.className = 'card';
-    cardFilial.style.position='relative';
+  // Limpa resultados do filtro lateral
+  document.getElementById("resultadoFiltro").innerHTML = "";
 
-    cardFilial.innerHTML = `
-      <div class="filial-quadro">
-        FILIAL : <strong>${filial}</strong>
-      </div>
+  // Atualiza o badge global
+  atualizarBadgeGlobal();
 
-      <div class="badge">${lojasFilial.length}</div>
+  // Reseta a regional atual
+  regionalAtual = null;
+}
+function renderFilialCards(lojas){
+  const tipo=document.getElementById("selectTipo").value||"todos";
+  let filtradas=lojas.filter(l=>tipo==="todos"||l.tipo===tipo);
+  listaAtualFiltrada=filtradas.slice();
+  document.getElementById("badgeFiltro").textContent=`Exibindo ${filtradas.length} de ${lojas.length} lojas`;
+  const agrupado={};
+  filtradas.forEach(l=>{if(!agrupado[l.filial]) agrupado[l.filial]=[];agrupado[l.filial].push(l);});
+  const container=document.getElementById("tabelaLojas");
+  container.innerHTML="";
+  for(let filial in agrupado){
+    let rows="";
+    agrupado[filial].forEach(l=>{rows+=`<tr><td>${l.sigla}</td> <td>${l.cnpj || 'Nao Informado'}</td><td>${l.cidade}</td><td>${l.uf}</td><td class="tipo-${l.tipo.toLowerCase()}">${l.tipo}</td></tr>`;});
+    const card=document.createElement("div");card.className="filial-card";
+    card.innerHTML=`<h3>${filial}</h3><table><thead><tr><th>Sigla</th><th>CNPJ</th><th>Cidade</th><th>UF</th><th>Tipo</th></tr></thead><tbody>${rows}</tbody></table>`;
+    container.appendChild(card);
+  }
+}
+function filtrarPorTipo(){if(!regionalAtual) return;renderFilialCards(regionais[regionalAtual]);}
 
-      <div style="margin-top:15px;">
-        <table style="width:100%; border-collapse: separate; border-spacing: 0 6px;">
-          
-          <thead>
-            <tr>
-              <th>Sigla</th>
-              <th>Tipo</th>
-              <th>IP</th>
-              <th>Cidade</th>
-              <th>Dispositivo</th>
-              ${!ocultarPDV ? '<th>PDVs</th>' : ''}
-              <th>Acao</th>
-            </tr>
-          </thead>
+function pesquisar() {
+  const termo = document.getElementById("searchBox").value.toLowerCase().trim();
+  const resultadosDiv = document.getElementById("resultadoFiltro");
+  resultadosDiv.innerHTML = "";
 
-          <tbody>
-            ${lojasFilial.map(l=>{
-              const pdvs1 = l.pdvs.slice(0, Math.ceil(l.pdvs.length / 2));
-              const pdvs2 = l.pdvs.slice(Math.ceil(l.pdvs.length / 2));
+  if (termo !== "") document.getElementById("filtroLateral").style.display = "none";
+  else document.getElementById("filtroLateral").style.display = "flex";
 
-              return `
-              <tr>
-                <td>${l.sigla}</td>
-                <td>${l.tipo}</td>
-                <td>${l.ip}</td>
-                <td>${l.cidade}</td>
-                <td>${l.dispositivo}</td>
+  if (termo === "") {
+    atualizarBadgeGlobal(); // retorna ao estado normal
+    return;
+  }
 
-                ${!ocultarPDV ? `
-                <td>
-                  <div style="display:flex; gap:6px; justify-content:center;">
-                    
-                    <ul style="padding:0; margin:0; flex:1;">
-                      ${pdvs1.map(p=>`
-                        <li style="list-style:none;background: rgba(255,204,0,0.1);margin:2px 0;padding:3px 6px;border-radius:6px;">
-                          ${p}
-                        </li>
-                      `).join('')}
-                    </ul>
-
-                    ${pdvs2.length>0 ? `
-                    <ul style="padding:0; margin:0; flex:1;">
-                      ${pdvs2.map(p=>`
-                        <li style="list-style:none;background: rgba(255,204,0,0.2);margin:2px 0;padding:3px 6px;border-radius:6px;">
-                          ${p}
-                        </li>
-                      `).join('')}
-                    </ul>
-                    ` : ''}
-
-                  </div>
-                </td>
-                ` : ''}
-
-                <td id="acoes-${l.sigla}"></td>
-              </tr>
-              `;
-            }).join('')}
-          </tbody>
-
-        </table>
-      </div>
-    `;
-
-    telaLojas.appendChild(cardFilial);
-
-    // Botões de ação
-    lojasFilial.forEach(l=>{
-      const td = document.getElementById(`acoes-${l.sigla}`);
-      const ip = l.ip;
-
-      if(l.dispositivo.toLowerCase()==="mikrotik"){
-        const btn = document.createElement('button'); 
-        btn.className='action-btn'; 
-        btn.style.backgroundColor='#2ecc71'; 
-        btn.textContent='Copiar';
-        btn.onclick=()=>copiarDireto(`${ip}:5819`);
-        td.appendChild(btn);
-      }
-
-      if(l.dispositivo.toLowerCase()==="fortigate"){
-        const openBtn=document.createElement('button'); 
-        openBtn.className='action-btn'; 
-        openBtn.style.backgroundColor='#3498db'; 
-        openBtn.textContent='Abrir';
-        openBtn.onclick=()=>window.open(`https://${ip}:5413`,'_blank'); 
-        td.appendChild(openBtn);
-
-        const senha = l.senha || 'Hrt5M-jgExN7';
-        const senhaBtn=document.createElement('button'); 
-        senhaBtn.className='action-btn'; 
-        senhaBtn.style.backgroundColor='#e67e22'; 
-        senhaBtn.textContent='Senha';
-        senhaBtn.onclick = () => abrirModal(senha);
-        td.appendChild(senhaBtn);
+  let resultados = [];
+  for (let reg in regionais) {
+    const lojas = regionais[reg];
+    if (reg.toLowerCase().includes(termo))
+      resultados.push(...lojas.map(l => ({ ...l, regional: reg })));
+    lojas.forEach(l => {
+      if ([l.filial, l.cidade, l.sigla, l.tipo, l.uf].some(x =>
+        String(x).toLowerCase().includes(termo))) {
+        resultados.push({ ...l, regional: reg });
       }
     });
   }
+
+  filtroLateralDados = resultados;
+
+if (resultados.length === 0) {
+   resultadosDiv.innerHTML = `
+<div style="
+    width:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-top:40px;
+">
+
+  <div style="
+      width:90%;
+      max-width:900px;
+      padding:50px 40px;
+      border-radius:20px;
+      background:#0b0b0f;
+      box-shadow:0 0 40px rgba(255,200,0,0.2);
+      position:relative;
+      text-align:center;
+      animation:fadeIn 0.4s ease;
+  ">
+
+    <!-- Linha superior -->
+    <!--<div style="
+        position:absolute;
+        top:0;
+        left:0;
+        width:100%;
+        height:4px;
+        background:linear-gradient(90deg,#ffd700,#ffae00);
+        box-shadow:0 0 15px #ffd700;
+        border-radius:20px 20px 0 0;
+    "></div>
+
+    <p style="
+        color:#ffd700;
+        letter-spacing:4px;
+        font-size:12px;
+        margin-bottom:20px;
+    ">
+        CENTRAL DE CONSULTA
+    </p>
+
+    <h1 style="
+        font-size:34px;
+        color:#fff;
+        margin-bottom:20px;
+        letter-spacing:2px;
+    ">
+        PESQUISA NAO LOCALIZADA
+    </h1>
+
+    <p style="
+        color:#ccc;
+        font-size:16px;
+        margin-bottom:10px;
+    ">
+        Nenhum Resultado Encontrado Para
+    </p>
+
+    <p style="
+        color:#ffd700;
+        font-size:22px;
+        font-weight:bold;
+        margin-bottom:30px;
+    ">
+        "${termo}"
+    </p>
+
+    <!-- Caixa destaque -->
+    <!--<div style="
+        margin:0 auto 30px auto;
+        padding:15px 20px;
+        max-width:600px;
+        border-radius:12px;
+        border:2px solid #ffd700;
+        color:#fff;
+        box-shadow:0 0 15px rgba(255,215,0,0.4);
+        background:rgba(255,215,0,0.05);
+    ">
+<div style="
+    font-size:15px;
+    color:#ccc;
+    margin-bottom:10px;
+">
+    Realize a busca utilizando:
+</div>
+
+<div style="
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:10px;
+    margin-top:10px;
+">
+
+  <span class="badgeFiltro">Regional</span>
+  <span class="badgeFiltro">Filial</span>
+  <span class="badgeFiltro">Cidade</span>
+  <span class="badgeFiltro">Sigla</span>
+  <span class="badgeFiltro">Tipo</span>
+
+</div>
+    </div>
+
+    <!-- Botão -->
+    <!--<button onclick="voltar()" style="
+        padding:15px 35px;
+        border:none;
+        border-radius:12px;
+        font-weight:bold;
+        font-size:16px;
+        cursor:pointer;
+        background:linear-gradient(135deg,#ffd700,#ffae00);
+        color:#000;
+        box-shadow:0 0 15px #ffd700,0 0 40px rgba(255,215,0,0.5);
+        transition:0.3s;
+    "
+    onmouseover="this.style.transform='scale(1.08)';this.style.boxShadow='0 0 25px #ffd700,0 0 60px rgba(255,215,0,0.8)';"
+    onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 0 15px #ffd700,0 0 40px rgba(255,215,0,0.5)';"
+    >
+        VOLTAR AO PAINEL
+    </button>
+
+    
+
+  </div>
+</div>
+
+<style>
+@keyframes fadeIn {
+  from {opacity:0; transform:translateY(20px);}
+  to {opacity:1; transform:translateY(0);}
+}
+</style>
+`;
+
+document.getElementById("badgeGlobal").innerHTML = `
+<div class="alerta-vazio">
+
+  <div class="alerta-topo"></div>
+
+  <div class="alerta-icon">🔍</div>
+
+  <h3>Nenhuma Loja Encontrada</h3>
+
+  <p class="busca-texto">Você buscou:</p>
+  <div class="busca-termo">"${termo}"</div>
+
+  ${sugestoesHTML}
+
+  <button class="btn-limpar" onclick="limparFiltro()">
+    Limpar Pesquisa
+  </button>
+
+</div>
+`;
+
+
+return;
+}
+   resultados.forEach(r => {
+  const div = document.createElement("div");
+  div.className = "result-card";
+ div.innerHTML = `
+       <p><span>Filial :</span> ${r.filial}</p>
+
+<p>
+  <span>CNPJ:</span> 
+  <span class="cnpj-box">
+    <span class="cnpj-text">${r.cnpj || 'Nao Informado'}</span>
+
+    <button class="btn-copy" onclick="copiarCNPJ('${r.cnpj}')">
+      📋
+    </button>
+  </span>
+</p>
+
+       <p><span>Sigla:</span> <span class="siglaBadge">${r.sigla}</span></p>
+       <p><span>Cidade:</span> ${r.cidade}</p>
+       <p><span>Regional:</span> ${r.regional}</p>
+       <p><span>UF:</span> ${r.uf}</p>
+       <p><span>Tipo:</span> ${r.tipo}</p>
+`;
+  resultadosDiv.appendChild(div);
+});
+
+function copiarCNPJ(cnpj) {
+  if (!cnpj || cnpj === "Nao Informado") return;
+
+  const input = document.createElement("input");
+  input.value = cnpj;
+  document.body.appendChild(input);
+
+  input.select();
+  document.execCommand("copy");
+
+  document.body.removeChild(input);
+
+  alert("CNPJ copiado!");
 }
 
-let resultadoAtual = [];
+function mostrarToast(msg) {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerText = msg;
 
-function aplicarFiltros() {
+  document.body.appendChild(toast);
 
-  const termoBusca = document.getElementById('searchInput').value.toLowerCase();
+  setTimeout(() => toast.classList.add("show"), 50);
 
-  const filtroTipo = document.getElementById('filtroTipo');
-  const filtroDispositivo = document.getElementById('filtroDispositivo');
+  setTimeout(() => toast.remove(), 2000);
+}
 
-  const tipoSelecionado = filtroTipo ? filtroTipo.value : 'todos';
-  const dispositivoSelecionado = filtroDispositivo ? filtroDispositivo.value : 'todos';
 
-  resultadoAtual = lojas.filter(loja => {
 
-    const correspondeBusca =
-      loja.sigla.toLowerCase().includes(termoBusca) ||
-      loja.ip.toLowerCase().includes(termoBusca);
+function copiarFallback(texto, el) {
+  const input = document.createElement("textarea");
+  input.value = texto;
+  document.body.appendChild(input);
+  input.select();
+  input.setSelectionRange(0, 99999);
 
-    const correspondeTipo =
-      tipoSelecionado === 'todos' ||
-      loja.tipo === tipoSelecionado;
-
-    const correspondeDispositivo =
-      dispositivoSelecionado === 'todos' ||
-      loja.dispositivo === dispositivoSelecionado;
-
-    return correspondeBusca && correspondeTipo && correspondeDispositivo;
-  });
-
-  if (resultadoAtual.length === 0) {
-    telaLojas.innerHTML = "<p style='margin-top:30px;'>Nenhum Resultado Encontrado.</p>";
-  } else {
-    mostrarTabela(resultadoAtual);
+  try {
+    document.execCommand("copy");
+    feedbackCopia(el, texto);
+  } catch (err) {
+    alert("Não foi possível copiar o CNPJ");
   }
 
-  telaRegionais.style.display = 'none';
-  backBtn.style.display = 'inline-block';
+  document.body.removeChild(input);
+}
 
-  atualizarResumo(resultadoAtual);
+function feedbackCopia(el, texto) {
+  const span = el.querySelector(".cnpj-text");
 
-  document.getElementById('btnDownload').style.display =
-    resultadoAtual.length > 0 ? 'inline-block' : 'none';
+  span.innerText = "✔ Copiado!";
+  span.style.color = "#00ff88";
+
+  setTimeout(() => {
+    span.innerText = texto;
+    span.style.color = "#fff";
+  }, 1500);
+}
+
+  const contagem = {Filial:0, Posto:0, Deposito:0, Representante:0};
+  resultados.forEach(l => { if(contagem[l.tipo]!==undefined) contagem[l.tipo]++; });
+  const totalFiltrado = contagem.Filial + contagem.Posto + contagem.Deposito + contagem.Representante;
+  const agora = new Date().toLocaleString("pt-BR");
+  
+  document.getElementById("badgeGlobal").innerHTML = `
+<h3>Pesquisa: "${termo}"</h3>
+
+<div class="grid-badges">
+
+  <div class="box total destaque">
+    <span>${totalFiltrado}</span>
+    <small>Total</small>
+  </div>
+
+  <div class="box filial">
+    <span>${contagem.Filial}</span>
+    <small>Filiais</small>
+  </div>
+
+  <div class="box posto">
+    <span>${contagem.Posto}</span>
+    <small>Postos</small>
+  </div>
+
+  <div class="box deposito">
+    <span>${contagem.Deposito}</span>
+    <small>Depósitos</small>
+  </div>
+
+  <div class="box representante">
+    <span>${contagem.Representante}</span>
+    <small>Representantes</small>
+  </div>
+
+</div>
+
+<small>Atualizado: ${agora}</small>`;
 }
 
 const btnMenu = document.getElementById("btnMenu");
@@ -1352,428 +2358,149 @@ btnMenu.addEventListener("click", () => {
     window.location.href = "menu.html";
 });
 
-
-function baixarResultado() {
-  if (resultadoAtual.length === 0) return;
-
-  let csv = "Sigla,Filial,Tipo,IP,Dispositivo\n";
-
-  resultadoAtual.forEach(loja => {
-    csv += `${loja.sigla},${loja.filial},${loja.tipo},${loja.ip},${loja.dispositivo}\n`;
-  });
-
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = "resultado_filtro_claudino.csv";
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-}
-
-function baixarExcel() {
-  if (resultadoAtual.length === 0) return;
-
-  // Cria uma planilha XLSX
-  const ws_data = [
-    ["Sigla","Filial","Tipo","IP","Dispositivo","Cidade","PDVs"]
-  ];
-
-  resultadoAtual.forEach(loja => {
-    ws_data.push([
-      loja.sigla,
-      loja.filial,
-      loja.tipo,
-      loja.ip,
-      loja.dispositivo,
-      loja.cidade,
-      loja.pdvs.join(", ")
-    ]);
-  });
-
-  const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.aoa_to_sheet(ws_data);
-  XLSX.utils.book_append_sheet(wb, ws, "Resultado");
-  XLSX.writeFile(wb, "resultado_filtro_claudino.xlsx");
-}
-
-function removerLoja(sigla) {
-  const index = lojas.findIndex(l => l.sigla === sigla);
-
-  if (index !== -1) {
-    lojas.splice(index, 1);
-
-    // 🔥 Atualiza automaticamente
-    filtrar(); // se estiver pesquisando
-    mostrarRegionais(); // se estiver na tela inicial
-    atualizarResumo();
-  }
-}
-
-function atualizarTelaAtual() {
-  const termo = searchInput.value.trim();
-
-  if (termo) {
-    filtrar();
-  } else if (telaRegionais.style.display !== "none") {
-    mostrarRegionais();
-  } else {
-    // se estiver dentro de uma regional
-    const regionalAtual = document.querySelector('.card h2')?.textContent;
-    if (regionalAtual) {
-      mostrarLojasPorRegional(regionalAtual);
-    }
-  }
-
-  atualizarResumo();
-}
-
-function destacarLoja(sigla) {
-  document.querySelectorAll('.card-loja-pesquisada').forEach(card=>{
-    card.classList.remove('encontrado');
-  });
-  const card = document.querySelector('.card-loja-pesquisada h2');
-  if(card.textContent === sigla) {
-    card.parentElement.classList.add('encontrado');
-  }
-}
-
-// Atualiza a cada segundo
-atualizarResumo();
-
-
-
-function abrirModal(texto){
-  textoParaCopiar = texto;
-  authInput.value = '';
-  errorMsg.textContent = '';
-  modal.style.display = 'flex';
-  authInput.focus();
-}
-
-
-authInput.addEventListener('keydown', e=>{
-  if(e.key==='Enter'){ e.preventDefault(); validarSenha(); }
-});
-
-function copiarDireto(texto){
-  const temp = document.createElement('textarea');
-  temp.value = texto;
-  document.body.appendChild(temp);
-  temp.select();
-  temp.setSelectionRange(0,99999);
-  document.execCommand('copy');
-  document.body.removeChild(temp);
-
-  // MOSTRA APENAS SUCESSO
-  copyMsg.className = "copy-msg success show";
-  copyMsg.textContent = " COPIADO COM SUCESSO";
-
-  setTimeout(() => {
-    copyMsg.classList.remove("show");
-  }, 3000);
-}
-
-
-
-
-function validarSenha(){
-
-  if(authInput.value.trim() === LIBERACAO_SENHA){
-
-    if(!textoParaCopiar){
-      return;
-    }
-
-    const temp = document.createElement('textarea');
-    temp.value = textoParaCopiar;
-    document.body.appendChild(temp);
-    temp.select();
-    temp.setSelectionRange(0, 99999);
-    document.execCommand('copy');
-    document.body.removeChild(temp);
-
-    modal.style.display = 'none';
-
-    // SUCESSO
-    copyMsg.className = "copy-msg success show";
-    copyMsg.textContent = " ACESSO LIBERADO E COPIADO";
-
-    setTimeout(() => {
-      copyMsg.classList.remove("show");
-    }, 3000);
-
-  } else {
-
-    // ERRO no mesmo estilo visual
-    copyMsg.className = "copy-msg error show";
-    copyMsg.textContent = " USUARIO INCORRETO - DIGITE NOVAMENTE";
-
-    setTimeout(() => {
-      copyMsg.classList.remove("show");
-    }, 3000);
-
-    authInput.focus();
-  }
-
-  authInput.value = '';
-}
-
-
-
-function filtrar(){
-  const termo = searchInput.value.toLowerCase().trim();
-  
-
-  // ?? Sempre ocultar regionais ao pesquisar
-  if(termo){
-    telaRegionais.style.display = 'none';
-    backBtn.style.display = 'inline-block';
-  }
-
-  // Se pesquisa estiver vazia, mostra tudo
-  if(!termo){
-    document.getElementById("siglaResumo").textContent = "---";
-    document.querySelector(".card-loja-pesquisada").classList.remove("encontrado"); 
-    telaLojas.innerHTML='';
-    mostrarRegionais();
-    telaRegionais.style.display='flex';
-    backBtn.style.display='none';
-    atualizarResumo();
-    return;
-  }
-  
-  // Filtra as lojas
-  const resultado = lojas.filter(l=>l.sigla.toLowerCase().includes(termo) 
-    || l.pdvs.some(p=>p.toLowerCase().includes(termo)));
-const campoSigla = document.getElementById("siglaResumo");
-const campoCidade = document.getElementById("cidadeResumo");
-const cardLoja = document.querySelector(".card-loja-pesquisada");
-const campoPDV = document.getElementById("pdvResumo");
-const campoQtdPDV = document.getElementById("qtdPDV");
-
-
-if (resultado.length > 0) {
-
-  const primeiraLoja = resultado[0];
-
-  campoSigla.textContent = primeiraLoja.sigla;
-  campoCidade.textContent = primeiraLoja.cidade;
-
-  // 🔥 VERIFICA SE TEM PDVs
-  if (primeiraLoja.pdvs && primeiraLoja.pdvs.length > 0) {
-
-    campoPDV.innerHTML = primeiraLoja.pdvs
-      .map(p => `<div>${p}</div>`)
-      .join("");
-
-    campoQtdPDV.textContent = primeiraLoja.pdvs.length;
-
-  } else {
-
-    // 🔥 MENSAGEM QUANDO NÃO TEM
-    campoPDV.innerHTML = `<div class="sem-pdv">Não Possui PDVs</div>`;
-    campoQtdPDV.textContent = "0";
-
-  }
-
-  cardLoja.classList.add("encontrado");
-
-} else {
-
-  campoSigla.textContent = "---";
-  campoCidade.textContent = "---";
-  campoPDV.innerHTML = "";
-  campoQtdPDV.textContent = "0";
-
-  cardLoja.classList.remove("encontrado");
-}
-
-  // Atualiza quadros com o filtro
-  atualizarResumo(resultado);
-
-  if (resultado.length === 0) {
-
-  telaLojas.innerHTML = `
-  <div class="consulta-wrapper">
-
-    <div class="consulta-card">
-
-      <div class="consulta-topbar"></div>
-
-      <div class="consulta-header">
-        CENTRAL DE CONSULTA
-      </div>
-
-      <div class="consulta-title">
-        PESQUISA NAO LOCALIZADA
-      </div>
-
-      <div class="consulta-text">
-        Nenhum resultado encontrado para
-      </div>
-
-      <div class="consulta-search">
-        "${searchInput.value}"
-      </div>
-
-      <div class="consulta-alert">
-         Verifique se a <strong>SIGLA DA LOJA</strong> ou o <strong>PDV</strong> estao corretos.
-      </div>
-
-      <button onclick="voltar()" class="consulta-btn">
-        VOLTAR AO PAINEL
-      </button>
-
+function montarBadge(total, contagem, titulo) {
+  const agora = new Date().toLocaleString("pt-BR");
+
+  return `
+  <h3>${titulo}</h3>
+
+  <div class="grid-badges">
+    <div class="box total destaque">
+      <span>${total}</span>
+      <small>Total</small>
     </div>
 
+    <div class="box filial">
+      <span>${contagem.Filial}</span>
+      <small>Filiais</small>
+    </div>
+
+    <div class="box posto">
+      <span>${contagem.Posto}</span>
+      <small>Postos</small>
+    </div>
+
+    <div class="box deposito">
+      <span>${contagem.Deposito}</span>
+      <small>Depósitos</small>
+    </div>
+
+    <div class="box representante">
+      <span>${contagem.Representante}</span>
+      <small>Representantes</small>
+    </div>
   </div>
 
-  <style>
-
-  .consulta-wrapper{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    margin-top:120px;
-    animation:fadeWrapper 0.6s ease-out;
-  }
-
-  @keyframes fadeWrapper{
-    from{opacity:0; transform:translateY(20px);}
-    to{opacity:1; transform:translateY(0);}
-  }
-
-  .consulta-card{
-    width:650px;
-    padding:65px 55px;
-    border-radius:22px;
-    background:linear-gradient(145deg,#121212,#1c1c1c);
-    border:1px solid rgba(255,255,255,0.06);
-    text-align:center;
-    position:relative;
-    box-shadow:
-      0 40px 100px rgba(0,0,0,0.9),
-      0 0 60px rgba(255, 200, 0, 0.08);
-  }
-
-  /* Barra superior elegante */
-  .consulta-topbar{
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
-    height:5px;
-    border-radius:22px 22px 0 0;
-    background:linear-gradient(90deg,#ffcc00,#ffd700,#ffcc00);
-    box-shadow:0 0 20px rgba(255,200,0,0.5);
-  }
-
-  .consulta-header{
-    font-size:13px;
-    letter-spacing:4px;
-    color:#ffcc00;
-    margin-bottom:25px;
-    font-weight:700;
-  }
-
-  .consulta-title{
-    font-size:30px;
-    font-weight:900;
-    letter-spacing:3px;
-    color:#ffffff;
-    margin-bottom:25px;
-  }
-
-  .consulta-text{
-    font-size:17px;
-    color:#bbb;
-    margin-bottom:12px;
-  }
-
-  .consulta-search{
-    font-size:24px;
-    font-weight:800;
-    color:#ffcc00;
-    margin-bottom:35px;
-    text-shadow:0 0 15px rgba(255,200,0,0.6);
-  }
-
-  .consulta-alert{
-    margin:0 0 40px;
-    padding:20px 30px;
-    border-radius:14px;
-    font-size:17px;
-    font-weight:700;
-    color:#fff;
-
-    background:rgba(255, 200, 0, 0.08);
-    border:1px solid rgba(255, 200, 0, 0.6);
-
-    box-shadow:
-      0 0 25px rgba(255, 200, 0, 0.35),
-      0 0 70px rgba(255, 200, 0, 0.15);
-
-    animation:alertFade 0.8s ease-out;
-  }
-
-  @keyframes alertFade{
-    from{opacity:0; transform:translateY(15px);}
-    to{opacity:1; transform:translateY(0);}
-  }
-
-  .consulta-btn{
-    padding:15px 42px;
-    border-radius:14px;
-    border:none;
-    cursor:pointer;
-    font-weight:800;
-    font-size:14px;
-    letter-spacing:1px;
-    background:linear-gradient(135deg,#ffcc00,#ffaa00);
-    color:#000;
-    transition:0.3s ease;
-    box-shadow:
-      0 0 20px rgba(255,200,0,0.6),
-      0 0 60px rgba(255,200,0,0.3);
-  }
-
-  .consulta-btn:hover{
-    transform:scale(1.05);
-    box-shadow:
-      0 0 35px rgba(255,200,0,0.9),
-      0 0 80px rgba(255,200,0,0.6);
-  }
-
-  </style>
-  `;
-
-  return;
+  <small>Atualizado: ${agora}</small>`;
 }
 
 
- mostrarTabela(resultado, true); // 🔥 esconde PDVs
+// --- Filtro lateral ---
+function aplicarFiltroLateral(){
+  const tipo = document.getElementById("filtroTipo").value;
+  const regionalSel = document.getElementById("filtroRegional").value;
+  const div = document.getElementById("resultadoFiltro");
+  div.innerHTML = "";
+
+  const dadosFiltrados = Object.entries(regionais)
+    .filter(([reg, lojas]) => regionalSel === "todas" || reg === regionalSel)
+    .flatMap(([reg, lojas]) => lojas
+      .filter(l => tipo === "todos" || l.tipo === tipo)
+      .map(l => ({...l, regional: reg}))
+    );
+
+  filtroLateralDados = dadosFiltrados;
+
+  dadosFiltrados.forEach(l => {
+    const card = document.createElement("div");
+    card.className = "result-card";
+    card.innerHTML = `
+  <h3>${l.filial}</h3>
+  <p><span>Sigla:</span> ${l.sigla}</p>
+  <p><span>CNPJ:</span> <span class="cnpj">${l.cnpj || 'Nao Informado'}</span></p>
+  <p><span>Cidade:</span> ${l.cidade}</p>
+  <p><span>Regional:</span> ${l.regional}</p>
+  <p><span>UF:</span> ${l.uf}</p>
+  <p class="tipo-${l.tipo.toLowerCase()}"><span>Tipo:</span> ${l.tipo}</p>`;    div.appendChild(card);
+  });
+
+  document.getElementById("btnExportFiltro").style.display = filtroLateralDados.length > 0 ? "block" : "none";
+
+  const contagem = {Filial:0, Posto:0, Deposito:0, Representante:0};
+  filtroLateralDados.forEach(l => { if(contagem[l.tipo] !== undefined) contagem[l.tipo]++; });
+  const totalFiltrado = contagem.Filial + contagem.Posto + contagem.Deposito + contagem.Representante;
+  const agora = new Date().toLocaleString("pt-BR");
+
+  // Badge atualizado mostrando filtro aplicado
+  document.getElementById("badgeGlobal").innerHTML = `
+    <h3>Total de Lojas (Filtro: Tipo="${tipo}" / Regional="${regionalSel}")</h3>
+    <span>${totalFiltrado}</span>
+    <p>Filiais: <span class="tipo-filial">${contagem.Filial}</span></p>
+    <p>Postos: <span class="tipo-posto">${contagem.Posto}</span></p>
+    <p>Depositos: <span class="tipo-deposito">${contagem.Deposito}</span></p>
+    <p>Representantes: <span class="tipo-representante">${contagem.Representante}</span></p>
+    <small>Atualizado: ${agora}</small>`;
 }
 
-function atualizarResumo(lista = lojas) {
 
-  const totalForti = lista.filter(l=>l.dispositivo.toLowerCase()==="fortigate").length;
-  const totalMikrotik = lista.filter(l=>l.dispositivo.toLowerCase()==="mikrotik").length;
-  const totalFilial = lista.filter(l=>l.tipo.toLowerCase()==="filial").length;
-  const totalPostos = lista.filter(l=>l.tipo.toLowerCase()==="posto").length;
-  const totalDeposito = lista.filter(l=>l.tipo.toLowerCase()==="deposito").length;
-  const totalRep = lista.filter(l=>l.tipo.toLowerCase()==="representante").length;
-  const totalGeral = lista.length;
+function limparFiltro() {
+    // Resetar selects
+    document.getElementById("filtroTipo").value = "todos";
+    document.getElementById("filtroRegional").value = "todas";
 
-  document.getElementById('totalForti').textContent = totalForti;
-  document.getElementById('totalMikrotik').textContent = totalMikrotik;
-  document.getElementById('totalFilial').textContent = totalFilial;
-  document.getElementById('totalPostos').textContent = totalPostos;
-  document.getElementById('totalDeposito').textContent = totalDeposito;
-  document.getElementById('totalRep').textContent = totalRep;
-  document.getElementById('totalGeral').textContent = totalGeral;
+    // Limpar campo de pesquisa
+    document.getElementById("searchBox").value = "";
+
+    // Limpar painel de resultados do filtro
+    document.getElementById("resultadoFiltro").innerHTML = "";
+
+    // Reexibir todos os cards
+    const todosCards = document.querySelectorAll(".card"); // ajuste a classe se for diferente
+    todosCards.forEach(card => {
+        card.style.display = "block";
+    });
+
+    // Atualizar badge ou contador geral
+    atualizarBadgeGlobal(); // função que você já deve ter para atualizar contadores
+}
+
+function sugerirLojas(termo) {
+  let sugestoes = [];
+
+  for (let reg in regionais) {
+    regionais[reg].forEach(l => {
+      const texto = `${l.sigla} ${l.cidade} ${l.filial}`.toLowerCase();
+
+      // pega coisas parecidas (contém parte do termo)
+      if (texto.includes(termo.slice(0, 2))) {
+        sugestoes.push({
+          nome: `${l.sigla} - ${l.cidade}`,
+          valor: l.sigla
+        });
+      }
+    });
+  }
+
+  // remove duplicados e limita
+  return [...new Map(sugestoes.map(s => [s.nome, s])).values()].slice(0, 5);
+}
+
+
+// --- Exporta  o Excel ---
+function exportarFiltroExcel(){
+  if(filtroLateralDados.length===0){alert("Nenhum dado para exportar.");return;}
+  const wb=XLSX.utils.book_new();const ws_data=[];
+  const dadosPorRegional={};
+  filtroLateralDados.forEach(l=>{if(!dadosPorRegional[l.regional]) dadosPorRegional[l.regional]=[];dadosPorRegional[l.regional].push(l);});
+  for(const reg in dadosPorRegional){
+    const lojas=dadosPorRegional[reg];
+    ws_data.push([`${reg}`],["Filial","Sigla","CNPJ","Cidade","UF","Tipo"]);
+    lojas.forEach(l=>ws_data.push([l.filial,l.sigla,l.cnpj,l.cidade,l.uf,l.tipo]));
+    ws_data.push([]);
+  }
+  const ws=XLSX.utils.aoa_to_sheet(ws_data);
+  ws['!cols']=[{wch:25},{wch:10},{wch:20},{wch:5},{wch:15}];
+  XLSX.utils.book_append_sheet(wb,ws,"Lojas Filtradas");XLSX.writeFile(wb,"lojas_filtradas.xlsx");
 }
 
 
@@ -1781,3 +2508,4 @@ function atualizarResumo(lista = lojas) {
 </script>
 </body>
 </html>
+

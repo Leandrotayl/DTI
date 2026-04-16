@@ -1,121 +1,398 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gerador de Senhas</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #1e1e2f;
-      color: #fff;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .container {
-      background: #2c2c44;
-      padding: 30px;
-      border-radius: 15px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
-      text-align: center;
-      width: 350px;
-    }
-    h1 {
-      margin-bottom: 20px;
-      color: #00ffcc;
-    }
-    label {
-      display: block;
-      margin: 10px 0 5px;
-    }
-    input[type="number"] {
-      width: 60px;
-      padding: 5px;
-      border-radius: 5px;
-      border: none;
-      text-align: center;
-    }
-    input[type="checkbox"] {
-      margin-right: 5px;
-    }
-    button {
-      margin-top: 15px;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      background: #00ffcc;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover {
-      background: #00d1a6;
-    }
-    #senha {
-      margin-top: 20px;
-      padding: 10px;
-      background: #1e1e2f;
-      border: 2px solid #00ffcc;
-      border-radius: 8px;
-      font-weight: bold;
-      word-break: break-all;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Gerador Completo PRO</title>
+
+<style>
+body {
+    font-family: Arial;
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    color: #fff;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+}
+
+.card {
+    max-width: 1000px;
+    margin: auto;
+    background: rgba(255,255,255,0.05);
+    padding: 20px;
+    border-radius: 15px;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.bloco {
+    background: rgba(0,0,0,0.3);
+    padding: 15px;
+    border-radius: 12px;
+}
+
+button {
+    padding: 8px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.btn-verde { background: #22c55e; color: #000; }
+.btn-azul { background: #38bdf8; }
+.btn-vermelho { background: #ef4444; color: white; }
+
+.check-item {
+    display: inline-block;
+    padding: 6px 10px;
+    margin: 5px;
+    border-radius: 8px;
+    background: #1e293b;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.check-item.active {
+    background: #22c55e;
+    color: #000;
+    font-weight: bold;
+    transform: scale(1.05);
+}
+
+.tags span {
+    background: #38bdf8;
+    padding: 6px 10px;
+    border-radius: 10px;
+    margin: 5px;
+    display: inline-block;
+    cursor: pointer;
+    color: #000;
+    transition: 0.2s;
+}
+
+.tags span:hover {
+    transform: scale(1.1);
+}
+
+.resultado {
+    margin-top: 20px;
+    padding: 15px;
+    background: #020617;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 20px;
+    transition: 0.3s;
+}
+
+.resultado.rodando {
+    box-shadow: 0 0 25px #38bdf8;
+    transform: scale(1.05);
+}
+
+.resultado.final {
+    box-shadow: 0 0 30px #22c55e;
+    transform: scale(1.1);
+    font-weight: bold;
+}
+
+.resultado-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.box {
+    background: #020617;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+    font-size: 18px;
+    transition: 0.3s;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.box.rodando {
+    box-shadow: 0 0 20px #38bdf8;
+    transform: scale(1.05);
+}
+
+.box.final {
+    box-shadow: 0 0 20px #22c55e;
+    transform: scale(1.1);
+    font-weight: bold;
+}
+
+
+
+
+/* 👇 COLE AQUI EMBAIXO */
+#resNome {
+    grid-column: 1 / -1;
+    font-size: 28px;
+    padding: 25px;
+    background: linear-gradient(135deg, #38bdf8, #22c55e);
+    color: #000;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-radius: 15px;
+    box-shadow: 0 0 25px rgba(56,189,248,0.8);
+    text-align: center;
+}
+
+#resNome.rodando {
+    box-shadow: 0 0 35px #38bdf8;
+    transform: scale(1.08);
+}
+
+#resNome.final {
+    box-shadow: 0 0 40px #22c55e;
+    transform: scale(1.12);
+}
+
+.input-nome {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.input-nome input {
+    flex: 1;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    outline: none;
+    background: #020617;
+    color: #fff;
+    font-size: 16px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.6);
+}
+
+.input-nome input::placeholder {
+    color: #94a3b8;
+}
+
+.btn-add {
+    background: linear-gradient(135deg,#22c55e,#16a34a);
+    color: #000;
+    font-weight: bold;
+    padding: 12px 15px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-add:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px #22c55e;
+}
+
+</style>
+
+</style>
 </head>
+
 <body>
-  <div class="container">
-    <h1>Gerador de Senhas</h1>
 
-    <label for="tamanho">Tamanho da senha:</label>
-    <input type="number" id="tamanho" value="12" min="4" max="64">
+<h1>⚙️ Gerador Completo PRO</h1>
 
-    <label>
-      <input type="checkbox" id="maiusculas" checked> Letras Maiúsculas
-    </label>
-    <label>
-      <input type="checkbox" id="minusculas" checked> Letras Minúsculas
-    </label>
-    <label>
-      <input type="checkbox" id="numeros" checked> Números
-    </label>
-    <label>
-      <input type="checkbox" id="simbolos" checked> Símbolos
-    </label>
+<div class="card">
 
-    <button onclick="gerarSenha()">Gerar Senha</button>
+<!-- NOMES -->
+<div class="bloco">
+<h3>👤 Nomes</h3>
+<div class="input-nome">
 
-    <div id="senha"></div>
-  </div>
+    <input type="text" id="nomeInput" placeholder="Digite um nome...">
 
-  <script>
-    function gerarSenha() {
-      const tamanho = parseInt(document.getElementById("tamanho").value);
-      const usarMaiusculas = document.getElementById("maiusculas").checked;
-      const usarMinusculas = document.getElementById("minusculas").checked;
-      const usarNumeros = document.getElementById("numeros").checked;
-      const usarSimbolos = document.getElementById("simbolos").checked;
+    <button class="btn-add" onclick="addNome()">+ Adicionar</button>
 
-      let caracteres = "";
-      if (usarMaiusculas) caracteres += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      if (usarMinusculas) caracteres += "abcdefghijklmnopqrstuvwxyz";
-      if (usarNumeros) caracteres += "0123456789";
-      if (usarSimbolos) caracteres += "!@#$%^&*()_+-=[]{}|;:,.<>?";
+</div>
+<div class="tags" id="nomes"></div>
+</div>
 
-      if (caracteres === "") {
-        alert("Selecione pelo menos um tipo de caractere!");
+<!-- GRID -->
+<div class="grid">
+
+<div class="bloco">
+<h3>📅 Dias</h3>
+<div id="dias"></div>
+<button class="btn-azul" onclick="marcarTodos('dias')">Selecionar todos</button>
+<button class="btn-vermelho" onclick="limpar('dias')">Limpar</button>
+</div>
+
+<div class="bloco">
+<h3>📆 Meses</h3>
+<div id="meses"></div>
+<button class="btn-azul" onclick="marcarTodos('meses')">Selecionar todos</button>
+<button class="btn-vermelho" onclick="limpar('meses')">Limpar</button>
+</div>
+
+<div class="bloco">
+<h3>⏰ Horários</h3>
+<div id="horarios"></div>
+<button class="btn-azul" onclick="marcarTodos('horarios')">Selecionar todos</button>
+<button class="btn-vermelho" onclick="limpar('horarios')">Limpar</button>
+</div>
+
+</div>
+
+<button class="btn-verde" style="width:100%;margin-top:20px;" onclick="gerar()">🎰 GERAR</button>
+
+<div class="resultado-grid" id="resultado">
+
+    <div class="box" id="resNome">Nome</div>
+    <div class="box" id="resDia">Dia</div>
+    <div class="box" id="resMes">Mês</div>
+    <div class="box" id="resHora">Hora</div>
+
+</div>
+
+</div>
+
+<script>
+
+// LISTAS
+const dias = ["Segunda","Terça","Quarta","Quinta","Sexta","Sábado","Domingo"];
+const meses = ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"];
+const horarios = ["08:00","09:00","10:00","11:00","12:00","13:00","14:00","15:00","16:00","17:00"];
+
+let listaNomes = [];
+
+// FORMATAR NOME
+function formatar(nome){
+    return nome.toLowerCase().split(" ").map(p => p[0].toUpperCase()+p.slice(1)).join(" ");
+}
+
+// ADD NOME
+function addNome(){
+    let nome = document.getElementById("nomeInput").value.trim();
+    if(!nome) return;
+
+    nome = formatar(nome);
+    listaNomes.push(nome);
+    document.getElementById("nomeInput").value="";
+    renderNomes();
+}
+
+// RENDER NOMES
+function renderNomes(){
+    const div = document.getElementById("nomes");
+    div.innerHTML="";
+    listaNomes.forEach((n,i)=>{
+        let span = document.createElement("span");
+        span.innerText=n;
+        span.onclick=()=>{ listaNomes.splice(i,1); renderNomes(); };
+        div.appendChild(span);
+    });
+}
+
+// RENDER CHECK
+function render(lista,id){
+    const div=document.getElementById(id);
+    div.innerHTML="";
+
+    lista.forEach(item=>{
+        let el=document.createElement("div");
+        el.className="check-item";
+        el.innerText=item;
+
+        el.onclick=()=> el.classList.toggle("active");
+
+        div.appendChild(el);
+    });
+}
+
+// MARCAR TODOS
+function marcarTodos(id){
+    document.querySelectorAll(`#${id} .check-item`).forEach(el=>el.classList.add("active"));
+}
+
+// LIMPAR
+function limpar(id){
+    document.querySelectorAll(`#${id} .check-item`).forEach(el=>el.classList.remove("active"));
+}
+
+// PEGAR SELECIONADOS
+function getSelecionados(id){
+    return [...document.querySelectorAll(`#${id} .active`)].map(el=>el.innerText);
+}
+
+// GERAR COM ANIMAÇÃO
+function gerar(){
+
+    if(listaNomes.length === 0){
+        alert("Adicione nomes!");
         return;
-      }
-
-      let senha = "";
-      for (let i = 0; i < tamanho; i++) {
-        senha += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
-      }
-
-      document.getElementById("senha").textContent = senha;
     }
-  </script>
+
+    const d = getSelecionados("dias");
+    const m = getSelecionados("meses");
+    const h = getSelecionados("horarios");
+
+    if(!d.length || !m.length || !h.length){
+        alert("Selecione tudo!");
+        return;
+    }
+
+    const botao = document.querySelector("button[onclick='gerar()']");
+
+    const nomeBox = document.getElementById("resNome");
+    const diaBox = document.getElementById("resDia");
+    const mesBox = document.getElementById("resMes");
+    const horaBox = document.getElementById("resHora");
+
+    botao.disabled = true;
+
+    const boxes = [nomeBox, diaBox, mesBox, horaBox];
+
+    boxes.forEach(b => {
+        b.classList.remove("final");
+        b.classList.add("rodando");
+    });
+
+    let contador = 0;
+    let velocidade = 50;
+
+    function animar(){
+
+        nomeBox.innerText = listaNomes[Math.floor(Math.random()*listaNomes.length)];
+        diaBox.innerText = d[Math.floor(Math.random()*d.length)];
+        mesBox.innerText = m[Math.floor(Math.random()*m.length)];
+        horaBox.innerText = h[Math.floor(Math.random()*h.length)];
+
+        contador++;
+        velocidade += 10;
+
+        if(contador < 25){
+            setTimeout(animar, velocidade);
+        } else {
+            boxes.forEach(b => {
+                b.classList.remove("rodando");
+                b.classList.add("final");
+            });
+
+            botao.disabled = false;
+        }
+    }
+
+    animar();
+}
+
+// INIT
+render(dias,"dias");
+render(meses,"meses");
+render(horarios,"horarios");
+
+</script>
+
 </body>
 </html>

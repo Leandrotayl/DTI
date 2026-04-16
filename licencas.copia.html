@@ -1,18 +1,38 @@
 
+
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title> Licenças Office </title>
+<title> Licencas Office </title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 body, html { width:100%; height:100%; background:#0a0a0a; }
 
 canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
-.content { position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; padding:40px; gap:40px; min-height:100vh; color:#fff; }
+.content {
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding:10px 40px 40px 40px; /* 👈 topo menor */
+  gap:25px;
+  min-height:100vh;
+  color:#fff;
+}
 
-.top-bar { display:flex; align-items:center; justify-content:center; gap:30px; flex-wrap:wrap; width:100%; }
+.top-bar { 
+  display:flex; 
+  margin-top: -15px;
+  align-items:center; 
+  justify-content:center; 
+  gap:30px; 
+  flex-wrap:wrap; 
+  width:100%; }
+
+
 .datetime-group { display:flex; gap:20px; align-items:center; }
 
 .time-card, .date-card { background: linear-gradient(145deg,#1976d2,#0d47a1); border:2px solid #0ff; border-radius:20px; padding:15px 25px; text-align:center; color:#0ff; box-shadow:0 5px 20px rgba(0,255,255,0.5); min-width:180px; font-size:1.5rem; }
@@ -62,7 +82,7 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
   border-radius: 8px;
   box-shadow: 0 0 15px #00ffff, 0 0 25px #00e6e6;
   position: relative;
-  z-index: 5000; /* 👈 sobe acima de todos os cards laterais */
+  z-index: 5000; /* ?? sobe acima de todos os cards laterais */
 }
 
 /* === QUADRO ULTRA HD+ COM TEXTO PRETO === */
@@ -73,7 +93,7 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
   min-width: 300px;
   max-width: 480px;
   background: linear-gradient(135deg, rgba(255,255,255,0.95), rgba(220,255,255,0.95), rgba(200,255,255,0.9));
-  color: #000; /* 👈 texto preto */
+  color: #000; /* ?? texto preto */
   padding: 22px 28px;
   border-radius: 20px;
   border: 3px solid rgba(0,255,255,1);
@@ -86,7 +106,7 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
   font-weight: 700;
   letter-spacing: 0.8px;
   text-align: center;
-  text-shadow: none; /* 👈 sem brilho no texto */
+  text-shadow: none; /* ?? sem brilho no texto */
   backdrop-filter: blur(15px) brightness(1.3);
   z-index: 9999999999 !important;
   white-space: normal;
@@ -438,6 +458,9 @@ canvas { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
   100% { opacity: 0; }
 }
 
+
+
+
 .total-card {
   position: fixed;
   top: 0px;
@@ -553,6 +576,30 @@ footer { text-align:center; padding:15px; font-size:1rem; color:#ccc; margin-top
   .total-card{font-size:1.6rem;padding:20px 30px;}
 }
 
+#btnExportar {
+  position: fixed;
+  top: 10px;
+  right: 280px; /* ajuste para não colidir com o total-card */
+
+  padding: 15px 25px;
+  background: linear-gradient(145deg,#00c853,#00e676);
+  color: #003300;
+  border: 2px solid #00ff99;
+  border-radius: 15px;
+  font-weight: bold;
+  cursor: pointer;
+
+  box-shadow: 0 0 15px #00ff99, inset 0 0 10px rgba(255,255,255,0.3);
+  transition: all 0.3s ease;
+  z-index: 1001;
+}
+
+#btnExportar:hover {
+  background: linear-gradient(145deg,#00ff99,#00c853);
+  transform: scale(1.05);
+  box-shadow: 0 0 25px #00ff99;
+}
+
 
 
 </style>
@@ -573,11 +620,11 @@ footer { text-align:center; padding:15px; font-size:1rem; color:#ccc; margin-top
   </div>
 </div>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <span class="highlight">$1</span>
 
-<button id="btnTop" title="Ir para o topo">
-  <span class="btn-core">Ir para o início</span>
+  <span class="btn-core">Ir para o Inicio</span>
 </button>
 
 
@@ -601,7 +648,11 @@ footer { text-align:center; padding:15px; font-size:1rem; color:#ccc; margin-top
 
   <div class="licenca-container" id="licenca-container"></div>
 
-  <footer>&copy; 2025 Gerência de Suporte</footer>
+<button id="btnExportar">EXPORTAR EXCEL</button>
+
+
+
+  <footer>&copy; 2025 Gerencia de Suporte</footer>
 </div>
 
 <script>
@@ -654,32 +705,53 @@ draw();
 
   // Codigo do Licencas Office
   const dadosFixos = [
+
       
       { usuario: "Adecio", loja: "HALLEY", licencas: 01, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00"  },
       { usuario: "Tarcisio", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00"  },
       { usuario: "Almoxarifado", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00" },
       { usuario: "Arielson", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Assistente", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office01@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Atemisto", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Aurea", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Bruna", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Carla", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Cesar", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office02@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "David", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Deposito", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Estevam", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Gracione", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Graziheli", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office03@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Halemb", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Indiara", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Lindomar", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Marciano", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
-      { usuario: "Maria Eduarda", loja: "HALLEY", licencas: 1, modelo: "Desktop", email: "office04@grupoclaudino.email", tagEquipamento: "HALDSK00" },
  
   
     ];
 
+document.getElementById("btnExportar").addEventListener("click", () => {
+  
+  const filtro = document.getElementById('search-bar').value.toLowerCase();
 
+  let dados = dadosFixos;
+
+  // Se tiver filtro ativo, exporta só os filtrados
+  if (filtro) {
+    dados = dadosFixos.filter(item =>
+      item.usuario.toLowerCase().includes(filtro) ||
+      item.loja.toLowerCase().includes(filtro) ||
+      (item.email && item.email.toLowerCase().includes(filtro)) ||
+      item.modelo.toLowerCase().includes(filtro) ||
+      (item.tagEquipamento && item.tagEquipamento.toLowerCase().includes(filtro))
+    );
+  }
+
+  // Formata os dados
+  const dadosFormatados = dados.map(item => ({
+    Usuario: item.usuario,
+    Loja: item.loja,
+    Quantidade: item.licencas,
+    Tipo: item.modelo,
+    Email: item.email,
+    Tag_Equipamento: item.tagEquipamento
+  }));
+
+  // Cria planilha
+  const ws = XLSX.utils.json_to_sheet(dadosFormatados);
+
+  // Cria workbook
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Licencas");
+
+  // Exporta arquivo
+  XLSX.writeFile(wb, "Licencas_Office.xlsx");
+});
 
  
 function destacar(texto,filtro){ if(!filtro) return texto; const regex=new RegExp(`(${filtro})`,'gi'); return texto.replace(regex,'<span class="highlight">$1</span>'); }
@@ -710,7 +782,7 @@ function atualizarDashboard(licencas){
         <div style="background:linear-gradient(145deg,#001f3f,#003366);border:3px solid #0ff;border-radius:25px;
         padding:40px 60px;text-align:center;font-size:2rem;font-weight:bold;color:#0ff;text-shadow:0 0 10px #0ff,0 0 20px #00e6e6,0 0 40px #00ffff;
         box-shadow:0 0 25px rgba(0,255,255,0.7), inset 0 0 30px rgba(0,255,255,0.3);animation:pulseNeon 2s infinite alternate;max-width:700px;">
-         Não existe licença para a pesquisa realizada 
+         Nao Existe Licenca para a Pesquisa Realizada 
         </div>
       </div>`;
     return;
@@ -815,7 +887,7 @@ function copiarAntigo(texto, btn) {
     const sucesso = document.execCommand('copy');
     if (sucesso) {
       mostrarPopup();
-      btn.textContent = 'Copiado!';
+      btn.textContent = 'E-mial Copiado Com Sucesso!';
       setTimeout(() => btn.textContent = 'Copiar E-mail', 2000);
     } else {
       alert('Não foi possível copiar. Copie manualmente.');
@@ -893,10 +965,10 @@ function atualizarDataHora() {
   // Turno
   const turno =
     horas >= 6 && horas < 12
-      ? "🌅 Manhã"
+      ? " Manha"
       : horas >= 12 && horas < 18
-      ? "🌇 Tarde"
-      : "🌙 Noite";
+      ? " Tarde"
+      : " Noite";
 
   // Atualiza o conteúdo no mesmo card
   const timeCard = document.getElementById('time-card');
@@ -911,6 +983,10 @@ function atualizarDataHora() {
 setInterval(atualizarDataHora, 1000);
 atualizarDataHora();
 
+const btnMenu = document.getElementById("btnMenu");
+btnMenu.addEventListener("click", () => {
+    window.location.href = "menu.html";
+});
 
 
 (function(){
@@ -945,9 +1021,9 @@ atualizarDataHora();
   });
 })();
 
-setInterval(atualizarHora,1000);
-atualizarHora();
-atualizarData();
+
 </script>
+
+
 </body>
 </html>

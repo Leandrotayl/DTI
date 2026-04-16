@@ -23,7 +23,7 @@
         align-items: center;
         justify-content: flex-start;
         padding: 20px;
-        overflow-x: hidden; /* CORREÇÃO DO BUG NO CELULAR */
+        overflow-x: hidden; /* CORRECAO DO BUG NO CELULAR */
         width: 100%;
     }
 
@@ -171,10 +171,10 @@
         <input type="number" id="tamanhoSenha" value="12" min="4" max="50">
 
         <div class="flex">
-            <label><input type="checkbox" id="maiusculas" checked> Letras Maiúsculas</label>
-            <label><input type="checkbox" id="minusculas" checked> Letras Minúsculas</label>
-            <label><input type="checkbox" id="numeros" checked> Números</label>
-            <label><input type="checkbox" id="simbolos" checked> Símbolos</label>
+            <label><input type="checkbox" id="maiusculas" checked> Letras Maiï¿½sculas</label>
+            <label><input type="checkbox" id="minusculas" checked> Letras Minï¿½sculas</label>
+            <label><input type="checkbox" id="numeros" checked> Nï¿½meros</label>
+            <label><input type="checkbox" id="simbolos" checked> Sï¿½mbolos</label>
         </div>
 
         <button onclick="gerarSenha()">Gerar Senha</button>
@@ -187,8 +187,8 @@
     <div class="section">
         <h2>Sorteador de Nomes</h2>
 
-        <label>Insira os nomes separados por vírgula:</label>
-        <textarea id="nomesInput" placeholder="Ex: João, Maria, Pedro"></textarea>
+        <label>Insira os nomes separados por vï¿½rgula:</label>
+        <textarea id="nomesInput" placeholder="Ex: Joï¿½o, Maria, Pedro"></textarea>
 
         <button onclick="sortearNome()">Sortear Nome</button>
         <button onclick="limparSorteados()">Limpar Lista de Sorteados</button>
@@ -245,7 +245,7 @@ function sortearNome() {
     let disponiveis = nomes.filter(n => !nomesSorteados.includes(n));
 
     if (disponiveis.length === 0) {
-        alert('Todos os nomes já foram sorteados!');
+        alert('Todos os nomes jï¿½ foram sorteados!');
         return;
     }
 
@@ -288,7 +288,7 @@ function criarCascata(qtd){
         img.className = 'falling-item';
         img.style.left = Math.random() * 100 + 'vw';
         img.style.animationDuration = (3 + Math.random() * 3) + 's';
-        img.style.width = (30 + Math.random() * 40) + 'px'; // tamanho variável
+        img.style.width = (30 + Math.random() * 40) + 'px'; // tamanho variï¿½vel
         img.src = imagens[Math.floor(Math.random() * imagens.length)];
 
         document.body.appendChild(img);

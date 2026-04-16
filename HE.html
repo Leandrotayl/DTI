@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Controle de Horas Avançado</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+body{
+    font-family: Arial;
+    background:#0b1220;
+    color:#fff;
+    padding:20px;
+}
+
+h2{text-align:center;}
+h3{text-align:center;color:#38bdf8;}
+
+.container{max-width:1600px;margin:auto;}
+
+.form{
+    display:grid;
+    grid-template-columns:repeat(8,1fr);
+    gap:8px;
+    margin-bottom:15px;
+}
+
+.field{display:flex;flex-direction:column;}
+label{font-size:11px;color:#94a3b8;}
+
+input{
+    padding:7px;
+    border-radius:6px;
+    border:1px solid #1f2937;
+    background:#0f172a;
+    color:#fff;
+    font-size:12px;
+}
+
+button{
+    padding:10px;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+    font-weight:bold;
+}
+
+.add{background:#22c55e;color:#fff;}
+.export{background:#3b82f6;color:#fff;margin-bottom:10px;}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    font-size:12px;
+}
+
+th,td{
+    border:1px solid #1f2937;
+    padding:6px;
+    text-align:center;
+}
+
+th{background:#111827;color:#93c5fd;}
+
+.msg-error{
+    background:#7f1d1d;
+    color:#fecaca;
+    border:1px solid #ef4444;
+    animation:shake 0.3s ease;
+}
+
+.msg-success{
+    background:#14532d;
+    color:#bbf7d0;
+    border:1px solid #22c55e;
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+  100% { transform: translateX(0); }
+}
+
+.msg-error{
+    background:#7f1d1d;
+    color:#fecaca;
+    border:1px solid #ef4444;
+    animation:shake 0.3s ease;
+}
+
+.msg-success{
+    background:#14532d;
+    color:#bbf7d0;
+    border:1px solid #22c55e;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>📊 Controle de Horas Avançado</h2>
+<h3>Folha de Ponto</h3>
+
+<div class="form">
+
+    <div class="field">
+        <label>Data</label>
+        <input type="date" id="data" onchange="setDia()">
+    </div>
+
+    <div class="field">
+        <label>Dia</label>
+        <input type="text" id="dia" readonly>
+    </div>
+
+    <div class="field">
+        <label>Entrada</label>
+        <input type="time" id="entrada">
+    </div>
+
+    <div class="field">
+        <label>Saída Almoço</label>
+        <input type="time" id="saida1">
+    </div>
+
+    <div class="field">
+        <label>Retorno</label>
+        <input type="time" id="retorno">
+    </div>
+
+    <div class="field">
+        <label>Saída Final</label>
+        <input type="time" id="saida2">
+    </div>
+
+    <div class="field">
+        <label>Meta (h)</label>
+        <input type="number" id="meta" value="9">
+    </div>
+
+    <div class="field">
+        <label>Valor Hora (R$)</label>
+        <input type="number" id="valorHora" value="2.51" step="0.01">
+    </div>
+
+</div>
+
+<button class="add" onclick="adicionar()">Adicionar</button>
+<button class="export" onclick="exportar()">Exportar Excel</button>
+
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Dia</th>
+<th>Entrada</th>
+<th>Almoço</th>
+<th>Retorno</th>
+<th>Saída</th>
+<th>Total Dia</th>
+<th>Regulares</th>
+<th>Extras</th>
+<th>Negativas</th>
+<th>Sab</th>
+<th>Dom</th>
+<th>R$ Dia</th>
+<th>R$ Extra</th>
+<th>Ação</th>
+</tr>
+</thead>
+
+<tbody id="tbody"></tbody>
+</table>
+
+</div>
+
+<!-- 🔐 MODAL AUTENTICAÇÃO -->
+<div id="modalAuth" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.85);
+justify-content:center;
+align-items:center;
+z-index:10000;
+">
+
+  <div style="
+    background:#111827;
+    padding:25px;
+    border-radius:12px;
+    width:320px;
+    border:1px solid #1f2937;
+    text-align:center;
+  ">
+
+    <h3 style="color:#38bdf8;">🔐 Autenticação</h3>
+
+    <input id="authUser" placeholder="Usuário"
+    style="width:100%;margin:10px 0;padding:8px;border-radius:6px;border:1px solid #1f2937;background:#0b1220;color:#fff;">
+
+    <input id="authPass" type="password" placeholder="Senha"
+    style="width:100%;margin-bottom:10px;padding:8px;border-radius:6px;border:1px solid #1f2937;background:#0b1220;color:#fff;">
+
+    <!-- ✅ AGORA DENTRO DO MODAL -->
+    <div id="msgAuth" style="
+      display:none;
+      margin-bottom:10px;
+      padding:10px;
+      border-radius:8px;
+      font-size:12px;
+      font-weight:bold;
+      text-align:center;
+    "></div>
+
+    <button onclick="validarAuth()"
+    style="width:100%;background:#22c55e;color:#fff;padding:10px;border:none;border-radius:8px;">
+      Entrar
+    </button>
+
+    <button onclick="fecharAuth()"
+    style="margin-top:10px;width:100%;background:#ef4444;color:#fff;padding:8px;border:none;border-radius:8px;">
+      Cancelar
+    </button>
+
+  </div>
+</div>
+
+<!-- ✏️ MODAL EDITAR -->
+<div id="modalEditar" style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.85);
+justify-content:center;
+align-items:center;
+z-index:9999;
+">
+
+  <div style="
+    background:linear-gradient(145deg,#0f172a,#111827);
+    padding:25px;
+    border-radius:14px;
+    width:420px;
+    border:1px solid #1f2937;
+    box-shadow:0 0 20px rgba(56,189,248,0.2);
+  ">
+
+    <h3 style="text-align:center;color:#38bdf8;">✏️ Editar Registro</h3>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+
+      <div>
+        <label style="font-size:11px;">Entrada</label>
+        <input type="time" id="editEntrada">
+      </div>
+
+      <div>
+        <label style="font-size:11px;">Saída Almoço</label>
+        <input type="time" id="editSaida1">
+      </div>
+
+      <div>
+        <label style="font-size:11px;">Retorno</label>
+        <input type="time" id="editRetorno">
+      </div>
+
+      <div>
+        <label style="font-size:11px;">Saída Final</label>
+        <input type="time" id="editSaida2">
+      </div>
+
+    </div>
+
+    <div style="display:flex;gap:10px;margin-top:15px;">
+
+      <button onclick="salvarEdicao()" style="flex:1;background:#22c55e;color:#fff;padding:10px;border:none;border-radius:8px;">
+        Salvar
+      </button>
+
+      <button onclick="fecharEdicao()" style="flex:1;background:#ef4444;color:#fff;padding:10px;border:none;border-radius:8px;">
+        Cancelar
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<script>
+
+const USER = "admin";
+const PASS = "1234";
+
+let dados = JSON.parse(localStorage.getItem("ponto_avancado")) || [];
+let editIndex = null;
+
+function salvar(){
+    localStorage.setItem("ponto_avancado", JSON.stringify(dados));
+}
+
+function setDia(){
+    let d = new Date(document.getElementById("data").value + "T00:00:00");
+    let dias = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
+    document.getElementById("dia").value = dias[d.getDay()];
+}
+
+function min(t){
+    if(!t) return 0;
+    let [h,m] = t.split(":");
+    return (+h*60)+(+m);
+}
+
+function adicionar(){
+
+    let data = document.getElementById("data").value;
+    let dia = document.getElementById("dia").value;
+
+    let entrada = document.getElementById("entrada").value;
+    let saida1 = document.getElementById("saida1").value;
+    let retorno = document.getElementById("retorno").value;
+    let saida2 = document.getElementById("saida2").value;
+
+    let meta = parseFloat(document.getElementById("meta").value);
+    let valorHora = parseFloat(document.getElementById("valorHora").value);
+
+    let total = (min(saida1)-min(entrada)) + (min(saida2)-min(retorno));
+
+    let metaMin = meta*60;
+    let extra = total-metaMin;
+    let reg = Math.min(total, metaMin);
+    let neg = total<metaMin ? metaMin-total : 0;
+
+    dados.push({
+        data,
+        dia,
+        entrada,
+        saida1,
+        retorno,
+        saida2,
+        total:(total/60).toFixed(2)+"h",
+        reg:(reg/60).toFixed(2)+"h",
+        extra:(extra>0?extra/60:0).toFixed(2)+"h",
+        neg:(neg/60).toFixed(2)+"h",
+        sab:dia==="Sáb"?total/60:0,
+        dom:dia==="Dom"?total/60:0,
+        valorDia:((reg/60)*valorHora).toFixed(2),
+        valorExtra:(extra>0?(extra/60)*valorHora*1.27:0).toFixed(2)
+    });
+
+    salvar();
+    render();
+}
+
+function render(){
+
+    let tbody = document.getElementById("tbody");
+    tbody.innerHTML="";
+
+    dados.forEach((d,i)=>{
+        tbody.innerHTML += `
+<tr>
+<td>${d.data}</td>
+<td>${d.dia}</td>
+<td>${d.entrada}</td>
+<td>${d.saida1}</td>
+<td>${d.retorno}</td>
+<td>${d.saida2}</td>
+<td>${d.total}</td>
+<td>${d.reg}</td>
+<td>${d.extra}</td>
+<td>${d.neg}</td>
+<td>${d.sab}</td>
+<td>${d.dom}</td>
+<td>R$ ${d.valorDia}</td>
+<td>R$ ${d.valorExtra}</td>
+<td><button onclick="abrirAuth(${i})" style="background:#f59e0b;border:none;padding:5px;border-radius:5px;">Editar</button></td>
+</tr>`;
+    });
+}
+
+/* 🔐 AUTH */
+function abrirAuth(i){
+    editIndex = i;
+    document.getElementById("modalAuth").style.display = "flex";
+
+    // ativa ENTER
+    setTimeout(()=>{
+        document.getElementById("authUser").focus();
+        ativarEnterLogin();
+    }, 100);
+}
+
+function validarAuth(){
+
+    const u = document.getElementById("authUser").value.trim();
+    const p = document.getElementById("authPass").value.trim();
+    const msg = document.getElementById("msgAuth");
+
+    // reset visual
+    msg.style.display = "block";
+    msg.style.opacity = "1";
+    msg.style.transform = "scale(1)";
+    msg.className = "";
+
+    function showMessage(type, text){
+        msg.className = type;
+        msg.innerHTML = text;
+
+        // animação leve
+        msg.style.transition = "all 0.2s ease";
+        msg.style.transform = "scale(1.03)";
+
+        setTimeout(()=>{
+            msg.style.transform = "scale(1)";
+        }, 150);
+    }
+
+    // valida campos vazios
+    if(!u || !p){
+        showMessage("msg-error", "⚠️ Informe usuário e senha para continuar.");
+        shakeModal();
+        return;
+    }
+
+    // autenticação correta
+    if(u === USER && p === PASS){
+
+        showMessage("msg-success", "✔ Acesso autorizado. Carregando edição...");
+
+        // efeito de sucesso suave antes de abrir modal
+        setTimeout(()=>{
+
+            msg.style.opacity = "0";
+
+            setTimeout(()=>{
+                fecharAuth();
+                abrirModalEdicao(editIndex);
+                msg.style.display = "none";
+            }, 200);
+
+        }, 500);
+
+        return;
+    }
+
+    // erro de autenticação
+    showMessage("msg-error", "❌ Credenciais inválidas. Tente novamente.");
+
+    // limpa senha
+    document.getElementById("authPass").value = "";
+
+    // foco automático no usuário (UX melhor)
+    document.getElementById("authUser").focus();
+
+    // efeito visual de erro
+    shakeModal();
+}
+
+function shakeModal(){
+    const box = document.querySelector("#modalAuth > div");
+
+    box.style.animation = "shake 0.3s ease";
+
+    setTimeout(()=>{
+        box.style.animation = "";
+    }, 300);
+}
+
+function fecharAuth(){
+    document.getElementById("modalAuth").style.display="none";
+}
+
+/* ✏️ EDIT */
+function abrirModalEdicao(i){
+
+    let d = dados[i];
+
+    document.getElementById("editEntrada").value=d.entrada;
+    document.getElementById("editSaida1").value=d.saida1;
+    document.getElementById("editRetorno").value=d.retorno;
+    document.getElementById("editSaida2").value=d.saida2;
+
+    document.getElementById("modalEditar").style.display="flex";
+}
+
+function fecharEdicao(){
+    document.getElementById("modalEditar").style.display="none";
+}
+
+function salvarEdicao(){
+
+    let d = dados[editIndex];
+
+    let entrada = document.getElementById("editEntrada").value;
+    let saida1 = document.getElementById("editSaida1").value;
+    let retorno = document.getElementById("editRetorno").value;
+    let saida2 = document.getElementById("editSaida2").value;
+
+    let total = (min(saida1)-min(entrada)) + (min(saida2)-min(retorno));
+
+    let metaMin = parseFloat(document.getElementById("meta").value || 9) * 60;
+    let valorHora = parseFloat(document.getElementById("valorHora").value || 0);
+
+    let extra = total - metaMin;
+    let reg = Math.min(total, metaMin);
+    let neg = total < metaMin ? metaMin - total : 0;
+
+    d.entrada = entrada;
+    d.saida1 = saida1;
+    d.retorno = retorno;
+    d.saida2 = saida2;
+
+    d.total = (total/60).toFixed(2) + "h";
+    d.reg = (reg/60).toFixed(2) + "h";
+    d.extra = (extra>0 ? extra/60 : 0).toFixed(2) + "h";
+    d.neg = (neg/60).toFixed(2) + "h";
+
+    d.valorDia = ((reg/60)*valorHora).toFixed(2);
+    d.valorExtra = (extra>0 ? (extra/60)*valorHora*1.27 : 0).toFixed(2);
+
+    salvar();
+    render();
+    fecharEdicao();
+}
+
+function exportar(){
+    let ws = XLSX.utils.json_to_sheet(dados);
+    let wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Ponto");
+    XLSX.writeFile(wb, "folha_ponto.xlsx");
+}
+
+render();
+
+function ativarEnterLogin(){
+
+    const user = document.getElementById("authUser");
+    const pass = document.getElementById("authPass");
+
+    function handler(e){
+        if(e.key === "Enter"){
+            validarAuth();
+        }
+    }
+
+    // evita múltiplos listeners duplicados
+    user.onkeydown = handler;
+    pass.onkeydown = handler;
+}
+
+</script>
+
+</body>
+</html>

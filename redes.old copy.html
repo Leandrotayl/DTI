@@ -4,728 +4,311 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rede IPs - Claudino</title>
+<title>Painel de Regionais</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-
-
- body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  margin: 0;
-  padding: 20px;
-
-  /* ?? Imagem no fundo */
-  background: 
-  linear-gradient(135deg, rgba(0,0,0,0.35), rgba(0,0,0,0.55)),
-  url("SUA-IMAGEM.jpg"),
-url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
-
-  background-size: cover;          /* preenche a tela inteira */
-  background-position: center;     /* centraliza */
-  background-repeat: no-repeat;    /* evita repetição */
-  background-attachment: fixed;    /* efeito de paralaxe (opcional) */
-
-  color: #fff;
-  animation: bgGradient 15s ease infinite; /* mantém sua animação */
+body {
+  background: url('http://172.16.2.2/DTI/img/Fundo1.png') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
 }
 
-/* Quadro para contar FortiGate e Mikrotik */
-.quadro-container {
-    position: fixed;
-    top: 10px;       /* distância do topo */
-    left: 10px;      /* lado esquerdo da tela */
-    display: flex;
-    flex-direction: column;  /* empilhar verticalmente */
-    gap: 10px;       /* espaço entre os quadros */
-    z-index: 999;
+/* Container ocupa toda a largura */
+.container { 
+  max-width: 100%;
+  margin: 20px auto; 
+  padding: 0 20px; 
 }
 
-
-.quadro {
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255,255,255,0.3);
-    border-radius: 10px;
-    padding: 6px 10px;    /* menos padding */
-    width: 120px;          /* largura menor */
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    transition: transform 0.3s;
+/* Pesquisa */
+.search-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
 }
 
-.quadro:hover {
-    transform: scale(1.03);
+.search-container input {
+  width: 50%;
+  max-width: 400px;
+  min-width: 250px;
+  padding: 12px 20px;
+  font-size: 0.95em;
+  border-radius: 25px;
+  background: rgba(255, 204, 0, 0.2); /* fundo mais claro */
+  color: #1a1a1a; /* letras escuras para contraste */
+  font-weight: 600;
+  box-shadow: 0 0 12px rgba(255, 204, 0, 0.6), inset 0 0 6px rgba(255, 204, 0, 0.4);
+  transition: all 0.3s;
 }
 
-.quadro h2 {
-    font-size: 1.4em;       /* fonte menor */
-    margin: 0;
-    color: #fff;
-    text-shadow: 0 0 6px #00f, 0 0 10px #0ff;
+.search-container input::placeholder {
+  color: #1a1a1a; /* placeholder mais vis vel */
+  font-weight: 500;
+  opacity: 0.8;
 }
 
-.quadro p {
-    margin: 3px 0 0;
-    font-size: 0.8em;
-    color: #ccc;
-    text-shadow: 0 0 3px #000;
-}
-
-.fortigate {
-    border-color: #ff3d00;
-    box-shadow: 0 0 12px #ff3d00;
-}
-
-.mikrotik {
-    border-color: #00e5ff;
-    box-shadow: 0 0 12px #00e5ff;
-}
-
-
-
-@keyframes bgGradient {
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
-
-  h1 { text-align:center; margin-bottom:20px; }
-
-.total-lojas {
-  position: fixed;
-  top: 2px;
-  right: 6px;
-  width: 260px;
-  background: rgba(0,0,0,0.3);
-  border-radius: 18px;
-  padding: 1px;
-  color: #00c8d8;
-  text-align: center;
-  border: 2px solid rgba(0,200,220,0.6);
-  z-index: 9999;
-  box-shadow: 0 0 15px rgba(0,200,220,0.3);
-}
-
-
-.total-geral-quadro {
-  background: linear-gradient(135deg, #ff4d4d, #ff9999); /* Vermelho degradê */
-  border-radius: 12px;
-  padding: 12px;
-  margin-bottom: 10px;
-  border: 1px solid rgba(255,77,77,0.6);
-  color: #fff;
-}
-
-.total-item:nth-child(1) { /* Filial */
-  background: linear-gradient(135deg, #353a3f, #80c1ff);
-  border: 1px solid rgba(77,166,255,0.6);
-  color: #000;
-}
-
-.total-item:nth-child(2) { /* Posto */
-  background: linear-gradient(135deg, #3b443b, #99ff99);
-  border: 1px solid rgba(51,204,51,0.6);
-  color: #000;
-}
-
-.total-item:nth-child(3) { /* Deposito */
-  background: linear-gradient(135deg, #3a3831, #fff066);
-  border: 1px solid rgba(255,204,51,0.6);
-  color: #000;
-}
-
-.total-item:nth-child(4) { /* Representante */
-  background: linear-gradient(135deg, #3352ff, #e699ff);
-  border: 1px solid rgba(204,51,255,0.6);
-  color: #000;
-}
-
-.total-geral-label {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 4px;
-}
-
-.total-geral-value {
-  font-size: 28px;
-  font-weight: bold;
-  text-shadow: 0 0 8px #00c8d8, 0 0 15px #00aab0;
-}
-
-.totais-gerais-duas-linhas {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px 10px;
-  margin-bottom: 8px;
-}
-
-.total-item {
-  background: linear-gradient(145deg, #1a1a1a, #222);
-  border-radius: 20px;
-  padding: 8px 0;
-  font-weight: bold;
-  color: #00c8d8;
-  text-shadow: 0 0 3px rgba(0,200,220,0.5);
-  border: 1px solid rgba(0,200,220,0.3);
-  box-shadow: 0 0 5px rgba(0,200,220,0.1) inset;
-}
-
-.ultima-atualizacao {
-  margin-top: 8px;
-  font-size: 11px;
-  color: #00b0c8;
-  text-shadow: 0 0 5px rgba(0,180,200,0.6);
-}
-
-
-/* Container centralizado */
-.search-container { 
-  text-align: center;         
-  margin-bottom: 30px;        
-}
-
-
-
-/* BOT O PARA VOLTAR MENU PRINCIPAL */
-/* Bot o MENU PRINCIPAL reposicionado no topo da lateral */
-#btnMenu {
-  position: fixed;
-  top: 60px;       /* distancia do topo */
-  left: 160px;      /* fixa na lateral esquerda */
-  width: 240px;    /* largura consistente com o painel lateral */
-  padding: 15px 0;
-  background: linear-gradient(135deg,#0d47a1,#1976d2);
-  color: #0ff;
-  border: 3px solid #ff0000;
-  border-radius: 15px;
-  font-size: 1rem;
-  font-weight: bold;
-  text-align: center;
-  cursor: pointer;
-  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
-  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
-  transition: all 0.3s ease-in-out;
-  z-index: 1001;   /* acima do painel lateral */
-}
-
-#btnMenu:hover {
-  background: linear-gradient(145deg,#ff0000,#1a1aff);
-  color: #fff;
-  box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
-  transform: scale(1.05);
-}
-/* Campo de busca maior e robusto */
-.search-input {
-  width: 500px;               /* Aumentei a largura */
-  max-width: 95%;             /* Responsivo em telas menores */
-  padding: 16px 24px;         /* Padding maior para visual mais imponente */
-  border-radius: 15px;        /* Bordas mais arredondadas */
-  border: 2px solid #00ffea;  /* Neon suave */
-  background: #0d0d0d;        /* Fundo escuro */
-  color: #00ffea;             /* Cor do texto */
-  font-size: 18px;            /* Fonte maior */
-  font-weight: 500;           /* Texto mais robusto */
-  text-shadow: 0 0 3px #00ffea33; /* Brilho sutil */
-  box-shadow: 0 2px 5px #00ffea22 inset, 0 0 5px #00ffea11; /* efeito interno e externo leve */
-  transition: all 0.3s ease; 
-}
-
-/* Efeito ao focar */
-.search-input:focus {
+.search-container input:focus {
+  background: #fffbcc; /* amarelo claro ao focar */
+  box-shadow: 0 0 18px rgba(255, 204, 0, 0.8), inset 0 0 8px rgba(255, 204, 0, 0.5);
   outline: none;
-  border-color: #00ffe0;
-  box-shadow: 0 0 10px #00ffea44, 0 0 18px #00ffe033 inset;
-  transform: translateY(-1px); /* leve efeito 3D */
 }
 
-/* Placeholder */
-.search-input::placeholder {
-  color: #00ffeaaa;
-  text-shadow: 0 0 2px #00ffea22;
+
+/* Tabela de resultados elegante */
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+  margin-top: 20px;
+  font-size: 0.95em;
+}
+thead th {
+  background: #ffcc00;
+  color: #1a1a1a;
+  font-weight: 700;
+  padding: 12px 10px;
+  text-align: center; /* CENTRALIZADO */
+  border-radius: 8px 8px 0 0;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
 }
 
-/* Cards regionais 3D ultra futurista */
-.regional-card {
-  background: linear-gradient(135deg,#1c1c1c,#2a2a2a);
-  border-radius: 20px;
-  width: 190px;
-  height: 180px;
+tbody tr {
+  background: #2a2a2a;
+  color: #f0f0f0;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.4);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+tbody tr:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px rgba(0,0,0,0.6);
+}
+
+tbody td {
+  padding: 10px;
+  text-align: center; /* CENTRALIZA OS DADOS */
+  vertical-align: middle;
+}
+
+tbody td { padding: 10px; }
+.action-btn {
+  padding: 6px 12px;
+  margin: 2px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #fff;
+}
+.action-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+}
+
+/* Bot o voltar */
+.back-btn {
+  margin-bottom:20px;
+  padding:10px 22px;
+  background:#ffcc00;
+  color:#1a1a1a;
+  border:none;
+  border-radius:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition: all 0.2s;
+  display:none;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+.back-btn:hover { background:#e6b800; transform:translateY(-2px); }
+
+.top-left, .top-right {
+  position: fixed;
+  top: 4px;
+  z-index: 1000;
+  font-family: 'Poppins', sans-serif;
+}
+.top-left { left: 20px; }
+.top-right { right: 20px; }
+
+.card-dispositivo, 
+
+/* Quadro de resumo mais forte */
+.cards-resumo {
+  display: grid;
+  grid-template-columns: repeat(2, 70px);
+  gap: 6px;
+  padding: 6px;
+  border: 2px solid #ffcc00;
+  border-radius: 12px;
+  background: rgba(255,204,0,0.05);
+  box-shadow: 0 0 10px #ffcc00, 0 0 20px rgba(255,204,0,0.3);
+
+  /* NOVO: posicionamento fixo no topo direito */
+  position: fixed;
+  top: 2px;      /* dist ncia do topo */
+  right: 6px;    /* dist ncia da lateral direita */
+  z-index: 1000;  /* para ficar acima do resto */
+}
+
+
+.card .badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: #ffcc00;
+  color: #1a1a1a;
+  font-size: 0.85em;
+  font-weight: 700;
+  width: 32px;       /* tamanho maior e quadrado */
+  height: 32px;      /* igual   largura para ficar quadrado */
   display: flex;
-  
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  font-weight: bold;
-  text-align: center;
-  padding: 15px;
-  box-shadow: 
-    0 10px 25px rgba(0,255,234,0.3),       /* sombra externa */
-    inset 0 0 15px rgba(0,255,234,0.2),     /* brilho interno */
-    inset 0 0 30px rgba(0,255,234,0.1),
-    0 0 20px rgba(0,255,234,0.15);
-  transition: all 0.5s ease;
-  perspective: 1200px;
-  position: relative;
-  overflow: hidden;
-  color: #fff;
-  text-shadow: 0 0 8px rgba(0,255,234,0.6);
-}
-
-/* Cards regionais 3D robustos e elegantes */
-.regional-card {
-  background: linear-gradient(135deg,#1c1c1c,#2a2a2a);
-  border-radius: 20px;
-  width: 190px;
-  height: 180px;
-  display: flex;
-  
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-weight: bold;
-  text-align: center;
-  padding: 15px;
-  box-shadow: 
-    0 10px 25px rgba(0,255,234,0.3),       /* sombra externa */
-    inset 0 0 15px rgba(0,255,234,0.2),     /* brilho interno */
-    inset 0 0 30px rgba(0,255,234,0.1),
-    0 0 20px rgba(0,255,234,0.15);
-  transition: all 0.5s ease;
-  perspective: 1200px;
-  position: relative;
-  overflow: hidden;
-  color: #fff;
-  text-shadow: 0 0 8px rgba(0,255,234,0.6);
-}
-
-/* Pseudo-element para brilho dinâmico */
-.regional-card::before {
-  content: "";
-  position: absolute;
-  top: -50%;
-  left: -50%;
-  width: 200%;
-  height: 200%;
-  background: linear-gradient(60deg, rgba(0,255,234,0.2), rgba(0,255,234,0) 70%);
-  transform: rotate(25deg);
-  animation: shine 4s infinite linear;
-  transition: all 0.6s ease;
-  pointer-events: none;
-}
-
-@keyframes shine {
-  0% { transform: rotate(25deg) translateX(-10px); }
-  50% { transform: rotate(25deg) translateX(10px); }
-  100% { transform: rotate(25deg) translateX(-10px); }
-}
-
-/* Hover robusto */
-.regional-card:hover {
-  background: linear-gradient(145deg, #1a1a1a, #3a3a3a);
-  transform: scale(1.05) rotateX(4deg) rotateY(4deg);
-  box-shadow: 
-    0 14px 30px rgba(0,0,0,0.7),
-    inset 0 0 20px rgba(0,255,234,0.05);
+  border-radius: 8px; /* cantos arredondados */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5), 0 0 10px #ffcc00 inset;
 }
 
 
 
-
-
-/* Badge de quantidade discreto e elegante */
-.regional-card .badge-quantidade {
-  position: absolute;
-  top: 14px;
-  right: 50%;
-  transform: translateX(50%);
-  background: rgba(0,255,240,0.4);
-  color: #000;
-  font-weight: bold;
-  font-size: 20px;
-  padding: 8px 14px;
-  border-radius: 14px;
-  box-shadow: 0 0 10px rgba(0,255,240,0.2);
-  text-align: center;
-  min-width: 35px;
-  transition: all 0.3s ease;
-}
-
-.regional-card .badge-quantidade:hover {
-  transform: translateX(50%) scale(1.1);
-  box-shadow: 0 0 15px rgba(0,255,240,0.25);
-}
-
-/* Contadores dentro do card */
-.contadores-card {
-  margin-top: 16px;
-  font-size: 15px;
-  line-height: 1.4;
-  color: #00fff0;
-  text-shadow: 0 0 5px #00fff0;
-  transition: all 0.3s ease;
-}
-
-
-.regional-card:hover::before {
-  transform: rotate(35deg) translateX(10px) translateY(10px);
-}
-
-.regional-card:hover {
-  background: linear-gradient(135deg,#00d1c1,#33e0d8);
-  color: #000;
-  transform: scale(1.08) rotateX(8deg) rotateY(8deg);
-  box-shadow: 
-    0 15px 40px rgba(0,209,193,0.6),
-    inset 0 0 40px rgba(0,209,193,0.3),
-    0 0 35px rgba(0,209,193,0.2);
-}
-
-/* Contadores dentro do card */
-.contadores-card {
-  margin-top: 15px;
-  font-size: 14px;
-  line-height: 1.4;
-  color: #00fff0;
-  text-shadow: 0 0 10px #00fff0, 0 0 25px #33e0d8;
-}
-
-
-.regional-card:hover::before {
-  transform: rotate(35deg) translateX(5px) translateY(5px);
-}
-
-.regional-card:hover {
-  background: linear-gradient(135deg,#00d1c1,#33e0d8); /* cores suaves no hover */
-  color:#000;
-  transform: scale(1.05);
-  box-shadow: 0 8px 20px rgba(0,209,193,0.5), 0 0 35px rgba(0,209,193,0.2) inset;
-}
-
-.contadores-card {
-  margin-top:12px;
-  font-size:14px;
+/* Cards internos menores */
+.card-mini {
+  background:#2a2a2a;
+  border-radius:10px;
+  padding:8px 6px;
   text-align:center;
-  line-height:1.3;
-  color:#00fff0;
-  text-shadow:0 0 8px #00fff0, 0 0 20px #00f5ff;
-  transition: all 0.3s ease;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4), 0 0 4px #ffcc00 inset;
+  cursor: default;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
+.card-mini:hover {
+  transform:translateY(-1px);
+  box-shadow:0 6px 12px rgba(0,0,0,0.6),0 0 6px #ffcc00 inset;
+}
 
-/* Container de regionais */
-.regionais-container {
+.card-mini span {
+  display:block;
+  font-size:0.7em; /* menor para caber no card */
+  color:#ffd966;
+  margin-bottom:2px;
+  text-transform: uppercase;
+  letter-spacing:0.5px;
+  font-weight:600;
+}
+
+.card-mini h2 {
+  font-size:1.1em; /* proporcional ao card menor */
+  font-weight:700;
+  color:#ffcc00;
+  margin:0;
+  text-shadow:1px 1px 3px #000;
+}
+
+/* Atualizado em */
+#atualizado {
+  font-size:0.6em;
+  color:#ffd966;
+  text-align:center;
+  letter-spacing:0.5px;
+  margin-top:2px;
+}
+
+.cards-dispositivo-resumo {
+  display: grid;
+  grid-template-columns: repeat(2, 70px); /* mesmo tamanho do resumo */
+  gap: 6px;
+  padding: 6px;
+  border: 2px solid #ffcc00;
+  border-radius: 12px;
+  background: rgba(255,204,0,0.05);
+  box-shadow: 0 0 10px #ffcc00, 0 0 20px rgba(255,204,0,0.3);
+}
+
+/* Cards internos */
+.card-mini-dispositivo {
+  background:#2a2a2a;
+  border-radius:10px;
+  padding:8px 6px;
+  text-align:center;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.4), 0 0 4px #ffcc00 inset;
+  cursor: default;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-mini-dispositivo:hover {
+  transform:translateY(-1px);
+  box-shadow:0 6px 12px rgba(0,0,0,0.6),0 0 6px #ffcc00 inset;
+}
+
+.card-mini-dispositivo span {
+  display:block;
+  font-size:0.7em; 
+  color:#ffd966;
+  margin-bottom:2px;
+  text-transform: uppercase;
+  letter-spacing:0.5px;
+  font-weight:600;
+}
+
+.card-mini-dispositivo h2 {
+  font-size:1.1em; 
+  font-weight:700;
+  color:#ffcc00;
+  margin:0;
+  text-shadow:1px 1px 3px #000;
+}
+
+/* Cards regionais */
+.cards {
   display: flex;
   flex-wrap: wrap;
   gap: 20px;
   justify-content: flex-start;
-  margin-left: 20px;
-  margin-top: 120px;  /* <-- aumente este valor para "abaixar" os quadros */
-  perspective: 1000px;
+  align-items: flex-start;
+}
+/* Cards de regionais mais baixos na tela */
+.cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  margin-top: 80px; /* aumentei a dist ncia do topo para baixar os cards */
 }
 
-
-.message-box {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: auto;
-  max-width: 400px;
-  padding: 20px 30px;
-  background: linear-gradient(135deg, #0ff, #0aa, #05d);
-  border-radius: 20px;
-  border: 2px solid #0ff;
-  box-shadow: 0 0 20px #0ff, 0 0 40px #0aa inset, 0 0 60px #05d;
-  color: #000;
-  font-weight: bold;
-  font-size: 1.2rem;
-  text-align: center;
-  pointer-events: none;
-  opacity: 0;
-  z-index: 9999;
-  text-shadow: 0 0 10px #0ff, 0 0 20px #0aa;
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+.card {
+  background:#2a2a2a; border-radius:12px; padding:20px; text-align:center; cursor:pointer;
+  transition: transform 0.2s, box-shadow 0.2s; box-shadow:0 4px 10px rgba(0,0,0,0.5);
+  border:2px solid #ffcc00; overflow:hidden;
 }
-.message-box.show {
-  opacity: 1;
-  transform: translateX(-50%) scale(1.05);
+.card:hover { transform:translateY(-5px); box-shadow:0 8px 20px rgba(0,0,0,0.7),0 0 15px #ffcc00 inset; }
+.card h2 { color:#ffdd57; font-size:1.3em; margin-bottom:15px; text-shadow:1px 1px 5px #000; }
+.card .contagem-tipos {
+  display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:15px;
 }
-.message-box .message-content {
-  animation: glowPulse 1.8s infinite alternate;
+.card .contagem-tipos .tipo {
+  background:#3a3a3a; padding:12px; border-radius:10px; text-align:center;
+  box-shadow:0 4px 10px rgba(0,0,0,0.5); transition: transform 0.2s, box-shadow 0.2s;
 }
+.card .contagem-tipos .tipo span { display:block; font-size:0.85em; color:#aaa; }
+.card .contagem-tipos .tipo p { font-weight:700; font-size:1.1em; color:#ffcc00; margin-top:5px; }
+.card .contagem-tipos .tipo:hover { transform:translateY(-3px); box-shadow:0 8px 15px rgba(0,0,0,0.7); }
 
-@keyframes glowPulse {
-  0% { text-shadow: 0 0 10px #0ff, 0 0 20px #0aa; }
-  50% { text-shadow: 0 0 20px #0ff, 0 0 40px #0aa, 0 0 60px #05d; }
-  100% { text-shadow: 0 0 10px #0ff, 0 0 20px #0aa; }
+/* Modal autentica  o */
+.modal { display:none; position:fixed; top:0; left:0; width:100vw; height:100vh; background:rgba(0,0,0,0.85); backdrop-filter:blur(4px); justify-content:center; align-items:center; z-index:9999; transition: opacity 0.3s; }
+.modal-content {
+  background: linear-gradient(145deg,#2a2a2a,#1a1a1a);
+  padding:35px 50px; border-radius:25px; max-width:400px; width:90%; text-align:center;
+  box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 25px #ffcc00; transform:rotateX(-10deg); transition: transform 0.3s ease;
 }
+.modal-content h3 { color:#ffcc00; margin-bottom:20px; text-shadow:1px 1px 3px #000; }
+.modal-content input { width:80%; padding:12px; margin-bottom:20px; border-radius:12px; border:none; outline:none; font-size:1em; text-align:center; box-shadow:inset 0 0 6px rgba(255,204,0,0.4); }
+.modal-content button { padding:10px 22px; border:none; border-radius:12px; background:#ffcc00; color:#1a1a1a; font-weight:700; cursor:pointer; box-shadow:0 5px 15px rgba(0,0,0,0.5); transition: all 0.2s; }
+.modal-content button:hover { background:#e6b800; transform:translateY(-2px); }
+.error-msg { color:#ff4444; margin-bottom:12px; font-weight:700; font-size:0.95em; }
 
-
-
-/* CORES DIFERENTES PARA CADA REGIONAL */
-.regionais-container .regional-card:nth-child(1) { background: linear-gradient(135deg,#1648b4,#2564c2,#1d7bb9); }
-.regionais-container .regional-card:nth-child(2) { background: linear-gradient(135deg,#1648b4,#1648b4,#2f477a); }
-.regionais-container .regional-card:nth-child(3) { background: linear-gradient(135deg,#1648b4,#5e4b6d,#ca7b13); }
-.regionais-container .regional-card:nth-child(4) { background: linear-gradient(135deg,#1648b4,#5aa090,#ca7b13); }
-.regionais-container .regional-card:nth-child(5) { background: linear-gradient(135deg,#1648b4,#003f7f,#ca7b13); }
-.regionais-container .regional-card:nth-child(6) { background: linear-gradient(135deg,#1648b4,#039f6a,#ca7b13); }
-.regionais-container .regional-card:nth-child(7) { background: linear-gradient(135deg,#1648b4,#413837,#c54614); }
-.regionais-container .regional-card:nth-child(8) { background: linear-gradient(135deg,#1648b4,#1558a5,#bd571c); }
-.regionais-container .regional-card:nth-child(9) { background: linear-gradient(135deg,#292825,#320a7e,#db5203); }
-
-
-
-/* ESTILO COMUM PARA TODOS OS CARDS */
-.regional {
-  border-radius: 18px;
-  width: 200px; height:180px;
-  display:flex; flex-direction:column; align-items:center; justify-content:center;
-  cursor:pointer; font-weight:bold; text-align:center;
-  padding:12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.3), 0 0 15px rgba(255,255,255,0.05) inset;
-  transition: all 0.5s ease;
-  position: relative;
-  overflow: hidden;
-  color: #fff;
-  text-shadow: 0 0 5px rgba(255,255,255,0.3);
-}
-
-/* Pseudo-element para brilho sutil */
-.regional::before {
-  content:"";
-  position:absolute;
-  top:-50%; left:-50%;
-  width:200%; height:200%;
-  background: linear-gradient(60deg, rgba(255,255,255,0.06), rgba(255,255,255,0) 70%);
-  transform: rotate(25deg);
-  transition: all 0.6s ease;
-}
-
-.regional:hover::before {
-  transform: rotate(35deg) translateX(5px) translateY(5px);
-}
-
-/* Hover futurista e 3D sutil */
-.regional:hover {
-  transform: scale(1.06) rotateX(3deg) rotateY(3deg);
-  box-shadow: 0 12px 25px rgba(0,0,0,0.35), 0 0 35px rgba(255,255,255,0.08) inset;
-}
-
-/* Contadores dentro do card */
-.contadores-card {
-  margin-top:12px;
-  font-size:13px;
-  text-align:center;
-  line-height:1.3;
-  color:#fff;
-  text-shadow:0 0 4px rgba(255,255,255,0.4);
-}
-
-.regional-card .badge-quantidade {
-  position: absolute;
-  top: 12px;               /* um pouco mais afastado do topo */
-  right: 70%;              /* posiciona no centro horizontal do card */
-  transform: translateX(50%); /* centraliza exatamente */
-  background: rgba(0,255,240,0.85);
-  color: #000;
-  font-weight: bold;
-  font-size: 20px;         /* aumentado */
-  padding: 8px 16px;       /* aumentado para ficar maior e proporcional */
-  border-radius: 14px;     /* borda arredondada maior */
-  box-shadow: 0 0 10px #00fff0;
-  text-align: center;
-  min-width: 30px;
-}
-
-.acao-btns {
-  display:flex;
-  gap:8px;
-  justify-content:center;
-  align-items:center;
-}
-
-/* botões estilo original */
-.action-btn {
-  padding:8px 12px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:bold;
-  font-size:0.9rem;
-  transition: all 0.3s ease;
-  box-shadow:0 0 8px rgba(0,255,234,0.12);
-}
-
-.fortigate-btn { background: linear-gradient(45deg,#0c10d6,#00f5ff); color:#fff; border:2px solid rgba(0,255,240,0.2); }
-.fortigate-btn:hover { box-shadow:0 0 15px #0c10d6,0 0 25px #00ff99; transform:scale(1.05);}
-
-.mikrotik-btn { background: linear-gradient(45deg,#13e236,#00ff99); color:#000; border:2px solid rgba(0,255,240,0.06);}
-.mikrotik-btn:hover { box-shadow:0 0 15px #13e236,0 0 25px #00ff99; transform:scale(1.05);}
-
-.copy-senha-btn { background: linear-gradient(45deg,#ff7a18,#ff3d00); color:#000; border:2px solid rgba(255,160,0,0.08); padding:8px 10px; }
-.copy-senha-btn:hover { box-shadow:0 0 15px rgba(255,120,0,0.3); transform:scale(1.05); }
-
-/* resultado pesquisa e tabelas */
-#resultado-pesquisa {
-  display:none;
-  margin-top:20px;
-  background:#0a0a0a;
-  border:2px solid #00ffea;
-  border-radius:15px;
-  padding:15px;
-  max-width:95%;
-  margin-left:auto;
-  margin-right:auto;
-  box-shadow:0 0 25px #00ffea;
-}
-
-#tabela-pesquisa {
-  width:100%;
-  border-collapse:collapse;
-  margin-top:15px;
-}
-
-#tabela-pesquisa th, #tabela-pesquisa td {
-  border:1px solid #00ffea;
-  padding:10px;
-  text-align:center;
-}
-
-#tabela-pesquisa th {
-  background:#00ffea;
-  color:#000;
-}
-
-#tabela-pesquisa td {
-  color:#fff;
-}
-
-/* Mantém a aparência sem alteração ao passar o mouse */
-#tabela-pesquisa tr:hover {
-  background: #0a0a0a;  /* mesma cor do fundo da tabela */
-  color: #fff;           /* mesma cor do texto */
-  transform: none;       /* sem zoom */
-  box-shadow: none;      /* sem sombra */
-}
-
-
-
-/* Quadro para contar FortiGate e Mikrotik */
-/* Quadro para contar FortiGate e Mikrotik */
-.quadro-container {
-    position: fixed;
-    top: 10px;       /* distância do topo */
-    left: 10px;      /* lado esquerdo da tela */
-    display: flex;
-    flex-direction: column;  /* empilhar verticalmente */
-    gap: 10px;       /* espaço entre os quadros */
-    z-index: 999;
-}
-
-.quadro {
-    background: rgba(255, 255, 255, 0.05);
-    border: 2px solid rgba(255,255,255,0.3);
-    border-radius: 10px;
-    padding: 6px 10px;    /* menos padding */
-    width: 120px;          /* largura menor */
-    text-align: center;
-    box-shadow: 0 0 10px rgba(0,0,0,0.5);
-    transition: transform 0.3s;
-}
-
-.quadro:hover {
-    transform: scale(1.03);
-}
-
-.quadro h2 {
-    font-size: 1.4em;       /* fonte menor */
-    margin: 0;
-    color: #fff;
-    text-shadow: 0 0 6px #00f, 0 0 10px #0ff;
-}
-
-.quadro p {
-    margin: 3px 0 0;
-    font-size: 0.8em;
-    color: #ccc;
-    text-shadow: 0 0 3px #000;
-}
-
-.fortigate {
-    border-color: #ff3d00;
-    box-shadow: 0 0 12px #ff3d00;
-}
-
-.mikrotik {
-    border-color: #00e5ff;
-    box-shadow: 0 0 12px #00e5ff;
-}
-
-
-  #lojas-container { margin-top:20px; display:none; }
-  #contadores-regional { margin-top:10px; font-size:14px; }
-  table { width:100%; border-collapse:collapse; margin-top:20px; }
-  th,td { border:1px solid #00ffea; padding:10px; text-align:center; }
-  th { background:#00ffea; color:#000; }
-
-  .back-btn {
-  margin-top: 15px;
-  padding: 12px 25px;       /* Aumenta o tamanho do botão */
-  background: #00ffea;
-  color: #000;
-  border: none;
-  cursor: pointer;
-  border-radius: 10px;      /* Borda um pouco maior */
-  font-weight: bold;
-  font-size: 1rem;          /* Fonte maior */
-  transition: all 0.3s ease;
-  box-shadow: 0 0 10px #00ffea;
-}
-
-.back-btn:hover {
-  background: linear-gradient(90deg, #00ffea, #0ff);
-  color: #000;
-  transform: scale(1.05);
-  box-shadow: 0 0 15px #00ffea, 0 0 25px #0ff inset;
-}
-
-  .action-btn {
-  padding:8px 16px;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:bold;
-  font-size:0.9rem;
-  transition: all 0.4s ease;
-  box-shadow:0 0 10px #00fff0;
-}
-
-.action-btn:hover {
-  transform: scale(1.15);
-  box-shadow:0 0 25px #00fff0, 0 0 45px #33e0d8 inset;
-}
-
-  .fortigate-btn { background: linear-gradient(45deg,#0c10d6,#00f5ff); color:#fff; }
-  .fortigate-btn:hover { box-shadow:0 0 15px #0c10d6,0 0 25px #00ff99; transform:scale(1.1); }
-  .mikrotik-btn { background: linear-gradient(45deg,#13e236,#00ff99); color:#000; }
-  .mikrotik-btn:hover { box-shadow:0 0 15px #13e236,0 0 25px #00ff99; transform:scale(1.1);}
-
- /* Quadro fixo no canto superior esquerdo */
-  #contadorLoja {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    background: linear-gradient(135deg, #1f1f1f, #333);
-    color: #fff;
-    padding: 15px 20px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    z-index: 9999;
-  }
-
-  .filtro-select {
+.filtro-select {
   position: fixed;
   top: 15px;
   left: 15px;
@@ -757,7 +340,7 @@ url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
 .filtro-select {
   position: fixed;
   top: 15px;
-  left: 350px;
+  left: 366px;
   background: linear-gradient(135deg, #00ffcc, #0099ff);
   color: #000;
   font-weight: bold;
@@ -769,7 +352,7 @@ url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
 #btnDownload {
   position: fixed;
   top: 14px; /* abaixo do filtro */
-  left: 500px; /* move mais para direita */
+  left: 520px; /* move mais para direita */
   padding: 8px 12px;
   background: #1ce701;
   color: #000;
@@ -785,108 +368,725 @@ url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
   background: #00ccaa;
 }
 
+#telaLojas .card {
+  margin-top: 68px; /* aumenta o espa o do topo */
+  animation: slideDown 0.4s ease;
+}
 
- /* --- modal de senha --- */
-  #modalSenha {
-    display:none;
-    position:fixed;
-    left:0; top:0;
-    width:100%; height:100%;
-    background: rgba(0,0,0,0.7);
-    z-index:2000;
-    justify-content:center;
-    align-items:center;
-  }
-  #modalSenha .modal-inner {
-    background: linear-gradient(135deg,#091b2a,#06202a);
-    border-radius:18px;
-    padding:20px;
-    width:360px;
-    box-shadow: 0 0 40px rgba(0,200,220,0.2);
-    color:#fff;
-    text-align:center;
-    position:relative;
-  }
-  #modalSenha .input-wrapper {
-    position: relative;
-    display: inline-block;
-    width: 85%;
-  }
-  #modalSenha input[type="password"],
-  #modalSenha input[type="text"] {
-    width:100%;
-    padding:10px 40px 10px 12px;
-    border-radius:10px;
-    border:2px solid rgba(0,200,220,0.15);
-    margin-bottom:12px;
-    background:#0b0b0b;
-    color:#00ffea;
-    font-size:16px;
-  }
-  #toggleSenha {
-    position: absolute;
-    top: 50%;
-    right: 10px;
-    transform: translateY(-50%);
-    cursor: pointer;
-    font-size: 20px;
-    color: #00ffea;
-    user-select: none;
-  }
-  #toggleSenha:hover { color:#fff; }
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
 
-  #modalSenha .btn-row { display:flex; gap:10px; justify-content:center; margin-top:8px; }
-  #modalSenha .btn-row button {
-    padding:10px 14px;
-    border-radius:10px;
-    border:none;
-    font-weight:bold;
-    cursor:pointer;
-  }
+/* ===== LINHA AMARELA ENTRE COLUNAS ===== */
 
-  .confirmar-btn {
-    background: linear-gradient(135deg,#00ffea,#007bff);
-    color:#000;
-    box-shadow:0 0 10px #00ffea;
+/* Cabe alho */
+/* ===== LINHA TRACEJADA GROSSA ENTRE COLUNAS ===== */
+
+thead th {
+  border-right: 4px dashed #ffcc00;  /* MAIS GROSSA */
+}
+
+tbody td {
+  border-right: 6px dashed rgba(255, 204, 0, 0.8); /* MAIS GROSSA */
+}
+
+/* Remove da  ltima coluna */
+thead th:last-child,
+tbody td:last-child {
+  border-right: none;
+}
+
+thead th {
+  border-right: 6px dashed #ffcc00;
+}
+
+tbody td {
+  border-right: 6px dashed #ffcc00;
+}
+
+/* Glow leve na tabela */
+table {
+  box-shadow: 0 0 20px rgba(255, 204, 0, 0.4);
+}
+
+thead th:last-child,
+tbody td:last-child {
+  border-right: none;
+}
+
+/* Linha neon entre colunas */
+thead th,
+tbody td {
+  border-right: 1px solid #ffcc00;
+}
+
+thead th:last-child,
+tbody td:last-child {
+  border-right: none;
+}
+
+/* Glow suave */
+table {
+  box-shadow: 0 0 15px rgba(255,204,0,0.3);
+}
+
+.regional-card .badge {
+  background: #00ffcc;
+  color: #000;
+  box-shadow: 0 0 15px #00ffcc;
+}
+
+.consulta-alert{
+  position:relative;
+  margin:25px 0 35px;
+  padding:20px 28px;
+  border-radius:14px;
+
+  font-size:16px;
+  font-weight:700;
+  color:#ffffff;
+
+  background:rgba(20,20,20,0.8);
+}
+
+/* Vertical */
+.consulta-alert::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border-radius:14px;
+  padding:2px;
+  background:
+    linear-gradient(#00ffc8,#00ffc8) left,
+    linear-gradient(#00ffc8,#00ffc8) right,
+    linear-gradient(#ffcc00,#ffcc00) top,
+    linear-gradient(#ffcc00,#ffcc00) bottom;
+
+  background-size:
+    2px 100%,
+    2px 100%,
+    100% 2px,
+    100% 2px;
+
+  background-repeat:no-repeat;
+  pointer-events:none;
+}
+
+.cidadeResumo{
+  position:relative;
+  display:inline-block;
+  margin-top:8px;
+  padding:10px 20px;
+
+  font-size:0.80em;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+
+  color:#7CFFB2;
+
+  text-shadow:
+    0 0 6px rgba(124,255,178,0.6),
+    0 0 18px rgba(124,255,178,0.3);
+
+  animation:fadeCidade 0.5s ease forwards;
+}
+
+/* Moldura animada */
+.cidadeResumo::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  border:2px solid transparent;
+  border-radius:6px;
+
+  background:
+    linear-gradient(#00ff88,#00ff88) top left,
+    linear-gradient(#00ff88,#00ff88) top right,
+    linear-gradient(#00ff88,#00ff88) bottom right,
+    linear-gradient(#00ff88,#00ff88) bottom left;
+
+  background-size:0% 2px, 2px 0%, 0% 2px, 2px 0%;
+  background-repeat:no-repeat;
+
+  animation:fecharQuadro 0.8s ease forwards;
+}
+
+/* Anima  o fechando o quadro */
+@keyframes fecharQuadro{
+  0%{
+    background-size:
+      0% 2px,
+      2px 0%,
+      0% 2px,
+      2px 0%;
   }
-  .cancelar-btn {
-    background: linear-gradient(135deg,#ff4444,#ff0000);
-    color:#fff;
-    box-shadow:0 0 10px #ff0000;
+  25%{
+    background-size:
+      100% 2px,
+      2px 0%,
+      0% 2px,
+      2px 0%;
   }
-  
+  50%{
+    background-size:
+      100% 2px,
+      2px 100%,
+      0% 2px,
+      2px 0%;
+  }
+  75%{
+    background-size:
+      100% 2px,
+      2px 100%,
+      100% 2px,
+      2px 0%;
+  }
+  100%{
+    background-size:
+      100% 2px,
+      2px 100%,
+      100% 2px,
+      2px 100%;
+  }
+}
+
+@keyframes fadeCidade{
+  from{
+    opacity:0;
+    transform:translateY(5px);
+  }
+  to{
+    opacity:1;
+    transform:translateY(0);
+  }
+}
+
+.card-loja-pesquisada.encontrado .cidadeResumo{
+  color:#ffcc00;
+  text-shadow:0 0 8px rgba(255,215,0,0.6);
+}
+
+/* Bot o MENU PRINCIPAL reposicionado no topo da lateral */
+#btnMenu {
+  position: fixed;
+  top: 10px;       /* distancia do topo */
+  left: 182px;      /* fixa na lateral esquerda */
+  width: 240px;    /* largura consistente com o painel lateral */
+  padding: 15px 0;
+  background: linear-gradient(135deg,#0d47a1,#1976d2);
+  color: #0ff;
+  border: 3px solid #ff0000;
+  border-radius: 15px;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+  cursor: pointer;
+  text-shadow: 0 0 5px #ff0000, 0 0 15px #ff0000;
+  box-shadow: 0 0 15px #ff0000, 0 0 30px #ff0000 inset;
+  transition: all 0.3s ease-in-out;
+  z-index: 1001;   /* acima do painel lateral */
+}
+
+#btnMenu:hover {
+  background: linear-gradient(145deg,#ff0000,#1a1aff);
+  color: #fff;
+  box-shadow: 0 0 25px #ff4d4d, 0 0 50px #ff4d4d inset;
+  transform: scale(1.05);
+}
+
+/* Quadro Loja Pesquisada ao lado do resumo */
+.top-loja {
+  position: fixed;
+  top: 4px;
+  right: 190px; /* Ajuste fino ao lado do resumo */
+  z-index: 1000;
+  font-family: 'Poppins', sans-serif;
+}
+
+.card-loja-pesquisada {
+  position: relative;
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  border-radius: 14px;
+  padding: 12px 22px;
+  text-align: center;
+  border: 2px solid #00ffcc;
+  box-shadow:
+    0 0 12px rgba(0,255,204,0.5),
+    0 6px 15px rgba(0,0,0,0.6);
+  min-width: 150px;
+  transition: all 0.3s ease;
+}
+
+/* brilho interno sutil */
+.card-loja-pesquisada::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: linear-gradient(120deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%);
+  transform: translateX(-100%);
+  transition: transform 0.6s ease;
+}
+
+/* efeito passando brilho */
+.card-loja-pesquisada:hover::after {
+  transform: translateX(100%);
+}
+
+.card-loja-pesquisada span {
+  display:block;
+  font-size:0.65em;
+  color:#00ffcc;
+  margin-bottom:4px;
+  text-transform:uppercase;
+  font-weight:600;
+  letter-spacing:1px;
+}
+
+.card-loja-pesquisada h2 {
+  margin:0;
+  font-size:1.3em;
+  font-weight:800;
+  letter-spacing:1.5px;
+  color:#ffffff;
+  text-shadow: 0 0 8px rgba(0,255,204,0.6);
+  transition: all 0.3s ease;
+}
+
+.filial-quadro {
+  display: inline-block;
+  padding: 8px 16px;
+  margin-bottom: 12px;
+  border: 2px solid #ffcc00;       /* borda amarela */
+  border-radius: 10px;             /* cantos arredondados */
+  background: rgba(255, 204, 0, 0.1);  /* fundo leve amarelo */
+  color: #ffcc00;                  /* texto amarelo */
+  font-weight: 700;
+  font-size: 1.1em;
+  text-shadow: 1px 1px 4px rgba(0,0,0,0.5);
+}
+
+/* Quando encontrar loja (mantendo sua l gica atual) */
+.card-loja-pesquisada.encontrado {
+  border-color:#ffcc00;
+  box-shadow:
+    0 0 18px #ffcc00,
+    0 0 35px rgba(255,204,0,0.4),
+    0 6px 15px rgba(0,0,0,0.6);
+}
+
+.card-loja-pesquisada.encontrado h2 {
+  color:#ffcc00;
+  text-shadow:
+    0 0 12px #ffd700,
+    0 0 25px rgba(255,215,0,0.8);
+  transform: scale(1.08);
+}
+
+/* Fortigate - Azul marinho */
+.fortigate-tag {
+  background: linear-gradient(135deg, #001f3f, #003366);
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 0 8px rgba(0, 51, 102, 0.7);
+}
+
+/* Mikrotik - Verde claro */
+.mikrotik-tag {
+  background: linear-gradient(135deg, #00ffcc, #66ff99);
+  color: #003333;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 0 8px rgba(0, 255, 204, 0.7);
+}
+
+/* Mensagem copiado */
+.copy-msg {
+  position: fixed;
+  top: 30px;
+  right: -600px;
+  z-index: 10000;
+
+  padding: 22px 45px;
+  border-radius: 18px;
+
+  font-size: 1.15em;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  border: 3px solid #ffffff;
+
+  transform: scale(0.9);
+  opacity: 0;
+
+  transition:
+    right 0.6s cubic-bezier(.68,-0.55,.27,1.55),
+    transform 0.5s ease,
+    opacity 0.4s ease;
+}
+
+/* ?? ATIVA  O */
+.copy-msg.show {
+  right: 30px;
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* SUCESSO (dourado premium) */
+.copy-msg.success {
+  background: linear-gradient(145deg, #ffd700, #ffcc00);
+  color: #111;
+  box-shadow:
+    0 0 0 4px rgba(255,204,0,0.4),
+    0 10px 35px rgba(0,0,0,0.7),
+    0 0 30px rgba(255,215,0,0.9);
+}
+
+.destaque-busca {
+  background: linear-gradient(135deg, #ffcc00, #ffd700);
+  color: #000;
+  padding: 2px 6px;
+  border-radius: 6px;
+  font-weight: 700;
+  box-shadow: 0 0 8px rgba(255,204,0,0.8);
+}
+
+/* ===================================== */
+/* BOT O 3D REAL COM COR DIN MICA */
+/* ===================================== */
+
+#btnTop {
+  position: fixed;
+  bottom: 40px;
+  right: 40px;
+  min-width: 210px;
+  height: 60px;
+  padding: 0 32px;
+  border-radius: 14px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: all 0.4s ease;
+  z-index: 9999;
+  overflow: hidden;
+
+  /* COR PADR O (VERMELHO) */
+  background: linear-gradient(145deg, #1a0000, #3a0000);
+
+  box-shadow:
+    0 18px 35px rgba(0,0,0,0.7), /* sombra externa profunda */
+    inset 0 4px 8px rgba(255,255,255,0.08), /* luz superior */
+    inset 0 -6px 12px rgba(0,0,0,0.6), /* sombra interna */
+    0 0 25px rgba(255,0,0,0.3);
+}
+
+/* Quando aparece */
+#btnTop.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* TEXTO */
+#btnTop .btn-core {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(255,0,0,0.7);
+  transition: 0.4s;
+}
+
+/* HOVER 3D */
+#btnTop:hover {
+  transform: scale(1.05) translateY(-3px);
+  box-shadow:
+    0 25px 45px rgba(0,0,0,0.8),
+    0 0 35px rgba(255,0,0,0.6),
+    0 0 70px rgba(255,0,0,0.4);
+}
+
+/* FILIAL - Azul forte */
+.filial-tag {
+  background: linear-gradient(135deg, #131414, #007bff);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 0 8px rgba(0,123,255,0.6);
+}
+
+/* POSTO - Laranja */
+.posto-tag {
+  background: linear-gradient(135deg, #746455, #df8c19);
+  color: #1a1a1a;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 0 8px rgba(255,122,0,0.6);
+}
+
+/* DEPOSITO - Roxo */
+.deposito-tag {
+  background: linear-gradient(135deg, #a78dc0, #a64dff);
+  color: #fff;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 0 8px rgba(166,77,255,0.6);
+}
+
+/* REPRESENTANTE - Verde */
+.representante-tag {
+  background: linear-gradient(135deg, #00b894, #55efc4);
+  color: #003333;
+  font-weight: 700;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 0 8px rgba(0,184,148,0.6);
+}
+
+.legenda-topo {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.legenda-grupo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0,0,0,0.5);
+  padding: 8px 14px;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(255,204,0,0.3);
+}
+
+.legenda-titulo {
+  font-size: 0.8em;
+  color: #ffcc00;
+  font-weight: 700;
+  margin-right: 5px;
+}
+
+/* Usa os mesmos estilos dos badges */
+.legenda-item {
+  font-size: 0.75em;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: default;
+  transition: 0.2s;
+}
+
+.legenda-item:hover {
+  transform: scale(1.08);
+}
+
+.legenda-item.ativo {
+  outline: 2px solid #fff;
+  box-shadow: 0 0 15px #fff;
+  transform: scale(1.1);
+}
+
+/* ===================================== */
+/* ESTADO TOPO (VERDE APROVADO) */
+/* ===================================== */
+
+#btnTop.top-active {
+  background: linear-gradient(145deg, #002b15, #004d26);
+
+  box-shadow:
+    0 18px 35px rgba(0,0,0,0.7),
+    inset 0 4px 8px rgba(255,255,255,0.08),
+    inset 0 -6px 12px rgba(0,0,0,0.6),
+    0 0 25px rgba(0,255,100,0.4);
+}
+
+#btnTop.top-active .btn-core {
+  text-shadow: 0 0 8px rgba(0,255,100,0.8);
+}
+
+.login-screen {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 99999;
+}
+
+.login-box {
+  background: #1a1a1a;
+  padding: 40px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 0 25px #ffcc00;
+}
+
+.login-box h2 {
+  color: #ffcc00;
+  margin-bottom: 20px;
+}
+
+.login-box input {
+  display: block;
+  width: 250px;
+  margin: 10px auto;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  text-align: center;
+}
+
+.login-box button {
+  padding: 10px 25px;
+  margin-top: 15px;
+  background: #ffcc00;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+#loginErro {
+  color: red;
+  margin-top: 10px;
+}
+
+#btnLogout {
+  position: fixed;
+  top: 10px;
+  right: 400px; /* canto superior direito */
+  z-index: 10001;
+
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+
+  font-weight: 700;
+  font-size: 0.85em;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+
+  cursor: pointer;
+
+  color: #fff;
+  background: linear-gradient(135deg, #ff0000, #990000);
+
+  box-shadow:
+    0 0 10px rgba(255,0,0,0.6),
+    0 0 20px rgba(255,0,0,0.3),
+    inset 0 0 10px rgba(0,0,0,0.6);
+
+  transition: all 0.3s ease;
+}
+
+#btnLogout:hover {
+  transform: scale(1.08);
+  background: linear-gradient(135deg, #ff3333, #cc0000);
+  box-shadow:
+    0 0 20px rgba(255,0,0,0.9),
+    0 0 40px rgba(255,0,0,0.5);
+}
+
+.user-area {
+  position: fixed;
+  top: 10px;
+  right: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 10001;
+}
+
+/* Texto do usuário */
+#userInfo {
+  color: #00ffcc;
+  font-weight: 700;
+  font-size: 0.85em;
+  background: rgba(0,0,0,0.6);
+  padding: 8px 14px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,255,204,0.4);
+}
+
+/* Botão sair (mantém seu estilo) */
+#btnLogout {
+  padding: 10px 18px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+
+  font-weight: 700;
+  font-size: 0.85em;
+
+  color: #fff;
+  background: linear-gradient(135deg, #ff0000, #990000);
+
+  box-shadow:
+    0 0 10px rgba(255,0,0,0.6),
+    0 0 20px rgba(255,0,0,0.3);
+
+  transition: all 0.3s ease;
+}
+
+#btnLogout:hover {
+  transform: scale(1.08);
+}
+
+
+
 </style>
 </head>
 <body>
 
+  <div id="loginScreen" class="login-screen">
+  <div class="login-box">
+    <h2>🔐 Acesso ao Sistema</h2>
 
+    <input type="text" id="loginUser" placeholder="Usuário">
+    <input type="password" id="loginPass" placeholder="Senha">
 
-  
+    <button onclick="fazerLogin()">Entrar</button>
 
-<button id="btnMenu">MENU PRINCIPAL</button>
-
-<h1>Rede IPs - Claudino</h1>
-
-<div class="total-lojas" id="totalLojas">
-  <div class="total-geral-quadro">
-    <div class="total-geral-label">Total Geral</div>
-    <div class="total-geral-value" id="totalGeral">0</div>
+    <p id="loginErro"></p>
   </div>
-  <div class="totais-gerais-duas-linhas">
-    <div class="total-item">Filial: <span id="totalFilial">0</span></div>
-    <div class="total-item">Posto: <span id="totalPosto">0</span></div>
-    <div class="total-item">Deposito: <span id="totalDeposito">0</span></div>
-    <div class="total-item">Representante: <span id="totalRepresentante">0</span></div>
-  </div>
-  <div class="ultima-atualizacao">Atualizado em: <span id="ultimaAtualizacao"></span></div>
 </div>
 
-
+<button onclick="logout()" style="
+  position:fixed;
+  top:10px;
+  left:10px;
+  background:#ff4444;
+  color:#fff;
+  border:none;
+  padding:8px 12px;
+  border-radius:6px;
+  cursor:pointer;
+">
+  Sair
+</button>
 
 <div class="top-bar">
 
   <!-- Filtro por Tipo -->
-  <select id="filtroTipo" onchange="aplicarFiltros()" class="filtro-select">
+  <!--<select id="filtroTipo" onchange="aplicarFiltros()" class="filtro-select">
     <option value="todos">Todos os Tipos</option>
     <option value="Filial">Filial</option>
     <option value="Posto">Posto</option>
@@ -895,238 +1095,745 @@ url('http://172.16.2.7/DTI/img/1.png');  /* coloque aqui o nome da sua imagem */
   </select>
 
   <!-- Filtro por Dispositivo -->
-  <select id="filtroDispositivo" onchange="aplicarFiltros()" class="filtro-select" style="left:160px;">
+   <!-- <select id="filtroDispositivo" onchange="aplicarFiltros()" class="filtro-select" style="left:190px;">
     <option value="todos">Todos Dispositivos</option>
     <option value="FortiGate">FortiGate</option>
     <option value="Mikrotik">Mikrotik</option>
   </select>
-
+-->
 </div>
 
 
 </div>
 
-<button id="btnDownload" onclick="baixarExcel()">
+  <!--<button id="btnDownload" onclick="baixarExcel()">
    Baixar Excel
-</button>
-
-
-
-<!-- Mensagem fixa dentro de quadro futurista -->
-<div id="copyMessage" class="message-box">
-  <div class="message-content"></div>
-</div>
-<div class="search-container">
-  <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar por Sigla ou Endereco IP" onkeyup="pesquisarLojas()">
-</div>
-
-<div class="regionais-container" id="regionais-container"></div>
-
-<div id="resultado-pesquisa">
-  <h2>Resultados da Pesquisa</h2>
-  <table id="tabela-pesquisa">
-    <thead>
-      <tr>
-        <th>Sigla</th>
-        <th>Filial</th>
-        <th>Tipo</th>
-        <th>Endereco IP</th>
-        <th>Dispositivo</th>
-        <th>Acao</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</div>
-
-
-<!-- Quadro de contagem -->
-<div class="quadro-container">
-  <div class="quadro fortigate">
-    <h2 id="countFortiGate">0</h2>
-    <p>FortiGate</p>
-  </div>
-  <div class="quadro mikrotik">
-    <h2 id="countMikrotik">0</h2>
-    <p>Mikrotik</p>
-  </div>
-</div>
-
-
-<div id="lojas-container">
-  <button class="back-btn" onclick="voltarRegionais()">Voltar aos Regionais</button>
-  <h2 id="nome-regional"></h2>
-  <div id="contadores-regional">
-    Filial: <span id="regionalFilial">0</span> |
-    Posto: <span id="regionalPosto">0</span> |
-    Deposito: <span id="regionalDeposito">0</span> |
-    Representante: <span id="regionalRepresentante">0</span>
-  </div>
-  <table id="tabela-lojas">
-    <thead>
-      <tr>
-        <th>Sigla</th>
-        <th>Filial</th>
-        <th>Tipo</th>
-        <th>Endereco IP</th>
-        <th>Dispositivo</th>
-        <th>Acao</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
-</div>
+</button>-->
 
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
+<div class="user-area">
+  <div id="userInfo"></div>
+  <button id="btnLogout">Sair</button>
+</div>
 
-<!-- Modal de liberação -->
-<div id="modalUsuario" class="modal" style="display: none;">
-  <div class="modal-content">
-    <h2>Digite o usuario para liberar a senha</h2>
-    <div style="position: relative;">
-      <input type="password" id="usuarioInput" placeholder="Usuário" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; font-size: 16px;">
-      <span id="toggleUsuario" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); cursor: pointer; font-size: 18px; color: #666;">???</span>
+<button id="btnMenu">MENU PRINCIPAL</button>
+
+<button id="btnTop" title="Ir para o topo">
+  <span class="btn-core">Ir para o inIcio</span>
+</button>
+
+<!-- Resumo neon no canto superior direito -->
+ 
+<div class="top-right">
+  <div class="top-loja">
+  <div class="card-loja-pesquisada">
+  <span>Loja Pesquisada</span>
+  <h2 id="siglaResumo">---</h2>
+  <div class="cidadeResumo" id="cidadeResumo">---</div>
+</div>
+</div>
+
+
+
+
+  <div class="cards-resumo">
+      <!-- NOVO TOTAL GERAL -->
+  <div class="card-mini" style="grid-column: span 2;">
+    <span>Total Geral</span>
+    <h2 id="totalGeral">0</h2>
+  </div>
+
+    
+    <div class="card-mini">
+      <span>Filial</span>
+      <h2 id="totalFilial">0</h2>
     </div>
-    <div style="margin-top: 15px; display: flex; justify-content: space-around;">
-      <button id="confirmarUsuario">Confirmar</button>
-      <button id="cancelarUsuario">Cancelar</button>
+    <div class="card-mini">
+      <span>Postos</span>
+      <h2 id="totalPostos">0</h2>
+    </div>
+    <div class="card-mini">
+      <span>Depositos</span>
+      <h2 id="totalDeposito">0</h2>
+    </div>
+    <div class="card-mini">
+      <span>Reps</span>
+      <h2 id="totalRep">0</h2>
+    </div>
+    
+  </div>
+</div>
+
+<!-- Dispositivos no canto superior esquerdo -->
+<div class="top-left">
+  <div class="cards-dispositivo-resumo">
+    <div class="card-mini-dispositivo">
+      <span>FortiGate</span>
+      <h2 id="totalForti">0</h2>
+    </div>
+    <div class="card-mini-dispositivo">
+      <span>Mikrotik</span>
+      <h2 id="totalMikrotik">0</h2>
     </div>
   </div>
 </div>
 
+<div class="container">
+
+  <div class="search-container">
+    <input type="text" id="searchInput" placeholder="Pesquisar por SIGLA ou PDV..." oninput="filtrar()">
+  </div>
+
+   <div class="legenda-topo">
+  <div class="legenda-grupo">
+    <span class="legenda-titulo">TIPOS:</span>
+
+    <div class="legenda-item filial-tag" onclick="filtrarLegenda('tipo','Filial', this)">Filial</div>
+    <div class="legenda-item posto-tag" onclick="filtrarLegenda('tipo','Posto', this)">Posto</div>
+    <div class="legenda-item deposito-tag" onclick="filtrarLegenda('tipo','Deposito', this)">Deposito</div>
+    <div class="legenda-item representante-tag" onclick="filtrarLegenda('tipo','Representante', this)">Representante</div>
+  </div>
+
+  <div class="legenda-grupo">
+    <span class="legenda-titulo">DISPOSITIVOS:</span>
+
+    <div class="legenda-item fortigate-tag" onclick="filtrarLegenda('disp','Fortigate', this)">Fortigate</div>
+    <div class="legenda-item mikrotik-tag" onclick="filtrarLegenda('disp','Mikrotik', this)">Mikrotik</div>
+  </div>
+</div>
+
+
+</div>
+  <button class="back-btn" id="backBtn" onclick="voltar()"> Voltar </button>
+
+  <div id="telaRegionais" class="cards"></div>
+  <div id="telaLojas"></div>
+</div>
+
+<div class="modal" id="modalAuth">
+  <div class="modal-content">
+    <h3>Autenticacao - Liberar Senha</h3>
+    <div class="error-msg" id="errorMsg"></div>
+    <input type="password" id="authPassword" placeholder=" Digite o Usuario ">
+    <br>
+    <button onclick="validarSenha()">Confirmar</button>
+  </div>
+</div>
+
+<div class="copy-msg" id="copyMsg"></div>
 
 <script>
+const LIBERACAO_SENHA="Gertec20";
+let textoParaCopiar="",btnParaMensagem=null;
 
-const lojasData = {
-  "Regional Afonso": [
-    { sigla: "ACA", filial: "ACA", tipo: "Filial", ip: "172.16.88.251", dispositivo: "FortiGate" },
-    { sigla: "BJS", filial: "ACA", tipo: "Posto", ip: "172.19.56.251", dispositivo: "FortiGate" },
-    { sigla: "CID", filial: "ACA", tipo: "Posto", ip: "172.19.52.251", dispositivo: "FortiGate" },
-    { sigla: "ITG", filial: "ACA", tipo: "Posto", ip: "172.16.147.251", dispositivo: "FortiGate" },
-    { sigla: "RNP", filial: "ACA", tipo: "Posto", ip: "172.18.231.251", dispositivo: "FortiGate" },
-    { sigla: "SFB", filial: "ACA", tipo: "Posto", ip: "172.19.57.251", dispositivo: "FortiGate" },
-   
+/* ?? FILTROS DA LEGENDA */
+let filtroTipoAtivo = null;
+let filtroDispositivoAtivo = null;
 
 
-  ]
+const lojas=[
 
+ // Regional Afonso
+
+{sigla:"ACA",   	filial:"ACA",   	cidade:"Acailandia",              	tipo:"Filial",      	ip:"172.16.88.251",      	dispositivo:"Fortigate",      	regional:"Regional Afonso",     pdvs:["pdvaca01","pdvaca02","pdvaca03","pdvaca04","pdvaca05","pdvaca06","pdvaca07","pdvaca08","pdvaca09","pdvaca10","pdvaca12",]},
+{sigla:"BJS",   	filial:"ACA",   	cidade:"Bom Jesus Da Selva",      	tipo:"Posto",      	ip:"172.19.56.251",         	dispositivo:"Fortigate",      	regional:"Regional Afonso",     pdvs:["pdvbjs01","pdvbjs02"]},
+{sigla:"CID",   	filial:"ACA",  		cidade:"Cidelandia",               	tipo:"Posto",      	ip:"172.19.82.251",         	dispositivo:"Fortigate",      	regional:"Regional Afonso",     pdvs:["pdvcid01","pdvcid02"]},
+{sigla:"ITG",   	filial:"ACA",  		cidade:"Itinga",                   	tipo:"Posto",     	ip:"172.16.147.251",         	dispositivo:"Fortigate",      	regional:"Regional Afonso",     pdvs:["pdvitg01","pdvitg02","pdvitg03",]},
+{sigla:"RNP",   	filial:"ACA",  		cidade:"Rodon Do Para",            	tipo:"Posto",      	ip:"172.18.231.251",         	dispositivo:"Fortigate",      	regional:"Regional Afonso",     pdvs:["pdvrnp01","pdvrnp02","pdvrnp03",]},
+{sigla:"SFB",   	filial:"ACA",  		cidade:"Sao Francisco Do Brejao",  	tipo:"Posto",      	ip:"172.19.57.251",         	dispositivo:"Fortigate",      	regional:"Regional Afonso",     pdvs:["pdvsfb01","pdvsfb02"]},
+
+
+  {sigla:"ZED",   	filial:"ZED ", 		cidade:"Ze Doca",       		  tipo:"Filial",        	ip:"172.16.94.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvzed01","pdvzed02","pdvzed03","pdvzed04","pdvzed05","pdvzed06","pdvzed07","pdvzed08","pdvzed09","pdvzed10","pdvzed11","pdvzed12"]},
+  {sigla:"AGN",   	filial:"ZED ", 		cidade:"Araguana",       		tipo:"Posto",        	ip:"172.19.191.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvagn01","pdvagn02"]},
+  {sigla:"CDG",   	filial:"ZED ", 		cidade:"Centro do Guilherme",       	tipo:"Posto",        	ip:"172.19.192.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvcdg01","pdvcdg02"]},
+  {sigla:"CNM",   	filial:"ZED ", 		cidade:"Centro Novo Do Maranhao",       tipo:"Posto",       	ip:"172.19.193.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvcnm01","pdvcnm02"]},
+  {sigla:"ENC",   	filial:"ZED ", 		cidade:"Governador Nunes Freire",       tipo:"Posto",        	ip:"172.16.109.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvenc01","pdvenc02"]},
+  {sigla:"GUM",   	filial:"ZED ", 		cidade:"Boa Vista Do Gurupi",       	tipo:"Posto",        	ip:"172.16.221.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvgum01","pdvgum02"]},
+  {sigla:"MAS",   	filial:"ZED ", 		cidade:"Maracacume",       		tipo:"Posto",        	ip:"172.16.197.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvmas01","pdvmas02"]},
+  {sigla:"MAZ",   	filial:"ZED ", 		cidade:"Maranhaozinho",       		tipo:"Posto",        	ip:"172.19.196.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvmaz01","pdvmaz02"]},
+  {sigla:"NOL",   	filial:"ZED ", 		cidade:"Nova Olinda Do Maranhao",       tipo:"Posto",        	ip:"172.19.33.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvnol01","pdvnol02"]},
+  {sigla:"PDM",   	filial:"ZED ", 		cidade:"Presidente Medice",       	tipo:"Posto",        	ip:"172.19.197.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvpdm01","pdvpdvm02"],servidorCustom:"zed"},
+  {sigla:"PRO",   	filial:"ZED ", 		cidade:"Pedro Do Rosario",       	tipo:"Posto",        	ip:"172.19.198.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvpro01","pdvpro02"],servidorCustom:"zed"},
+  {sigla:"SLP",   	filial:"ZED ", 		cidade:"Santa Luzia Do Parua",       	tipo:"Filial",        	ip:"172.16.246.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvslp01","pdvslp02","pdvslp03","pdvslp04","pdvslp05",]},
+  {sigla:"ZED / DZE",   filial:"ZED ", 		cidade:"Deposito de Ze Doca",       	tipo:"Deposito",        ip:"172.26.94.1",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["Nao Possui PDVs"],servidorCustom:"zed"},
+  {sigla:"ZMU",   	filial:"ZED ", 		cidade:"Ze Doca Usados",       		tipo:"Representante",   ip:"172.26.94.65",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvzed23"],servidorCustom:"zed"},
+  {sigla:"JUN",   	filial:"ZED ", 		cidade:"Junco Do Maranhao",       	tipo:"Representante",   ip:"172.19.194.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvzed22"],servidorCustom:"zed"},
+  {sigla:"GNB",   	filial:"ZED ", 		cidade:"Governador Newton Belo",       	tipo:"Representante",   ip:"172.19.201.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvzed17"],servidorCustom:"zed"},
+  {sigla:"CGT",   	filial:"ZED ", 		cidade:"Chega Tudo",       		tipo:"Posto",        	ip:"172.18.247.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvcgt01","pdvcgt02"],servidorCustom:"zed"},
+ 
+  
+  {sigla:"SIN",   	filial:"SIN ", 		cidade:"Santa Ines",       		tipo:"Filial",        	ip:"172.16.96.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvsin01","pdvsin02","pdvsin03","pdvsin04","pdvsin05","pdvsin06","pdvsin07","pdvsin08","pdvsin09","pdvsin10","pdvsin11","pdvsin12","pdvsin13",]},
+  {sigla:"BCU",   	filial:"SIN ", 		cidade:"Buriticupu",       		tipo:"Filial",        	ip:"172.16.222.251",        	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvbcu01","pdvbcu02","pdvbcu03","pdvbcu04","pdvbcu05","pdvbcu06","pdvbcu07",]},
+  {sigla:"BJA",   	filial:"SIN ", 		cidade:"Bom Jardim",       		tipo:"Posto",        	ip:"172.16.215.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvbja01","pdvbja02"]},
+  {sigla:"BVI",   	filial:"SIN ", 		cidade:"Bela Vista Do Maranhao",       	tipo:"Posto",        	ip:"172.19.209.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvbvi01","pdvbvi02"],servidorCustom:"sin"},
+  {sigla:"IPM",   	filial:"SIN ", 		cidade:"Igarape Do Meio",       	tipo:"Posto",        	ip:"172.19.211.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvipm01","pdvipm02"],servidorCustom:"sin"},
+  {sigla:"MAT",   	filial:"SIN ", 		cidade:"Matinha Do Maranhao",       	tipo:"Posto",        	ip:"172.19.96.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvmat01","pdvmat02"],servidorCustom:"sin"},
+  {sigla:"MON",   	filial:"SIN ", 		cidade:"Moncao",       			tipo:"Posto",        	ip:"172.19.90.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvmon01","pdvmon02"],servidorCustom:"sin"},
+  {sigla:"PEN",   	filial:"SIN ", 		cidade:"Penalva",       		tipo:"Posto",        	ip:"172.16.217.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvpen01","pdvpen02"],servidorCustom:"sin"},
+  {sigla:"PMI",   	filial:"SIN ", 		cidade:"Pindare Mirin",       		tipo:"Posto",        	ip:"172.16.127.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvpmi01","pdvpmi02"]},
+  {sigla:"SJC",   	filial:"SIN ", 		cidade:"Sao Joao Do Caru",       	tipo:"Posto",        	ip:"172.19.199.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvsjc01","pdvsjc02"]},
+  {sigla:"SLZ",   	filial:"SIN ", 		cidade:"Santa Luzia Do Tide",       	tipo:"Posto",        	ip:"172.16.244.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvslz01","pdvslz02","pdvslz03","pdvslz04"]},
+  {sigla:"VIA",   	filial:"SIN ", 		cidade:"Viana",       			tipo:"Posto",        	ip:"172.16.193.251",         	dispositivo:"Fortigate",      	regional:"Regional Coutinho",     pdvs:["pdvvia01","pdvvia02"]},
+  {sigla:"VME",   	filial:"SIN ", 		cidade:"Vitoria Do Mearim",       	tipo:"Posto",        	ip:"172.16.137.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvvme01","pdvvme02"]},
+  {sigla:"ARI",   	filial:"SIN ", 		cidade:"Arari",       			tipo:"Posto",        	ip:"172.16.216.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvari01","pdvari02"]},
+  {sigla:"SIN / DSI",   filial:"SIN ", 		cidade:"Deposito de Santa Ines",       	tipo:"Deposito",        ip:"172.26.96.1",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvdsi01","pdvdsi02"],servidorCustom:"sin"},
+  {sigla:"AAP",   	filial:"SIN ", 		cidade:"Alto Alegre Do Pindare",       	tipo:"Representante",   ip:"172.19.94.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvsin21"],servidorCustom:"sin"},
+  {sigla:"ACO",   	filial:"SIN ", 		cidade:"Acoque",       			tipo:"Representante",   ip:"172.19.222.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvaco24"],servidorCustom:"sin"},
+  {sigla:"AUZ",   	filial:"SIN ", 		cidade:"Auzilandia",       		tipo:"Representante",   ip:"172.19.223.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvsin25"],servidorCustom:"sin"},
+  {sigla:"CAJ",   	filial:"SIN ", 		cidade:"Cajari",       			tipo:"Representante",   ip:"172.19.210.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvsin18"],servidorCustom:"sin"},
+  {sigla:"JRE",   	filial:"SIN ", 		cidade:"Jacare",       			tipo:"Representante",   ip:"172.19.224.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvsin26"],servidorCustom:"sin"},
+  {sigla:"TUF",   	filial:"SIN ", 		cidade:"Tufilandia",       		tipo:"Representante",   ip:"172.19.212.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvsin20"],servidorCustom:"sin"},
+  {sigla:"OLN",   	filial:"SIN ", 		cidade:"Olinda Nova Do Maranhao",       tipo:"Posto",        	ip:"172.19.225.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvoln01","pdvoln02"],servidorCustom:"sin"},
+	
+  
+  {sigla:"PIN",   	filial:"PIN ", 		cidade:"Pinheiro",      	 	tipo:"Filial",        	ip:"172.16.86.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvpin01","pdvpin02","pdvpin03","pdvpin04","pdvpin05","pdvpin06","pdvpin07","pdvpin08","pdvpin09"]},
+  {sigla:"CUM",   	filial:"PIN ", 		cidade:"Cururupu",       		tipo:"Filial",        	ip:"172.16.115.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvcum01","pdvcum02","pdvcum03","pdvcum04","pdvcum06"]},
+  {sigla:"APA",   	filial:"PIN ", 		cidade:"Apicum-Acu",       		tipo:"Posto",        	ip:"172.19.184.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvapa01","pdvapa02"]},
+  {sigla:"ALC",   	filial:"PIN ", 		cidade:"Alcantara",       		tipo:"Posto",        	ip:"172.19.64.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvalc01","pdvalc02"]},
+  {sigla:"BCR",   	filial:"PIN ", 		cidade:"Bacuri",       			tipo:"Posto",        	ip:"172.19.187.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvbcr01","pdvbcr02","pdvbcr03"],servidorCustom:"pin"},
+  {sigla:"MIZ",   	filial:"PIN ", 		cidade:"Mirinzal",       		tipo:"Posto",        	ip:"172.16.129.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvmiz01","pdvmiz02"]},
+  {sigla:"PNU",   	filial:"PIN ", 		cidade:"Pinheiro Moveis Usados",       	tipo:"Posto",        	ip:"172.26.86.65",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvpnu01","pdvpnu02","pdvpnu03"],servidorCustom:"pin"},
+  {sigla:"PSA",   	filial:"PIN ", 		cidade:"Presidente Sarney",       	tipo:"Posto",        	ip:"172.19.164.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvpsa01","pdvpsa02","pdvpsa03"]},
+  {sigla:"SBE",   	filial:"PIN ", 		cidade:"Sao bento",       		tipo:"Posto",        	ip:"172.16.110.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvsbe01","pdvsbe02"]},
+  {sigla:"SHE",   	filial:"PIN ", 		cidade:"Santa Helena",       		tipo:"Posto",        	ip:"172.16.187.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvshe01","pdvshe02"]},
+  {sigla:"SVF",   	filial:"PIN ", 		cidade:"Sao Vicente Ferrer",       	tipo:"Posto",        	ip:"172.16.112.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvsvf01","pdvsvf02"]},
+  {sigla:"SJB",   	filial:"PIN ", 		cidade:"Sao Joao Batista",       	tipo:"Posto",        	ip:"172.16.111.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvsjb01","pdvsjb02"]},
+  {sigla:"TUR",   	filial:"PIN ", 		cidade:"Turiacu",       		tipo:"Posto",        	ip:"172.16.128.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvtur01","pdvtur02"]},
+  {sigla:"PIN / DPI",   filial:"PIN ", 		cidade:"Deposito de Pinheiro",       	tipo:"Deposito",        ip:"172.26.86.1",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["Nao Possui PDVs"],servidorCustom:"pin"},
+  {sigla:"BEQ",   	filial:"PIN ", 		cidade:"Bequimao",       		tipo:"Posto",        	ip:"172.19.188.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvbeq01","pdvbeq02"],servidorCustom:"pin"},
+  {sigla:"CED",   	filial:"PIN ", 		cidade:"Cedral",       			tipo:"Representante",   ip:"172.19.227.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvced16"],servidorCustom:"pin"},
+  {sigla:"CEN",   	filial:"PIN ", 		cidade:"Central",       		tipo:"Representante",   ip:"172.19.228.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvpin20"],servidorCustom:"pin"},
+  {sigla:"CJA",   	filial:"PIN ", 		cidade:"Cajapio",       		tipo:"Representante",   ip:"172.19.229.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvpin21"],servidorCustom:"pin"},
+  {sigla:"BCB",   	filial:"PIN ", 		cidade:"Bacurituba",       		tipo:"Representante",   ip:"172.19.226.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvpin12"],servidorCustom:"pin"},
+  {sigla:"PAS",   	filial:"PIN ", 		cidade:"Paraiso",       		tipo:"Representante",   ip:"172.18.243.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvpin24"],servidorCustom:"pin"},
+  {sigla:"PEM",   	filial:"PIN ", 		cidade:"Peri Merim",       		tipo:"Posto",   	ip:"172.19.71.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvpem01","pdvpem02"],servidorCustom:"pin"},
+  {sigla:"PME",   	filial:"PIN ", 		cidade:"Palmeirandia",       		tipo:"Representante",   ip:"172.19.230.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvpin22"],servidorCustom:"pin"},
+  {sigla:"SER",   	filial:"PIN ", 		cidade:"Serrano Do Maranhao",       	tipo:"Posto",        	ip:"172.19.232.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvser01","pdvser02"],servidorCustom:"cum"},
+  {sigla:"POM",   	filial:"PIN ", 		cidade:"Porto Rico Do Maranhao",       	tipo:"Representante",   ip:"172.19.231.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvpin23"],servidorCustom:"pin"},
+  {sigla:"GUI",   	filial:"PIN ", 		cidade:"Guimaraes",       		tipo:"Representante",   ip:"172.19.165.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvpin17"],servidorCustom:"pin"},
+  {sigla:"TRF",   	filial:"PIN ", 		cidade:"Tres Furros",       		tipo:"Representante",   ip:"172.19.233.251",         	dispositivo:"MIkrotik",       	regional:"Regional Coutinho",     pdvs:["pdvpsa04"],servidorCustom:"psa"},
+
+
+  {sigla:"CTP",   	filial:"CTP ", 		cidade:"Carutapera",       		tipo:"Filial",        	ip:"172.19.37.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvctp01","pdvctp02","pdvctp03","pdvctp04"]},
+  {sigla:"DCT / CTP",   filial:"CTP ", 		cidade:"Deposito de Carutapera",       	tipo:"Deposito",        ip:"172.29.37.1",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["Nao Possui PDVs"],servidorCustom:"ctp"},
+  {sigla:"AMP",   	filial:"CTP ", 		cidade:"Amapa Do Maranhao",       	tipo:"Posto",        	ip:"172.19.73.251",        	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvamp01","pdvamp02"]},
+  {sigla:"CME",   	filial:"CTP ", 		cidade:"Candido Do Mendes",       	tipo:"Posto",        	ip:"172.16.223.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvcme01","pdvcme02"]},
+  {sigla:"GDV",   	filial:"CTP ", 		cidade:"Godolfredo Viana",       	tipo:"Posto",        	ip:"172.19.75.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvgdv01","pdvgdv02"]},
+  {sigla:"LDO",   	filial:"CTP ", 		cidade:"Luis Domingues",       		tipo:"Posto",        	ip:"172.19.195.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvldo01","pdvldo02"],servidorCustom:"zed"},
+  
+  
+  {sigla:"CAX",   	filial:"CAX ", 		cidade:"Caxias",       			tipo:"Filial",        	ip:"172.16.90.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvcax01","pdvcax02","pdvcax03","pdvcax04","pdvcax05","pdvcax06","pdvcax07","pdvcax08","pdvcax09","pdvcax10","pdvcax11","pdvcax12","pdvcax13","pdvcax14","pdvcax15"]},
+  {sigla:"ALA",   	filial:"CAX ", 		cidade:"Aldeias Altas",       		tipo:"Posto",        	ip:"172.19.27.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvala01","pdvala02"]},
+  {sigla:"CXE",   	filial:"CAX ", 		cidade:"Caxias Eletro",       		tipo:"Posto",        	ip:"172.26.90.65",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvcxe01","pdvcxe02"]},
+  {sigla:"MTS",   	filial:"CAX ", 		cidade:"Matoes",       			tipo:"Posto",        	ip:"172.16.127.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvmts01","pdvmts02"]},
+  {sigla:"PRN",   	filial:"CAX ", 		cidade:"Parnarama",       		tipo:"Posto",        	ip:"172.16.252.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvprn01","pdvprn02"]},
+  {sigla:"CAX / CDP",   filial:"CAX ", 		cidade:"Deposito de Caxias",       	tipo:"Deposito",        ip:"172.26.90.1",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdccdp01"],servidorCustom:"cax"},
+  {sigla:"BRJ",   	filial:"CAX ", 		cidade:"Brejinho",       		tipo:"Representante",   ip:"172.19.95.251",         	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvcax16"],servidorCustom:"cax"},
+  {sigla:"CVR",   	filial:"CAX ", 		cidade:"Caxias Volta Redonda",       	tipo:"Representante",   ip:"Desativado Temporario",	dispositivo:"Mikrotik",       	regional:"Regional Coutinho",     pdvs:["pdvcax22"],servidorCustom:"cax"},
+  {sigla:"SJE",   	filial:"CAX ", 		cidade:"Sao Joao do Soter",       	tipo:"Posto",        	ip:"172.19.176.251",         	dispositivo:"Fortigate",       	regional:"Regional Coutinho",     pdvs:["pdvsje01","pdvsje02"],servidorCustom:"cax"},
+  {sigla:"BIV",   	filial:"CAX", 		cidade:"Buriti Da Inacia Vazia",    	tipo:"Posto",           ip:"172.19.168.251",         	dispositivo:"Fortigate",        regional:"Regional Erisvaldo",    pdvs:["pdvbiv01","pdvbiv02"],servidorCustom:"cax"},
+  
+
+
+  // Regional Cazuza
+  {sigla:"ABR",   	filial:"ABR", 		cidade:"Agua Branca",       		tipo:"Filial",        	ip:"172.16.186.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvabr01","pdvabr02","pdvabr07"]},
+  {sigla:"AMA",   	filial:"ABR", 		cidade:"Amarante Do Piaui",       	tipo:"Posto",        	ip:"172.16.188.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvama01","pdvama02"]},
+  {sigla:"ANG",   	filial:"ABR", 		cidade:"Angical Do Piaui",       	tipo:"Posto",        	ip:"172.16.229.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvang01","pdvang02"]},
+  {sigla:"BDR",   	filial:"ABR", 		cidade:"Barro Duro",       		tipo:"Posto",        	ip:"172.16.231.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvbdr01","pdvbdr02"]},
+  {sigla:"DLB",   	filial:"ABR", 		cidade:"Demerval Lobal",       		tipo:"Posto",        	ip:"172.16.201.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvdlb01","pdvdlb02"]},
+  {sigla:"MGL",   	filial:"ABR", 		cidade:"Monsenhor Gil",       		tipo:"Posto",        	ip:"172.19.82.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvmgl01","pdvmgl02"]},
+  {sigla:"PAL",   	filial:"ABR", 		cidade:"Palmeirais",       		tipo:"Posto",        	ip:"172.16.243.251",         	dispositivo:"Fortigate",      	regional:"Regional Cazuza",     pdvs:["pdvpal01","pdvpal02"]},
+  {sigla:"PRP",   	filial:"ABR", 		cidade:"Prata Do Paiui",       		tipo:"Posto",        	ip:"172.19.20.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvprp01","pdvprp02"]},
+  {sigla:"ABR / DAB",   filial:"ABR", 		cidade:"Deposito de Agua Branca",       tipo:"Deposito",        ip:"172.26.186.1",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvdab01","pdvdab02"]},
+  {sigla:"REG",   	filial:"ABR", 		cidade:"Regeneracao",       		tipo:"Posto",        	ip:"172.16.195.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvreg01","pdvreg02"]},
+  {sigla:"SAG",   	filial:"ABR", 		cidade:"Sao Gancalo Do Piaui",       	tipo:"Posto",        	ip:"172.19.100.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvsag01","pdvsag02"]},
+  {sigla:"SFR",   	filial:"ABR", 		cidade:"Sao Francisco Do Maranhao",     tipo:"Posto",        	ip:"172.16.173.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["Nao Possui PDV's"]},
+  {sigla:"SPE",   	filial:"ABR", 		cidade:"Sao Pedro Do Piaui",       	tipo:"Posto",        	ip:"172.19.102.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvspe01","pdvspe02"]},
+  {sigla:"HUN",   	filial:"ABR", 		cidade:"Hugo Napoleao",       		tipo:"Representante",   ip:"172.18.113.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvabr06"]},
+  {sigla:"SFL",   	filial:"ABR", 		cidade:"Sao Felix Do Piaui",       	tipo:"Representante",   ip:"172.19.106.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvprp03"]},
+  {sigla:"PFP",   	filial:"ABR", 		cidade:"Passagem Franca Do Piaui",      tipo:"Posto",        	ip:"172.19.220.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvprp01","pdvprp02"]},
+  {sigla:"AGR",   	filial:"ABR", 		cidade:"Agricolandia",       		tipo:"Representante",   ip:"172.16.191.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvabr05"]},
+
+  
+
+  {sigla:"ARP",   	filial:"ARP", 		cidade:"Araripina",       		tipo:"Filial",       	ip:"172.16.171.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvarp01","pdvarp02","pdvarp03"]},
+  {sigla:"OUR",   	filial:"ARP", 		cidade:"Ouricuri",       		tipo:"Posto",        	ip:"172.19.219.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvour01","pdvour02","pdvour03"],servidorCustom:"arp"},
+  {sigla:"SRO",   	filial:"ARP", 		cidade:"Serrolandia",       		tipo:"Posto",        	ip:"172.19.157.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvsro01","pdvsro02"],servidorCustom:"arp"},
+  {sigla:"TRI",   	filial:"ARP", 		cidade:"Trindade",      		tipo:"Posto",        	ip:"172.19.162.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvtri01","pdvtri02"],servidorCustom:"arp"},
+  {sigla:"SRT",   	filial:"ARP", 		cidade:"Serrita",       		tipo:"Posto",        	ip:"172.18.116.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvsrt01","pdvsrt02","pdvsrt03"],servidorCustom:"arp"},
+  {sigla:"EXU",   	filial:"ARP", 		cidade:"Exu",       			tipo:"Posto",        	ip:"172.18.117.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvexu01","pdvexu02","pdvexu03"],servidorCustom:"arp"},
+  {sigla:"MRL",   	filial:"ARP", 		cidade:"Moreilandia",       		tipo:"Posto",        	ip:"172.18.118.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvmrl01","pdvmrl02"],servidorCustom:"arp"},
+  {sigla:"BDC",   	filial:"ARP", 		cidade:"Bodoco",       			tipo:"Posto",        	ip:"172.18.112.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvbdc01","pdvbdc02","pdvbdc03"],servidorCustom:"arp"},
+  {sigla:"ARP / ARD",   filial:"ARP", 		cidade:"Deposito De Araripina",       	tipo:"Deposito",        ip:"172.26.171.1",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["Nao Possui PDVs"]},
+  {sigla:"IPB",   	filial:"ARP", 		cidade:"Ipubi",       			tipo:"Representante",   ip:"172.19.154.251S",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvarp06"]},
+  {sigla:"NAS",   	filial:"ARP", 		cidade:"Nascente",       		tipo:"Representante",   ip:"172.18.236.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvarp07"]},
+  
+  
+  {sigla:"CNV",   	filial:"CNV", 		cidade:"Casa Nova",       		tipo:"Filial",        	ip:"172.16.138.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvcnv01","pdvcnv02","pdvcnv03","pdvcnv04","pdvcnv05"]},
+  {sigla:"SNA",   	filial:"CNV", 		cidade:"Santa Do Sobrado",       	tipo:"Representante",   ip:"172.19.138.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvcnv06"]},
+  
+
+  {sigla:"JUA",   	filial:"JUA", 		cidade:"Juazeiro",       		tipo:"Filial",        	ip:"172.16.81.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvjua01","pdvjua02","pdvjua03"]},
+  {sigla:"JJP",   	filial:"JUA", 		cidade:"Juazeiro Jao Paulo ",       	tipo:"Posto",        	ip:"172.26.80.193",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvjjp01","pdvjjp02"]},
+ 
+ 
+  {sigla:"OEI",   	filial:"OEI", 		cidade:"Oeiras",       			tipo:"Filial",        	ip:"172.16.202.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvoei01","pdvoei02","pdvoei03","pdvoei04","pdvoei05"]},
+  {sigla:"EVL",   	filial:"OEI", 		cidade:"Elesbao Veloso",       		tipo:"Posto",        	ip:"172.16.212.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvevl01","pdvevl02"]},
+  {sigla:"FRL",   	filial:"OEI", 		cidade:"Francinopolis",       		tipo:"Posto",        	ip:"172.19.11.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvfrl01","pdvfrl02"]},
+  {sigla:"SCP",   	filial:"OEI", 		cidade:"Santa Crus Do Piaui",       	tipo:"Posto",        	ip:"172.19.1.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvscp01","pdvscp02"]},
+  {sigla:"SJP",   	filial:"OEI", 		cidade:"Sao Joao Do Piaui",       	tipo:"Posto",        	ip:"172.16.204.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvsjp01","pdvsjp02"]},
+  {sigla:"BVP",   	filial:"OEI", 		cidade:"Boa Vista Do Piaui",       	tipo:"Representante",   ip:"172.18.124.251",        	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["Nao Possui PDVs"]},
+  {sigla:"SMP",   	filial:"OEI", 		cidade:"Simplicio Mendes",     		tipo:"Posto",        	ip:"172.16.248.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvsmp01","pdvsmp02"]},
+  {sigla:"SJP / DSJ",   filial:"OEI", 		cidade:"Deposito de Sao Joao Do Piaui", tipo:"Deposito",        ip:"Sem Rede Definida",         dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["Nao Possui PDVs"]},
+  {sigla:"COP",   	filial:"OEI", 		cidade:"Colonia Do Piaui",       	tipo:"Representante",   ip:"172.19.237.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvoei06"]},
+  {sigla:"CPG",   	filial:"OEI", 		cidade:"Capitao Gervazio",       	tipo:"Representante",   ip:"172.18.235.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvoei09"]},
+  {sigla:"SCR",   	filial:"OEI", 		cidade:"Socorro Do Piaui",       	tipo:"Representante",   ip:"172.19.241.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvsmp04"]},
+  {sigla:"PLD",   	filial:"OEI", 		cidade:"Paes Landim",       		tipo:"Representante",   ip:"172.19.240.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvsmp03"]},
+  {sigla:"SAI",   	filial:"OEI", 		cidade:"Santo Inacio",       		tipo:"Representante",   ip:"172.19.238.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvoei07"]},
+  {sigla:"SJV",   	filial:"OEI", 		cidade:"Sao Joao da Varjota",       	tipo:"Representante",   ip:"172.19.239.251",        	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvoei08"]},
+  {sigla:"VGD",   	filial:"OEI", 		cidade:"Vargem Grande",       		tipo:"Representante",   ip:"172.19.242.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvfrl03"]},
+  {sigla:"WAF",   	filial:"OEI", 		cidade:"Wall Ferraz",       		tipo:"Posto",        	ip:"172.19.208.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvwaf01","pdvwaf02"]},
+  {sigla:"CPP",   	filial:"OEI", 		cidade:"Campinas do Piaui",       	tipo:"Representante",   ip:"172.16.85.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvoei10"]},
+  
+  {sigla:"PET",   	filial:"PET", 		cidade:"Petrolina",                 	tipo:"Filial",         ip:"172.16.80.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvpet01","pdvpet02","pdvpet03","pdvpet04"]},
+  {sigla:"CRC",   	filial:"PET", 		cidade:"Curaca",                    	tipo:"Posto",          ip:"172.19.40.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvcrc01","pdvcrc02"]},
+  {sigla:"JAG",   	filial:"PET", 		cidade:"Jaguarari",                 	tipo:"Posto",          ip:"172.19.42.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvjag01","pdvjag02"]},
+  {sigla:"LGP",   	filial:"PET", 		cidade:"Lagoa Grande Pernambuco",   	tipo:"Posto",          ip:"172.16.123.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvlgp01","pdvlgp02"]},
+  {sigla:"CBB",   	filial:"PET", 		cidade:"Cabrobro",       		tipo:"Posto",        	ip:"172.18.122.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvcbb01","pdvcbb02","pdvcbb03"]},
+  {sigla:"ORO",   	filial:"PET", 		cidade:"Oroco",                     	tipo:"Posto",          ip:"172.19.85.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvoro01","pdvoro02"]},
+  {sigla:"PJM",   	filial:"PET", 		cidade:"Petolina Joao e Maria",       	tipo:"Posto",          ip:"172.26.80.129",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpjm01","pdvpjm02"]},
+  {sigla:"PLA",   	filial:"PET", 		cidade:"Pilao Arcado",       		tipo:"Posto",          ip:"172.16.107.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvpla01","pdvpla02"]},
+  {sigla:"PMZ",   	filial:"PET", 		cidade:"Petrolina Jardim Amazonas",     tipo:"Representante",  ip:"172.26.80.65",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpet08"]},
+  {sigla:"PSG",   	filial:"PET", 		cidade:"Petrolina S o Goncalo",       	tipo:"Posto",        	ip:"172.26.80.161",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpsg01","pdvpsg02"]},
+  {sigla:"REM",   	filial:"PET", 		cidade:"Remanso",       		tipo:"Posto",        	ip:"172.19.43.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvrem01","pdvrem02"]},
+  {sigla:"SCV",   	filial:"PET", 		cidade:"Santa Cruz Da Venerada",       	tipo:"Posto",        	ip:"172.19.117.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvscv01","pdvscv02","pdvscv03"]},
+  {sigla:"SFI",   	filial:"PET", 		cidade:"Santa Filomena",       		tipo:"Posto",        	ip:"172.19.107.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvsfi01","pdvsfi02"]},
+  {sigla:"SMB",   	filial:"PET", 		cidade:"Santa Maria Da Boa Vista",      tipo:"Posto",        	ip:"172.19.46.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvsmb01","pdvsmb02"]},
+  {sigla:"SOB",   	filial:"PET", 		cidade:"Sobradinho",       		tipo:"Posto",        	ip:"172.19.45.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvsob01","pdvsob02"]},
+  {sigla:"STS",   	filial:"PET", 		cidade:"Sento Se",       		tipo:"Posto",        	ip:"172.16.125.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvsts01","pdvsts02"]},
+  {sigla:"BSF",   	filial:"PET", 		cidade:"Belem Do Francisco",       	tipo:"Posto",        	ip:"172.18.121.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvbsf01","pdvbsf02"]},
+  {sigla:"PET / PDC",   filial:"PET", 		cidade:"Deposito De Petrolina",       	tipo:"Deposito",        ip:"172.26.80.1",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpdc01"]},
+  {sigla:"VRM",   	filial:"PET", 		cidade:"Vermelhos",       		tipo:"Representante",   ip:"172.19.103.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvlgp03"]},
+  {sigla:"AFR",   	filial:"PET", 		cidade:"Afranio",       		tipo:"Representante",   ip:"172.19.166.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpet10"]},
+  {sigla:"DRM",   	filial:"PET", 		cidade:"Dormentes",       		tipo:"Representante",   ip:"172.19.144.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpet11"]},
+  {sigla:"PIL",   	filial:"PET", 		cidade:"Pilar",       			tipo:"Representante",   ip:"172.19.116.251",         	dispositivo:"Mikrotik",      	regional:"Regional Cazuza",     pdvs:["pdvjag03"]},
+  {sigla:"PJD",   	filial:"PET", 		cidade:"Petrolina Joao De Deus",       	tipo:"Representante",   ip:"172.26.80.97",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpet07"]},
+	
+  
+  
+  {sigla:"VAL",   	filial:"VAL", 		cidade:"Valenca",       		tipo:"Filial",        	ip:"172.16.212.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvval01","pdvval02","pdvval07","pdvval08"]},
+  {sigla:"ARO",   	filial:"VAL", 		cidade:"Araoses",       		tipo:"Posto",        	ip:"172.19.3.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvaro01","pdvaro02"]},
+  {sigla:"PMT",   	filial:"VAL", 		cidade:"Pimenteira",       		tipo:"Posto",        	ip:"172.19.18.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvpmt01","pdvpmt02"]},
+  {sigla:"INH",   	filial:"VAL", 		cidade:"Inhuma",       			tipo:"Posto",        	ip:"172.16.239.251",        	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvinh01","pdvinh02"]},
+  {sigla:"IPI",   	filial:"VAL", 		cidade:"Ipiranga Do Piaui ",       	tipo:"Posto",        	ip:"172.16.249.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvipi01","pdvipi02"]},
+
+  
+  {sigla:"PIC",   	filial:"PIC", 		cidade:"Picos",       			tipo:"Filial",        	ip:"172.16.114.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvpic01","pdvpic02","pdvpic03","pdvpic04","pdvpic05","pdvpic06","pdvpic07","pdvpic08","pdvpic09","pdvpic10"]},
+  {sigla:"PIM",   	filial:"PIC", 		cidade:"Picos Moveis",       		tipo:"Filial",        	ip:"172.26.114.1",         	dispositivo:"MIkrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpim01","pdvpim02"]},
+  {sigla:"FRO",   	filial:"PIC", 		cidade:"Froteira",       		tipo:"Posto",        	ip:"172.19.12.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvfro01","pdvfro02"]},
+  {sigla:"FSA",   	filial:"PIC", 		cidade:"Francisco Santos ",       	tipo:"Posto",        	ip:"172.19.13.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvfsa01","pdvfsa02"]},
+  {sigla:"ITI",   	filial:"PIC", 		cidade:"Itainopolis ",       		tipo:"Posto",        	ip:"172.16.113.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdviti01","pdviti02"]},
+  {sigla:"JAI",   	filial:"PIC", 		cidade:"Jaicos ",       		tipo:"Posto",        	ip:"172.16.162.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvjai01","pdvjai02"]},
+  {sigla:"SIM",   	filial:"PIC", 		cidade:"Simoes",       			tipo:"Posto",        	ip:"172.19.24.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvsim01","pdvsim02"]},
+  {sigla:"MCO",   	filial:"PIC", 		cidade:"Marcolandia",       		tipo:"Posto",        	ip:"172.16.207.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvmco01","pdvmco02"]},
+  {sigla:"PAU",   	filial:"PIC", 		cidade:"Paulistana",       		tipo:"Posto",        	ip:"172.16.134.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvpau01","pdvpau02"]},
+  {sigla:"PIX",   	filial:"PIC", 		cidade:"Pio IX",       			tipo:"Posto",        	ip:"172.19.16.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvpix01","pdvpix02"]},
+  {sigla:"CRN",   	filial:"PIC", 		cidade:"Curral Novo Do Piaui",       	tipo:"Posto",        	ip:"172.19.214.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvcrn01","pdvcrn02","pdvcrn03"]},
+  {sigla:"PMA",   	filial:"PIC", 		cidade:"Padre Maroos",       		tipo:"Posto",        	ip:"172.19.17.251",         	dispositivo:"Fortigate",       	regional:"Regional Cazuza",     pdvs:["pdvpma01","pdvpma02"]},
+  {sigla:"PIC / DPC",   filial:"PIC", 		cidade:"Deposito De Picos",       	tipo:"Deposito",        ip:"172.26.114.129",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["Nao Possui PDVs"]},
+  {sigla:"QNV",   	filial:"PIC", 		cidade:"Queimada Nova",       		tipo:"Representante",   ip:"172.19.25.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpau05"]},
+  {sigla:"SAB",   	filial:"PIC", 		cidade:"Santo Antonio Do Lisboas",      tipo:"Representante",   ip:"172.19.151.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpic15"]},
+  {sigla:"SCB",   	filial:"PIC", 		cidade:"Santa Cruz Da Venerada",       	tipo:"Representante",   ip:"172.19.148.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpic14"]},
+  {sigla:"SJO",   	filial:"PIC", 		cidade:"Sao Jose Do Piaui",       	tipo:"Representante",   ip:"172.19.153.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpic13"]},
+  {sigla:"SJU",   	filial:"PIC", 		cidade:"Sao Juliao",       		tipo:"Representante",   ip:"172.19.206.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvfro03"]},
+  {sigla:"SNT",   	filial:"PIC", 		cidade:"Santana Do Piaui",       	tipo:"Representante",   ip:"172.19.150.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpic16"]},
+  {sigla:"VEM",   	filial:"PIC", 		cidade:"Vera Mendes",       		tipo:"Representante",   ip:"172.19.207.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdviti03"]},
+  {sigla:"LAB",   	filial:"PIC", 		cidade:"Lagoa Do Barro",       		tipo:"Representante",   ip:"172.18.114.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpic11"]},
+  {sigla:"MHI",   	filial:"PIC", 		cidade:"Monsenhor Hipolito",       	tipo:"Representante",   ip:"172.19.156.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpic17"]},
+  {sigla:"JAB",   	filial:"PIC", 		cidade:"Jacobina Do Piaui",       	tipo:"Representante",   ip:"172.19.204.251",        	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpau04"]},
+  {sigla:"AGT",   	filial:"PIC", 		cidade:"Alegrete Do Piaui",       	tipo:"Representante",   ip:"172.19.155.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvmco03"]},
+  {sigla:"ALH",   	filial:"PIC", 		cidade:"Alagoinha Do Piaui",       	tipo:"Representante",   ip:"172.19.149.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpic18"]},
+  {sigla:"BEN",   	filial:"PIC", 		cidade:"Betania Do Piaui",       	tipo:"Representante",   ip:"172.19.203.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpau03"]},
+  {sigla:"BNA",   	filial:"PIC", 		cidade:"Bocaina",       		tipo:"Representante",   ip:"172.19.158.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpic19"]},
+  {sigla:"CCN",   	filial:"PIC", 		cidade:"Conceicao Do Canide",       	tipo:"Representante",   ip:"172.19.216.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdviti05"]},
+  {sigla:"CGP",   	filial:"PIC", 		cidade:"Campo Grande Do Piaui",       	tipo:"Representante",   ip:"172.19.217.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvfsa03"]},
+  {sigla:"CRD",   	filial:"PIC", 		cidade:"Curral Novo Do Piaui",       	tipo:"Representante",   ip:"172.19.213.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvsim03"]},
+  {sigla:"DEX",   	filial:"PIC", 		cidade:"Dom Expedido Lope",       	tipo:"Representante",   ip:"172.19.152.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpic12"]},
+  {sigla:"ISC",   	filial:"PIC", 		cidade:"Isaias Coelho",       		tipo:"Representante",   ip:"172.19.218.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdviti04"]},
+  {sigla:"PTP",   	filial:"PIC", 		cidade:"Patos Do Piaui",       		tipo:"Representante",   ip:"172.18.108.251",         	dispositivo:"Mikrotik",       	regional:"Regional Cazuza",     pdvs:["pdvpic27"]},
+    
+  
+
+  // Regional Edivano
+  {sigla:"BHM",   	filial:"BHM", 		cidade:"Berreiras",       		tipo:"Filial",        	ip:"172.16.70.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvbhm01","pdvbhm02","pdvbhm03","pdvbhm04","pdvbhm05","pdvbhm06","pdvbhm07"]},
+  {sigla:"BHI",   	filial:"BHM", 		cidade:"barreiras Usados",       	tipo:"Filial",        	ip:"172.26.70.65",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvbhi01","pdvbhi02","pdvbhi03","pdvbhi04"]},
+  {sigla:"ANB",   	filial:"BHM", 		cidade:"Angical Bahia",       		tipo:"Posto",        	ip:"172.16.251.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvanb01","pdvanb02"]},
+  {sigla:"BRA",   	filial:"BHM", 		cidade:"Barra Bahia",       		tipo:"Posto",        	ip:"172.16.136.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvbra01","pdvbra02"]},
+  {sigla:"COT",   	filial:"BHM", 		cidade:"Cotegipe",       		tipo:"Posto",        	ip:"172.19.50.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvcot01","pdvcot02"]},
+  {sigla:"CRI",   	filial:"BHM", 		cidade:"Cristopolis",       		tipo:"Posto",        	ip:"172.19.39.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvcri01","pdvcri02"]},
+  {sigla:"FRP",   	filial:"BHM", 		cidade:"Formosa Do Rio Preto",       	tipo:"Posto",        	ip:"172.19.51.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvfrp01","pdvfrp02"]},
+  {sigla:"IBO",   	filial:"BHM", 		cidade:"Ibotirama",       		tipo:"Posto",        	ip:"172.16.140.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvibo01","pdvibo02"]},
+  {sigla:"RNE",   	filial:"BHM", 		cidade:"Riachao Das Neves",       	tipo:"Posto",        	ip:"172.19.44.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvrne01","pdvrne02"]},
+  {sigla:"SAN",   	filial:"BHM", 		cidade:"Santana Bahia",       		tipo:"Posto",        	ip:"172.19.41.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvsan01","pdvsan02"]},
+  {sigla:"SDE",   	filial:"BHM", 		cidade:"Sao Desiderio",       		tipo:"Posto",        	ip:"172.19.19.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvsde01","pdvsde02"]},
+  {sigla:"SMV",   	filial:"BHM", 		cidade:"Santa Maria Da Vitoria",       	tipo:"Posto",        	ip:"172.16.142.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvsmv01","pdvsmv02"]},
+  {sigla:"SRC",   	filial:"BHM", 		cidade:"Santa Rita De Cassia",       	tipo:"Posto",        	ip:"172.16.144.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvsrc01","pdvsrc02"]},
+  {sigla:"TBV",   	filial:"BHM", 		cidade:"Tabocas Do brejo Velho",       	tipo:"Posto",        	ip:"172.16.97.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvtbv01","pdvtbv02"]},
+  {sigla:"BHM / BDF",   filial:"BHM", 		cidade:"Deposito De Barreiras",       	tipo:"Deposito",        ip:"172.26.70.1",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvbdf01"]},
+  {sigla:"WAN",   	filial:"BHM", 		cidade:"Wanderlei",       		tipo:"Representante",   ip:"172.16.87.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvbhm17"]},
+  {sigla:"BAI",   	filial:"BHM", 		cidade:"Bainopolis",       		tipo:"Representante",   ip:"172.19.93.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvbhm12"]},
+  {sigla:"BBH",   	filial:"BHM", 		cidade:"Barreiras Barreirinhas",       	tipo:"Representante",   ip:"172.26.70.129",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvbhm11"]},
+  {sigla:"MAC",   	filial:"BHM", 		cidade:"Missao Do Aricobe",       	tipo:"Representante",   ip:"172.19.62.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvbhm16"]},
+  {sigla:"SDO",   	filial:"BHM", 		cidade:"Serra Dourada",       		tipo:"Representante",   ip:"172.19.136.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvbhm13"]},
+  {sigla:"CBA",   	filial:"BHM", 		cidade:"Corretina",       		tipo:"Representante",   ip:"172.19.29.251",        	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvbhm15"]},
+  
+  
+  {sigla:"BOJ",   	filial:"BOJ", 		cidade:"Bom Jesus ",       		tipo:"Filial",        	ip:"172.16.192.251",         	dispositivo:"Fortigate",      	regional:"Regional Edivano",     pdvs:["pdvboj01","pdvboj02","pdvboj03","pdvboj04"]},
+  {sigla:"RGR",   	filial:"BOJ", 		cidade:"Redencao Do Gurgueia",       	tipo:"Posto",        	ip:"172.19.25.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvrgr01","pdvrgr02"]},
+  {sigla:"CCT",   	filial:"BOJ", 		cidade:"Cristino Castro",       	tipo:"Posto",        	ip:"172.16.199.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvcct01","pdvcct02"]},
+  {sigla:"BOJ / DBJ",   filial:"BOJ", 		cidade:"Deposito De Bom jesus",       	tipo:"Deposito",        ip:"172.16.192.1",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["Nao Possui PDVs"]},
+  {sigla:"PDP",   	filial:"BOJ",	 	cidade:"Palmeira Do Piaui",       	tipo:"Representante",   ip:"172.19.235.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvcct03"]},
+  {sigla:"SZP",   	filial:"BOJ", 		cidade:"Santa Luz",       		tipo:"Representante",   ip:"172.19.236.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvcct04"]},
+ 
+ 
+  {sigla:"COR",   	filial:"COR", 		cidade:"Corrente",       		tipo:"Filial",        	ip:"172.16.196.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvcor01","pdvcor02","pdvcor03","pdvcor04","pdvcor09"]},
+  {sigla:"GLB",   	filial:"COR", 		cidade:"Gilbues",       		tipo:"Posto",        	ip:"172.19.44.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvglb01","pdvglb02"]},
+  {sigla:"PRG",   	filial:"COR", 		cidade:"Parnagua",       		tipo:"Posto",        	ip:"172.19.49.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvprg01","pdvprg02"]},
+  {sigla:"CUR",   	filial:"COR", 		cidade:"Curimata",       		tipo:"Posto",        	ip:"172.16.235.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvcur01","pdvcur02"]},
+  {sigla:"COR / CDE",   filial:"COR", 		cidade:"Deposito De Corrente",       	tipo:"Deposito",        ip:"172.26.196.1",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["Nao Possui PDVs"]},
+  {sigla:"JUB",   	filial:"COR", 		cidade:"Julio Borges",       		tipo:"Representante",   ip:"172.19.99.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvcur03"]},
+  {sigla:"RIF",   	filial:"COR", 		cidade:"Riacho Frio",       		tipo:"Representante",   ip:"172.19.92.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvcor06"]},
+  {sigla:"SEB",   	filial:"COR", 		cidade:"Sebastiao Leal",       		tipo:"Representante",   ip:"172.16.183.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvcor11"]},
+  {sigla:"MAL",   	filial:"COR", 		cidade:"Monte Alegre Do Piaui",       	tipo:"Posto",         	ip:"172.19.91.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvmal01","pdvmal02"]},
+  {sigla:"SFO",   	filial:"COR", 		cidade:"Santa Filomena",       		tipo:"Representante",   ip:"172.16.203.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvcor10"]},
+  {sigla:"ALP",   	filial:"COR", 		cidade:"Alvelino Lopes",       		tipo:"Posto",   	ip:"172.19.97.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvalp01","pdvalp02","pdvalp03"]},
+  {sigla:"CTL",   	filial:"COR", 		cidade:"Cristalandia",       		tipo:"Representante",   ip:"172.19.98.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvcor05"]},
+
+
+  {sigla:"FLO",   	filial:"FLO", 		cidade:"Floriano",       		tipo:"Filial",        	ip:"172.16.102.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvflo01","pdvflo02","pdvflo03","pdvflo04","pdvflo05","pdvflo06","pdvflo07","pdvflo08","pdvflo09","pdvflo10"]},
+  {sigla:"AAL",   	filial:"FLO", 		cidade:"Arraial",       		tipo:"Posto",        	ip:"172.19.28.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvaal01","pdvaal02"]},
+  {sigla:"BAG",   	filial:"FLO", 		cidade:"Barao De Grajau",       	tipo:"Posto",        	ip:"172.26.102.65",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvbag01","pdvbag02","pdvbag03"]},
+  {sigla:"BER",   	filial:"FLO", 		cidade:"Bertolinia",       		tipo:"Posto",        	ip:"172.19.5.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvber01","pdvber02"]},
+  {sigla:"CAB",   	filial:"FLO", 		cidade:"Canto Do Buriti",       	tipo:"Posto",        	ip:"172.16.194.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvcab01","pdvcab02","pdvcab03"]},
+  {sigla:"COG",   	filial:"FLO", 		cidade:"Colonia Do Gurgueia",       	tipo:"Posto",        	ip:"172.19.9.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvcog01","pdvcog02"]},
+  {sigla:"EMR",   	filial:"FLO", 		cidade:"Elizeu Martins",       		tipo:"Posto",        	ip:"172.19.10.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvemr01","pdvemr02"]},
+  {sigla:"GPE",   	filial:"FLO", 		cidade:"Guadalupe",       		tipo:"Posto",        	ip:"172.16.158.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvgpe01","pdvgpe02"]},
+  {sigla:"ITE",   	filial:"FLO", 		cidade:"Itaueira",       		tipo:"Posto",        	ip:"172.16.160.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvite01","pdvite02"]},
+  {sigla:"MEM",   	filial:"FLO", 		cidade:"Manoel Emidio",       		tipo:"Posto",        	ip:"172.19.250.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvmem01","pdvmem02"]},
+  {sigla:"MPA",   	filial:"FLO", 		cidade:"Marcos Parante",       		tipo:"Posto",        	ip:"172.19.55.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvmpa01","pdvmpa02"]},
+  {sigla:"SJX",   	filial:"FLO", 		cidade:"Sao Jose Dos Peixe",       	tipo:"Posto",        	ip:"172.19.22.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvsjx01","pdvsjx02"]},
+  {sigla:"FLO / FLD",   filial:"FLO", 		cidade:"Deposio De Floriano",       	tipo:"Deposito",        ip:"172.26.102.1",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvfld01"]},
+  {sigla:"DCB / CAB",   filial:"FLO", 		cidade:"Deposito De Canto Do Buriti",   tipo:"Deposito",        ip:"172.26.194.1",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["Nao Possui PDVs"]},
+  {sigla:"ATM",   	filial:"FLO", 		cidade:"Antonio Almeida",       	tipo:"Representante",   ip:"172.19.161.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvmpa04"]},
+  {sigla:"AVG",   	filial:"FLO", 		cidade:"Alvorada Do Gurgueia",       	tipo:"Representante",   ip:"172.16.89.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvflo14"]},
+  {sigla:"BJP",   	filial:"FLO", 		cidade:"Brejo Do Piaui",      	 	tipo:"Representante",   ip:"172.19.247.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvcab04"]},
+  {sigla:"CAN",   	filial:"FLO", 		cidade:"Canavieira",       		tipo:"Representante",   ip:"172.19.253.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvber03"]},
+  {sigla:"CJZ",   	filial:"FLO", 		cidade:"Cajazeiras Do Piaui",       	tipo:"Representante",   ip:"172.19.0.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvaal04"]},
+  {sigla:"FAY",   	filial:"FLO", 		cidade:"Francisco Ayres",       	tipo:"Representante",   ip:"172.18.255.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvaal03"]},
+  {sigla:"JER",   	filial:"FLO", 		cidade:"Jerumenha",       		tipo:"Representante",   ip:"172.19.248.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvgpe03"]},
+  {sigla:"FLR",   	filial:"FLO", 		cidade:"Flores Do Piaui",       	tipo:"Representante",   ip:"172.198.254.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvite03"]},
+  {sigla:"LSA",  	filial:"FLO", 		cidade:"Landri Sales",       		tipo:"Representante",   ip:"172.19.249.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvmpa03"]},
+  {sigla:"NAZ",   	filial:"FLO", 		cidade:"Nazare Do Piaui",       	tipo:"Representante",   ip:"172.19.160.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvflo14"]},
+  {sigla:"PAV",   	filial:"FLO", 		cidade:"Pavussu",       		tipo:"Representante",   ip:"172.18.252.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvite04"]},
+  {sigla:"PJU",   	filial:"FLO", 		cidade:"Pajeu Do Piaui",       		tipo:"Representante",   ip:"172.19.87.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvcab05"]},
+  {sigla:"POA",   	filial:"FLO", 		cidade:"Porto Alegre Do Piaui",       	tipo:"Representante",   ip:"172.19.134.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvmpa05"]},
+  {sigla:"RGD",   	filial:"FLO", 		cidade:"Rio Grande Do Piaui",       	tipo:"Representante",   ip:"172.18.252.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvite05"]},
+  {sigla:"RIB",   	filial:"FLO", 		cidade:"Ribeira Do Piaui",       	tipo:"Representante",   ip:"172.18.251.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvsjx03"]},
+  {sigla:"SBL",   	filial:"FLO", 		cidade:"Sebastiao Leal",       		tipo:"Representante",   ip:"172.19.254.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvber04"]},
+  {sigla:"SFC",   	filial:"FLO", 		cidade:"Sao Francisco Do Piaui",       	tipo:"Representante",   ip:"172.19.252.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvflo12"]},
+  {sigla:"SMI",   	filial:"FLO", 		cidade:"Santa Rosa Do Fidalgo",       	tipo:"Representante",   ip:"172.19.255.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvsjx04"]},
+  {sigla:"STR",   	filial:"FLO", 		cidade:"Santa Rosa Do Piaui",       	tipo:"Representante",   ip:"172.19.251.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvaal05"]},
+
+
+  {sigla:"LEM",   	filial:"LEM ", 		cidade:"Luis Eduardo Magalhaes",       	tipo:"Filial",          ip:"172.16.78.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvlem01","pdvlem02","pdvlem03","pdvlem04","pdvlem05","pdvlem06"]},
+  {sigla:"TAG",   	filial:"LEM ", 		cidade:"Taguatinga",       		tipo:"Posto",           ip:"172.19.48.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvtag01","pdvtag02"]},
+  {sigla:"LDU",   	filial:"LEM ", 		cidade:"Luis Eduardo Usados",       	tipo:"Posto",           ip:"172.26.78.1",        	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvldu01","pdvldu02"]},
+  {sigla:"LED",   	filial:"LEM ", 		cidade:"Luis Eduardo Deposito",      	tipo:"Deposito",        ip:"172.26.78.65",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvled01"]},
+  {sigla:"COB",   	filial:"LEM ", 		cidade:"Combinado",       		tipo:"Posto",        	ip:"172.19.142.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvtag03"]},
+ 
+
+
+  {sigla:"SRN",   	filial:"SRN", 		cidade:"Sao Raimundo Nonato",       		tipo:"Filial",        		ip:"172.16.206.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvsrn01","pdvsrn02","pdvsrn03"]},
+  {sigla:"CAC",   	filial:"SRN", 		cidade:"Caracol",       			tipo:"Posto",        		ip:"172.19.8.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvcac01","pdvcac02"]},
+  {sigla:"ABU",   	filial:"SRN", 		cidade:"Anizio De Abreu",       		tipo:"Posto",        		ip:"172.19.23.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvabu01","pdvabu02"]},
+  {sigla:"DAV",   	filial:"SRN", 		cidade:"Dirceu Arcoverdes",       		tipo:"Posto",        		ip:"172.19.81.251",         	dispositivo:"Fortigate",       	regional:"Regional Edivano",     pdvs:["pdvdav01","pdvdav02"]},
+  {sigla:"DIN",   	filial:"SRN", 		cidade:"Dom Inocencio",       			tipo:"Representante",   	ip:"172.18.239.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvsrn06"]},
+  {sigla:"FAR",   	filial:"SRN", 		cidade:"Fortuna Do Piaui",       		tipo:"Representante",        	ip:"172.18.249.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvsrn05"]},
+  {sigla:"SBZ",   	filial:"SRN", 		cidade:"Sao Braz Do Piaui",       		tipo:"Representante",        	ip:"172.18.248.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvsrn04"]},
+  {sigla:"BFP",   	filial:"SRN", 		cidade:"Bom FIm Do Piaui",       		tipo:"Representante",        	ip:"172.18.109.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvsrn07"]},
+  {sigla:"SRN / SRD",   filial:"SRN", 		cidade:"Deposito De Sao Raimundo Nonato",       tipo:"Deposito",        	ip:"172.18.109.251",         	dispositivo:"Mikrotik",       	regional:"Regional Edivano",     pdvs:["pdvsrd01"]},
+  
+
+
+];
+
+
+
+document.getElementById("btnLogout").onclick = () => {
+  localStorage.removeItem("usuarioLogado");
+  location.reload();
 };
 
+const usuarios = [
+  { user: "ti", senha: "123", nivel: "TI" },
+  { user: "consulta", senha: "123", nivel: "CONSULTA" }
+];
 
-// ---------- SENHA PADRÃO FORTIGATE ----------
-const senhaFortigate = "Hrt5M-jgExN7"; // senha única para todas as lojas FortiGate
-const usuarioLiberacaoAceito = ["gertec20"]; // usuários autorizados
-const modalUsuario = document.getElementById("modalUsuario");
-const usuarioInput = document.getElementById("usuarioInput");
-const confirmarUsuario = document.getElementById("confirmarUsuario");
-const cancelarUsuario = document.getElementById("cancelarUsuario");
-const toggleUsuario = document.getElementById("toggleUsuario");
+let usuarioLogado = null;
+
+function fazerLogin(){
+  const user = document.getElementById("loginUser").value;
+  const pass = document.getElementById("loginPass").value;
+
+  const encontrado = usuarios.find(u => u.user === user && u.senha === pass);
+
+ if(encontrado){
+  usuarioLogado = encontrado;
+
+  localStorage.setItem("usuarioLogado", JSON.stringify(encontrado));
+
+  document.getElementById("loginScreen").style.display = "none";
+
+  atualizarBotaoUsuario(); // 👈 IMPORTANTE
 
 
-
-
-// Mostrar/ocultar usuário digitado
-toggleUsuario.addEventListener("click", () => {
-  if (usuarioInput.type === "password") {
-    usuarioInput.type = "text";
-    toggleUsuario.textContent = "??";
   } else {
-    usuarioInput.type = "password";
-    toggleUsuario.textContent = "???";
+    document.getElementById("loginErro").textContent = "Usuário ou senha inválidos";
+  }
+}
+
+window.onload = function(){
+  const salvo = localStorage.getItem("usuarioLogado");
+
+  if(salvo){
+    usuarioLogado = JSON.parse(salvo);
+    document.getElementById("loginScreen").style.display = "none";
+  }
+
+  atualizarBotaoUsuario(); // 👈 AQUI TAMBÉM
+};
+
+function mostrarUsuario(){
+  if(usuarioLogado){
+    document.getElementById("userInfo").innerHTML = 
+      `👤 ${usuarioLogado.user} (${usuarioLogado.nivel})`;
+  }
+}
+
+mostrarUsuario();
+
+function logout(){
+  localStorage.removeItem("usuarioLogado");
+  location.reload();
+}
+
+function atualizarBotaoUsuario(){
+  const btn = document.getElementById("btnLogout");
+
+  if(usuarioLogado){
+    btn.textContent = ` Sair ( Logado: ${usuarioLogado.user} )`;
+  } else {
+    btn.textContent = "Sair";
+  }
+}
+
+const regionais = [...new Set(lojas.map(l => l.regional))].sort();
+const telaRegionais=document.getElementById('telaRegionais'),telaLojas=document.getElementById('telaLojas'),backBtn=document.getElementById('backBtn'),searchInput=document.getElementById('searchInput');
+const modal=document.getElementById('modalAuth'),
+      authInput=document.getElementById('authPassword'),
+      errorMsg=document.getElementById('errorMsg');
+
+// 🔥 ENTER PARA LOGIN
+document.addEventListener("keydown", function(e){
+
+  // verifica se o modal está aberto
+  if(modal.style.display === "flex"){
+
+    if(e.key === "Enter"){
+      e.preventDefault();
+
+      if(authInput.value.trim() !== ""){
+        validarSenha();
+      }
+    }
+
+  }
+
+});
+
+const copyMsg=document.getElementById('copyMsg');
+
+function mostrarRegionais(){
+  telaRegionais.innerHTML="";
+  regionais.forEach(reg=>{
+    const lojasDaRegional=lojas.filter(l=>l.regional===reg);
+    const contagem={
+      Filial:lojasDaRegional.filter(l=>l.tipo.toLowerCase()==="filial").length,
+      Postos:lojasDaRegional.filter(l=>l.tipo.toLowerCase()==="posto").length,
+      Depositos:lojasDaRegional.filter(l=>l.tipo.toLowerCase()==="deposito").length,
+      Representantes:lojasDaRegional.filter(l=>l.tipo.toLowerCase()==="representante").length
+    };
+    const totalLojas = lojasDaRegional.length; // total geral da regional
+const card=document.createElement('div'); 
+card.className='card regional-card';
+card.style.position='relative'; // necess rio para o badge
+card.innerHTML=`
+  <h2>${reg}</h2>
+  <div class="badge">${totalLojas}</div>
+  <div class="contagem-tipos">
+    <div class="tipo"><span>Filial</span><p>${contagem.Filial}</p></div>
+    <div class="tipo"><span>Postos</span><p>${contagem.Postos}</p></div>
+    <div class="tipo"><span>Depositos</span><p>${contagem.Depositos}</p></div>
+    <div class="tipo"><span>Representantes</span><p>${contagem.Representantes}</p></div>
+  </div>`;
+
+    card.onclick=()=>mostrarLojasPorRegional(reg);
+    telaRegionais.appendChild(card);
+  });
+}
+
+mostrarRegionais();
+
+function mostrarLojasPorRegional(regional){
+  backBtn.style.display='inline-block';
+  telaRegionais.style.display='none';
+  mostrarTabela(lojas.filter(l=>l.regional===regional));
+}
+
+function voltar(){
+  searchInput.value='';
+  telaLojas.innerHTML='';
+  mostrarRegionais();
+  telaRegionais.style.display='flex';
+  backBtn.style.display='none';
+}
+
+function destacarTexto(texto, termo){
+  if(!termo) return texto;
+
+  const regex = new RegExp(`(${termo})`, "gi");
+  return texto.replace(regex, `<span class="destaque-busca">$1</span>`);
+}
+
+// BOT O IR PARA O TOPO
+const btnTop = document.getElementById("btnTop");
+
+// Mostrar/ocultar bot o ao rolar
+window.addEventListener("scroll", () => {
+  if (window.scrollY > 200) {
+    btnTop.classList.add("show");
+  } else {
+    btnTop.classList.remove("show");
+  }
+
+  // Muda cor quando estiver no topo
+  if (window.scrollY === 0) {
+    btnTop.classList.add("top-active");
+  } else {
+    btnTop.classList.remove("top-active");
   }
 });
 
-// Confirmar usuário
-confirmarUsuario.addEventListener("click", () => {
-  const usuario = usuarioInput.value.trim();
-  if (usuarioLiberacaoAceito.includes(usuario)) {
-    alert("Usuário autorizado. Senha liberada!");
-    modalUsuario.style.display = "none";
-    usuarioInput.value = "";
-    // Aqui você pode chamar a função que copia a senha
-  } else {
-    alert("Usuário inválido!");
-  }
-});
+// Fun  o de subir suave
+function irTopo() {
+  window.scrollTo({
+    top: 0,
+    behavior: "smooth"
+  });
+}
 
-// Cancelar
-cancelarUsuario.addEventListener("click", () => {
-  modalUsuario.style.display = "none";
-  usuarioInput.value = "";
-});
+// Evento de clique
+btnTop.addEventListener("click", irTopo);
 
+function mostrarTabela(lista){
+  telaLojas.innerHTML=''; 
+  if(lista.length===0) return;
 
+  // Agrupa lojas por filial
+  const agrupadas = {};
+  lista.forEach(l => {
+    if(!agrupadas[l.filial]) agrupadas[l.filial] = [];
+    agrupadas[l.filial].push(l);
+  });
 
-// ---------- FUNÇÕES INICIAIS ----------
-function criarRegionais() {
-  const container = document.getElementById('regionais-container');
-  container.innerHTML = '';
-  const coresCount = 8;
-  let index = 0;
+  for(const filial in agrupadas){
+    const lojasFilial = agrupadas[filial];
 
-  for (const regional in lojasData) {
-    const lojas = lojasData[regional];
-    const contadores = contarTipos(lojas);
-    const totalLojasRegional = lojas.length; // total de lojas
+    // Cria um card por filial
+    const cardFilial = document.createElement('div');
+    cardFilial.className = 'card';
+    cardFilial.style.position='relative';
+    cardFilial.innerHTML = `
+      <div class="filial-quadro">
+  		  FILIAL : <strong>${filial}</strong>
+      </div>
+      <div class="badge">${lojasFilial.length}</div>
+      <div style="margin-top:15px;">
+        <table style="width:100%; border-collapse: separate; border-spacing: 0 6px;">
+          <thead>
+            <tr>
+              <th>Sigla</th><th>Tipo</th><th>IP</th><th>Cidade</th><th>Dispositivo</th><th>PDVs</th><th>Acao</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${lojasFilial.map(l=>{
 
-    const card = document.createElement('div');
-    card.className = 'regional-card';
-    card.setAttribute('data-cor', index % coresCount);
-    card.onclick = () => abrirRegional(regional);
-    card.innerHTML = `
-      ${regional}
-      <div class="badge-quantidade">${totalLojasRegional}</div>
-      <div class="contadores-card">
-        Filial: ${contadores.filial}<br>
-        Posto: ${contadores.posto}<br>
-        Deposito: ${contadores.deposito}<br>
-        Representante: ${contadores.representante}
+  const termo = document.getElementById('searchInput').value.toLowerCase();
+
+  const pdvs1 = l.pdvs.slice(0, Math.ceil(l.pdvs.length / 2));
+  const pdvs2 = l.pdvs.slice(Math.ceil(l.pdvs.length / 2));
+
+   return `<tr>
+    <td>${destacarTexto(l.sigla, termo)}</td>
+                <td>${l.tipo}</td>
+                <td>${destacarTexto(l.ip, termo)}</td>
+                <td>${l.cidade}</td>
+                <td>${l.dispositivo}</td>
+                <td>
+                  <div style="display:flex; gap:6px; justify-content:center;">
+                    <ul style="padding:0; margin:0; flex:1;">${pdvs1.map(p=>`<li style="list-style:none;background: rgba(255,204,0,0.1);margin:2px 0;padding:3px 6px;border-radius:6px;">${p}</li>`).join('')}</ul>
+                    ${pdvs2.length>0 ? `<ul style="padding:0; margin:0; flex:1;">${pdvs2.map(p=>`<li style="list-style:none;background: rgba(255,204,0,0.2);margin:2px 0;padding:3px 6px;border-radius:6px;">${p}</li>`).join('')}</ul>` : ''}
+                  </div>
+                </td>
+                <td id="acoes-${l.sigla}"></td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>
       </div>
     `;
-    container.appendChild(card);
-    index++;
-  }
-}
+    telaLojas.appendChild(cardFilial);
 
-function somarTodasAsLojas() {
-  let todasLojas = [];
-  for (const regional in lojasData) {
-    todasLojas = todasLojas.concat(lojasData[regional]);
-  }
-  return todasLojas;
-}
+    // Bot es de a  o
+    lojasFilial.forEach(l=>{
+      const td=document.getElementById(`acoes-${l.sigla}`);
+      const ip = l.ip;
+      if(l.dispositivo.toLowerCase()==="mikrotik"){
+        const btn=document.createElement('button'); 
+        btn.className='action-btn'; 
+        btn.style.backgroundColor='#2ecc71'; 
+        btn.textContent='Copiar';
+        btn.onclick=()=>copiarDireto(`${ip}:5819`);
+        td.appendChild(btn);
+      }
+      if(l.dispositivo.toLowerCase()==="fortigate"){
+        const openBtn=document.createElement('button'); 
+        openBtn.className='action-btn'; 
+        openBtn.style.backgroundColor='#3498db'; 
+        openBtn.textContent='Abrir';
+        openBtn.onclick=()=>window.open(`https://${ip}:5413`,'_blank'); 
+        td.appendChild(openBtn);
 
-function contarTipos(lojas) {
-  let filial=0, posto=0, deposito=0, representante=0;
-  const lojasUnicas = Array.from(new Set(lojas.map(l => JSON.stringify(l)))).map(l => JSON.parse(l));
-  lojasUnicas.forEach(loja => {
-    switch((loja.tipo||'').toLowerCase()){
-      case 'filial': filial++; break;
-      case 'posto': posto++; break;
-      case 'deposito': deposito++; break;
-      case 'representante': representante++; break;
-    }
-  });
-  return {filial, posto, deposito, representante};
-}
-
-// atualizarContadores (mantive sua versão)
-function atualizarContadores(lojas, alvo) {
-  const contadores = contarTipos(lojas);
-  if(alvo==='total'){
-    document.getElementById('totalFilial').innerText = contadores.filial;
-    document.getElementById('totalPosto').innerText = contadores.posto;
-    document.getElementById('totalDeposito').innerText = contadores.deposito;
-    document.getElementById('totalRepresentante').innerText = contadores.representante;
-
-    // Total geral = quantidade total de lojas em todos os regionais
-    document.getElementById('totalGeral').innerText = lojas.length;
-  } else {
-    document.getElementById('regionalFilial').innerText = contadores.filial;
-    document.getElementById('regionalPosto').innerText = contadores.posto;
-    document.getElementById('regionalDeposito').innerText = contadores.deposito;
-    document.getElementById('regionalRepresentante').innerText = contadores.representante;
+        const senha = l.senha || 'Hrt5M-jgExN7';
+        const senhaBtn=document.createElement('button'); 
+        senhaBtn.className='action-btn'; 
+        senhaBtn.style.backgroundColor='#e67e22'; 
+        senhaBtn.textContent='Copiar Senha';
+        senhaBtn.onclick = () => abrirModal(senha);
+        td.appendChild(senhaBtn);
+      }
+    });
   }
 }
 
@@ -1135,12 +1842,14 @@ let resultadoAtual = [];
 function aplicarFiltros() {
 
   const termoBusca = document.getElementById('searchInput').value.toLowerCase();
-  const tipoSelecionado = document.getElementById('filtroTipo').value;
-  const dispositivoSelecionado = document.getElementById('filtroDispositivo').value;
 
-  const todasLojas = somarTodasAsLojas();
+  const filtroTipo = document.getElementById('filtroTipo');
+  const filtroDispositivo = document.getElementById('filtroDispositivo');
 
-  resultadoAtual = todasLojas.filter(loja => {
+  const tipoSelecionado = filtroTipo ? filtroTipo.value : 'todos';
+  const dispositivoSelecionado = filtroDispositivo ? filtroDispositivo.value : 'todos';
+
+  resultadoAtual = lojas.filter(loja => {
 
     const correspondeBusca =
       loja.sigla.toLowerCase().includes(termoBusca) ||
@@ -1157,37 +1866,70 @@ function aplicarFiltros() {
     return correspondeBusca && correspondeTipo && correspondeDispositivo;
   });
 
-  mostrarResultadoPesquisa(resultadoAtual);
+  if (resultadoAtual.length === 0) {
+    telaLojas.innerHTML = "<p style='margin-top:30px;'>Nenhum Resultado Encontrado.</p>";
+  } else {
+    mostrarTabela(resultadoAtual);
+  }
+
+  telaRegionais.style.display = 'none';
+  backBtn.style.display = 'inline-block';
+
+  atualizarResumo(resultadoAtual);
 
   document.getElementById('btnDownload').style.display =
     resultadoAtual.length > 0 ? 'inline-block' : 'none';
 }
 
+const btnMenu = document.getElementById("btnMenu");
+btnMenu.addEventListener("click", () => {
+    window.location.href = "menu.html";
+});
 
+function filtrarLegenda(tipo, valor, elemento){
 
-function mostrarResultadoPesquisa(lojas){
-  const tbody = document.querySelector('#tabela-pesquisa tbody');
-  tbody.innerHTML = '';
-
-  if(lojas.length === 0){
-    document.getElementById('resultado-pesquisa').style.display = 'none';
-    return;
+  // Alternar sele  o
+  if(tipo === 'tipo'){
+    filtroTipoAtivo = (filtroTipoAtivo === valor) ? null : valor;
+  } else {
+    filtroDispositivoAtivo = (filtroDispositivoAtivo === valor) ? null : valor;
   }
 
-  document.getElementById('resultado-pesquisa').style.display = 'block';
-
-  lojas.forEach(loja => {
-    const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${loja.sigla}</td>
-      <td>${loja.filial}</td>
-      <td>${loja.tipo}</td>
-      <td>${loja.ip}</td>
-      <td>${loja.dispositivo}</td>
-      <td>-</td>
-    `;
-    tbody.appendChild(tr);
+  // Remove sele  o visual
+  document.querySelectorAll('.legenda-item').forEach(el => {
+    el.classList.remove('ativo');
   });
+
+  // Marca os ativos
+  document.querySelectorAll('.legenda-item').forEach(el => {
+    if(el.textContent === filtroTipoAtivo || el.textContent === filtroDispositivoAtivo){
+      el.classList.add('ativo');
+    }
+  });
+
+  aplicarFiltroLegenda();
+}
+
+function aplicarFiltroLegenda(){
+
+  let listaFiltrada = lojas.filter(l => {
+
+    const tipoOk = !filtroTipoAtivo || l.tipo === filtroTipoAtivo;
+    const dispOk = !filtroDispositivoAtivo || l.dispositivo === filtroDispositivoAtivo;
+
+    return tipoOk && dispOk;
+  });
+
+  if(listaFiltrada.length === 0){
+    telaLojas.innerHTML = "<p style='margin-top:30px;'>Nenhum resultado encontrado.</p>";
+  } else {
+    mostrarTabela(listaFiltrada);
+  }
+
+  telaRegionais.style.display = 'none';
+  backBtn.style.display = 'inline-block';
+
+  atualizarResumo(listaFiltrada);
 }
 
 
@@ -1212,393 +1954,410 @@ function baixarResultado() {
 }
 
 function baixarExcel() {
-  const tabela = document.querySelector("table");
-  const linhas = tabela.querySelectorAll("tbody tr");
+  if (resultadoAtual.length === 0) return;
 
-  let dados = [];
+  // Cria uma planilha XLSX
+  const ws_data = [
+    ["Sigla","Filial","Tipo","IP","Dispositivo","Cidade","PDVs"]
+  ];
 
-  // Cabeçalho
-  const cabecalho = [];
-  tabela.querySelectorAll("thead th").forEach(th => {
-    cabecalho.push(th.innerText);
-  });
-  dados.push(cabecalho);
-
-  // Linhas visíveis (respeita filtro)
-  linhas.forEach(linha => {
-    if (linha.style.display !== "none") {
-      const linhaDados = [];
-      linha.querySelectorAll("td").forEach(td => {
-        linhaDados.push(td.innerText);
-      });
-      dados.push(linhaDados);
-    }
+  resultadoAtual.forEach(loja => {
+    ws_data.push([
+      loja.sigla,
+      loja.filial,
+      loja.tipo,
+      loja.ip,
+      loja.dispositivo,
+      loja.cidade,
+      loja.pdvs.join(", ")
+    ]);
   });
 
   const wb = XLSX.utils.book_new();
-  const ws = XLSX.utils.aoa_to_sheet(dados);
-  XLSX.utils.book_append_sheet(wb, ws, "Relatorio");
-
-  XLSX.writeFile(wb, "relatorio_filtrado.xlsx");
+  const ws = XLSX.utils.aoa_to_sheet(ws_data);
+  XLSX.utils.book_append_sheet(wb, ws, "Resultado");
+  XLSX.writeFile(wb, "resultado_filtro_claudino.xlsx");
 }
 
 
-// Abrir regional e mostrar lojas
-function abrirRegional(nome) {
-  document.getElementById('regionais-container').style.display='none';
-  document.getElementById('lojas-container').style.display='block';
-  document.getElementById('nome-regional').innerText=nome;
-  document.getElementById('resultado-pesquisa').style.display='none';
-  mostrarLojas(lojasData[nome]||[]);
-  atualizarContadores(lojasData[nome]||[],'regional');
-  atualizarTotais(lojasData[nome]||[]); // atualiza apenas com lojas da regional
-}
-
-// Mostrar lojas na tabela por regional
-function mostrarLojas(lojas){
-  const tbody = document.querySelector('#tabela-lojas tbody');
-  tbody.innerHTML = '';
-
-  if(lojas.length === 0){
-    tbody.innerHTML = `<tr><td colspan="6">Nenhuma loja encontrada</td></tr>`;
-    return;
-  }
-
-  // Agrupar lojas por filial
-  const lojasPorFilial = {};
-  lojas.forEach(loja => {
-    if(!lojasPorFilial[loja.filial]) lojasPorFilial[loja.filial] = [];
-    lojasPorFilial[loja.filial].push(loja);
+function destacarLoja(sigla) {
+  document.querySelectorAll('.card-loja-pesquisada').forEach(card=>{
+    card.classList.remove('encontrado');
   });
-
-  // Ordenar filiais alfabeticamente
-  const filiaisOrdenadas = Object.keys(lojasPorFilial).sort();
-
-  filiaisOrdenadas.forEach(filial => {
-    // Linha de título da filial
-    const trFilial = document.createElement('tr');
-    trFilial.innerHTML = `<td colspan="6" style="background:#00ffea; color:#000; font-weight:bold; text-align:left; padding-left:10px;">Filial: ${filial}</td>`;
-    tbody.appendChild(trFilial);
-
-    // Adicionar lojas dessa filial
-    lojasPorFilial[filial].forEach(loja => {
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td>${loja.sigla}</td>
-        <td>${loja.filial}</td>
-        <td>${loja.tipo}</td>
-        <td>${loja.ip}</td>
-        <td>${loja.dispositivo}</td>
-        <td>
-          ${loja.dispositivo === 'FortiGate' ? 
-            `<div class="acao-btns">
-               <button class="action-btn fortigate-btn" onclick="abrirForti('${loja.ip}')">Abrir</button>
-               <button class="action-btn copy-senha-btn" onclick="abrirModalSenha('${loja.ip}','${loja.sigla}')">Copiar Senha</button>
-             </div>` :
-            `<button class="action-btn mikrotik-btn" onclick="copiarMikro('${loja.ip}')">Copiar</button>`}
-        </td>
-      `;
-      tbody.appendChild(tr);
-    });
-  });
+  const card = document.querySelector('.card-loja-pesquisada h2');
+  if(card.textContent === sigla) {
+    card.parentElement.classList.add('encontrado');
+  }
 }
 
-// Função para atualizar os contadores de FortiGate e Mikrotik
-// Função para atualizar contadores
-  function atualizarContadoresDispositivos() {
-    let countFortiGate = 0;
-    let countMikrotik = 0;
-
-    for (const regional in lojasData) {
-      lojasData[regional].forEach(loja => {
-        if (loja.dispositivo.toLowerCase() === "fortigate") countFortiGate++;
-        if (loja.dispositivo.toLowerCase() === "mikrotik") countMikrotik++;
-      });
-    }
-
-    // Animação de contagem
-    animarContagem('countFortiGate', countFortiGate);
-    animarContagem('countMikrotik', countMikrotik);
-  }
-
-  // Função de animação de contagem
-  function animarContagem(id, valorFinal) {
-    const el = document.getElementById(id);
-    let valorAtual = parseInt(el.textContent);
-    const incremento = valorFinal > valorAtual ? 1 : -1;
-
-    if (valorAtual === valorFinal) return;
-
-    const intervalo = setInterval(() => {
-      valorAtual += incremento;
-      el.textContent = valorAtual;
-      if (valorAtual === valorFinal) clearInterval(intervalo);
-    }, 50);
-  }
-
-  // Atualizar na inicialização
-  atualizarContadoresDispositivos();
-
-// Atualiza automaticamente ao carregar a página
-window.addEventListener("DOMContentLoaded", atualizarContadores);
+// Atualiza a cada segundo
+atualizarResumo();
 
 
-// Pesquisar lojas (versão mantendo agrupamento por filial)
-function pesquisarLojas(){
-  const query = document.getElementById('searchInput').value.toLowerCase();
-  const tbody = document.querySelector('#tabela-pesquisa tbody');
-  tbody.innerHTML = '';
 
-  if(!query){
-    document.getElementById('resultado-pesquisa').style.display = 'none';
-    document.getElementById('regionais-container').style.display = 'flex';
-    document.getElementById('lojas-container').style.display = 'none';
-    atualizarTotais(); // total geral completo
-    return;
-  }
-
-  const resultados = [];
-  for(const regional in lojasData){
-    lojasData[regional].forEach(loja=>{
-      if(loja.sigla.toLowerCase().includes(query) || loja.ip.includes(query)){
-        resultados.push({...loja, regional});
-      }
-    });
-  }
-
-  if(resultados.length === 0){
-    tbody.innerHTML = `<tr><td colspan="6">Nenhum resultado encontrado</td></tr>`;
-  } else {
-    // Agrupar por filial
-    const resultadosPorFilial = {};
-    resultados.forEach(loja => {
-      if(!resultadosPorFilial[loja.filial]) resultadosPorFilial[loja.filial] = [];
-      resultadosPorFilial[loja.filial].push(loja);
-    });
-
-    // Ordenar filiais alfabeticamente
-    const filiaisOrdenadas = Object.keys(resultadosPorFilial).sort();
-
-    filiaisOrdenadas.forEach(filial => {
-      // Linha de título da filial
-      const trFilial = document.createElement('tr');
-      trFilial.innerHTML = `<td colspan="6" style="background:#00ffea; color:#000; font-weight:bold; text-align:left; padding-left:10px;">Filial: ${filial}</td>`;
-      tbody.appendChild(trFilial);
-
-      // Adicionar lojas da filial
-      resultadosPorFilial[filial].forEach(loja => {
-        const tr = document.createElement('tr');
-        tr.innerHTML = `
-          <td>${loja.sigla}</td>
-          <td>${loja.filial}</td>
-          <td>${loja.tipo}</td>
-          <td>${loja.ip}</td>
-          <td>${loja.dispositivo}</td>
-          <td>
-            ${loja.dispositivo === 'FortiGate' ? 
-              `<div class="acao-btns">
-                 <button class="action-btn fortigate-btn" onclick="abrirForti('${loja.ip}')">Abrir</button>
-                 <button class="action-btn copy-senha-btn" onclick="abrirModalSenha('${loja.ip}','${loja.sigla}')">Copiar Senha</button>
-               </div>` :
-              `<button class="action-btn mikrotik-btn" onclick="copiarMikro('${loja.ip}')">Copiar</button>`}
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-    });
-  }
-
-  document.getElementById('resultado-pesquisa').style.display = 'block';
-  document.getElementById('regionais-container').style.display = 'none';
-  document.getElementById('lojas-container').style.display = 'none';
-
-  atualizarTotais(resultados); // total baseado na pesquisa
-}
-
-function voltarRegionais() {
-  // Mostrar regionais
-  document.getElementById('regionais-container').style.display = 'flex';
-
-  // Esconder outras áreas
-  document.getElementById('lojas-container').style.display = 'none';
-  document.getElementById('resultado-pesquisa').style.display = 'none';
-
-  // Limpar título e tabela
-  document.getElementById('nome-regional').innerText = '';
-  document.querySelector('#tabela-lojas tbody').innerHTML = '';
-
-  // Limpar campo de busca
-  document.getElementById('searchInput').value = '';
-
-  // Restaurar totais gerais
-  const todasLojas = somarTodasAsLojas();
-  atualizarContadores(todasLojas, 'total');
-  atualizarTotais(todasLojas);
-
-  // Atualizar contadores FortiGate / Mikrotik
-  atualizarContadoresDispositivos();
+function abrirModal(texto){
+  textoParaCopiar = texto;
+  authInput.value = '';
+  errorMsg.textContent = '';
+  modal.style.display = 'flex';
+  authInput.focus();
 }
 
 
-
-// ===== AÇÕES =====
-const btnMenu = document.getElementById("btnMenu");
-btnMenu.addEventListener("click", () => {
-    window.location.href = "menu.html";
+document.getElementById("modalAuth").addEventListener("keydown", function(e){
+  if(e.key === "Enter"){
+    e.preventDefault();
+    validarSenha();
+  }
 });
 
-function abrirForti(ip){
-    window.open(`https://${ip}:5413`, '_blank');
-}
-function copiarMikro(ip) {
-  if (!ip) return;
-  const ipComPorta = `${ip}:5819`;
+function copiarDireto(texto){
+  const temp = document.createElement('textarea');
+  temp.value = texto;
+  document.body.appendChild(temp);
+  temp.select();
+  temp.setSelectionRange(0,99999);
+  document.execCommand('copy');
+  document.body.removeChild(temp);
 
-  const copiarTexto = () => {
-    if (navigator.clipboard && window.isSecureContext) {
-    	
-    	return navigator.clipboard.writeText(ipComPorta);
-    } else {
-      const textarea = document.createElement('textarea');
-      textarea.value = ipComPorta;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      return Promise.resolve();
+  // MOSTRA APENAS SUCESSO
+  copyMsg.className = "copy-msg success show";
+  copyMsg.textContent = " COPIADO COM SUCESSO";
+
+  setTimeout(() => {
+    copyMsg.classList.remove("show");
+  }, 3000);
+}
+
+
+
+
+function validarSenha(){
+
+  if(authInput.value.trim() === LIBERACAO_SENHA){
+
+      // 🔥 SALVA LOGIN
+  localStorage.setItem
+
+    if(!textoParaCopiar){
+      return;
     }
-  };
+window.addEventListener("load", () => {
 
-  copiarTexto().then(() => {
-    // Tocar som futurista
-    const audio = document.getElementById('click-sound');
-    if(audio) { try{ audio.currentTime = 0; audio.play(); }catch(e){} }
+  const logado = localStorage.getItem("usuarioLogado");
 
-    // Mostrar mensagem no quadro
-    const msgBox = document.getElementById('copyMessage');
-    const msgContent = msgBox.querySelector('.message-content');
-    msgContent.innerHTML = ` <strong>${ipComPorta}</strong> copiado com sucesso!`;
-    msgBox.classList.add('show');
-
-    // Remover após 15 segundos (pode ajustar entre 10-20)
-    setTimeout(() => msgBox.classList.remove('show'), 15000);
-  }).catch(err => console.error('Erro ao copiar IP:', err));
-}
-
-// <!-- Som futurista ao copiar -->
-//<audio id="click-sound">
-//  <source src="https://www.soundjay.com/button/beep-07.wav" type="audio/wav">
-//</audio>
-
-// ===== Modal e cópia da senha FortiGate =====
-function abrirModalSenha(ip, sigla){
-  // exibe modal; guarda dados para uso (se desejar mostrar na UI)
-  const modal = document.getElementById('modalSenha');
-  modal.style.display = 'flex';
-  modal.setAttribute('data-ip', ip || '');
-  modal.setAttribute('data-sigla', sigla || '');
-  const input = document.getElementById('modalSenhaUsuario');
-  if(input) input.value = '';
-  const inputFocus = () => { if(input) input.focus(); };
-  setTimeout(inputFocus, 120);
-}
-
-function fecharModalSenha(){
-  const modal = document.getElementById('modalSenha');
-  modal.style.display = 'none';
-  modal.removeAttribute('data-ip');
-  modal.removeAttribute('data-sigla');
-}
-
-function tentarLiberarSenha(){
-  const input = document.getElementById('modalSenhaUsuario');
-  const usuario = (input && input.value) ? input.value.trim().toLowerCase() : '';
-  if(usuario && usuarioLiberacaoAceito.includes(usuario)){
-    copiarSenhaForti();
-    fecharModalSenha();
-    // mensagem confirmando a cópia da senha
-	mostrarMsgBox(`<strong>Senha Copiada com Sucesso!</strong>`);
+  if(logado === "true"){
+    modal.style.display = "none"; // já entra direto
   } else {
-    	mostrarMsgBox(`<strong>Usuario Invalido</strong> , Liberacao Negada.`);
-  }
-}
-
-function copiarSenhaForti(){
-  const copiarTexto = () => {
-    if (navigator.clipboard && window.isSecureContext) {
-      return navigator.clipboard.writeText(senhaFortigate);
-    } else {
-      const textarea = document.createElement('textarea');
-      textarea.value = senhaFortigate;
-      document.body.appendChild(textarea);
-      textarea.select();
-      document.execCommand('copy');
-      document.body.removeChild(textarea);
-      return Promise.resolve();
-    }
-  };
-
-  copiarTexto().then(() => {
-    const audio = document.getElementById('click-sound');
-    if(audio) { try{ audio.currentTime = 0; audio.play(); }catch(e){} }
-    // mensagem será mostrada na função que chama copiarSenhaForti
-  }).catch(err => console.error('Erro ao copiar senha:', err));
-}
-
-// Função reutilizada para mostrar mensagem no quadro futurista
-function mostrarMsgBox(htmlContent){
-  const msgBox = document.getElementById('copyMessage');
-  const msgContent = msgBox.querySelector('.message-content');
-  msgContent.innerHTML = htmlContent;
-  msgBox.classList.add('show');
-  setTimeout(() => msgBox.classList.remove('show'), 15000);
-}
-
-
-// ===== Totais =====
-function atualizarTotais(lojas = null) {
-  let lista = lojas;
-
-  if (!lista) {
-    lista = somarTodasAsLojas();
+    modal.style.display = "flex"; // exige login
   }
 
-  atualizarContadores(lista, 'total');
+});
+    
+    const temp = document.createElement('textarea');
+    temp.value = textoParaCopiar;
+    document.body.appendChild(temp);
+    temp.select();
+    temp.setSelectionRange(0, 99999);
+    document.execCommand('copy');
+    document.body.removeChild(temp);
 
-  const agora = new Date();
-  const dataFormatada =
-    agora.toLocaleDateString('pt-BR') + ' ' +
-    agora.toLocaleTimeString('pt-BR');
+    modal.style.display = 'none';
 
-  document.getElementById('ultimaAtualizacao').innerText = dataFormatada;
+    // SUCESSO
+    copyMsg.className = "copy-msg success show";
+    copyMsg.textContent = " ACESSO LIBERADO E COPIADO";
+
+    setTimeout(() => {
+      copyMsg.classList.remove("show");
+    }, 3000);
+
+  } else {
+
+    // ERRO no mesmo estilo visual
+    copyMsg.className = "copy-msg error show";
+    copyMsg.textContent = " USUARIO INCORRETO - DIGITE NOVAMENTE";
+
+    setTimeout(() => {
+      copyMsg.classList.remove("show");
+    }, 3000);
+
+    authInput.focus();
+  }
+
+  authInput.value = '';
 }
 
 
+function filtrar(){
+  const termo = searchInput.value.toLowerCase().trim();
 
-// ===== Inicialização =====
-criarRegionais();
-atualizarTotais();
+  // ?? Sempre ocultar regionais ao pesquisar
+  if(termo){
+    telaRegionais.style.display = 'none';
+    backBtn.style.display = 'inline-block';
+  }
 
-</script>
+  // Se pesquisa estiver vazia, mostra tudo
+  if(!termo){
 
-<!-- Modal HTML (colocado no final para sobrepor corretamente) -->
-<!-- Modal HTML (substitua o modal antigo por este) -->
-<div id="modalSenha">
-  <div class="modal-inner" role="dialog" aria-modal="true">
-    <h3 style="color:#00ffea; margin:0 0 10px 0;">Autenticacao - Liberar Senha</h3>
-    <div style="font-size:13px; margin-bottom:10px; color:#bfeff3;">Digite o usuario para liberar </div>
+  // 🔥 RESETA FILTROS
+  filtroTipoAtivo = null;
+  filtroDispositivoAtivo = null;
 
-    <!-- wrapper que usa seu CSS #toggleSenha -->
-    <div class="input-wrapper" style="margin:0 auto 6px; width:85%;">
-      <input type="password" id="modalSenhaUsuario" placeholder=" Nome do Usuario " autocomplete="off" />
-    </div>
+  // 🔥 REMOVE VISUAL ATIVO
+  document.querySelectorAll('.legenda-item').forEach(el => {
+    el.classList.remove('ativo');
+  });
 
-    <div class="btn-row">
-      <button style="background:linear-gradient(90deg,#00d1c1,#33e0d8); color:#000; border-radius:10px;" onclick="tentarLiberarSenha()">Liberar</button>
-      <button style="background:linear-gradient(90deg,#ff7a18,#ff3d00); color:#000; border-radius:10px;" onclick="fecharModalSenha()">Cancelar</button>
-    </div>
-  </div>
+  // RESET VISUAL
+  document.getElementById("siglaResumo").textContent = "---";
+  document.getElementById("cidadeResumo").textContent = "---";
+  document.querySelector(".card-loja-pesquisada").classList.remove("encontrado"); 
+
+  telaLojas.innerHTML='';
+  mostrarRegionais();
+  telaRegionais.style.display='flex';
+  backBtn.style.display='none';
+
+  atualizarResumo();
+
+  return;
+}
+  
+  // Filtra as lojas
+  const resultado = lojas.filter(l =>
+  l.sigla.toLowerCase().includes(termo) ||
+  l.ip.toLowerCase().includes(termo) ||
+  (l.servidor && l.servidor.toLowerCase().includes(termo)) || // NOVO
+  l.pdvs.some(p => p.toLowerCase().includes(termo))
+);
+const campoSigla = document.getElementById("siglaResumo");
+const campoCidade = document.getElementById("cidadeResumo");
+const cardLoja = document.querySelector(".card-loja-pesquisada");
+
+if(resultado.length > 0){
+
+  // sempre pega a primeira da lista
+  const primeiraLoja = resultado[0];
+
+  campoSigla.textContent = primeiraLoja.sigla;
+  campoCidade.textContent = primeiraLoja.cidade;
+
+  cardLoja.classList.add("encontrado");
+
+}else{
+
+  campoSigla.textContent = "---";
+  campoCidade.textContent = "---";
+
+  cardLoja.classList.remove("encontrado");
+}
+  // Atualiza quadros com o filtro
+  atualizarResumo(resultado);
+
+  if (resultado.length === 0) {
+
+  telaLojas.innerHTML = `
+  <div class="consulta-wrapper">
+
+    <div class="consulta-card">
+
+      <div class="consulta-topbar"></div>
+
+      <div class="consulta-header">
+        CENTRAL DE CONSULTA
+      </div>
+
+      <div class="consulta-title">
+        PESQUISA NAO LOCALIZADA
+      </div>
+
+      <div class="consulta-text">
+        Nenhum resultado encontrado para
+      </div>
+
+      <div class="consulta-search">
+        "${searchInput.value}"
+      </div>
+
+      <div class="consulta-alert">
+<div style="
+    margin-top:15px;
+    font-size:14px;
+    color:#ccc;
+    text-align:center;
+">
+    Verifique se os Dados Informados Estao Corretos:
 </div>
 
+<div style="
+    display:flex;
+    justify-content:center;
+    gap:15px;
+    margin-top:15px;
+">
+
+  <div class="boxErro">SIGLA DA LOJA</div>
+  <div class="boxErro">PDV</div>
+
+</div>      </div>
+
+      <button onclick="voltar()" class="consulta-btn">
+        VOLTAR AO PAINEL
+      </button>
+
+    </div>
+
+  </div>
+
+  <style>
+
+  .consulta-wrapper{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    margin-top:120px;
+    animation:fadeWrapper 0.6s ease-out;
+  }
+
+  @keyframes fadeWrapper{
+    from{opacity:0; transform:translateY(20px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  .consulta-card{
+    width:650px;
+    padding:65px 55px;
+    border-radius:22px;
+    background:linear-gradient(145deg,#121212,#1c1c1c);
+    border:1px solid rgba(255,255,255,0.06);
+    text-align:center;
+    position:relative;
+    box-shadow:
+      0 40px 100px rgba(0,0,0,0.9),
+      0 0 60px rgba(255, 200, 0, 0.08);
+  }
+
+  /* Barra superior elegante */
+  .consulta-topbar{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:5px;
+    border-radius:22px 22px 0 0;
+    background:linear-gradient(90deg,#ffcc00,#ffd700,#ffcc00);
+    box-shadow:0 0 20px rgba(255,200,0,0.5);
+  }
+
+  .consulta-header{
+    font-size:13px;
+    letter-spacing:4px;
+    color:#ffcc00;
+    margin-bottom:25px;
+    font-weight:700;
+  }
+
+  .consulta-title{
+    font-size:30px;
+    font-weight:900;
+    letter-spacing:3px;
+    color:#ffffff;
+    margin-bottom:25px;
+  }
+
+  .consulta-text{
+    font-size:17px;
+    color:#bbb;
+    margin-bottom:12px;
+  }
+
+  .consulta-search{
+    font-size:24px;
+    font-weight:800;
+    color:#ffcc00;
+    margin-bottom:35px;
+    text-shadow:0 0 15px rgba(255,200,0,0.6);
+  }
+
+  .consulta-alert{
+    margin:0 0 40px;
+    padding:20px 30px;
+    border-radius:14px;
+    font-size:17px;
+    font-weight:700;
+    color:#fff;
+
+    background:rgba(255, 200, 0, 0.08);
+    border:1px solid rgba(255, 200, 0, 0.6);
+
+    box-shadow:
+      0 0 25px rgba(255, 200, 0, 0.35),
+      0 0 70px rgba(255, 200, 0, 0.15);
+
+    animation:alertFade 0.8s ease-out;
+  }
+
+  @keyframes alertFade{
+    from{opacity:0; transform:translateY(15px);}
+    to{opacity:1; transform:translateY(0);}
+  }
+
+  .consulta-btn{
+    padding:15px 42px;
+    border-radius:14px;
+    border:none;
+    cursor:pointer;
+    font-weight:800;
+    font-size:14px;
+    letter-spacing:1px;
+    background:linear-gradient(135deg,#ffcc00,#ffaa00);
+    color:#000;
+    transition:0.3s ease;
+    box-shadow:
+      0 0 20px rgba(255,200,0,0.6),
+      0 0 60px rgba(255,200,0,0.3);
+  }
+
+  .consulta-btn:hover{
+    transform:scale(1.05);
+    box-shadow:
+      0 0 35px rgba(255,200,0,0.9),
+      0 0 80px rgba(255,200,0,0.6);
+  }
+
+  </style>
+  `;
+
+  return;
+}
+
+
+  mostrarTabela(resultado);
+}
+
+function atualizarResumo(lista = lojas) {
+
+  const totalForti = lista.filter(l=>l.dispositivo.toLowerCase()==="fortigate").length;
+  const totalMikrotik = lista.filter(l=>l.dispositivo.toLowerCase()==="mikrotik").length;
+  const totalFilial = lista.filter(l=>l.tipo.toLowerCase()==="filial").length;
+  const totalPostos = lista.filter(l=>l.tipo.toLowerCase()==="posto").length;
+  const totalDeposito = lista.filter(l=>l.tipo.toLowerCase()==="deposito").length;
+  const totalRep = lista.filter(l=>l.tipo.toLowerCase()==="representante").length;
+  const totalGeral = lista.length;
+
+  document.getElementById('totalForti').textContent = totalForti;
+  document.getElementById('totalMikrotik').textContent = totalMikrotik;
+  document.getElementById('totalFilial').textContent = totalFilial;
+  document.getElementById('totalPostos').textContent = totalPostos;
+  document.getElementById('totalDeposito').textContent = totalDeposito;
+  document.getElementById('totalRep').textContent = totalRep;
+  document.getElementById('totalGeral').textContent = totalGeral;
+}
+
+
+
+</script>
 </body>
 </html>
